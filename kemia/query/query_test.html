@@ -5,9 +5,11 @@ Copyright (c) 2010 Mark Rijnbeek (markr@ebi.ac.uk)
 -->
 <html>
 <head>
-<title>kemia unit ring_finder.js</title>
+<title>kemia unit query test</title>
+
 <script src="../../third-party/closure/closure/goog/base.js"></script>
 <script src="../deps.js"></script>
+
 <script>
             goog.require('goog.testing.jsunit');
             goog.require('goog.array');
@@ -61,7 +63,7 @@ function debug(text, noNewLine) {
 
             function testSmilesCompiler1() {
                 var queried = createMolecule();
-                var query = kemia.query.SmilesCompiler.compile('CCC');
+                var query = new kemia.query.SmilesCompiler().compile('CCC');
                 var mapper = new kemia.query.DFSMapper(query);
                 var maps = mapper.mapUnique(queried);
                 assertEquals(6, maps.length);
@@ -69,7 +71,7 @@ function debug(text, noNewLine) {
             
             function testSmilesCompiler2() {
                 var queried = createMolecule();
-                var query = kemia.query.SmilesCompiler.compile('CCCN');
+                var query = new kemia.query.SmilesCompiler().compile('CCCN');
                 var mapper = new kemia.query.DFSMapper(query);
                 var maps = mapper.mapUnique(queried);
                 //printMaps(maps);
@@ -78,7 +80,7 @@ function debug(text, noNewLine) {
  
             function testSmilesCompiler3() {
                 var queried = createMolecule();
-                var query = kemia.query.SmilesCompiler.compile('CCC=N');
+                var query = new kemia.query.SmilesCompiler().compile('CCC=N');
                 var mapper = new kemia.query.DFSMapper(query);
                 var maps = mapper.mapUnique(queried);
                 //printMaps(maps);
@@ -87,7 +89,7 @@ function debug(text, noNewLine) {
 
             function genericSmilesMatchTest(smiles) {
                 var queried = kemia.io.smiles.SmilesParser.parse(smiles);
-                var query = kemia.query.SmilesCompiler.compile(smiles);
+                var query = new kemia.query.SmilesCompiler().compile(smiles);
                 var mapper = new kemia.query.DFSMapper(query);
                 var maps = mapper.mapUnique(queried);
                 return maps.length == 1;
@@ -139,7 +141,7 @@ function debug(text, noNewLine) {
 
             function testDFSMapper() {
                 var queried = createBenzene();
-                var query = kemia.query.MoleculeCompiler.compile(queried);
+                var query = new kemia.query.MoleculeCompiler().compile(queried);
 
                 var mapper = new kemia.query.DFSMapper(query);
                 /*

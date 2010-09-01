@@ -17,28 +17,22 @@ goog.provide('kemia.query.SmilesCompiler');
 goog.require('kemia.io.smiles.SmilesParser');
 goog.require('kemia.query.MoleculeCompiler');
 
-(function() {
+/**
+ * The Smiles Query Compiler compiles SMILES strings into queries. This class
+ * implements {@link kemia.query.IQueryCompiler}. See the <a
+ * href="../Substructure Search.html">Substructure Search</a> page for more
+ * information. Smiles Query Compiler
+ * 
+ * @see kemia.query.IQueryCompiler
+ * @implements kemia.query.IQueryCompiler
+ * @constructor
+ */
+kemia.query.SmilesCompiler = function() {
+};
 
-    /**
-     * The Smiles Query Compiler compiles SMILES strings into queries. This
-     * class implements {@link kemia.query.IQueryCompiler}. See the 
-     * <a href="../Substructure Search.html">Substructure Search</a> page for more
-     * information.
-     * @class Smiles Query Compiler
-     * @see kemia.query.IQueryCompiler
-     * @implements kemia.query.IQueryCompiler
-     */
-    kemia.query.SmilesCompiler = {};
-
-    /**
-     * Compile a query from smiles string.
-     * @param smiles The smiles string
-     * @return {kemia.query.IQuery}
-     */
-    kemia.query.SmilesCompiler.compile = function(/**string*/smiles) {
-        var molecule = kemia.io.smiles.SmilesParser.parse(smiles);
-        var query = kemia.query.MoleculeCompiler.compile(molecule);
-        return query;
-    };
- 
-}());
+/** @inheritDoc */
+kemia.query.SmilesCompiler.prototype.compile = function(smiles) {
+	var molecule = kemia.io.smiles.SmilesParser.parse(smiles);
+	var query = new kemia.query.MoleculeCompiler().compile(molecule);
+	return query;
+};
