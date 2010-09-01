@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var _allTests = [ "kemia/algorithm/symmetry/symmetry_test.html",
-                  "kemia/algorithm/query/query_test.html",
+var _allTests = [ "kemia/symmetry/symmetry_test.html",
+                  "kemia/query/query_test.html",
                   "kemia/io/smiles/smiles_parser_test.html",
                   "kemia/io/qsmiles/smiles_test.html",
 		  "kemia/math/line_test.html", 

@@ -15,44 +15,39 @@
 goog.provide('kemia.query.MoleculeCompiler');
 
 goog.require('kemia.query.Query');
+goog.require('kemia.query.QueryAtom');
+goog.require('kemia.query.QueryBond');
 
-(function() {
-    /**
-     * The Molecule Query Compiler compiles existing molecules into queries. This
-     * class implements {@link kemia.query.IQueryCompiler}. See the 
-     * <a href="../Substructure Search.html">Substructure Search</a> page for more
-     * information.
-     * @class Smiles Query Compiler
-     * @see kemia.query.IQueryCompiler
-     * @implements kemia.query.IQueryCompiler
-     */
-   kemia.query.MoleculeCompiler = {};
+/**
+ * The Molecule Query Compiler compiles existing molecules into queries. This
+ * class implements {@link kemia.query.IQueryCompiler}. See the <a
+ * href="../Substructure Search.html">Substructure Search</a> page for more
+ * information.
+ * 
+ * @constructor
+ * @implements kemia.query.IQueryCompiler
+ */
+kemia.query.MoleculeCompiler = function() {
+};
 
-    /**
-     * Compile a query from an exising molecule.
-     * @param {kemia.model.Molecule} molecule The molecule
-     * @return {kemia.query.IQuery}
-     */
-    kemia.query.MoleculeCompiler.compile = function(molecule) {
-        var query = new kemia.query.Query();
+/** @inheritDoc */
+kemia.query.MoleculeCompiler.prototype.compile = function(molecule) {
+	var query = new kemia.query.Query();
 
-        for (var i = 0, li = molecule.countAtoms(); i < li; i++) {
-            var qatom = new kemia.query.QueryAtom();
-            qatom.symbols.push(molecule.getAtom(i).symbol);
-            query.addAtom(qatom);
-        }
+	for ( var i = 0, li = molecule.countAtoms(); i < li; i++) {
+		var qatom = new kemia.query.QueryAtom();
+		qatom.symbols.push(molecule.getAtom(i).symbol);
+		query.addAtom(qatom);
+	}
 
-        for (i = 0, li = molecule.countBonds(); i < li; i++) {
-            var bond = molecule.bonds[i];
-            var source = query.getAtom(molecule.indexOfAtom(bond.source));
-            var target = query.getAtom(molecule.indexOfAtom(bond.target));
-            var qbond = new kemia.query.QueryBond(source, target);
-            qbond.orders.push(bond.order);
-            query.addBond(qbond);
-        }
+	for (i = 0, li = molecule.countBonds(); i < li; i++) {
+		var bond = molecule.bonds[i];
+		var source = query.getAtom(molecule.indexOfAtom(bond.source));
+		var target = query.getAtom(molecule.indexOfAtom(bond.target));
+		var qbond = new kemia.query.QueryBond(source, target);
+		qbond.orders.push(bond.order);
+		query.addBond(qbond);
+	}
 
-        return query;
-    }; 
-
-
-}());
+	return query;
+};

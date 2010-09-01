@@ -254,8 +254,8 @@ kemia.model.Molecule.prototype.getRings = function() {
 /**
  * Checks if atom is in a ring
  * 
- * @return{boolean
- */
+ * @return{boolean}
+ **/
 kemia.model.Molecule.prototype.isAtomInRing = function(atom_) {
     rings = this.getRings();
 	for(r=0,ringCount=rings.length; r<ringCount; r++) { 
@@ -271,8 +271,8 @@ kemia.model.Molecule.prototype.isAtomInRing = function(atom_) {
 /**
  * Checks if bond is in a ring
  * 
- * @return{boolean
- */
+ * @return{boolean}
+ **/
 kemia.model.Molecule.prototype.isBondInRing = function(bond_) {
     rings = this.getRings();
     for(r=0,ringCount=rings.length; r<ringCount; r++) { 
