@@ -255,7 +255,7 @@ kemia.query.DFSMapper.prototype.mapAll = function(queried) {
 	var maps = [];
 	var queryAtom = kemia.query.DFSMapper.getStartAtom(this.query);
 	for ( var i = 0, li = queried.countAtoms(); i < li; i++) {
-		var state = new State(kemia.query.DFSMapper.Type.MAP_ALL, this.query, queried);
+		var state = new kemia.query.State(kemia.query.DFSMapper.Type.MAP_ALL, this.query, queried);
 		var queriedAtom = queried.getAtom(i);
 		if (!queryAtom.matches(queriedAtom)) {
 			continue;

@@ -34,7 +34,7 @@ function debug(text, noNewLine) {
 
         var i = 0;
         function doNext() {
-            var query = kemia.query.SmilesCompiler.compile('c1ccccc1');
+            var query = new kemia.query.SmilesCompiler().compile('c1ccccc1');
             var mapper = new kemia.query.DFSMapper(query);
             var molecule = kemia.io.smiles.SmilesParser.parse(smiles[i]);
             var maps = mapper.mapAll(molecule);
