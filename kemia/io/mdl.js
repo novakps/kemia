@@ -353,3 +353,5 @@ kemia.io.mdl.readRxnfile = function(rxnfile) {
 
 };
 
+goog.exportSymbol('kemia.io.mdl.readMolfile', kemia.io.mdl.readMolfile);
+

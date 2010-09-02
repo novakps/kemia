@@ -29,6 +29,7 @@ goog.require('kemia.query.QueryBond');
  */
 kemia.query.MoleculeCompiler = function() {
 };
+goog.exportSymbol('kemia.query.MoleculeCompiler', kemia.query.MoleculeCompiler);
 
 /** @inheritDoc */
 kemia.query.MoleculeCompiler.prototype.compile = function(molecule) {
@@ -51,3 +52,4 @@ kemia.query.MoleculeCompiler.prototype.compile = function(molecule) {
 
 	return query;
 };
+goog.exportSymbol('kemia.query.MoleculeCompiler.prototype.compile', kemia.query.MoleculeCompiler.prototype.compile)

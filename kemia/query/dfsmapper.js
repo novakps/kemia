@@ -36,6 +36,7 @@ goog.require('kemia.query.State');
 kemia.query.DFSMapper = function(query) {
 	this.query = query;
 }
+goog.exportSymbol('kemia.query.DFSMapper', kemia.query.DFSMapper);
 
 /**
  * @enum {number}
@@ -47,8 +48,7 @@ kemia.query.DFSMapper.Type = {
 };
 
 /**
- * Select a start atom. 
- * TODO: select the most unique query atom, this avoids
+ * Select a start atom. TODO: select the most unique query atom, this avoids
  * checking many paths that will never lead to a match.
  * 
  * @param {kemia.query.IQuery}
@@ -65,7 +65,8 @@ kemia.query.DFSMapper.getStartAtom = function(query) {
  * 
  * @param {kemia.query.State}
  *            state
- * @param {Array.<goog.structs.Map>} maps
+ * @param {Array.
+ *            <goog.structs.Map>} maps
  */
 kemia.query.DFSMapper.checkForMap = function(state, maps) {
 	// store the mapping if all atoms are mapped
@@ -117,7 +118,8 @@ kemia.query.DFSMapper.checkForMap = function(state, maps) {
  *            queryNbr
  * @param {kemia.model.Atom}
  *            queriedNbr
- * @param {Array.<goog.structs.Map>} maps
+ * @param {Array.
+ *            <goog.structs.Map>} maps
  * @return {boolean}
  */
 kemia.query.DFSMapper.matchCandidate = function(state, queryAtom, queriedAtom,
@@ -162,9 +164,11 @@ kemia.query.DFSMapper.matchCandidate = function(state, queryAtom, queriedAtom,
  *            queryAtom
  * @param {kemia.model.Atom}
  *            queriedAtom
- * @param {Array.<goog.structs.Map>} maps
+ * @param {Array.
+ *            <goog.structs.Map>} maps
  */
-kemia.query.DFSMapper.depthFirstSearch = function(state, queryAtom, queriedAtom, maps) {
+kemia.query.DFSMapper.depthFirstSearch = function(state, queryAtom,
+		queriedAtom, maps) {
 	var queryNbrs = queryAtom.getNeighbors();
 	var queriedNbrs = queriedAtom.getNeighbors();
 
@@ -193,9 +197,11 @@ kemia.query.DFSMapper.depthFirstSearch = function(state, queryAtom, queriedAtom,
 	// do the mapping by checking the candidates
 	while (state.candidates[state.candidates.length - 1].length) {
 		var candidate = state.candidates[state.candidates.length - 1].pop();
-		if (kemia.query.DFSMapper.matchCandidate(state, candidate.queryAtom, candidate.queriedAtom,
-				candidate.queryNbr, candidate.queriedNbr, maps)) {
-			kemia.query.DFSMapper.depthFirstSearch(state, candidate.queryNbr, candidate.queriedNbr, maps);
+		if (kemia.query.DFSMapper.matchCandidate(state, candidate.queryAtom,
+				candidate.queriedAtom, candidate.queryNbr,
+				candidate.queriedNbr, maps)) {
+			kemia.query.DFSMapper.depthFirstSearch(state, candidate.queryNbr,
+					candidate.queriedNbr, maps);
 
 			// backtrack
 			state.queryPath.pop();
@@ -218,9 +224,10 @@ kemia.query.DFSMapper.depthFirstSearch = function(state, queryAtom, queriedAtom,
  *            queryAtom
  * @param {kemia.model.Molecule}
  *            queried
- * @param {Array.<goog.structs.Map>}
- *            maps
- * @param {function(Array.<goog.structs.Map>)} callback
+ * @param {Array.
+ *            <goog.structs.Map>} maps
+ * @param {function(Array.
+ *            <goog.structs.Map>)} callback
  */
 kemia.query.DFSMapper.mapNext = function(i, type, query, queryAtom, queried,
 		maps, callback) {
@@ -230,13 +237,15 @@ kemia.query.DFSMapper.mapNext = function(i, type, query, queryAtom, queried,
 	if (queryAtom.matches(queriedAtom)) {
 		state.queryPath.push(queryAtom);
 		state.queriedPath.push(queriedAtom);
-		kemia.query.DFSMapper.depthFirstSearch(state, queryAtom, queriedAtom, maps);
+		kemia.query.DFSMapper.depthFirstSearch(state, queryAtom, queriedAtom,
+				maps);
 	}
 
 	i++;
 	if (i < queried.countAtoms()) {
 		var nextBitOfWork = function() {
-			kemia.query.DFSMapper.mapNext(i, type, query, queryAtom, queried, maps, callback);
+			kemia.query.DFSMapper.mapNext(i, type, query, queryAtom, queried,
+					maps, callback);
 		};
 		setTimeout(nextBitOfWork, 0);
 	} else {
@@ -255,7 +264,8 @@ kemia.query.DFSMapper.prototype.mapAll = function(queried) {
 	var maps = [];
 	var queryAtom = kemia.query.DFSMapper.getStartAtom(this.query);
 	for ( var i = 0, li = queried.countAtoms(); i < li; i++) {
-		var state = new kemia.query.State(kemia.query.DFSMapper.Type.MAP_ALL, this.query, queried);
+		var state = new kemia.query.State(kemia.query.DFSMapper.Type.MAP_ALL,
+				this.query, queried);
 		var queriedAtom = queried.getAtom(i);
 		if (!queryAtom.matches(queriedAtom)) {
 			continue;
@@ -263,7 +273,8 @@ kemia.query.DFSMapper.prototype.mapAll = function(queried) {
 		if (this.query.countAtoms() > 1) {
 			state.queryPath.push(queryAtom);
 			state.queriedPath.push(queriedAtom);
-			kemia.query.DFSMapper.depthFirstSearch(state, queryAtom, queriedAtom, maps);
+			kemia.query.DFSMapper.depthFirstSearch(state, queryAtom,
+					queriedAtom, maps);
 		} else {
 			var map = new goog.structs.Map();
 			map.set(state.query.indexOfAtom(queryAtom), state.queried
@@ -282,13 +293,16 @@ kemia.query.DFSMapper.prototype.mapAll = function(queried) {
  * 
  * @param {kemia.model.Molecule}
  *            queried The queried molecule.
- * @param {function(Array.<goog.structs.Map>)} callback The callback function to report results.
+ * @param {function(Array.
+ *            <goog.structs.Map>)} callback The callback function to report
+ *            results.
  */
 kemia.query.DFSMapper.prototype.mapAllCallback = function(queried, callback) {
 	var maps = [];
 	var queryAtom = kemia.query.DFSMapper.getStartAtom(this.query);
 	var i = 0;
-	kemia.query.DFSMapper.mapNext(i, Type.MapAll, this.query, queryAtom, queried, maps, callback);
+	kemia.query.DFSMapper.mapNext(i, Type.MapAll, this.query, queryAtom,
+			queried, maps, callback);
 };
 
 /** @inheritDoc */
@@ -296,7 +310,8 @@ kemia.query.DFSMapper.prototype.mapUnique = function(queried) {
 	var maps = [];
 	var queryAtom = kemia.query.DFSMapper.getStartAtom(this.query);
 	for ( var i = 0, li = queried.countAtoms(); i < li; i++) {
-		var state = new kemia.query.State(kemia.query.DFSMapper.Type.MAP_UNIQUE, this.query, queried);
+		var state = new kemia.query.State(
+				kemia.query.DFSMapper.Type.MAP_UNIQUE, this.query, queried);
 		var queriedAtom = queried.getAtom(i);
 		if (!queryAtom.matches(queriedAtom)) {
 			continue;
@@ -304,7 +319,8 @@ kemia.query.DFSMapper.prototype.mapUnique = function(queried) {
 		if (this.query.countAtoms() > 1) {
 			state.queryPath.push(queryAtom);
 			state.queriedPath.push(queriedAtom);
-			kemia.query.DFSMapper.depthFirstSearch(state, queryAtom, queriedAtom, maps);
+			kemia.query.DFSMapper.depthFirstSearch(state, queryAtom,
+					queriedAtom, maps);
 		} else {
 			var map = new goog.structs.Map();
 			map.set(state.query.indexOfAtom(queryAtom), state.queried
@@ -315,13 +331,20 @@ kemia.query.DFSMapper.prototype.mapUnique = function(queried) {
 
 	return maps;
 };
+goog.exportSymbol('kemia.query.DFSMapper.prototype.mapUnique',
+		kemia.query.DFSMapper.prototype.mapUnique);
+
+// TODO this is a leaky abstraction, encapsulate with accessor if needed
+goog.exportProperty(goog.structs.Map.prototype, 'getCount',
+		goog.structs.Map.prototype.getCount);
 
 /** @inheritDoc */
 kemia.query.DFSMapper.prototype.mapUniqueCallback = function(queried, callback) {
 	var maps = [];
 	var queryAtom = kemia.query.DFSMapper.getStartAtom(this.query);
 	var i = 0;
-	kemia.query.DFSMapper.mapNext(i, Type.MapUnique, this.query, queryAtom, queried, maps, callback);
+	kemia.query.DFSMapper.mapNext(i, Type.MapUnique, this.query, queryAtom,
+			queried, maps, callback);
 };
 
 /** @inheritDoc */
@@ -329,7 +352,8 @@ kemia.query.DFSMapper.prototype.mapFirst = function(queried) {
 	var maps = [];
 	var queryAtom = kemia.query.DFSMapper.getStartAtom(this.query);
 	for ( var i = 0, li = queried.countAtoms(); i < li; i++) {
-		var state = new kemia.query.State(kemia.query.DFSMapper.Type.MAP_FIRST, this.query, queried);
+		var state = new kemia.query.State(kemia.query.DFSMapper.Type.MAP_FIRST,
+				this.query, queried);
 		var queriedAtom = queried.getAtom(i);
 		if (!queryAtom.matches(queriedAtom)) {
 			continue;
@@ -338,7 +362,8 @@ kemia.query.DFSMapper.prototype.mapFirst = function(queried) {
 		if (this.query.countAtoms() > 1) {
 			state.queryPath.push(queryAtom);
 			state.queriedPath.push(queriedAtom);
-			kemia.query.DFSMapper.depthFirstSearch(state, queryAtom, queriedAtom, maps);
+			kemia.query.DFSMapper.depthFirstSearch(state, queryAtom,
+					queriedAtom, maps);
 		} else {
 			var map = new goog.structs.Map();
 			map.set(state.query.indexOfAtom(queryAtom), state.queried
@@ -353,3 +378,5 @@ kemia.query.DFSMapper.prototype.mapFirst = function(queried) {
 
 	return new goog.structs.Map();
 };
+goog.exportSymbol('kemia.query.DFSMapper.prototype.mapFirst',
+		kemia.query.DFSMapper.prototype.mapFirst);
