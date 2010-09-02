@@ -22,14 +22,7 @@ kemia.ring.Ring=function(_atoms,_bonds)
 {
     this.atoms=_atoms;
     this.bonds=_bonds;
-
-    var avgX=0;
-	var avgY=0;
-    for (var j = 0, jl = _atoms.length; j < jl; j++) {
-        avgX += _atoms[j].coord.x;
-        avgY += _atoms[j].coord.y;
-    }
-    this.ringCenter=new goog.math.Coordinate(avgX/_atoms.length, avgY/_atoms.length);
+    this.setRingCenter();
 
     /** 
      * Array with property flags (true/false) 
@@ -45,4 +38,19 @@ kemia.ring.Ring=function(_atoms,_bonds)
  */
 kemia.ring.Ring.prototype.setFlag = function(flag_type, flag_value){
     this.flags[flag_type] = flag_value
+}
+
+
+/**
+ * Set ring center
+ */
+kemia.ring.Ring.prototype.setRingCenter = function(){
+    var avgX=0;
+	var avgY=0;
+    for (var j = 0, jl = this.atoms.length; j < jl; j++) {
+        avgX += this.atoms[j].coord.x;
+        avgY += this.atoms[j].coord.y;
+    }
+    this.ringCenter=new goog.math.Coordinate(avgX/this.atoms.length, avgY/this.atoms.length);
+
 }
