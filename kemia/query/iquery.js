@@ -12,6 +12,8 @@
  * limitations under the License.
  */
 goog.provide('kemia.query.IQuery');
+goog.require('kemia.query.IQueryAtom');
+goog.require('kemia.query.IQueryBond');
 
 /**
  * <h2 class="fixedFont">Introduction</h2>
@@ -46,7 +48,7 @@ goog.provide('kemia.query.IQuery');
  * <p>
  * The {@link kemia.query.MoleculeCompiler} takes a molecule and converts it to
  * a query. The resulting query is an exact (sub)structure search. Another
- * smililar query compiler is the {@link kemia.query.SmilesCompiler} which
+ * similar query compiler is the {@link kemia.query.SmilesCompiler} which
  * converts a smiles string to a query. Complex queries can be created using the
  * {@link kemia.query.SmartCompiler}. Smarts strings are complex queries with
  * logical operators for query atoms and/or query bonds.

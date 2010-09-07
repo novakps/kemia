@@ -13,7 +13,7 @@
  */
 
 goog.provide('kemia.query.SmilesCompiler');
-
+goog.require('kemia.query.IQueryCompiler');
 goog.require('kemia.io.smiles.SmilesParser');
 goog.require('kemia.query.MoleculeCompiler');
 

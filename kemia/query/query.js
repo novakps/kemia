@@ -13,6 +13,7 @@
  */
 
 goog.provide('kemia.query.Query');
+goog.require('kemia.query.IQuery');
 
 /**
  * Default query implementation.
@@ -20,6 +21,7 @@ goog.provide('kemia.query.Query');
  * @see kemia.query.QueryAtom
  * @see kemia.query.QueryBond
  * @implements {kemia.query.IQuery}
+ * @constructor
  */
 kemia.query.Query = function() {
 	this.atoms = [];
@@ -57,7 +59,7 @@ kemia.query.Query.prototype.addBond = function(bond) {
 };
 
 /** @inheritDoc */
-kemia.query.Query.prototype.findBond = function( atom1, atom2) {
+kemia.query.Query.prototype.findBond = function(atom1, atom2) {
 	for ( var i = 0, il = this.bonds.length; i < il; i++) {
 		var bond = this.bonds[i];
 		if ((atom1 === bond.source && atom2 === bond.target)
@@ -67,5 +69,3 @@ kemia.query.Query.prototype.findBond = function( atom1, atom2) {
 	}
 	return null;
 };
-
-

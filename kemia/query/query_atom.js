@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 goog.provide('kemia.query.QueryAtom');
+goog.require('kemia.query.IQueryAtom');
 
 /**
  * Default query atom implementation

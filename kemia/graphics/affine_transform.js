@@ -2,8 +2,12 @@ goog.provide('kemia.graphics.AffineTransform');
 goog.require('goog.graphics.AffineTransform');
 
 /**
- * {@inheritDoc}
- * 
+ * @param {number=} opt_m00 The m00 coordinate of the transform.
+ * @param {number=} opt_m10 The m10 coordinate of the transform.
+ * @param {number=} opt_m01 The m01 coordinate of the transform.
+ * @param {number=} opt_m11 The m11 coordinate of the transform.
+ * @param {number=} opt_m02 The m02 coordinate of the transform.
+ * @param {number=} opt_m12 The m12 coordinate of the transform.
  * @constructor
  * @extends {goog.graphics.AffineTransform}
  */

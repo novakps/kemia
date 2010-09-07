@@ -52,7 +52,7 @@ kemia.model.Atom=function(symbol, x, y, opt_charge, opt_aromatic, opt_isotope)
     
     /**
      * aromatic
-     * @type{bool} 
+     * @type{boolean} 
      */
     this.aromatic = goog.isDef(opt_aromatic) ? opt_aromatic : false;
 
@@ -74,7 +74,8 @@ kemia.model.Atom.prototype.countBonds = function() {
  */
 kemia.model.Atom.prototype.hydrogenCount = function() {
 	var cov = kemia.resource.Covalence[this.symbol];
-	var totalBondOrder = goog.array.reduce(this.bonds.getValues(), function(r, v) {
+	/** @type{number} */
+	var totalBondOrder = goog.array.reduce(this.bonds.getValues(), function(/** @type{number} */r, /** @type{kemia.model.Bond.ORDER} */v) {
 		return r + v.order;
                 }, 0);
 	var hydrogenCount = 0;

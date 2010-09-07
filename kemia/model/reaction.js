@@ -3,6 +3,7 @@ goog.require('kemia.model.Molecule');
 goog.require('goog.math.Box');
 goog.require('goog.math.Rect');
 goog.require('goog.debug.Logger');
+goog.require('kemia.graphics.AffineTransform');
 
 /**
  * Creates a new Reaction.

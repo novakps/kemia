@@ -15,6 +15,7 @@
 	<property name="junit.jar" value="${base.dir}/third-party/junit/junit-4.8.2.jar" />
 
 	<path id="input-files">
+		<!--
 		<filelist dir="${js-src.dir}/controller">
 			<file name="reaction_editor.js" />
 			<file name="defaulttoolbar.js" />
@@ -28,6 +29,7 @@
 		<filelist dir="${js-src.dir}/ring">
 			<file name="sssr.js" />
 		</filelist>
+		-->
 		<filelist dir="${js-src.dir}/query">
 			<file name="dfsmapper.js" />
 			<file name="smilescompiler.js" />
@@ -112,6 +114,7 @@
 				<arg line='-f "--jscomp_warning=missingProperties"' />
 				<arg line='-f "--jscomp_warning=unknownDefines"' />
 				<arg line='-f "--jscomp_warning=strictModuleDepCheck"' />
+				<arg line='-f "--create_source_map=${build.dir}/@{outputfile}.map"' />
 				<extraflags />
 			</exec>
 		</sequential>

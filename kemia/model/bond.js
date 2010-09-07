@@ -8,14 +8,15 @@ goog.require('kemia.model.Atom');
  *            source, Atom at one end of bond.
  * @param {kemia.model.Atom}
  *            target, Atom at other end of bond.
- * @param {kemia.model.Bond.ORDER}
+ * @param {kemia.model.Bond.ORDER=}
  *            opt_order, order of bond
  * 
- * @param {kemia.model.Bond.STEREO}
+ * @param {kemia.model.Bond.STEREO=}
  *            opt_stereo, stereochemistry of bond
  * 
- * @param {boolean}
+ * @param {boolean=}
  *            opt_aromatic, true if aromatic
+ * @param {kemia.model.Molecule=} opt_molecule, parent molecule            
  * 
  * @constructor
  */

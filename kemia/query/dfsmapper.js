@@ -14,7 +14,7 @@
 
 goog.provide('kemia.query.DFSMapper');
 goog.provide('kemia.query.DFSMapper.Type');
-
+goog.require('kemia.query.IMapper');
 goog.require('kemia.ring.RingFinder');
 goog.require('goog.structs.Map');
 goog.require('kemia.query.State');
@@ -65,8 +65,7 @@ kemia.query.DFSMapper.getStartAtom = function(query) {
  * 
  * @param {kemia.query.State}
  *            state
- * @param {Array.
- *            <goog.structs.Map>} maps
+ * @param {Array.<goog.structs.Map>} maps
  */
 kemia.query.DFSMapper.checkForMap = function(state, maps) {
 	// store the mapping if all atoms are mapped
@@ -116,10 +115,9 @@ kemia.query.DFSMapper.checkForMap = function(state, maps) {
  *            queriedAtom
  * @param {kemia.query.IQueryAtom}
  *            queryNbr
- * @param {kemia.model.Atom}
+ * @param {kemia.query.IQueryAtom}
  *            queriedNbr
- * @param {Array.
- *            <goog.structs.Map>} maps
+ * @param {Array.<goog.structs.Map>} maps
  * @return {boolean}
  */
 kemia.query.DFSMapper.matchCandidate = function(state, queryAtom, queriedAtom,
@@ -141,7 +139,7 @@ kemia.query.DFSMapper.matchCandidate = function(state, queryAtom, queriedAtom,
 	var queriedBond = state.queried.findBond(queriedAtom, queriedNbr);
 
 	// check if the bonds match
-	if (!queryBond.matches(queriedBond, state.queried, state.sssr)) {
+	if (!queryBond.matches(queriedBond, state.queried)){//, state.sssr)) {
 		return false;
 	}
 

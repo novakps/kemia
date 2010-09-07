@@ -13,6 +13,7 @@
  */
 
 goog.provide('kemia.query.QueryBond');
+goog.require('kemia.query.IQueryBond');
 
 /**
  * Class representing a bond in a query

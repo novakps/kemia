@@ -133,7 +133,7 @@ kemia.model.Molecule.prototype.findBond = function(atom1, atom2) {
  * 
  * @param {kemia.model.Atom}
  *            atom The atom to lookup.
- * @return{kemia.model.number}
+ * @return{number}
  */
 kemia.model.Molecule.prototype.indexOfAtom = function(atom) {
 	return goog.array.indexOf(this.atoms, atom);
@@ -144,7 +144,7 @@ kemia.model.Molecule.prototype.indexOfAtom = function(atom) {
  * 
  * @param {kemia.model.Bond}
  *            bond The bond to lookup.
- * @return{kemia.model.number}
+ * @return{number}
  */
 kemia.model.Molecule.prototype.indexOfBond = function(bond) {
 	return goog.array.indexOf(this.bonds, bond);
@@ -153,7 +153,7 @@ kemia.model.Molecule.prototype.indexOfBond = function(bond) {
 /**
  * Remove a atom from molecule.
  * 
- * @param {number|kemia.model.Atom}
+ * @param {number|kemia.model.Atom} atomOrId 
  *            Instance or id of the atom to remove.
  */
 
@@ -178,7 +178,7 @@ kemia.model.Molecule.prototype.removeAtom = function(atomOrId) {
 /**
  * Remove a bond from molecule.
  * 
- * @param {number|kemia.model.Bond}
+ * @param {number|kemia.model.Bond} bondOrId 
  *            Instance or id of the bond to remove.
  */
 
@@ -191,11 +191,11 @@ kemia.model.Molecule.prototype.removeBond = function(bondOrId) {
 	}
 	bond.source.bonds.remove(bond);
 	bond.target.bonds.remove(bond);
-	if (bond.source.bonds.length == 0) {
+	if (bond.source.bonds.getValues().length == 0) {
 		goog.array.remove(this.atoms, bond.source);
 		bond.source.molecule = undefined;
 	}
-	if (bond.target.bonds.length == 0) {
+	if (bond.target.bonds.getValues().length == 0) {
 		goog.array.remove(this.atoms, bond.target);
 		bond.target.molecule = undefined;
 
@@ -350,7 +350,7 @@ kemia.model.Molecule.prototype.getConnectedBondsList = function(atom) {
 kemia.model.Molecule.prototype.toString = function() {
 	return goog.array.map(this.atoms, function(atom) {
 		return atom.symbol + atom.index + atom.coord.toString();
-	});
+	}).toString();
 };
 /**
  * returns center coordinates of molecule's atoms

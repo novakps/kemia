@@ -585,7 +585,6 @@ goog.addDependency("../../../../kemia/algorithms_doc.js", [], []);
 goog.addDependency("../../../../kemia/depiction_doc.js", [], []);
 goog.addDependency("../../../../kemia/deps.js", [], []);
 goog.addDependency("../../../../kemia/developer_doc.js", [], []);
-goog.addDependency("../../../../kemia/exports.js", ['kemia.exports'], []);
 goog.addDependency("../../../../kemia/controller/arrow_controller.js", ['kemia.controller.ArrowController', 'kemia.controller.ArrowController.ArrowEvent'], ['goog.events.EventTarget', 'goog.debug.Logger']);
 goog.addDependency("../../../../kemia/controller/atom_controller.js", ['kemia.controller.AtomController', 'kemia.controller.AtomController.AtomEvent'], ['goog.events.EventTarget', 'goog.debug.Logger']);
 goog.addDependency("../../../../kemia/controller/bond_controller.js", ['kemia.controller.BondController', 'kemia.controller.BondController.BondEvent'], ['goog.events.EventTarget', 'goog.debug.Logger']);
@@ -643,7 +642,7 @@ goog.addDependency("../../../../kemia/model/neighborlist.js", ['kemia.model.Neig
 goog.addDependency("../../../../kemia/model/pseudo_atom.js", ['kemia.model.PseudoAtom'], ['kemia.model.Atom']);
 goog.addDependency("../../../../kemia/model/reaction.js", ['kemia.model.Reaction'], ['kemia.model.Molecule', 'goog.math.Box', 'goog.math.Rect', 'goog.debug.Logger']);
 goog.addDependency("../../../../kemia/model/reaction_test.js", [], ['kemia.model.Reaction', 'goog.testing.jsunit']);
-goog.addDependency("../../../../kemia/query/dfsmapper.js", ['kemia.query.DFSMapper', 'kemia.query.DFSMapper.Type'], ['kemia.ring.RingFinder', 'goog.structs.Map']);
+goog.addDependency("../../../../kemia/query/dfsmapper.js", ['kemia.query.DFSMapper', 'kemia.query.DFSMapper.Type'], ['kemia.ring.RingFinder', 'goog.structs.Map', 'kemia.query.State']);
 goog.addDependency("../../../../kemia/query/imapper.js", ['kemia.query.IMapper'], []);
 goog.addDependency("../../../../kemia/query/iquery.js", ['kemia.query.IQuery'], []);
 goog.addDependency("../../../../kemia/query/iquery_atom.js", ['kemia.query.IQueryAtom'], []);
@@ -653,6 +652,7 @@ goog.addDependency("../../../../kemia/query/moleculecompiler.js", ['kemia.query.
 goog.addDependency("../../../../kemia/query/query.js", ['kemia.query.Query'], []);
 goog.addDependency("../../../../kemia/query/query_atom.js", ['kemia.query.QueryAtom'], []);
 goog.addDependency("../../../../kemia/query/query_bond.js", ['kemia.query.QueryBond'], []);
+goog.addDependency("../../../../kemia/query/query_test.js", [], ['goog.testing.jsunit', 'goog.debug.Console', 'goog.debug.Logger', 'kemia.io.mdl', 'kemia.io.smiles.SmilesParser']);
 goog.addDependency("../../../../kemia/query/smilescompiler.js", ['kemia.query.SmilesCompiler'], ['kemia.io.smiles.SmilesParser', 'kemia.query.MoleculeCompiler']);
 goog.addDependency("../../../../kemia/query/state.js", ['kemia.query.State'], []);
 goog.addDependency("../../../../kemia/resource/covalence.js", ['kemia.resource.Covalence'], []);
