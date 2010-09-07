@@ -22,7 +22,7 @@ kemia.query.IQueryAtom = function() {};
 	/**
 	 * Compare an atom with this query atom.
 	 * 
-	 * @param {kemia.query.IQueryAtom} atom
+	 * @param {kemia.model.Atom} atom
 	 *            The atom to be compared with this query atom.
 	 * @param {kemia.model.Molecule=} opt_molecule
 	 *            The molecule containing atom.

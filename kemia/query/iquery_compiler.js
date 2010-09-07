@@ -23,7 +23,7 @@ goog.provide('kemia.query.IQueryCompiler');
  * 
  * @interface
  */
-kemia.query.IQueryCompiler = {};
+kemia.query.IQueryCompiler = function() {};
 /**
  * Compile a query.
  * 

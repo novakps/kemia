@@ -115,7 +115,7 @@ kemia.query.DFSMapper.checkForMap = function(state, maps) {
  *            queriedAtom
  * @param {kemia.query.IQueryAtom}
  *            queryNbr
- * @param {kemia.query.IQueryAtom}
+ * @param {kemia.model.Atom}
  *            queriedNbr
  * @param {Array.<goog.structs.Map>} maps
  * @return {boolean}
@@ -162,8 +162,7 @@ kemia.query.DFSMapper.matchCandidate = function(state, queryAtom, queriedAtom,
  *            queryAtom
  * @param {kemia.model.Atom}
  *            queriedAtom
- * @param {Array.
- *            <goog.structs.Map>} maps
+ * @param {Array.<goog.structs.Map>} maps
  */
 kemia.query.DFSMapper.depthFirstSearch = function(state, queryAtom,
 		queriedAtom, maps) {
@@ -222,10 +221,8 @@ kemia.query.DFSMapper.depthFirstSearch = function(state, queryAtom,
  *            queryAtom
  * @param {kemia.model.Molecule}
  *            queried
- * @param {Array.
- *            <goog.structs.Map>} maps
- * @param {function(Array.
- *            <goog.structs.Map>)} callback
+ * @param {Array.<goog.structs.Map>} maps
+ * @param {function(Array.<goog.structs.Map>)} callback
  */
 kemia.query.DFSMapper.mapNext = function(i, type, query, queryAtom, queried,
 		maps, callback) {
@@ -291,15 +288,14 @@ kemia.query.DFSMapper.prototype.mapAll = function(queried) {
  * 
  * @param {kemia.model.Molecule}
  *            queried The queried molecule.
- * @param {function(Array.
- *            <goog.structs.Map>)} callback The callback function to report
+ * @param {function(Array.<goog.structs.Map>)} callback The callback function to report
  *            results.
  */
 kemia.query.DFSMapper.prototype.mapAllCallback = function(queried, callback) {
 	var maps = [];
 	var queryAtom = kemia.query.DFSMapper.getStartAtom(this.query);
 	var i = 0;
-	kemia.query.DFSMapper.mapNext(i, Type.MapAll, this.query, queryAtom,
+	kemia.query.DFSMapper.mapNext(i, kemia.query.DFSMapper.Type.MAP_ALL, this.query, queryAtom,
 			queried, maps, callback);
 };
 
@@ -341,7 +337,7 @@ kemia.query.DFSMapper.prototype.mapUniqueCallback = function(queried, callback) 
 	var maps = [];
 	var queryAtom = kemia.query.DFSMapper.getStartAtom(this.query);
 	var i = 0;
-	kemia.query.DFSMapper.mapNext(i, Type.MapUnique, this.query, queryAtom,
+	kemia.query.DFSMapper.mapNext(i, kemia.query.DFSMapper.Type.MAP_UNIQUE, this.query, queryAtom,
 			queried, maps, callback);
 };
 

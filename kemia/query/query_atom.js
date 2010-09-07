@@ -39,16 +39,7 @@ kemia.query.QueryAtom = function() {
 	this.neighbors = [];
 };
 
-/**
- * Compare an atom with this query atom.
- * 
- * @param {kemia.query.IQueryAtom}
- *            atom The atom to be compared with this query atom.
- * @param {kemia.model.Molecule=}
- *            opt_molecule The molecule containing atom.
- * @param {Array.<kemia.ring.Ring>=} opt_sssr The SSSR for the molecule.
- * @return {boolean} True if the specified atom matches this query atom.
- */
+/** @inheritDoc */
 kemia.query.QueryAtom.prototype.matches = function(atom, opt_molecule, opt_sssr) {
 	var symbolMatches = true;
 	if (this.symbols.length) {
@@ -62,11 +53,7 @@ kemia.query.QueryAtom.prototype.matches = function(atom, opt_molecule, opt_sssr)
 	return symbolMatches && valenceMatches;
 };
 
-/**
- * Get the neighbors for this query atom.
- * 
- * @return {Array.<kemia.query.IQueryAtom>} The neighbors for this query atom.
- */
+/** @inheritDoc */
 kemia.query.QueryAtom.prototype.getNeighbors = function() {
 	return this.neighbors;
 };

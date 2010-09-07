@@ -26,13 +26,9 @@ kemia.query.IQueryBond = function(source, target) {
 /**
  * Compare an bond with this query bond.
  * 
- * @param {kemia.query.IQueryBond}
- *            bond
- * 
- * @param {kemia.model.Molecule=}
- *            opt_molecule The molecule containing atom.
- * @param {Array.
- *            <kemia.ring.Ring>=} opt_sssr The SSSR for the molecule.
+ * @param {kemia.model.Bond} bond
+ * @param {kemia.model.Molecule=} opt_molecule The molecule containing atom.
+ * @param {Array.<kemia.ring.Ring>=} opt_sssr The SSSR for the molecule.
  * @return {boolean} True if the specified bond matches this query bond.
  */
 kemia.query.IQueryBond.prototype.matches = function(bond, opt_molecule,

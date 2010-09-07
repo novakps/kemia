@@ -130,7 +130,7 @@ goog.require('kemia.query.IQueryBond');
  * </pre>
  * 
  * 
- * @page Substructure Search
+ * page Substructure Search
  * @name needed to make sure jsdoc doesn't ignore the comment
  */
 
@@ -209,7 +209,7 @@ kemia.query.IQuery.prototype.getAtom = function(index) {};
  *            The first atom.
  * @param {kemia.query.IQueryAtom} atom2
  *            The second atom.
- * @return {?kemia.query.IQueryBond} The found bond or null if no such bond
+ * @return {kemia.query.IQueryBond} The found bond or null if no such bond
  *         exists.
  */
 kemia.query.IQuery.prototype.findBond = function(atom1, atom2) {};
