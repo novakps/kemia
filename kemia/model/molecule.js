@@ -113,6 +113,8 @@ goog.exportSymbol("kemia.model.Molecule.prototype.addBond", kemia.model.Molecule
 kemia.model.Molecule.prototype.getAtom = function(id) {
 	return this.atoms[id];
 };
+goog.exportSymbol("kemia.model.Molecule.prototype.getAtom", kemia.model.Molecule.prototype.getAtom);
+
 
 /**
  * Get the bond of given id.
@@ -232,6 +234,7 @@ kemia.model.Molecule.prototype.removeBond = function(bondOrId) {
 kemia.model.Molecule.prototype.countAtoms = function() {
 	return this.atoms.length;
 };
+goog.exportSymbol('kemia.model.Molecule.prototype.countAtoms',kemia.model.Molecule.prototype.countAtoms);
 
 /**
  * Count bonds.
@@ -239,6 +242,7 @@ kemia.model.Molecule.prototype.countAtoms = function() {
 kemia.model.Molecule.prototype.countBonds = function() {
 	return this.bonds.length;
 };
+goog.exportSymbol("kemia.model.Molecule.prototype.countBonds", kemia.model.Molecule.prototype.countBonds);
 
 /**
  * Add an atom to molecule.

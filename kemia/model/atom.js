@@ -35,7 +35,7 @@ kemia.model.Atom = function(opt_symbol, opt_x, opt_y, opt_charge, opt_aromatic, 
 	/**
 	 * Atom symbol
 	 * 
-	 * @type {string|undefined}
+	 * @type {string}
 	 */
 	this.symbol = goog.isDef(opt_symbol) ? opt_symbol: "C";
 	
@@ -86,6 +86,18 @@ kemia.model.Atom = function(opt_symbol, opt_x, opt_y, opt_charge, opt_aromatic, 
 };
 goog.exportSymbol("kemia.model.Atom", kemia.model.Atom);
 
+/** @return {string} atomic symbol */
+kemia.model.Atom.prototype.getSymbol = function(){
+	return this.symbol;
+}
+goog.exportSymbol('kemia.model.Atom.prototype.getSymbol', kemia.model.Atom.prototype.getSymbol);
+
+/** @return {number} atomic charge */
+kemia.model.Atom.prototype.getCharge = function() {
+	return this.charge;
+}
+goog.exportSymbol('kemia.model.Atom.prototype.getCharge', kemia.model.Atom.prototype.getCharge);
+
 kemia.model.Atom.prototype.countBonds = function() {
 	return this.bonds.getCount();
 };
@@ -109,6 +121,7 @@ kemia.model.Atom.prototype.hydrogenCount = function() {
 	}
 	return hydrogenCount;
 };
+goog.exportSymbol('kemia.model.Atom.prototype.hydrogenCount', kemia.model.Atom.prototype.hydrogenCount);
 
 /**
  * Get an array with the neighbor atoms.

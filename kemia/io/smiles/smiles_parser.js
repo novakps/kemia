@@ -185,7 +185,7 @@ kemia.io.smiles.SmilesParser.sanityCheck = function(branch, ring, bond_type) {
 kemia.io.smiles.SmilesParser.parseAtom = function(item) {
 	var atom = {
 		isotope : null,
-		symbol : null,
+		'symbol' : null,
 		stereo : kemia.io.smiles.SmilesParser.BondStereo.NONE,
 		hcount : null,
 		charge : null,
