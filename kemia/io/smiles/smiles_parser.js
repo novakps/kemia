@@ -68,14 +68,7 @@ kemia.io.smiles.SmilesParser.atomPattern = new RegExp(
 		/^\[([0-9]*)([A-Z][a-z]?|c|n|o|se|s|as)(@|@@)?(H)?([0-9])?([+-][\d]?)?\]$/);
 kemia.io.smiles.SmilesParser.specialAtoms = [ 'C', 'c', 'N', 'n', 'O', 'o',
 		'S', 's', 'P', 'F', 'Br', 'Cl', 'I', 'B' ];
-kemia.io.smiles.SmilesParser.aromaticAtoms = {
-	c : 1,
-	n : 1,
-	o : 1,
-	s : 1,
-	as : 1,
-	se : 1
-};
+kemia.io.smiles.SmilesParser.aromaticAtoms = [ 'c', 'n', 'o', 's', 'as', 'se' ];
 
 kemia.io.smiles.SmilesParser.parse = function(smi) {
 	var items = smi.match(kemia.io.smiles.SmilesParser.smiPattern);
@@ -239,7 +232,7 @@ kemia.io.smiles.SmilesParser.parseAtom = function(item) {
 			atom.symbol = item;
 		}
 	}
-	if (kemia.io.smiles.SmilesParser.aromaticAtoms[atom.symbol]) {
+	if (goog.array.contains(kemia.io.smiles.SmilesParser.aromaticAtoms, atom.symbol)) {
 		atom.aromatic = true;
 		if (atom.symbol.length == 1) {
 			atom.symbol = atom.symbol.toUpperCase();
@@ -354,475 +347,475 @@ kemia.io.smiles.SmilesParser.setChiralCenters = function(molecule,
 }
 
 kemia.io.smiles.SmilesParser.periodicTable = {
-	H : {
+	'H' : {
 		"number" : 1,
 		"name" : "Hydrogen"
 	},
-	He : {
+	'He' : {
 		"number" : 2,
 		"name" : "Helium"
 	},
-	Li : {
+	'Li' : {
 		"number" : 3,
 		"name" : "Lithium"
 	},
-	Be : {
+	'Be' : {
 		"number" : 4,
 		"name" : "Beryllium"
 	},
-	B : {
+	'B' : {
 		"number" : 5,
 		"name" : "Boron"
 	},
-	C : {
+	'C' : {
 		"number" : 6,
 		"name" : "Carbon"
 	},
-	c : {
+	'c' : {
 		"number" : 6,
 		"name" : "Carbon"
 	},
-	N : {
+	'N' : {
 		"number" : 7,
 		"name" : "Nitrogen"
 	},
-	n : {
+	'n' : {
 		"number" : 7,
 		"name" : "Nitrogen"
 	},
-	O : {
+	'O' : {
 		"number" : 8,
 		"name" : "Oxygen"
 	},
-	o : {
+	'o' : {
 		"number" : 8,
 		"name" : "Oxygen"
 	},
-	F : {
+	'F' : {
 		"number" : 9,
 		"name" : "Fluorine"
 	},
-	Ne : {
+	'Ne' : {
 		"number" : 10,
 		"name" : "Neon"
 	},
-	Na : {
+	'Na' : {
 		"number" : 11,
 		"name" : "Sodium"
 	},
-	Mg : {
+	'Mg' : {
 		"number" : 12,
 		"name" : "Magnesium"
 	},
-	Al : {
+	'Al' : {
 		"number" : 13,
 		"name" : "Aluminium"
 	},
-	Si : {
+	'Si' : {
 		"number" : 14,
 		"name" : "Silicon"
 	},
-	P : {
+	'P' : {
 		"number" : 15,
 		"name" : "Phosphorus"
 	},
-	S : {
+	'S' : {
 		"number" : 16,
 		"name" : "Sulfur"
 	},
-	s : {
+	's' : {
 		"number" : 16,
 		"name" : "Sulfur"
 	},
-	Cl : {
+	'Cl' : {
 		"number" : 17,
 		"name" : "Chlorine"
 	},
-	Ar : {
+	'Ar' : {
 		"number" : 18,
 		"name" : "Argon"
 	},
-	K : {
+	'K' : {
 		"number" : 19,
 		"name" : "Potassium"
 	},
-	Ca : {
+	'Ca' : {
 		"number" : 20,
 		"name" : "Calcium"
 	},
-	Sc : {
+	'Sc' : {
 		"number" : 21,
 		"name" : "Scandium"
 	},
-	Ti : {
+	'Ti' : {
 		"number" : 22,
 		"name" : "Titanium"
 	},
-	V : {
+	'V' : {
 		"number" : 23,
 		"name" : "Vanadium"
 	},
-	Cr : {
+	'Cr' : {
 		"number" : 24,
 		"name" : "Chromium"
 	},
-	Mn : {
+	'Mn' : {
 		"number" : 25,
 		"name" : "Manganese"
 	},
-	Fe : {
+	'Fe' : {
 		"number" : 26,
 		"name" : "Iron"
 	},
-	Co : {
+	'Co' : {
 		"number" : 27,
 		"name" : "Cobalt"
 	},
-	Ni : {
+	'Ni' : {
 		"number" : 28,
 		"name" : "Nickel"
 	},
-	Cu : {
+	'Cu' : {
 		"number" : 29,
 		"name" : "Copper"
 	},
-	Zn : {
+	'Zn' : {
 		"number" : 30,
 		"name" : "Zinc"
 	},
-	Ga : {
+	'Ga' : {
 		"number" : 31,
 		"name" : "Gallium"
 	},
-	Ge : {
+	'Ge' : {
 		"number" : 32,
 		"name" : "Germanium"
 	},
-	As : {
+	'As' : {
 		"number" : 33,
 		"name" : "Arsenic"
 	},
-	as : {
+	'as' : {
 		"number" : 33,
 		"name" : "Arsenic"
 	},
-	Se : {
+	'Se' : {
 		"number" : 34,
 		"name" : "Selenium"
 	},
-	se : {
+	'se' : {
 		"number" : 34,
 		"name" : "Selenium"
 	},
-	Br : {
+	'Br' : {
 		"number" : 35,
 		"name" : "Bromine"
 	},
-	Kr : {
+	'Kr' : {
 		"number" : 36,
 		"name" : "Krypton"
 	},
-	Rb : {
+	'Rb' : {
 		"number" : 37,
 		"name" : "Rubidium"
 	},
-	Sr : {
+	'Sr' : {
 		"number" : 38,
 		"name" : "Strontium"
 	},
-	Y : {
+	'Y' : {
 		"number" : 39,
 		"name" : "Yttrium"
 	},
-	Zr : {
+	'Zr' : {
 		"number" : 40,
 		"name" : "Zirconium"
 	},
-	Nb : {
+	'Nb' : {
 		"number" : 41,
 		"name" : "Niobium"
 	},
-	Mo : {
+	'Mo' : {
 		"number" : 42,
 		"name" : "Molybdenum"
 	},
-	Tc : {
+	'Tc' : {
 		"number" : 43,
 		"name" : "Technetium"
 	},
-	Ru : {
+	'Ru' : {
 		"number" : 44,
 		"name" : "Ruthenium"
 	},
-	Rh : {
+	'Rh' : {
 		"number" : 45,
 		"name" : "Rhodium"
 	},
-	Pd : {
+	'Pd' : {
 		"number" : 46,
 		"name" : "Palladium"
 	},
-	Ag : {
+	'Ag' : {
 		"number" : 47,
 		"name" : "Silver"
 	},
-	Cd : {
+	'Cd' : {
 		"number" : 48,
 		"name" : "Cadmium"
 	},
-	In : {
+	'In' : {
 		"number" : 49,
 		"name" : "Indium"
 	},
-	Sn : {
+	'Sn' : {
 		"number" : 50,
 		"name" : "Tin"
 	},
-	Sb : {
+	'Sb' : {
 		"number" : 51,
 		"name" : "Antimony"
 	},
-	Te : {
+	'Te' : {
 		"number" : 52,
 		"name" : "Tellurium"
 	},
-	I : {
+	'I' : {
 		"number" : 53,
 		"name" : "Iodine"
 	},
-	Xe : {
+	'Xe' : {
 		"number" : 54,
 		"name" : "Xenon"
 	},
-	Cs : {
+	'Cs' : {
 		"number" : 55,
 		"name" : "Caesium"
 	},
-	Ba : {
+	'Ba' : {
 		"number" : 56,
 		"name" : "Barium"
 	},
-	La : {
+	'La' : {
 		"number" : 57,
 		"name" : "Lanthanum"
 	},
-	Ce : {
+	'Ce' : {
 		"number" : 58,
 		"name" : "Cerium"
 	},
-	Pr : {
+	'Pr' : {
 		"number" : 59,
 		"name" : "Praseodymium"
 	},
-	Nd : {
+	'Nd' : {
 		"number" : 60,
 		"name" : "Neodymium"
 	},
-	Pm : {
+	'Pm' : {
 		"number" : 61,
 		"name" : "Promethium"
 	},
-	Sm : {
+	'Sm' : {
 		"number" : 62,
 		"name" : "Samarium"
 	},
-	Eu : {
+	'Eu' : {
 		"number" : 63,
 		"name" : "Europium"
 	},
-	Gd : {
+	'Gd' : {
 		"number" : 64,
 		"name" : "Gadolinium"
 	},
-	Tb : {
+	'Tb' : {
 		"number" : 65,
 		"name" : "Terbium"
 	},
-	Dy : {
+	'Dy' : {
 		"number" : 66,
 		"name" : "Dysprosium"
 	},
-	Ho : {
+	'Ho' : {
 		"number" : 67,
 		"name" : "Holmium"
 	},
-	Er : {
+	'Er' : {
 		"number" : 68,
 		"name" : "Erbium"
 	},
-	Tm : {
+	'Tm' : {
 		"number" : 69,
 		"name" : "Thulium"
 	},
-	Yb : {
+	'Yb' : {
 		"number" : 70,
 		"name" : "Ytterbium"
 	},
-	Lu : {
+	'Lu' : {
 		"number" : 71,
 		"name" : "Lutetium"
 	},
-	Hf : {
+	'Hf' : {
 		"number" : 72,
 		"name" : "Hafnium"
 	},
-	Ta : {
+	'Ta' : {
 		"number" : 73,
 		"name" : "Tantalum"
 	},
-	W : {
+	'W' : {
 		"number" : 74,
 		"name" : "Tungsten"
 	},
-	Re : {
+	'Re' : {
 		"number" : 75,
 		"name" : "Rhenium"
 	},
-	Os : {
+	'Os' : {
 		"number" : 76,
 		"name" : "Osmium"
 	},
-	Ir : {
+	'Ir' : {
 		"number" : 77,
 		"name" : "Iridium"
 	},
-	Pt : {
+	'Pt' : {
 		"number" : 78,
 		"name" : "Platinum"
 	},
-	Au : {
+	'Au' : {
 		"number" : 79,
 		"name" : "Gold"
 	},
-	Hg : {
+	'Hg' : {
 		"number" : 80,
 		"name" : "Mercury"
 	},
-	Tl : {
+	'Tl' : {
 		"number" : 81,
 		"name" : "Thallium"
 	},
-	Pb : {
+	'Pb' : {
 		"number" : 82,
 		"name" : "Lead"
 	},
-	Bi : {
+	'Bi' : {
 		"number" : 83,
 		"name" : "Bismuth"
 	},
-	Po : {
+	'Po' : {
 		"number" : 84,
 		"name" : "Polonium"
 	},
-	At : {
+	'At' : {
 		"number" : 85,
 		"name" : "Astatine"
 	},
-	Rn : {
+	'Rn' : {
 		"number" : 86,
 		"name" : "Radon"
 	},
-	Fr : {
+	'Fr' : {
 		"number" : 87,
 		"name" : "Francium"
 	},
-	Ra : {
+	'Ra' : {
 		"number" : 88,
 		"name" : "Radium"
 	},
-	Ac : {
+	'Ac' : {
 		"number" : 89,
 		"name" : "Actinium"
 	},
-	Th : {
+	'Th' : {
 		"number" : 90,
 		"name" : "Thorium"
 	},
-	Pa : {
+	'Pa' : {
 		"number" : 91,
 		"name" : "Protactinium"
 	},
-	U : {
+	'U' : {
 		"number" : 92,
 		"name" : "Uranium"
 	},
-	Np : {
+	'Np' : {
 		"number" : 93,
 		"name" : "Neptunium"
 	},
-	Pu : {
+	'Pu' : {
 		"number" : 94,
 		"name" : "Plutonium"
 	},
-	Am : {
+	'Am' : {
 		"number" : 95,
 		"name" : "Americium"
 	},
-	Cm : {
+	'Cm' : {
 		"number" : 96,
 		"name" : "Curium"
 	},
-	Bk : {
+	'Bk' : {
 		"number" : 97,
 		"name" : "Berkelium"
 	},
-	Cf : {
+	'Cf' : {
 		"number" : 98,
 		"name" : "Californium"
 	},
-	Es : {
+	'Es' : {
 		"number" : 99,
 		"name" : "Einsteinium"
 	},
-	Fm : {
+	'Fm' : {
 		"number" : 100,
 		"name" : "Fermium"
 	},
-	Md : {
+	'Md' : {
 		"number" : 101,
 		"name" : "Mendelevium"
 	},
-	No : {
+	'No' : {
 		"number" : 102,
 		"name" : "Nobelium"
 	},
-	Lr : {
+	'Lr' : {
 		"number" : 103,
 		"name" : "Lawrencium"
 	},
-	Rf : {
+	'Rf' : {
 		"number" : 104,
 		"name" : "Rutherfordium"
 	},
-	Db : {
+	'Db' : {
 		"number" : 105,
 		"name" : "Dubnium"
 	},
-	Sg : {
+	'Sg' : {
 		"number" : 106,
 		"name" : "Seaborgium"
 	},
-	Bh : {
+	'Bh' : {
 		"number" : 107,
 		"name" : "Bohrium"
 	},
-	Hs : {
+	'Hs' : {
 		"number" : 108,
 		"name" : "Hassium"
 	},
-	Mt : {
+	'Mt' : {
 		"number" : 109,
 		"name" : "Meitnerium"
 	},
-	Ds : {
+	'Ds' : {
 		"number" : 110,
 		"name" : "Darmstadtium"
 	},
-	Rg : {
+	'Rg' : {
 		"number" : 111,
 		"name" : "Roentgenium"
 	},
-	Cn : {
+	'Cn' : {
 		"number" : 112,
 		"name" : "Copernicium"
 	}
