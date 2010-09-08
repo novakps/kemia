@@ -15,6 +15,9 @@ goog.require('goog.debug.Console');
 goog.require('goog.debug.Logger');
 goog.require('kemia.io.mdl');
 goog.require('kemia.io.smiles.SmilesParser');
+goog.require('kemia.query.MoleculeCompiler');
+goog.require('kemia.query.DFSMapper');
+goog.require('kemia.query.SmilesCompiler');
 
 function setUp() {
 	c = new goog.debug.Console();

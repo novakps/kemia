@@ -20,8 +20,8 @@ goog.require('kemia.ring.Ring');
 
 /**
  * The Hanser Ring Finder produces a ring as just a series of atoms. Here we
- * complete this information with the bonds and the ring center, creating a
- * ring object.
+ * complete this information with the bonds and the ring center, creating a ring
+ * object.
  * 
  * @param {Array.<number>} atomIndexes
  * @param {kemia.model.Molecule}
@@ -56,6 +56,7 @@ kemia.ring.RingFinder.createRing = function (atomIndexes, molecule) {
 
 /**
  * Check if a candidate ring is already in the SSSR ring set.
+ * 
  * @param {Array.<kemia.ring.Ring>} C
  * @param {Array.<Array.<kemia.ring.Ring>>} Csssr
  * @param {Array.<number>} valences
@@ -106,9 +107,11 @@ kemia.ring.RingFinder.isCandidateInSet = function(C, Csssr, valences, ringCount)
 
 /**
  * Verify if a ring set is the SSSR ring set.
- * @param {Array.<kemia.ring.Ring>} sssr
- * @param {Array.<kemia.ring.Ring>} nsssr
- * @param {kemia.model.Molecule} molecule
+ * 
+ * @param {Array.<Array.<number>>} sssr
+ * @param {number} nsssr
+ * @param {kemia.model.Molecule}
+ *            molecule
  * @return {Array.<kemia.ring.Ring>}
  */
 kemia.ring.RingFinder.verifySSSR = function(sssr, nsssr, molecule) {
@@ -169,18 +172,18 @@ kemia.ring.RingFinder.verifySSSR = function(sssr, nsssr, molecule) {
 
 /**
  * Detect ring membership of atoms and set the isInCycle property. Ring
- * membership of atoms can be computed in O(n) time by creating a spanning
- * tree. For this, a breath-first iteration is performed on the atoms and
- * the tree is constructed. During construction visited atoms and bonds are
- * stored in arrays. If a bond isn't visited yet but the atom it connects to
- * is, the bond is a ring-closure. When a closure bond is found, a
- * backtracking loop assigns the isInCycle property for all atoms in the
- * cycle. The end of the cycle is where the atoms come back together. For
- * even rings, there is always a single last (depth) atom. For odd rings,
- * the closure bond connects two atoms of the same depth. This function is
- * has an O(n) runtime.
+ * membership of atoms can be computed in O(n) time by creating a spanning tree.
+ * For this, a breath-first iteration is performed on the atoms and the tree is
+ * constructed. During construction visited atoms and bonds are stored in
+ * arrays. If a bond isn't visited yet but the atom it connects to is, the bond
+ * is a ring-closure. When a closure bond is found, a backtracking loop assigns
+ * the isInCycle property for all atoms in the cycle. The end of the cycle is
+ * where the atoms come back together. For even rings, there is always a single
+ * last (depth) atom. For odd rings, the closure bond connects two atoms of the
+ * same depth. This function is has an O(n) runtime.
  * 
- * @param {kemia.model.Molecule} molecule
+ * @param {kemia.model.Molecule}
+ *            molecule
  */
 kemia.ring.RingFinder.detectRingAtoms = function(molecule) {
 	var n = molecule.countAtoms();
@@ -276,10 +279,9 @@ kemia.ring.RingFinder.detectRingAtoms = function(molecule) {
 		}
 	}
 	/*
-	 * debug('before: ' + molecule.countAtoms()); var after = 0; for (var i =
-	 * 0, li = molecule.countAtoms(); i < li; i++) { if
-	 * (molecule.atoms[i].isInCycle) { after++; } } debug('after: ' +
-	 * after);
+	 * debug('before: ' + molecule.countAtoms()); var after = 0; for (var i = 0,
+	 * li = molecule.countAtoms(); i < li; i++) { if
+	 * (molecule.atoms[i].isInCycle) { after++; } } debug('after: ' + after);
 	 */
 }
 
@@ -288,7 +290,9 @@ kemia.ring.RingFinder.detectRingAtoms = function(molecule) {
  * disconnected ring system in the original molecule will result in a single
  * ring system molecule. Ring perception is done on each ring system
  * individually for optimal performance.
- * @param {kemia.model.Molecule} molecule
+ * 
+ * @param {kemia.model.Molecule}
+ *            molecule
  * @return {Array.<kemia.ring.Ring>}
  */
 kemia.ring.RingFinder.createRingSystems = function(molecule) {
@@ -373,8 +377,6 @@ kemia.ring.RingFinder.createRingSystems = function(molecule) {
 					ringSystem.addBond(newBond);
 				}
 			}
-
-
 		}
 
 		// assign indexes
@@ -392,7 +394,7 @@ kemia.ring.RingFinder.createRingSystems = function(molecule) {
 		var hanser = kemia.ring.Hanser.findRings(ringSystem, 6);
 		if (hanser.length >= nsssr) {
 			// Use the Hanser rings to make the first SSSR
-			sssr = verifySSSR(hanser, nsssr, ringSystem);
+			sssr = kemia.ring.RingFinder.verifySSSR(hanser, nsssr, ringSystem);
 			// Check the size of the first SSSR
 			if (sssr.length < nsssr) {
 				// Hanser rings don't contain the SSSR, do a full SSSR
@@ -416,14 +418,15 @@ kemia.ring.RingFinder.createRingSystems = function(molecule) {
 		}
 
 		for (var i = 0, il = sssr.length; i < il; i++) {
-			rings.push(createRing(sssr[i], molecule));
+			rings.push(kemia.ring.RingFinder.createRing(sssr[i], molecule));
 		}
 	}
 	return rings;
 }
 
 /**
- * @param {kemia.model.Molecule} molecule
+ * @param {kemia.model.Molecule}
+ *            molecule
  * @return {Array.<kemia.ring.Ring>}
  */
 kemia.ring.RingFinder.findRings = function(molecule) {
@@ -443,8 +446,8 @@ kemia.ring.RingFinder.findRings = function(molecule) {
 	}
 
 	// detect ring atoms in O(n) time
-	detectRingAtoms(molecule);
+	kemia.ring.RingFinder.detectRingAtoms(molecule);
 	// process the ring systems
-	return createRingSystems(molecule);
+	return kemia.ring.RingFinder.createRingSystems(molecule);
 }
 

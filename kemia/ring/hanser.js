@@ -30,10 +30,6 @@ goog.require('kemia.ring.PathGraph');
  * for Exhaustive Ring Perception in a Molecular Graph J. kemia. Inf. Comput.
  * Sci. 1996, 36, 1146-1152
  */
-// _____________________________________________________________________________
-// Hanser
-// _____________________________________________________________________________
-kemia.ring.Hanser = function(){};
 
 /**
  * Hanser main loop, produces the rings for a given molecule.

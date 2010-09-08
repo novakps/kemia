@@ -1,4 +1,18 @@
-//Licence and copyright
+/** 
+ * Copyright 2010 Paul Novak (paul@wingu.com)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 goog.provide('kemia.model.Atom');
 goog.provide('kemia.model.Atom.Hybridizations');
 goog.require('kemia.model.Flags');
@@ -23,7 +37,7 @@ kemia.model.Atom = function(opt_symbol, opt_x, opt_y, opt_charge, opt_aromatic, 
 	 * 
 	 * @type {string|undefined}
 	 */
-	this.symbol = goog.isDef(symbol) ? opt_symbol: "C";
+	this.symbol = goog.isDef(opt_symbol) ? opt_symbol: "C";
 	
 	var x = goog.isDef(opt_x) ? opt_x : 0;
 	
@@ -70,6 +84,7 @@ kemia.model.Atom = function(opt_symbol, opt_x, opt_y, opt_charge, opt_aromatic, 
 	this.flags = new Array(kemia.model.Flags.MAX_FLAG_INDEX + 1);
 
 };
+goog.exportSymbol("kemia.model.Atom", kemia.model.Atom);
 
 kemia.model.Atom.prototype.countBonds = function() {
 	return this.bonds.getCount();

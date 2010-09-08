@@ -63,6 +63,7 @@ kemia.model.Bond = function(source, target, opt_order, opt_stereo,
 	 */
 	this.molecule = goog.isDef(opt_molecule) ? opt_molecule : null;
 };
+goog.exportSymbol("kemia.model.Bond", kemia.model.Bond);
 
 /**
  * Get the atom at the other end of the bond from the subject atom

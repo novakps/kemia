@@ -1,4 +1,18 @@
-//License and copyright
+/** 
+ * Copyright 2010 Paul Novak (paul@wingu.com)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 /**
  * @fileoverview io utility functions and factory methods for MDL formats
@@ -51,8 +65,8 @@ kemia.io.mdl.getTypeCode = function(bond){
 
 /**
  * maps bond class to mdl molfile stereo type code
- * @param{kemia.model.Bond}
- * @return{number}
+ * @param {kemia.model.Bond} bond
+ * @return {number}
  */
 kemia.io.mdl.getStereoCode = function(bond){
 	if (bond.stereo == kemia.model.Bond.STEREO.UP){
@@ -88,7 +102,7 @@ kemia.io.mdl.createBond = function(type, stereo, source, target) {
 		case kemia.io.mdl.SINGLE_BOND_UP_OR_DOWN:
 			return new kemia.model.Bond(source, target, kemia.model.Bond.ORDER.SINGLE, kemia.model.Bond.STEREO.UP_OR_DOWN);
 		case kemia.io.mdl.SINGLE_BOND_DOWN:
-			return new kemia.model.Bond(source, target, kemia.model.Bond.ORDER.SINGLE, kemia.model.Bond.DOWN);
+			return new kemia.model.Bond(source, target, kemia.model.Bond.ORDER.SINGLE, kemia.model.Bond.STEREO.DOWN);
 		default:
 			throw new Error("invalid bond type/stereo [" + type + "]/["
 					+ stereo + "]");
@@ -118,7 +132,7 @@ kemia.io.mdl.createBond = function(type, stereo, source, target) {
 /**
  * convert a mdl block string to a molecule
  *  
- * @param {String} mdl to convert
+ * @param {string} molfile string to convert
  * @return {kemia.model.Molecule}
  */
 kemia.io.mdl.readMolfile = function(molfile) {
@@ -127,8 +141,8 @@ kemia.io.mdl.readMolfile = function(molfile) {
 	var mol_lines = molfile.split(lineDelimiter);
 	var name = mol_lines[0]
 	var mol = new kemia.model.Molecule(name);
-	var atom_count = parseInt(mol_lines[3].substr(0, 3));
-	var bond_count = parseInt(mol_lines[3].substr(3, 3));
+	var atom_count = parseInt(mol_lines[3].substr(0, 3), 10);
+	var bond_count = parseInt(mol_lines[3].substr(3, 3), 10);
 
 	for ( var i = 1; i <= atom_count; i++) {
 		var line = mol_lines[i + 3];
@@ -140,9 +154,9 @@ kemia.io.mdl.readMolfile = function(molfile) {
 
 		// see page 15 of ctfile for details
 		// http://www.symyx.com/downloads/public/ctfile/ctfile.pdf
-		var ctfile_dd = parseInt(line.substr(34, 2)); // TODO implement
+		var ctfile_dd = parseInt(line.substr(34, 2), 10); // TODO implement
 		// isotopic support
-		var ctfile_ccc = parseInt(line.substr(36, 3));
+		var ctfile_ccc = parseInt(line.substr(36, 3), 10);
 		// TODO support old-fashioned M ISO
 
 		var charge = 0;
@@ -171,12 +185,12 @@ kemia.io.mdl.readMolfile = function(molfile) {
 		var line = mol_lines[i + 3 + atom_count];
 		// Don't forget to -1 because molfile numbering from 1 instead of 0
 
-		var sourceAtom = mol.getAtom(parseInt(line.substr(0, 3)) - 1);
+		var sourceAtom = mol.getAtom(parseInt(line.substr(0, 3), 10) - 1);
 
-		var targetAtom = mol.getAtom(parseInt(line.substr(3, 3)) - 1);
+		var targetAtom = mol.getAtom(parseInt(line.substr(3, 3), 10) - 1);
 
-		var bondType = parseInt(line.substr(6, 3));
-		var bondStereoType = parseInt(line.substr(9, 3));
+		var bondType = parseInt(line.substr(6, 3), 10);
+		var bondStereoType = parseInt(line.substr(9, 3), 10);
 		var bond = kemia.io.mdl.createBond(bondType, bondStereoType,
 				sourceAtom, targetAtom);
 
@@ -207,11 +221,11 @@ kemia.io.mdl.readMolfile = function(molfile) {
 				}
 				superseded = true;
 			}
-			var nn = parseInt(line.substr(6, 3));
+			var nn = parseInt(line.substr(6, 3), 10);
 			for ( var k = 0; k < nn; k++) {
-				var atomNum = parseInt(line.substr(10 + 8 * k, 3));
+				var atomNum = parseInt(line.substr(10 + 8 * k, 3), 10);
 				// console.debug(atomNum);
-				var charge = parseInt(line.substr(14 + 8 * k, 3));
+				var charge = parseInt(line.substr(14 + 8 * k, 3), 10);
 				// console.debug(charge);
 				mol.getAtom(atomNum - 1).charge = charge;
 			}
@@ -225,6 +239,7 @@ kemia.io.mdl.readMolfile = function(molfile) {
 	return mol;
 
 };
+goog.exportSymbol('kemia.io.mdl.readMolfile', kemia.io.mdl.readMolfile);
 
 /**
  * convert Reaction to mdl RXN string
@@ -261,11 +276,11 @@ kemia.io.mdl.writeRxnfile = function(reaction) {
  * @return{string}
  */
 kemia.io.mdl.writeMolfile = function(mol) {
-	var molFile = new String();
-	var headerBlock = new String();
-	var countsLine = new String();
-	var atomBlock = new String();
-	var bondBlock = new String();
+	var molFile = "";
+	var headerBlock = "";
+	var countsLine = "";
+	var atomBlock = "";
+	var bondBlock = "";
 
 	// Header block
 	// Line 1: Molecule name
@@ -327,7 +342,7 @@ kemia.io.mdl.writeMolfile = function(mol) {
 /**
  * convert rxnfile format string to reaction
  * 
- * @param {String} rxnfile to parse
+ * @param {string} rxnfile to parse
  * @return{kemia.model.Reaction}
  */
 kemia.io.mdl.readRxnfile = function(rxnfile) {
@@ -338,8 +353,8 @@ kemia.io.mdl.readRxnfile = function(rxnfile) {
 	}
 	var reaction = new kemia.model.Reaction();
 	reaction.header = rxn_lines[2] + lineDelimiter + rxn_lines[3];
-	var reactant_count = parseInt(rxn_lines[4].substr(0, 3));
-	var product_count = parseInt(rxn_lines[4].substr(3, 3));
+	var reactant_count = parseInt(rxn_lines[4].substr(0, 3), 10);
+	var product_count = parseInt(rxn_lines[4].substr(3, 3), 10);
 	var rxn_blocks = rxnfile.split("$MOL" + lineDelimiter);
 	for ( var i = 1, il = reactant_count; i <= il; i++) {
 		var mol = kemia.io.mdl.readMolfile(rxn_blocks[i]);
