@@ -40,9 +40,14 @@ kemia.view.DoubleBondRenderer.prototype.render = function(bond, transform, bondP
             bv.scale(1 / bondLength * bondWidth);
             // create a vector orthogonal to the bond vector
             var orthogonal = new goog.math.Vec2(bv.y, -bv.x);
+            
             // check the side, invert orthogonal if needed
             var side = goog.math.Coordinate.sum(bond.source.coord, orthogonal);
+
+            if (ring.ringCenter.x ==0 && ring.ringCenter.y==0)
+            	ring.setRingCenter();
             var center = ring.ringCenter;
+
             if (!isOnSameSide(bond, side, center)) {
                 orthogonal.invert();
             }
