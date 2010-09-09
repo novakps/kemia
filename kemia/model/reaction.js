@@ -20,6 +20,14 @@ kemia.model.Reaction = function() {
 	this.conditionsText = "";
 };
 
+/**
+ * @return {string} the reaction header
+ */
+kemia.model.Reaction.prototype.getHeader = function() {
+	return this.header;
+}
+goog.exportSymbol('kemia.model.Reaction.prototype.getHeader', kemia.model.Reaction.prototype.getHeader);
+
 // TODO add docs
 kemia.model.Reaction.prototype.addReactant = function(mol) {
 	this.reactants.push(mol);

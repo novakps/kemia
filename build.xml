@@ -27,11 +27,14 @@
 		</filelist>
 		-->
 		<filelist dir="${js-src.dir}/io">
-			<!--
 			<file name="json.js" />
-			-->
 			<file name="mdl.js" />
 		</filelist>
+		<!--
+		<filelist dir="${js-src.dir}/io/smiles">
+			<file name="smiles_generator.js" />
+		</filelist>
+		-->
 		<filelist dir="${js-src.dir}/query">
 			<file name="dfsmapper.js" />
 			<file name="smilescompiler.js" />

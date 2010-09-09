@@ -12,8 +12,6 @@ goog.require('kemia.model.Atom');
 goog.require('goog.json');
 goog.require('goog.array');
 
-goog.exportSymbol('kemia.io.json.readReaction', kemia.io.json.readReaction);
-
 
 /**
  * uses JSON.parse and .stringify; needs def for IE and ?? This allows for a
@@ -58,19 +56,22 @@ kemia.io.json.StereoType = {
  * maps bond class to bond type code
  * 
  * @param{kemia.model.Bond} bond
- * @return{jchembun.io.json.BondType}
+ * @return{kemia.io.json.BondType}
  */
 kemia.io.json.getTypeCode = function(bond){
-	if (bond.order == 1){
+	if (bond.order == kemia.model.Bond.ORDER.SINGLE){
 		return kemia.io.json.BondType.SINGLE_BOND;
 	}
-	if (bond.order == 2){
+	if (bond.order == kemia.model.Bond.ORDER.DOUBLE){
 		return kemia.io.json.BondType.DOUBLE_BOND;
 	}
-	if (bond.order == 3){
+	if (bond.order == kemia.model.Bond.ORDER.TRIPLE){
 		return kemia.io.json.BondType.TRIPLE_BOND;
 	}
-	throw new Error("Invalid bond type [" + bond + "]");
+	if (bond.order == kemia.model.Bond.ORDER.QUADRUPLE){
+		return kemia.io.json.BondType.QUADRUPLE_BOND;
+	}
+	throw new Error("Invalid bond type [" + bond.toString() + "]");
 	
 };
 
@@ -81,19 +82,18 @@ kemia.io.json.getTypeCode = function(bond){
  * @return{kemia.io.json.StereoType}
  */
 kemia.io.json.getStereoCode = function(bond){
-	if (bond.stereo == 'up'){
+	if (bond.stereo == kemia.model.Bond.STEREO.UP){
 		return kemia.io.json.StereoType.SINGLE_BOND_UP;
 	}
-	if (bond.stereo == 'down'){
+	if (bond.stereo == kemia.model.Bond.STEREO.DOWN){
 		return kemia.io.json.StereoType.SINGLE_BOND_DOWN;
 	}
-	if (bond.stereo == 'up_or_down'){
+	if (bond.stereo == kemia.model.Bond.STEREO.UP_OR_DOWN){
 		return kemia.io.json.StereoType.SINGLE_BOND_UP_OR_DOWN;
 	}
 	return kemia.io.json.StereoType.NOT_STEREO;
-	
-	
 }
+
 
 /**
  * factory method for bonds
@@ -112,29 +112,23 @@ kemia.io.json.createBond = function(type, stereo, source, target) {
 		case kemia.io.json.StereoType.NOT_STEREO:
 			return new kemia.model.Bond(source, target);
 		case kemia.io.json.StereoType.SINGLE_BOND_UP:
-			var bond = new kemia.model.Bond(source, target);
-                        bond.stereo = 'up';
-                        return bond;
+			return new kemia.model.Bond(source, target, kemia.model.Bond.ORDER.SINGLE, kemia.model.Bond.STEREO.UP);
 		case kemia.io.json.StereoType.SINGLE_BOND_UP_OR_DOWN:
-			var bond = new kemia.model.Bond(source, target);
-                        bond.stereo = 'up_or_down';
-                        return bond;
+			return new kemia.model.Bond(source, target, kemia.model.Bond.ORDER.SINGLE, kemia.model.Bond.STEREO.UP_OR_DOWN);
 		case kemia.io.json.StereoType.SINGLE_BOND_DOWN:
-			var bond = new kemia.model.Bond(source, target);
-                        bond.stereo = 'down';
-                        return bond;
+			return new kemia.model.Bond(source, target, kemia.model.Bond.ORDER.SINGLE, kemia.model.Bond.STEREO.DOWN);
 		default:
 			throw new Error("invalid bond type/stereo [" + type + "]/["
 					+ stereo + "]");
 		};
 	case kemia.io.json.BondType.DOUBLE_BOND:
-		return new kemia.model.Bond(source, target, 2);
+		return new kemia.model.Bond(source, target, kemia.model.Bond.ORDER.DOUBLE);
 	case kemia.io.json.BondType.TRIPLE_BOND:
-		return new kemia.model.Bond(source, target, 3);
+		return new kemia.model.Bond(source, target, kemia.model.Bond.ORDER.TRIPLE);
+	case kemia.io.json.BondType.QUADRUPLE_BOND:
+		return new kemia.model.Bond(source, target, kemia.model.Bond.ORDER.QUADRUPLE);
 	case kemia.io.json.BondType.AROMATIC:
-		var bond = new kemia.model.Bond(source, target);
-                bond.aromatic = true;
-                return bond;
+		return new kemia.model.Bond(source, target, undefined, undefined, true);
 	case kemia.io.json.BondType.SINGLE_OR_DOUBLE:
 	case kemia.io.json.BondType.SINGLE_OR_AROMATIC:
 	case kemia.io.json.BondType.DOUBLE_OR_AROMATIC: 
@@ -149,43 +143,65 @@ kemia.io.json.createBond = function(type, stereo, source, target) {
 /**
  * convert jmol JSON object or string to molecule
  * 
- * @param{string} arg
+ * @param{kemia.io.json.Molecule|string} arg
  * @return{kemia.model.Molecule}
  */
 kemia.io.json.readMolecule = function(arg) {
+	/** @type {kemia.io.json.Molecule} */
 	var jmol;
 	if (arg.constructor == String) {
-		jmol = goog.json.parse(arg);
+		jmol = /** @type {kemia.io.json.Molecule} */(goog.json.parse(arg));
 	} else {
-		jmol = arg;
+		jmol =  /** @type {kemia.io.json.Molecule} */(arg);
 	}
 	var mol = new kemia.model.Molecule();
-	mol.name = jmol.name;
-	goog.array.forEach(jmol.atoms, function(a){
-		mol.addAtom(new kemia.model.Atom(a.symbol, a.coord.x, a.coord.y, a.charge));
+	mol.name = jmol['name'];
+	goog.array.forEach(jmol['atoms'], function(a){
+		mol.addAtom(new kemia.model.Atom(a['symbol'], a['coord']['x'], a['coord']['y'], a['charge']));
 	});
-	goog.array.forEach(jmol.bondindex, function(b){
-		mol.addBond(kemia.io.json.createBond(b.type, b.stereo, mol.getAtom(b.source), mol.getAtom(b.target)));
+	goog.array.forEach(jmol['bondindex'], function(b){
+		mol.addBond(kemia.io.json.createBond(b['type'], b['stereo'], mol.getAtom(b['source']), mol.getAtom(b['target'])));
 	});
-	
 	return mol;
 };
+goog.exportSymbol('kemia.io.json.readMolecule', kemia.io.json.readMolecule);
 
+/** @return {string} */
 kemia.io.json.writeMolecule = function(mol) {
 	return new goog.json.Serializer().serialize(kemia.io.json.moleculeToJson(mol));
 };
+goog.exportSymbol('kemia.io.json.writeMolecule', kemia.io.json.writeMolecule);
 
+
+/** @typedef {{header: string, reactants: Array, products: Array}} */ 
+kemia.io.json.Reaction;
+/** @typedef {{symbol: string, coord: kemia.io.json.Coordinate, charge: number}} */
+kemia.io.json.Atom;
+/** @typedef {{x:number,y:number}} */
+kemia.io.json.Coordinate;
+/** @typedef {{source: number, target: number, type: string, stereo: string}} */
+kemia.io.json.Bond;
+/**
+ * @typedef {{
+ *     name: string, 
+ *     atoms: Array.<kemia.io.json.Atom>, 
+ *     bondindex: Array.<kemia.io.json.Bond>}}
+ */
+kemia.io.json.Molecule;
 
 /**
  * convert molecule object to json representation
  * 
- * @param{kemia.model.Molecule} mol the molecule to convert
- * @returns{object} in json molecule format
+ * @param {kemia.model.Molecule}
+ *            mol the molecule to convert
+ * @returns {kemia.io.json.Molecule} in json molecule format
  */
 kemia.io.json.moleculeToJson = function(mol) {
+	/** @type {Array.<kemia.io.json.Atom>} */
 	var atoms = goog.array.map(mol.atoms, function(a){
 		return {symbol: a.symbol, coord:{x: a.coord.x, y: a.coord.y}, charge: a.charge};
 	});
+	/** @type {Array.<kemia.io.json.Bond>} */
 	var bonds = goog.array.map(mol.bonds, function(b){
 		var btype =   kemia.io.json.getTypeCode(b);
 		var bstereo = kemia.io.json.getStereoCode(b);
@@ -203,34 +219,36 @@ kemia.io.json.moleculeToJson = function(mol) {
 /**
  * convert JSON reaction representation to reaction object
  * 
- * @param {string|Object}
+ * @param {string|kemia.io.json.Reaction}
  *            arg The JSON object string, or object itself
  * @return {kemia.model.Reaction}
  */
 kemia.io.json.readReaction = function(arg) {
+	/** @type {kemia.io.json.Reaction} */
 	var jrxn;
 	if (arg.constructor == String) {
-		jrxn = goog.json.parse(arg);
+		jrxn = /** @type {kemia.io.json.Reaction} */(goog.json.parse(arg));
 	} else {
-		jrxn = arg;
+		jrxn = /** @type {kemia.io.json.Reaction} */(arg);
 	}
 	var rxn = new kemia.model.Reaction();
-	rxn.header = jrxn.header;
-	goog.array.forEach(jrxn.reactants, function(mol){
+	rxn.header = jrxn['header'];
+	goog.array.forEach(jrxn['reactants'], function(mol){
 		rxn.addReactant(kemia.io.json.readMolecule(mol));
-	}, this);
-	goog.array.forEach(jrxn.products, function(mol){
+	});
+	goog.array.forEach(jrxn['products'], function(mol){
 		rxn.addProduct(kemia.io.json.readMolecule(mol));
-	}, this );
+	});
 
 	return rxn;
 };
+goog.exportSymbol('kemia.io.json.readReaction', kemia.io.json.readReaction);
 
 /**
  * converts a reaction object to JSON representation
  * 
  * @param{kemia.model.Reaction} rxn. The reaction to convert to json
- * @return{object} json representation
+ * @return{kemia.io.json.Reaction} json representation
  */
 kemia.io.json.reactionToJson = function (rxn) {
 	var header = rxn.header;
@@ -241,8 +259,13 @@ kemia.io.json.reactionToJson = function (rxn) {
 		products: products};
 };
 
+/** 
+ * @param {kemia.model.Reaction} rxn the reaction to convert
+ * @return {string} 
+ * */
 kemia.io.json.writeReaction = function(rxn){
 	return new goog.json.Serializer().serialize(kemia.io.json.reactionToJson(rxn));
 }
+goog.exportSymbol('kemia.io.json.writeReaction', kemia.io.json.writeReaction);
 
 

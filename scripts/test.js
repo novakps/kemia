@@ -1,0 +1,1 @@
+function test1(){return "this is only a test1";}
