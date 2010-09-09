@@ -14,6 +14,7 @@ kemia.controller.plugins.Highlight = function() {
 	kemia.controller.Plugin.call(this);
 };
 goog.inherits(kemia.controller.plugins.Highlight, kemia.controller.Plugin);
+goog.exportSymbol('kemia.controller.plugins.Highlight', kemia.controller.plugins.Highlight);
 
 /** @inheritDoc */
 kemia.controller.plugins.Highlight.prototype.getTrogClassId = goog.functions

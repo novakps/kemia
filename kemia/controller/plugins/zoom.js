@@ -12,6 +12,7 @@ kemia.controller.plugins.Zoom = function(){
 	  kemia.controller.Plugin.call(this);
 }
 goog.inherits(kemia.controller.plugins.Zoom, kemia.controller.Plugin);
+goog.exportSymbol('kemia.controller.plugins.Zoom', kemia.controller.plugins.Zoom);
 
 /**
  * Commands implemented by this plugin.

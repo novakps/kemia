@@ -1,41 +1,48 @@
 goog.require('goog.testing.jsunit');
 goog.require('kemia.io.json');
 goog.require('goog.json.Serializer');
+goog.require('goog.debug.Console');
+goog.require('goog.debug.Logger');
 
 var rxn;
 var mol;
 function setUp() {
+	var c = new goog.debug.Console();
+	c.setCapturing(true);
+	logger = goog.debug.Logger.getLogger('JsonTest');
+
 }
 
-function test0ReadMolecule() {
+function testReadWriteMolecule() {
 	var mol = kemia.io.json.readMolecule(jmol);
 	assertEquals('test', mol.name);
 	assertEquals(26, mol.countAtoms());
 	assertEquals(27, mol.countBonds());
 
-	// test the string representation
-	// var str = goog.json.Serializer.serialize(mol);
-	// mol = goog.json.unsafeParse( str );
-	// assertEquals(mol.name,"test");
-	// assertEquals(mol.countAtoms(), 26);
-	// assertEquals(mol.countBonds(), 27);
+	var moljson = kemia.io.json.moleculeToJson(mol);
+	var mol2 = kemia.io.json.readMolecule(moljson);
+	 assertEquals(mol.name,"test");
+	 assertEquals(mol.countAtoms(), 26);
+	 assertEquals(mol.countBonds(), 27);
 }
 
 function testReadMoleculeAromatic() {
-	mol = kemia.io.json.readMolecule(jmol2);
+	var mol = kemia.io.json.readMolecule(jmol2);
 	assertEquals(mol.name, "test");
 	assertEquals(mol.countAtoms(), 26);
 	assertEquals(mol.countBonds(), 27);
 }
 
 function test1ExportMol() {
-	mol = kemia.io.json.readMolecule(jmol);
-	jmolstr = kemia.io.json.writeMolecule(mol);
-	assertEquals(2856, jmolstr.length);
+	var mol = kemia.io.json.readMolecule(jmol);
+	var jmolstr = kemia.io.json.writeMolecule(mol);
+
 	// test the string representation
-	var mol = kemia.io.json.readMolecule(JSON.stringify(jmol));
-	jmolstr = kemia.io.json.writeMolecule(mol);
-	assertEquals(2856, jmolstr.length);
+	var mol2 = kemia.io.json.readMolecule(jmolstr);
+	assertEquals('test', mol2.name);
+	assertEquals(26, mol2.countAtoms());
+	assertEquals(27, mol2.countBonds());
+	
 }
 
 function test2ImportReaction() {
@@ -57,7 +64,7 @@ function test2ImportReaction() {
 }
 
 function test3ExportReaction() {
-	rxn = kemia.io.json.readReaction(jreaction);
+	var rxn = kemia.io.json.readReaction(jreaction);
 	var jrxnstr = kemia.io.json.writeReaction(rxn);
 	assertEquals(3908, jrxnstr.length);
 	// test the string representation

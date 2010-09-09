@@ -180,6 +180,7 @@ kemia.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
 	return kemia.controller.DefaultToolbar.makeToolbar(buttons, elem);
 
 };
+goog.exportSymbol("kemia.controller.DefaultToolbar.makeDefaultToolbar", kemia.controller.DefaultToolbar.makeDefaultToolbar);
 
 /**
  * Creates a {@link goog.ui.Toolbar} containing the specified set of toolbar

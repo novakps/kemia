@@ -4,13 +4,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>kemia.controller.ReactionEditor</title>
 <!-- 
- <script src="../../kemia_compiled.js"></script>
+ <script src="../../build/kemia-advanced.js"></script>
  -->
 <script src="../../third-party/closure/closure/goog/base.js"></script>
 <script src="../deps.js"></script>
-
 <script src="../io/json_test_rxn.js"></script>
-
 <script src="../io/io_test_molsample2.js"></script>
 
 <link rel="stylesheet" href="../../css/kemia.css" />
@@ -19,6 +17,8 @@
 <script>
 	goog.require('goog.events.EventType');
 	goog.require('goog.dom');
+	goog.require('goog.ui.Select');
+	goog.require('goog.ui.MenuItem');
 	goog.require('kemia.io.json');
 	goog.require('kemia.controller.DefaultToolbar');
 	goog.require('kemia.controller.ToolbarController');
@@ -43,8 +43,8 @@
 	
 function initPage(){
 	// uncomment next two lines to debug to console
-	var c = new goog.debug.Console(); 
-	c.setCapturing(true); 
+	//var c = new goog.debug.Console(); 
+	//c.setCapturing(true); 
 
 	var toolbar = kemia.controller.DefaultToolbar.makeDefaultToolbar(goog.dom.getElement('reactionEditorToolbar'));  
 	var model = kemia.io.json.readReaction(reactionDrawing); 

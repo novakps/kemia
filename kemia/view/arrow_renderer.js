@@ -5,9 +5,10 @@ goog.require('goog.graphics');
 /**
  * Class to render an Arrow object to a graphics object
  * 
- * @constructor
+ * @param {
  * @param graphics
  *            {goog.graphics.AbstractGraphics} graphics to draw on.
+ * @constructor
  * @extends {kemia.view.Renderer}
  */
 kemia.view.ArrowRenderer = function(controller, graphics, opt_config) {

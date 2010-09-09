@@ -17,6 +17,7 @@ kemia.controller.plugins.ClearEditor = function() {
 };
 goog.inherits(kemia.controller.plugins.ClearEditor,
 		kemia.controller.Plugin);
+goog.exportSymbol('kemia.controller.plugins.ClearEditor', kemia.controller.plugins.ClearEditor);
 
 /** The clear command. */
 kemia.controller.plugins.ClearEditor.COMMAND = 'clearEditor';

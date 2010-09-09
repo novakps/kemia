@@ -11,6 +11,7 @@ kemia.controller.plugins.AtomEdit = function() {
 
 }
 goog.inherits(kemia.controller.plugins.AtomEdit, kemia.controller.Plugin);
+goog.exportSymbol('kemia.controller.plugins.AtomEdit', kemia.controller.plugins.AtomEdit);
 
 /**
  * Command implemented by this plugin.

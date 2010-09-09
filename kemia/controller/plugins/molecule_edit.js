@@ -12,7 +12,7 @@ kemia.controller.plugins.MoleculeEdit = function() {
 
 }
 goog.inherits(kemia.controller.plugins.MoleculeEdit, kemia.controller.Plugin);
-
+goog.exportSymbol('kemia.controller.plugins.MoleculeEdit', kemia.controller.plugins.MoleculeEdit);
 /**
  * Logging object.
  * 

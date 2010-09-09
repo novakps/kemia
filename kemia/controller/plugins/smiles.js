@@ -15,7 +15,7 @@ kemia.controller.plugins.Smiles = function() {
 	kemia.controller.Plugin.call(this);
 };
 goog.inherits(kemia.controller.plugins.Smiles, kemia.controller.plugins.AbstractDialogPlugin);
-
+goog.exportSymbol('kemia.controller.plugins.Smiles', kemia.controller.plugins.Smiles);
 /** @inheritDoc */
 kemia.controller.plugins.Smiles.prototype.getTrogClassId = goog.functions
 		.constant('kemia.controller.plugins.Smiles');

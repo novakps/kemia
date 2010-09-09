@@ -11,12 +11,25 @@ goog.require('kemia.graphics.AffineTransform');
  * @constructor
  */
 kemia.model.Reaction = function() {
+	/** @type {string} */
 	this.header = "";
+	
+	/** @type {Array.<kemia.model.Molecule>} */
 	this.reactants = [];
+	
+	/** @type {Array.<kemia.model.Molecule>} */
 	this.products = [];
+	
+	/** @type {Array.<kemia.model.Arrow>} */
 	this.arrows = [];
+	
+	/** @type {Array.<kemia.model.Pluse>} */
 	this.pluses = [];
+	
+	/** @type {string} */
 	this.reagentsText = "";
+	
+	/** @type {string} */
 	this.conditionsText = "";
 };
 
@@ -55,30 +68,52 @@ kemia.model.Reaction.prototype.removeMolecule = function(mol) {
 		mol.reaction = undefined;
 	}
 }
-kemia.model.Reaction.prototype.addArrow = function(coord) {
+
+/**
+ * @param {kemia.model.Arrow} arrow
+ */
+kemia.model.Reaction.prototype.addArrow = function(arrow) {
 	this.arrows.push(coord);
-	coord.reaction = this;
+	arrow.reaction = this;
+};
+
+/**
+ * @param {kemia.model.Arrow} arrow
+ */
+kemia.model.Reaction.prototype.removeArrow = function(arrow) {
+	goog.array.remove(this.arrows, arrow);
+	arrow.reaction = undefined;
+};
+
+/**
+ * @param {kemia.model.Plus} plus
+ */
+kemia.model.Reaction.prototype.addPlus = function(plus) {
+	this.pluses.push(plus);
+	plus.reaction = this;
+};
+
+/**
+ * @param {kemia.model.Plus} plus
+ */
+kemia.model.Reaction.prototype.removePlus = function(plus) {
+	goog.array.remove(this.pluses, plus);
+	plus.reaction = undefined;
 }
-kemia.model.Reaction.prototype.removeArrow = function(coord) {
-	goog.array.remove(this.arrows, coord);
-	coord.reaction = undefined;
-}
-kemia.model.Reaction.prototype.addPlus = function(coord) {
-	this.pluses.push(coord);
-	coord.reaction = this;
-}
-kemia.model.Reaction.prototype.removePlus = function(coord) {
-	goog.array.remove(this.pluses, coord);
-	coord.reaction = undefined;
-}
-kemia.model.Reaction.prototype.removeArrowOrPlus = function(coord) {
-	if (goog.array.contains(this.arrows, coord)) {
+/**
+ * @param {kemia.model.Plus | kemia.model.Arrow} item
+ */
+kemia.model.Reaction.prototype.removeArrowOrPlus = function(item) {
+	if (goog.array.contains(this.arrows, item)) {
 		this.removeArrow(coord);
-	} else if (goog.array.contains(this.pluses, coord)) {
+	} else if (goog.array.contains(this.pluses, item)) {
 		this.removePlus(coord);
 	}
 }
 
+/**
+ * @deprecated
+ */
 kemia.model.Reaction.prototype.generatePlusCoords = function(molecules) {
 	var previousMol;
 	goog.array.forEach(molecules, function(mol) {
@@ -91,6 +126,9 @@ kemia.model.Reaction.prototype.generatePlusCoords = function(molecules) {
 
 };
 
+/**
+ * @deprecated
+ */
 kemia.model.Reaction.prototype.generateArrowCoords = function(reactants,
 		products) {
 	var r_box = this.boundingBox(reactants);
@@ -101,7 +139,7 @@ kemia.model.Reaction.prototype.generateArrowCoords = function(reactants,
 
 /**
  * bounding box of an array of molecules
- * 
+ * @param {Array.<kemia.model.Molecule>} molecules
  * @return goog.math.Box
  */
 kemia.model.Reaction.prototype.boundingBox = function(molecules) {
@@ -116,7 +154,7 @@ kemia.model.Reaction.prototype.boundingBox = function(molecules) {
 
 /**
  * finds center of an array of molecules
- * 
+ * @param {Array.<kemia.model.Molecule>} molecules
  * @return goog.math.Coordinate
  */
 kemia.model.Reaction.prototype.center = function(molecules) {
@@ -184,6 +222,7 @@ kemia.model.Reaction.prototype.translateMolecule = function(molecule, coord) {
  * 
  * @param {kemia.model.Molecule}
  *            molecule, the molecule to rotate
+ * @param {number} degrees, angle of rotation
  * @param {goog.math.Coordinate}
  *            center, coordinates of center of rotation
  * 

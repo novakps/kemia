@@ -105,6 +105,7 @@ kemia.controller.ReactionEditor = function(element, opt_config) {
 
 };
 goog.inherits(kemia.controller.ReactionEditor, goog.events.EventTarget);
+goog.exportSymbol('kemia.controller.ReactionEditor', kemia.controller.ReactionEditor);
 
 /**
  * Sets the active editor id.
@@ -172,7 +173,8 @@ kemia.controller.ReactionEditor.prototype.setModels = function(models) {
 		this.neighborList = new kemia.model.NeighborList(objects, 1, .5);
 	}
 	this.render();
-}
+};
+goog.exportSymbol('kemia.controller.ReactionEditor.prototype.setModels', kemia.controller.ReactionEditor.prototype.setModels);
 
 kemia.controller.ReactionEditor.prototype.render = function() {
 	goog.array.forEach(this.models, function(model) {
@@ -184,7 +186,8 @@ kemia.controller.ReactionEditor.prototype.render = function() {
 			this.reactionRenderer.moleculeRenderer.render(model);
 		}
 	}, this);
-}
+};
+goog.exportSymbol('kemia.controller.ReactionEditor.prototype.render', kemia.controller.ReactionEditor.prototype.render);
 
 /**
  * gets model
@@ -451,8 +454,7 @@ kemia.controller.ReactionEditor.prototype.resetQueryablePlugins = function(){
 /**
  * Gets the value of command(s).
  * 
- * @param {string|Array.
- *            <string>} commands String name(s) of the command.
+ * @param {string|Array.<string>} commands String name(s) of the command.
  * @return {*} Value of each command. Returns false (or array of falses) if
  *         designMode is off or the editor is otherwise uneditable, and there
  *         are no activeOnUneditable plugins for the command.
@@ -482,8 +484,7 @@ kemia.controller.ReactionEditor.prototype.dispatchChange = function() {
 /**
  * Dispatches a command value change event.
  * 
- * @param {Array.
- *            <string>=} opt_commands Commands whose state has changed.
+ * @param {Array.<string>=} opt_commands Commands whose state has changed.
  */
 kemia.controller.ReactionEditor.prototype.dispatchCommandValueChange = function(
 		opt_commands) {
@@ -560,6 +561,7 @@ kemia.controller.ReactionEditor.prototype.registerPlugin = function(plugin) {
 		plugin.enable(this);
 	}
 };
+goog.exportSymbol('kemia.controller.ReactionEditor.prototype.registerPlugin', kemia.controller.ReactionEditor.prototype.registerPlugin);
 
 /**
  * Unregisters the plugin with this editor.
@@ -797,8 +799,7 @@ kemia.controller.ReactionEditor.prototype.dispatchLoadEvent_ = function() {
  * Gecko since the fields are contained in an iFrame and there is no way to
  * auto-propagate key events up to the main window.
  * 
- * @param {string|Array.
- *            <string>} type Event type to listen for or array of event types,
+ * @param {string|Array.<string>} type Event type to listen for or array of event types,
  *            for example goog.events.EventType.KEYDOWN.
  * @param {Function}
  *            listener Function to be used as the listener.
