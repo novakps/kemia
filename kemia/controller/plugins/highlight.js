@@ -3,6 +3,8 @@ goog.provide('kemia.controller.plugins.Highlight');
 goog.require('kemia.controller.Plugin');
 goog.require('goog.functions');
 goog.require('goog.debug.Logger');
+goog.require('kemia.model.Arrow');
+goog.require('kemia.model.Plus');
 
 /**
  * simple Plugin for highlighting bonds and atoms
@@ -14,7 +16,8 @@ kemia.controller.plugins.Highlight = function() {
 	kemia.controller.Plugin.call(this);
 };
 goog.inherits(kemia.controller.plugins.Highlight, kemia.controller.Plugin);
-goog.exportSymbol('kemia.controller.plugins.Highlight', kemia.controller.plugins.Highlight);
+goog.exportSymbol('kemia.controller.plugins.Highlight',
+		kemia.controller.plugins.Highlight);
 
 /** @inheritDoc */
 kemia.controller.plugins.Highlight.prototype.getTrogClassId = goog.functions
@@ -52,24 +55,29 @@ kemia.controller.plugins.Highlight.prototype.handleMouseMove = function(e) {
 					e.currentTarget.highlightGroup);
 		}
 
-//	} else if (target instanceof kemia.model.Molecule) {
-//		if (!e.currentTarget.highlightGroup) {
-//			e.currentTarget.highlightGroup = this.highlightMolecule(target);
-//		} else {
-//			e.currentTarget.highlightGroup = this.highlightMolecule(target,
-//					e.currentTarget.highlightGroup);
-//		}
+		// } else if (target instanceof kemia.model.Molecule) {
+		// if (!e.currentTarget.highlightGroup) {
+		// e.currentTarget.highlightGroup = this.highlightMolecule(target);
+		// } else {
+		// e.currentTarget.highlightGroup = this.highlightMolecule(target,
+		// e.currentTarget.highlightGroup);
+		// }
 
-	} else if (target instanceof goog.math.Coordinate) {
+	} else if (target instanceof kemia.model.Arrow) {
 		if (!e.currentTarget.highlightGroup) {
-			e.currentTarget.highlightGroup = this.highlightArrowOrPlus(target);
+			e.currentTarget.highlightGroup = this.highlightArrow(target);
 		} else {
-			e.currentTarget.highlightGroup = this.highlightArrowOrPlus(target,
+			e.currentTarget.highlightGroup = this.highlightArrow(target,
 					e.currentTarget.highlightGroup);
 		}
-	}
-
-	else {
+	} else if (target instanceof kemia.model.Plus) {
+		if (!e.currentTarget.highlightGroup) {
+			e.currentTarget.highlightGroup = this.highlightPlus(target);
+		} else {
+			e.currentTarget.highlightGroup = this.highlightPlus(target,
+					e.currentTarget.highlightGroup);
+		}
+	} else {
 		e.currentTarget.highlightGroup = undefined;
 	}
 }
@@ -92,8 +100,14 @@ kemia.controller.plugins.Highlight.prototype.highlightMolecule = function(
 			molecule, opt_group);
 };
 
-kemia.controller.plugins.Highlight.prototype.highlightArrowOrPlus= function(
-		coord, opt_group) {
-	return this.editorObject.reactionRenderer.arrowRenderer.highlightOn(coord,
+kemia.controller.plugins.Highlight.prototype.highlightArrow = function(arrow,
+		opt_group) {
+	return this.editorObject.reactionRenderer.arrowRenderer.highlightOn(arrow,
+			opt_group);
+};
+
+kemia.controller.plugins.Highlight.prototype.highlightPlus = function(plus,
+		opt_group) {
+	return this.editorObject.reactionRenderer.plusRenderer.highlightOn(plus,
 			opt_group);
 }

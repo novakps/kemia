@@ -645,7 +645,7 @@ goog.addDependency("../../../../kemia/model/molecule.js", ['kemia.model.Molecule
 goog.addDependency("../../../../kemia/model/neighborlist.js", ['kemia.model.NeighborList'], ['goog.math.Vec2', 'goog.array', 'goog.math.Line']);
 goog.addDependency("../../../../kemia/model/plus.js", ['kemia.model.Plus'], []);
 goog.addDependency("../../../../kemia/model/pseudo_atom.js", ['kemia.model.PseudoAtom'], ['kemia.model.Atom']);
-goog.addDependency("../../../../kemia/model/reaction.js", ['kemia.model.Reaction'], ['kemia.model.Molecule', 'goog.math.Box', 'goog.math.Rect', 'goog.debug.Logger', 'kemia.graphics.AffineTransform']);
+goog.addDependency("../../../../kemia/model/reaction.js", ['kemia.model.Reaction'], ['kemia.model.Molecule', 'goog.math.Box', 'goog.math.Rect', 'goog.debug.Logger', 'kemia.graphics.AffineTransform', 'kemia.model.Arrow']);
 goog.addDependency("../../../../kemia/model/reaction_test.js", [], ['kemia.model.Reaction', 'goog.testing.jsunit', 'goog.debug.Logger', 'goog.debug.Console']);
 goog.addDependency("../../../../kemia/query/dfsmapper.js", ['kemia.query.DFSMapper', 'kemia.query.DFSMapper.Type'], ['kemia.query.IMapper', 'kemia.ring.RingFinder', 'goog.structs.Map', 'kemia.query.State']);
 goog.addDependency("../../../../kemia/query/imapper.js", ['kemia.query.IMapper'], []);

@@ -1,30 +1,40 @@
+/** 
+ * Copyright 2010 Paul Novak (paul@wingu.com)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ * limitations under the License.
+ * @author paul@wingu.com (Paul Novak)
+ */
 goog.provide('kemia.view.BondRenderer');
 goog.require('kemia.view.Renderer');
 goog.require('kemia.math.Line');
 
 /**
- * Class to render a bond object to a graphics object
+ * Class to render an bond object to a graphics representation
  * 
+ *
+ * @param {goog.graphics.AbstractGraphics} graphics to draw on.
+ * @param {Object=} opt_config override default configuration
  * @constructor
- * @param graphics
- *            {goog.graphics.AbstractGraphics} graphics to draw on.
  * @extends {kemia.view.Renderer}
  */
-kemia.view.BondRenderer = function(controller, graphics, opt_config, defaultConfig) {
-	kemia.view.Renderer.call(this, controller, graphics, opt_config,
-			kemia.view.BondRenderer.defaultConfig);
+kemia.view.BondRenderer = function(graphics, opt_config ) {
+	kemia.view.Renderer.call(
+			this,
+			graphics, 
+			kemia.view.BondRenderer.defaultConfig, 
+			opt_config);
 }
 goog.inherits(kemia.view.BondRenderer, kemia.view.Renderer);
-/**
- * 
- * @param {kemia.model.Bond} bond
- * @param {kemia.graphics.AffineTransform} transform
- * @return {goog.graphics.GroupElement}
- */
-kemia.view.BondRenderer.prototype.render = function(bond, transform) {
-	this.transform = transform;
-
-};
 
 kemia.view.BondRenderer.prototype.highlightOn = function(bond, opt_group) {
 
@@ -71,6 +81,7 @@ kemia.view.BondRenderer.getTheta = function(bond) {
 kemia.view.BondRenderer.hasSymbol = function(atom) {
     return (atom.symbol != "C" || atom.countBonds() == 1);
 }
+
 
 /**
  * A default configuration for renderer

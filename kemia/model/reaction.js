@@ -4,6 +4,7 @@ goog.require('goog.math.Box');
 goog.require('goog.math.Rect');
 goog.require('goog.debug.Logger');
 goog.require('kemia.graphics.AffineTransform');
+goog.require('kemia.model.Arrow');
 
 /**
  * Creates a new Reaction.
@@ -73,7 +74,7 @@ kemia.model.Reaction.prototype.removeMolecule = function(mol) {
  * @param {kemia.model.Arrow} arrow
  */
 kemia.model.Reaction.prototype.addArrow = function(arrow) {
-	this.arrows.push(coord);
+	this.arrows.push(arrow);
 	arrow.reaction = this;
 };
 
@@ -133,8 +134,8 @@ kemia.model.Reaction.prototype.generateArrowCoords = function(reactants,
 		products) {
 	var r_box = this.boundingBox(reactants);
 	var p_box = this.boundingBox(products);
-	this.addArrow(new goog.math.Coordinate((r_box.right + p_box.left) / 2,
-			(r_box.top + p_box.bottom) / 2));
+	this.addArrow(new kemia.model.Arrow(new goog.math.Coordinate((r_box.right + p_box.left) / 2,
+			(r_box.top + p_box.bottom) / 2)));
 };
 
 /**

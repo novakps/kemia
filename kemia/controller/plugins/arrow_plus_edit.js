@@ -46,7 +46,7 @@ kemia.controller.plugins.ArrowPlusEdit.prototype.getTrogClassId = goog.functions
 		.constant("ArrowPlusEdit");
 
 /**
- * sets atom symbol.
+ * sets active
  * 
  * @param {string}
  *            command Command to execute.
@@ -84,7 +84,7 @@ kemia.controller.plugins.ArrowPlusEdit.prototype.handleMouseDown = function(
 				.createInverse();
 		var coords = trans.transformCoords( [ new goog.math.Coordinate(
 				e.offsetX, e.offsetY) ]);
-		this.editorObject.getModels()[0].addArrow(coords[0]);
+		this.editorObject.getModels()[0].addArrow(new kemia.model.Arrow(coords[0]));
 		this.editorObject.setModels(this.editorObject.getModels());
 		this.editorObject.dispatchChange();
 	} else if (this.activeCommand[kemia.controller.plugins.ArrowPlusEdit.COMMAND.EDIT_PLUS]) {

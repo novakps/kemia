@@ -13,15 +13,17 @@ goog.require('kemia.controller.AtomController');
  *            {goog.graphics.AbstractGraphics} graphics to draw on.
  * @extends {kemia.view.Renderer}
  */
-kemia.view.MoleculeRenderer = function(controller, graphics, opt_config) {
-	kemia.view.Renderer.call(this, controller, graphics, opt_config,
-			kemia.view.MoleculeRenderer.defaultConfig);
+kemia.view.MoleculeRenderer = function( graphics, opt_config) {
+	kemia.view.Renderer.call(this, 
+			graphics, 
+			kemia.view.MoleculeRenderer.defaultConfig, 
+			opt_config);
 	this.scale_factor = 1;
-	this.bondController = new kemia.controller.BondController(controller);
+	
 	this.bondRendererFactory = new kemia.view.BondRendererFactory(
-			this.bondController, graphics, this.config);
-	this.atomController = new kemia.controller.AtomController(controller);
-	this.atomRenderer = new kemia.view.AtomRenderer(this.atomController,
+			graphics, this.config);
+
+	this.atomRenderer = new kemia.view.AtomRenderer(
 			graphics, this.config);
 }
 goog.inherits(kemia.view.MoleculeRenderer, kemia.view.Renderer);
@@ -51,7 +53,8 @@ kemia.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 		var ex_box = box.expand(m, m, m, m);
 		trans = this.buildTransform(ex_box);
 	}
-	this.transform = trans;
+	this.setTransform(trans);
+	
 	var center = new goog.math.Coordinate((box.left + box.right) / 2,
 			(box.top + box.bottom) / 2);
 	var t_center = this.transform.transformCoords( [ center ])[0];

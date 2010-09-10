@@ -38,7 +38,7 @@ function initPage(){
 			element.clientHeight);
 	var group = graphics.createGroup();
 	graphics.render(element);
-	var r = new kemia.view.MoleculeRenderer(null, graphics);
+	var r = new kemia.view.MoleculeRenderer( graphics);
 	
 	var mol1 = new kemia.model.Molecule();
 	var trans = new kemia.graphics.AffineTransform(20,0,0,-20,0,0);
@@ -85,7 +85,7 @@ function initPage(){
 	mol4.addAtom(p);
 	mol4.addAtom(cl);
 	var b5 = new kemia.model.Bond(p,cl);
-        b5.stereo = 'up';
+        b5.stereo = kemia.model.Bond.STEREO.UP;
 	mol4.addBond(b5);
 
 	var f = new kemia.model.Atom("F", 6, -4);
@@ -93,7 +93,7 @@ function initPage(){
 	mol4.addAtom(f);
 	mol4.addAtom(br);
 	var b6 = new kemia.model.Bond(f,br);
-        b6.stereo = 'down';
+        b6.stereo = kemia.model.Bond.STEREO.UP;
 	mol4.addBond(b6);
 	r.render(mol4, trans, group);
 	
@@ -103,7 +103,7 @@ function initPage(){
 	mol5.addAtom(i);
 	mol5.addAtom(h);
 	var b7 = new kemia.model.Bond(i,h);
-        b7.stereo = 'up_or_down';
+        b7.stereo = kemia.model.Bond.STEREO.UP_OR_DOWN;
 	mol5.addBond(b7);
 	r.render(mol5, trans, group);
 

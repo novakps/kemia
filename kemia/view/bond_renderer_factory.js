@@ -15,12 +15,12 @@ goog.require('goog.reflect');
  * 
  * @param {goog.graphics.AbstractGraphics}
  *            graphics
- * @param {Object}
+ * @param {Object=}
  *            opt_config
  * @constructor
  */
-kemia.view.BondRendererFactory = function(controller, graphics, opt_config) {
-	this.controller = controller;
+kemia.view.BondRendererFactory = function( graphics, opt_config) {
+
 	this.graphics = graphics;
 	this.config = new goog.structs.Map();
 	if (opt_config) {
@@ -95,7 +95,7 @@ kemia.view.BondRendererFactory.prototype.getSingleBondNotStereoRenderer = functi
 {
 	if (!this.singleNotStereoBondRenderer) {
 		this.singleNotStereoBondRenderer = new kemia.view.SingleBondRenderer(
-				this.controller, this.graphics, this.config);
+				this.graphics, this.config);
 	}
 	return this.singleNotStereoBondRenderer;
 };
@@ -104,7 +104,7 @@ kemia.view.BondRendererFactory.prototype.getSingleBondUpRenderer = function()
 {
 	if (!this.singleUpBondRenderer) {
 		this.singleUpBondRenderer = new kemia.view.SingleUpBondRenderer(
-				this.controller, this.graphics, this.config);
+				this.graphics, this.config);
 	}
 	return this.singleUpBondRenderer;
 };
@@ -113,7 +113,7 @@ kemia.view.BondRendererFactory.prototype.getSingleBondDownRenderer = function()
 {
 	if (!this.singleDownBondRenderer) {
 		this.singleDownBondRenderer = new kemia.view.SingleDownBondRenderer(
-				this.controller, this.graphics, this.config);
+				this.graphics, this.config);
 	}
 	return this.singleDownBondRenderer;
 };
@@ -122,7 +122,7 @@ kemia.view.BondRendererFactory.prototype.getSingleBondUpOrDownRenderer = functio
 {
 	if (!this.singleUpOrDownBondRenderer) {
 		this.singleUpOrDownBondRenderer = new kemia.view.SingleUpOrDownBondRenderer(
-				this.controller, this.graphics, this.config);
+				this.graphics, this.config);
 	}
 	return this.singleUpOrDownBondRenderer;
 };
@@ -131,7 +131,7 @@ kemia.view.BondRendererFactory.prototype.getDoubleBondRenderer = function()
 {
 	if (!this.doubleBondRenderer) {
 		this.doubleBondRenderer = new kemia.view.DoubleBondRenderer(
-				this.controller, this.graphics, this.config);
+				this.graphics, this.config);
 	}
 	return this.doubleBondRenderer;
 };
@@ -140,7 +140,7 @@ kemia.view.BondRendererFactory.prototype.getTripleBondRenderer = function()
 {
 	if (!this.tripleBondRenderer) {
 		this.tripleBondRenderer = new kemia.view.TripleBondRenderer(
-				this.controller, this.graphics, this.config);
+				this.graphics, this.config);
 	}
 	return this.tripleBondRenderer;
 };
@@ -149,7 +149,7 @@ kemia.view.BondRendererFactory.prototype.getQuadrupleBondRenderer = function()
 {
 	if (!this.quadrupleBondRenderer) {
 		this.quadrupleBondRenderer = new kemia.view.QuadrupleBondRenderer(
-				this.controller, this.graphics, this.config);
+				this.graphics, this.config);
 	}
 	return this.quadrupleBondRenderer;
 };

@@ -9,13 +9,17 @@ goog.require('kemia.view.Renderer');
  *            {goog.graphics.AbstractGraphics} graphics to draw on.
  * @extends {kemia.view.Renderer}
  */
-kemia.view.PlusRenderer = function(controller, graphics, opt_config) {
-	kemia.view.Renderer.call(this, controller, graphics, opt_config,
-			kemia.view.PlusRenderer.defaultConfig);
+kemia.view.PlusRenderer = function( graphics, opt_config) {
+	kemia.view.Renderer.call(
+			this, 
+			graphics, 
+			kemia.view.PlusRenderer.defaultConfig, 
+			opt_config);
 }
 goog.inherits(kemia.view.PlusRenderer, kemia.view.Renderer);
 
 kemia.view.PlusRenderer.prototype.render = function(coord, transform) {
+	this.setTransform(transform);
 
 	var w = this.config.get('plus')['size'];
 	h0 = new goog.math.Coordinate(coord.x, coord.y - w);

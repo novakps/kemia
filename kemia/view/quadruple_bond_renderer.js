@@ -1,25 +1,48 @@
+/** 
+ * Copyright 2010 Paul Novak (paul@wingu.com)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ * limitations under the License.
+ * @author paul@wingu.com (Paul Novak)
+ */
 goog.provide('kemia.view.QuadrupleBondRenderer');
 goog.require('kemia.view.BondRenderer');
 
 /**
- * Class to render a quadruple bond object to a graphics object
+ * Class to render an quadruple bond object to a graphics representation
  * 
+ *
+ * @param {goog.graphics.AbstractGraphics} graphics to draw on.
+ * @param {Object=} opt_config override default configuration
  * @constructor
- * @param graphics
- *            {goog.graphics.AbstractGraphics} graphics to draw on.
  * @extends {kemia.view.BondRenderer}
  */
-kemia.view.QuadrupleBondRenderer = function(controller, graphics, opt_config) {
-	kemia.view.BondRenderer.call(this, controller, graphics, opt_config,
-			kemia.view.QuadrupleBondRenderer.defaultConfig);
-
+kemia.view.QuadrupleBondRenderer = function( graphics, opt_config) {
+	kemia.view.BondRenderer.call(
+			this, 
+			graphics, 
+			kemia.view.QuadrupleBondRenderer.defaultConfig, 
+			opt_config);
 }
 goog.inherits(kemia.view.QuadrupleBondRenderer, kemia.view.BondRenderer);
 
+/**
+ * 
+ */
 kemia.view.QuadrupleBondRenderer.prototype.render = function(bond,
-		transform) {
-	kemia.view.QuadrupleBondRenderer.superClass_.render.call(this, bond,
-			transform);
+		transform, bondPath) {
+	
+	this.setTransform(transform);
+
 	var strokeWidth = this.config.get("bond")['stroke']['width'];
 	var bondStroke = new goog.graphics.Stroke(strokeWidth, this.config.get("bond")['stroke']['color']);
 	var bondFill = null;
@@ -60,7 +83,6 @@ kemia.view.QuadrupleBondRenderer.prototype.render = function(bond,
 			rightside1[0], rightside1[1], leftside2[0], leftside2[1],
 			rightside2[0], rightside2[1] ]);
 
-	var bondPath = new goog.graphics.Path();
 	bondPath.moveTo(coords[0].x, coords[0].y);
 	bondPath.lineTo(coords[1].x, coords[1].y);
 

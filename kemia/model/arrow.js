@@ -30,7 +30,7 @@ kemia.model.Arrow = function(opt_source, opt_target, opt_style) {
 			new goog.math.Coordinate(0, 0);
 	this.target = goog.isDef(opt_target) ? 
 			opt_target 
-			: goog.math.Coordinate.sum(this.source, new goog.math.Coordinate(0, 1));
+			: goog.math.Coordinate.sum(this.source, new goog.math.Coordinate(2, 0));
 	this.style = goog.isDef(opt_style) ? 
 			opt_style: 
 			kemia.model.Arrow.STYLES.FORWARD;

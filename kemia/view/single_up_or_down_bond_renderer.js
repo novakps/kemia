@@ -1,28 +1,45 @@
+/** 
+ * Copyright 2010 Paul Novak (paul@wingu.com)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ * limitations under the License.
+ * @author paul@wingu.com (Paul Novak)
+ */
 goog.provide('kemia.view.SingleUpOrDownBondRenderer');
 goog.require('kemia.view.BondRenderer');
 
 /**
- * Class to render a Single-UpOrDown bond object to a graphics object
+ * Class to render an single up or down bond object to a graphics representation
  * 
+ *
+ * @param {goog.graphics.AbstractGraphics} graphics to draw on.
+ * @param {Object=} opt_config override default configuration
  * @constructor
- * @param graphics
- *            {goog.graphics.AbstractGraphics} graphics to draw on.
  * @extends {kemia.view.BondRenderer}
  */
-kemia.view.SingleUpOrDownBondRenderer = function(controller, graphics, opt_config) {
-	kemia.view.BondRenderer.call(this, controller, graphics, opt_config,
-			kemia.view.SingleUpOrDownBondRenderer.defaultConfig);
-
+kemia.view.SingleUpOrDownBondRenderer = function(graphics, opt_config) {
+	kemia.view.BondRenderer.call(this, 
+			graphics, 
+			kemia.view.SingleUpOrDownBondRenderer.defaultConfig, 
+			opt_config);
 }
 goog.inherits(kemia.view.SingleUpOrDownBondRenderer,
 		kemia.view.BondRenderer);
 
 kemia.view.SingleUpOrDownBondRenderer.prototype.render = function(bond,
-		transform) {
-	kemia.view.SingleUpOrDownBondRenderer.superClass_.render.call(this,
-			bond, transform);
+		transform, path) {
+	
+	this.setTransform(transform);
 
-	var path = new goog.graphics.Path();
 	var width = this.config.get("bond")['stroke']['width'] / 10;
 	var theta = kemia.view.BondRenderer.getTheta(bond);
 
@@ -57,7 +74,5 @@ kemia.view.SingleUpOrDownBondRenderer.prototype.render = function(bond,
 					coords[2].y + (coords[3].y - coords[2].y) * j / lines);
 		}
 	}
-
-	this.graphics.drawPath(path, stroke, fill);
 
 }

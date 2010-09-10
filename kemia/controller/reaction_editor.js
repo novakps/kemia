@@ -12,10 +12,10 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  * limitations under the License.
+ * @author paul@wingu.com (Paul Novak)
  */
 goog.provide("kemia.controller.ReactionEditor");
 goog.provide("kemia.controller.ReactionEditor.EventType");
-goog.require("kemia.controller.ReactionController");
 goog.require("kemia.view.ReactionRenderer");
 goog.require("kemia.view.MoleculeRenderer");
 goog.require("goog.graphics");
@@ -74,10 +74,7 @@ kemia.controller.ReactionEditor = function(element, opt_config) {
 
 	this.graphics.render(this.originalElement);
 
-	this.reactionController = new kemia.controller.ReactionController(this);
-	this.reactionRenderer = new kemia.view.ReactionRenderer(
-			this.reactionController, this.graphics, this.config);
-
+	this.reactionRenderer = new kemia.view.ReactionRenderer( this.graphics, this.config);
 	this.isModified_ = false;
 	this.isEverModified_ = false;
 

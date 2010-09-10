@@ -19,19 +19,22 @@ goog.require("kemia.graphics.AffineTransform");
  *            {goog.graphics.AbstractGraphics} graphics to draw on.
  * @extends {kemia.view.Renderer}
  */
-kemia.view.ReactionRenderer = function(controller, graphics, opt_config) {
-	kemia.view.Renderer.call(this, controller, graphics, opt_config,
-			kemia.view.ReactionRenderer.defaultConfig);
+kemia.view.ReactionRenderer = function( graphics, opt_config) {
+	kemia.view.Renderer.call(
+			this, 
+			graphics, 
+			kemia.view.ReactionRenderer.defaultConfig, 
+			opt_config);
+	
 	this.scale_factor = 1;
-	this.moleculeController = new kemia.controller.MoleculeController(
-			controller);
+
 	this.moleculeRenderer = new kemia.view.MoleculeRenderer(
-			this.moleculeController, graphics, this.config);
-	this.arrowController = new kemia.controller.ArrowController(controller);
-	this.arrowRenderer = new kemia.view.ArrowRenderer(this.arrowController, graphics,
+			graphics, this.config);
+
+	this.arrowRenderer = new kemia.view.ArrowRenderer(graphics,
 			this.config);
-	this.plusController = new kemia.controller.PlusController(controller);
-	this.plusRenderer = new kemia.view.PlusRenderer(this.plusController, graphics,
+
+	this.plusRenderer = new kemia.view.PlusRenderer(graphics,
 			this.config);
 }
 goog.inherits(kemia.view.ReactionRenderer, kemia.view.Renderer);
@@ -47,8 +50,8 @@ kemia.view.ReactionRenderer.prototype.render = function(reaction) {
 		if(!this.transform){
 			var box = this.boundingBox(molecules);
 			var m = this.config.get("margin");
-			box.expand(m.top, m.right, m.bottom, m.left);
-			this.transform = this.buildTransform(box);
+			box.expand(m, m, m, m);
+			this.setTransform(this.buildTransform(box));
 		}
 	
 		goog.array.forEach(molecules, function(mol) {
@@ -100,5 +103,5 @@ kemia.view.ReactionRenderer.prototype.logger = goog.debug.Logger
  * A default configuration for renderer
  */
 kemia.view.ReactionRenderer.defaultConfig = {
-	'margin' : 2
+	'margin' : 4
 };
