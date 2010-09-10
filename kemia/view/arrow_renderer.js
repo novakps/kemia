@@ -52,9 +52,6 @@ kemia.view.ArrowRenderer.prototype.render = function(arrow, reagents_text,
 	var angle = goog.math.angle(arrow.source.x, arrow.source.y, arrow.target.x, arrow.target.y);
 	var angle_up = goog.math.standardAngle(angle + 90);
 	var angle_down = goog.math.standardAngle(angle - 90);
-	this.logger.info('angle_up ' + angle_up);
-	this.logger.info('angle_down ' + angle_down);
-
 	var center = new goog.math.Coordinate(
 			(arrow.source.x + arrow.target.x)/2,
 			(arrow.source.y + arrow.target.y)/2);
@@ -94,18 +91,10 @@ kemia.view.ArrowRenderer.prototype.render = function(arrow, reagents_text,
 	
 	var angle_up_rads = goog.math.toRadians(angle_up);
 	var angle_down_rads = goog.math.toRadians(angle_down);
-	this.logger.info('angle_up_rads ' + angle_up_rads);
-	this.logger.info('angle_down_rads ' + angle_down_rads);
-	
-	
+ 
 	var reagents_nock = goog.math.Coordinate.sum(
 			new goog.math.Coordinate(fontSize * Math.cos(angle_up_rads), -fontSize * Math.sin(angle_up_rads)), 
 			coords[0]);
-	
-	this.logger.info('Math.cos(angle_up_rads) ' + Math.cos(angle_up_rads));
-	this.logger.info('Math.sin(angle_up_rads) ' + Math.sin(angle_up_rads));
-	this.logger.info(coords[0].toString());
-	this.logger.info(reagents_nock.toString());
 
 	var reagents_tip = goog.math.Coordinate.sum(
 			new goog.math.Coordinate(fontSize * Math.cos(angle_up_rads), -fontSize * Math.sin(angle_up_rads)), 

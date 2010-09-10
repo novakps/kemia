@@ -129,8 +129,10 @@ kemia.controller.ReactionEditor.getActiveEditorId = function() {
 };
 
 kemia.controller.ReactionEditor.prototype.clear = function() {
+	this.logger.info('clear');
 	this.graphics.clear();
 	this.models = [];
+	//this.neighborList = new kemia.model.NeighborList([], 1, .5);
 	var fill = new goog.graphics.SolidFill(this.config.get("background").color);
 
 	this.graphics.drawRect(0, 0, this.graphics.getSize().width, this.graphics
