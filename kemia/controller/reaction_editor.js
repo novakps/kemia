@@ -132,7 +132,9 @@ kemia.controller.ReactionEditor.prototype.clear = function() {
 	this.logger.info('clear');
 	this.graphics.clear();
 	this.models = [];
-	//this.neighborList = new kemia.model.NeighborList([], 1, .5);
+	
+	// TTD should be able to create empty NeighborList without this dummy Coordinate
+	this.neighborList = new kemia.model.NeighborList([new goog.math.Coordinate(1,1)], 1, .5);
 	var fill = new goog.graphics.SolidFill(this.config.get("background").color);
 
 	this.graphics.drawRect(0, 0, this.graphics.getSize().width, this.graphics
@@ -153,14 +155,14 @@ kemia.controller.ReactionEditor.prototype.setModels = function(models) {
 	this.models = models;
 	var objects = goog.array.flatten(goog.array.map(models, function(model) {
 		if (model instanceof kemia.model.Reaction) {
-			if (model.pluses.length == 0) {
-				model.generatePlusCoords(model.reactants);
-				model.generatePlusCoords(model.products);
-			}
-			if (model.arrows.length == 0 && model.reactants.length > 0
-					&& model.products.length > 0) {
-				model.generateArrowCoords(model.reactants, model.products);
-			}
+//			if (model.pluses.length == 0) {
+//				model.generatePlusCoords(model.reactants);
+//				model.generatePlusCoords(model.products);
+//			}
+//			if (model.arrows.length == 0 && model.reactants.length > 0
+//					&& model.products.length > 0) {
+//				model.generateArrowCoords(model.reactants, model.products);
+//			}
 			return goog.array.concat(model.reactants, model.products,
 					model.pluses, model.arrows);
 		} else {
