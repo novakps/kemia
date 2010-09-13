@@ -37,7 +37,7 @@ function runTiming(){
 		goog.debug.Trace.reset(defaultThreshold); 
     	
     	var tracer = goog.debug.Trace.startTracer('neighbor list containing ' + mols.length + ' molecules');
-    	var nl = new kemia.model.NeighborList(mols, 2, .25);
+    	var nl = new kemia.model.NeighborList(kemia.model.NeighborList.moleculesToNeighbors(mols), 2, .25);
     	goog.debug.Trace.addComment('neighborlist created');
     	i = 0;
     	var repeat_count = 1000;

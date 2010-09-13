@@ -126,7 +126,7 @@ kemia.view.AtomRenderer.prototype.highlightOn = function(atom, opt_group) {
  * return a compound symbol (e.g. NH, CH3), the plain symbol, or ""
  * 
  * @param{jchemhun.model.Atom} atom
- * @return {String}
+ * @return {Object}
  */
 kemia.view.AtomRenderer.prototype.compoundSymbol = function(atom) {
 	var retval = {
@@ -135,7 +135,7 @@ kemia.view.AtomRenderer.prototype.compoundSymbol = function(atom) {
 		superscript : '',
 		subscript : ''
 	};
-	if (atom.symbol != "C" || atom.countBonds() == 1) {
+	if (atom.symbol != "C" || atom.countBonds() <= 1) {
 		// terminal atom may need compound atom name
 		var hydrogen_count = atom.hydrogenCount();
 		if (hydrogen_count == 0) {

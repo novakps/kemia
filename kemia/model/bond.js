@@ -123,3 +123,7 @@ kemia.model.Bond.STEREO = {
 	UP_OR_DOWN : 12,
 	DOWN : 13
 }
+
+kemia.model.Bond.prototype.toString = function(){
+	return "kemia.model.Bond[" + this.order + "]";
+};

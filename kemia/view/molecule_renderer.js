@@ -1,9 +1,7 @@
 goog.provide('kemia.view.MoleculeRenderer');
-goog.require('kemia.controller.BondController');
 goog.require('kemia.view.BondRenderer');
 goog.require('kemia.view.BondRendererFactory');
 goog.require('kemia.view.AtomRenderer');
-goog.require('kemia.controller.AtomController');
 
 /**
  * Class to render a molecule object to a graphics object
@@ -73,7 +71,7 @@ kemia.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 	}, this);
 	this.graphics.drawPath(bondPath, bondStroke, bondFill, molecule.group);
 
-	// this.logger.info("molecule has " + molecule.atoms.length + " atoms");
+	this.logger.info("molecule has " + molecule.atoms.length + " atoms");
 	goog.array.forEach(molecule.atoms, function(atom) {
 		this.atomRenderer.render(atom, trans, molecule.group);
 	}, this);

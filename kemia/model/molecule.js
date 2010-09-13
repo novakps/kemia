@@ -371,9 +371,9 @@ kemia.model.Molecule.prototype.getConnectedBondsList = function(atom) {
  * @return {string}
  */
 kemia.model.Molecule.prototype.toString = function() {
-	return goog.array.map(this.atoms, function(atom) {
-		return atom.symbol + atom.index + atom.coord.toString();
-	}).toString();
+	return 'kemia.model.Molecule[' + goog.array.map(this.atoms, function(atom) {
+		return atom.toString();
+	}).toString() + ']';
 };
 /**
  * returns center coordinates of molecule's atoms

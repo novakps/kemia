@@ -177,3 +177,9 @@ kemia.model.Atom.Hybridizations = {
 kemia.model.Atom.prototype.setFlag = function(flag_type, flag_value) {
 	this.flags[flag_type] = flag_value
 }
+/**
+ * @return {string}
+ */
+kemia.model.Atom.prototype.toString = function() {
+	return "kemia.model.Atom [" + this.symbol + "] "+ this.coord.toString();
+};

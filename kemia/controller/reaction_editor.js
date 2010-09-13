@@ -1,17 +1,17 @@
-/** 
+/**
  * @license Copyright 2010 Paul Novak (paul@wingu.com)
  * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  * @author paul@wingu.com (Paul Novak)
  */
 goog.provide("kemia.controller.ReactionEditor");
@@ -74,7 +74,8 @@ kemia.controller.ReactionEditor = function(element, opt_config) {
 
 	this.graphics.render(this.originalElement);
 
-	this.reactionRenderer = new kemia.view.ReactionRenderer( this.graphics, this.config);
+	this.reactionRenderer = new kemia.view.ReactionRenderer(this.graphics,
+			this.config);
 	this.isModified_ = false;
 	this.isEverModified_ = false;
 
@@ -102,7 +103,8 @@ kemia.controller.ReactionEditor = function(element, opt_config) {
 
 };
 goog.inherits(kemia.controller.ReactionEditor, goog.events.EventTarget);
-goog.exportSymbol('kemia.controller.ReactionEditor', kemia.controller.ReactionEditor);
+goog.exportSymbol('kemia.controller.ReactionEditor',
+		kemia.controller.ReactionEditor);
 
 /**
  * Sets the active editor id.
@@ -129,12 +131,11 @@ kemia.controller.ReactionEditor.getActiveEditorId = function() {
 };
 
 kemia.controller.ReactionEditor.prototype.clear = function() {
-	this.logger.info('clear');
+
 	this.graphics.clear();
 	this.models = [];
-	
-	// TTD should be able to create empty NeighborList without this dummy Coordinate
-	this.neighborList = new kemia.model.NeighborList([new goog.math.Coordinate(1,1)], 1, .5);
+
+	this.neighborList = new kemia.model.NeighborList( [], 1, .5);
 	var fill = new goog.graphics.SolidFill(this.config.get("background").color);
 
 	this.graphics.drawRect(0, 0, this.graphics.getSize().width, this.graphics
@@ -154,19 +155,11 @@ kemia.controller.ReactionEditor.prototype.setModels = function(models) {
 	this.clear();
 	this.models = models;
 	var objects = goog.array.flatten(goog.array.map(models, function(model) {
+		if (model instanceof kemia.model.Molecule) {
+			return kemia.model.NeighborList.moleculesToNeighbors([model]);
+		}
 		if (model instanceof kemia.model.Reaction) {
-//			if (model.pluses.length == 0) {
-//				model.generatePlusCoords(model.reactants);
-//				model.generatePlusCoords(model.products);
-//			}
-//			if (model.arrows.length == 0 && model.reactants.length > 0
-//					&& model.products.length > 0) {
-//				model.generateArrowCoords(model.reactants, model.products);
-//			}
-			return goog.array.concat(model.reactants, model.products,
-					model.pluses, model.arrows);
-		} else {
-			return [ model ];
+			return kemia.model.NeighborList.reactionsToNeighbors([model]);
 		}
 	}));
 
@@ -175,7 +168,8 @@ kemia.controller.ReactionEditor.prototype.setModels = function(models) {
 	}
 	this.render();
 };
-goog.exportSymbol('kemia.controller.ReactionEditor.prototype.setModels', kemia.controller.ReactionEditor.prototype.setModels);
+goog.exportSymbol('kemia.controller.ReactionEditor.prototype.setModels',
+		kemia.controller.ReactionEditor.prototype.setModels);
 
 kemia.controller.ReactionEditor.prototype.render = function() {
 	goog.array.forEach(this.models, function(model) {
@@ -188,7 +182,8 @@ kemia.controller.ReactionEditor.prototype.render = function() {
 		}
 	}, this);
 };
-goog.exportSymbol('kemia.controller.ReactionEditor.prototype.render', kemia.controller.ReactionEditor.prototype.render);
+goog.exportSymbol('kemia.controller.ReactionEditor.prototype.render',
+		kemia.controller.ReactionEditor.prototype.render);
 
 /**
  * gets model
@@ -323,7 +318,8 @@ kemia.controller.ReactionEditor.prototype.handleChange = function() {
 // };
 
 kemia.controller.ReactionEditor.prototype.findTarget = function(e) {
-	var target = this.getAtomicCoords(kemia.controller.ReactionEditor.getMouseCoords(e));
+	var target = this.getAtomicCoords(kemia.controller.ReactionEditor
+			.getMouseCoords(e));
 	return this.neighborList.getNearest( {
 		x : target.x,
 		y : target.y
@@ -337,9 +333,10 @@ kemia.controller.ReactionEditor.prototype.getAtomicCoords = function(
 	return trans.transformCoords( [ graphicsCoord ])[0];
 }
 
-kemia.controller.ReactionEditor.prototype.getGraphicsCoords = function(atomicCoords){
+kemia.controller.ReactionEditor.prototype.getGraphicsCoords = function(
+		atomicCoords) {
 	var trans = this.reactionRenderer.moleculeRenderer.transform;
-	return trans.transformCoords([atomicCoords])[0];
+	return trans.transformCoords( [ atomicCoords ])[0];
 }
 
 kemia.controller.ReactionEditor.getMouseCoords = function(e) {
@@ -440,13 +437,12 @@ kemia.controller.ReactionEditor.prototype.queryCommandValueInternal_ = function(
 };
 
 /**
- * resets state of queryable plugins
- * used to make plugins exclusive
+ * resets state of queryable plugins used to make plugins exclusive
  */
-kemia.controller.ReactionEditor.prototype.resetQueryablePlugins = function(){
+kemia.controller.ReactionEditor.prototype.resetQueryablePlugins = function() {
 	var plugins = this.indexedPlugins_[kemia.controller.Plugin.Op.QUERY_COMMAND];
-	goog.array.forEach(plugins, function(p){
-		if(p.resetState){
+	goog.array.forEach(plugins, function(p) {
+		if (p.resetState) {
 			p.resetState();
 		}
 	});
@@ -455,7 +451,8 @@ kemia.controller.ReactionEditor.prototype.resetQueryablePlugins = function(){
 /**
  * Gets the value of command(s).
  * 
- * @param {string|Array.<string>} commands String name(s) of the command.
+ * @param {string|Array.
+ *            <string>} commands String name(s) of the command.
  * @return {*} Value of each command. Returns false (or array of falses) if
  *         designMode is off or the editor is otherwise uneditable, and there
  *         are no activeOnUneditable plugins for the command.
@@ -485,7 +482,8 @@ kemia.controller.ReactionEditor.prototype.dispatchChange = function() {
 /**
  * Dispatches a command value change event.
  * 
- * @param {Array.<string>=} opt_commands Commands whose state has changed.
+ * @param {Array.
+ *            <string>=} opt_commands Commands whose state has changed.
  */
 kemia.controller.ReactionEditor.prototype.dispatchCommandValueChange = function(
 		opt_commands) {
@@ -562,7 +560,8 @@ kemia.controller.ReactionEditor.prototype.registerPlugin = function(plugin) {
 		plugin.enable(this);
 	}
 };
-goog.exportSymbol('kemia.controller.ReactionEditor.prototype.registerPlugin', kemia.controller.ReactionEditor.prototype.registerPlugin);
+goog.exportSymbol('kemia.controller.ReactionEditor.prototype.registerPlugin',
+		kemia.controller.ReactionEditor.prototype.registerPlugin);
 
 /**
  * Unregisters the plugin with this editor.
@@ -800,7 +799,8 @@ kemia.controller.ReactionEditor.prototype.dispatchLoadEvent_ = function() {
  * Gecko since the fields are contained in an iFrame and there is no way to
  * auto-propagate key events up to the main window.
  * 
- * @param {string|Array.<string>} type Event type to listen for or array of event types,
+ * @param {string|Array.
+ *            <string>} type Event type to listen for or array of event types,
  *            for example goog.events.EventType.KEYDOWN.
  * @param {Function}
  *            listener Function to be used as the listener.

@@ -1,8 +1,5 @@
 goog.provide('kemia.view.ReactionRenderer');
 goog.require('kemia.view.Renderer');
-goog.require('kemia.controller.MoleculeController');
-goog.require('kemia.controller.ArrowController');
-goog.require('kemia.controller.PlusController');
 goog.require('kemia.view.MoleculeRenderer');
 goog.require('kemia.view.ArrowRenderer');
 goog.require('kemia.view.PlusRenderer');

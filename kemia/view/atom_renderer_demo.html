@@ -37,11 +37,10 @@ function initPage(){
 	
 	var trans = new kemia.graphics.AffineTransform(20,0,0,-20,0,0);
 	var mol1 = new kemia.model.Molecule();
-	var c1 = new kemia.model.Atom("C", 2, -2);
-	var o1 = new kemia.model.Atom("O", 3, -3);
-	mol1.addBond(new kemia.model.Bond(c1, o1));
+	var c1 = new kemia.model.Atom("S", 2, -2);
+	mol1.addAtom(c1);
 	r.render(c1, trans, group);
-	r.render(o1, trans, group);
+
 	
 	var mol2 = new kemia.model.Molecule();
 	var c2 = new kemia.model.Atom("C", 5, -2);

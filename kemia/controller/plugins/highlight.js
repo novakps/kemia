@@ -34,52 +34,85 @@ kemia.controller.plugins.Highlight.prototype.logger = goog.debug.Logger
 
 kemia.controller.plugins.Highlight.prototype.handleMouseMove = function(e) {
 
-	var target = this.editorObject.findTarget(e);
+	var targets = this.editorObject.findTargetList(e);
 	if (e.currentTarget.highlightGroup) {
 		e.currentTarget.highlightGroup.clear();
 	}
-
-	if (target instanceof kemia.model.Atom) {
-
+	var atom_targets = goog.array.filter(targets, function(t) {
+		return t instanceof kemia.model.Atom;
+	});
+	if (atom_targets.length > 0) {
+		var target = atom_targets[0];
 		if (!e.currentTarget.highlightGroup) {
 			e.currentTarget.highlightGroup = this.highlightAtom(target);
 		} else {
 			e.currentTarget.highlightGroup = this.highlightAtom(target,
 					e.currentTarget.highlightGroup);
 		}
-	} else if (target instanceof kemia.model.Bond) {
+		return;
+	}
+	;
+
+	var bond_targets = goog.array.filter(targets, function(t) {
+		return t instanceof kemia.model.Bond;
+	});
+	if (bond_targets.length > 0) {
+		var target = bond_targets[0];
 		if (!e.currentTarget.highlightGroup) {
 			e.currentTarget.highlightGroup = this.highlightBond(target);
 		} else {
 			e.currentTarget.highlightGroup = this.highlightBond(target,
 					e.currentTarget.highlightGroup);
 		}
+		return;
+	}
+	;
 
-		// } else if (target instanceof kemia.model.Molecule) {
-		// if (!e.currentTarget.highlightGroup) {
-		// e.currentTarget.highlightGroup = this.highlightMolecule(target);
-		// } else {
-		// e.currentTarget.highlightGroup = this.highlightMolecule(target,
-		// e.currentTarget.highlightGroup);
-		// }
+	var molecule_targets = goog.array.filter(targets, function(t) {
+		return t instanceof kemia.model.Molecule;
+	});
+	if (molecule_targets.length > 0) {
+		var target = molecule_targets[0];
+		if (!e.currentTarget.highlightGroup) {
+			e.currentTarget.highlightGroup = this.highlightMolecule(target);
+		} else {
+			e.currentTarget.highlightGroup = this.highlightMolecule(target,
+					e.currentTarget.highlightGroup);
+		}
+		return;
+	}
+	;
 
-	} else if (target instanceof kemia.model.Arrow) {
+	var arrow_targets = goog.array.filter(targets, function(t) {
+		return t instanceof kemia.model.Arrow;
+	});
+	if (arrow_targets.length > 0) {
+		var target = arrow_targets[0];
 		if (!e.currentTarget.highlightGroup) {
 			e.currentTarget.highlightGroup = this.highlightArrow(target);
 		} else {
 			e.currentTarget.highlightGroup = this.highlightArrow(target,
 					e.currentTarget.highlightGroup);
 		}
-	} else if (target instanceof kemia.model.Plus) {
+		return;
+	}
+
+	var plus_targets = goog.array.filter(targets, function(t) {
+		return t instanceof kemia.model.Plus;
+	});
+	if (plus_targets.length > 0) {
+		var target = plus_targets[0];
 		if (!e.currentTarget.highlightGroup) {
 			e.currentTarget.highlightGroup = this.highlightPlus(target);
 		} else {
 			e.currentTarget.highlightGroup = this.highlightPlus(target,
 					e.currentTarget.highlightGroup);
 		}
-	} else {
-		e.currentTarget.highlightGroup = undefined;
+		return;
 	}
+
+	e.currentTarget.highlightGroup = undefined;
+	return;
 }
 
 kemia.controller.plugins.Highlight.prototype.highlightBond = function(bond,
@@ -102,12 +135,14 @@ kemia.controller.plugins.Highlight.prototype.highlightMolecule = function(
 
 kemia.controller.plugins.Highlight.prototype.highlightArrow = function(arrow,
 		opt_group) {
+	this.logger.info('highlightArrow');
 	return this.editorObject.reactionRenderer.arrowRenderer.highlightOn(arrow,
 			opt_group);
 };
 
 kemia.controller.plugins.Highlight.prototype.highlightPlus = function(plus,
 		opt_group) {
+	this.logger.info('highlightPlus');
 	return this.editorObject.reactionRenderer.plusRenderer.highlightOn(plus,
 			opt_group);
 }

@@ -27,7 +27,7 @@
 	goog.require('kemia.graphics.AffineTransform');
 	goog.require('goog.debug.Console');
 </script>
-<script>
+<script><!--
     
 function initPage(){
 
@@ -43,11 +43,11 @@ function initPage(){
 	var mol1 = new kemia.model.Molecule();
 	var trans = new kemia.graphics.AffineTransform(20,0,0,-20,0,0);
 	var c1 = new kemia.model.Atom("C", 2, -2);
-	var o1 = new kemia.model.Atom("O", 3, -3);
+//	var o1 = new kemia.model.Atom("O", 3, -3);
 	mol1.addAtom(c1);
-	mol1.addAtom(o1);
-	var b = new kemia.model.Bond(c1, o1);
-	mol1.addBond(b);
+//	mol1.addAtom(o1);
+//	var b = new kemia.model.Bond(c1, o1);
+//	mol1.addBond(b);
 	r.render(mol1, trans, group);
 	
 	var mol2 = new kemia.model.Molecule();
@@ -113,7 +113,7 @@ function initPage(){
 };
 
 goog.events.listen(window, goog.events.EventType.LOAD, initPage);
-</script>
+--></script>
 </head>
 
 <body>

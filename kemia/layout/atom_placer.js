@@ -1,6 +1,5 @@
 goog.provide('kemia.layout.AtomPlacer');
 goog.require('kemia.layout.ConnectionMatrix');
-goog.require('goog.testing.jsunit');
 goog.require('kemia.layout.Vector2D');
 goog.require('goog.math');
 

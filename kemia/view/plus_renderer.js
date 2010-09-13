@@ -2,25 +2,27 @@ goog.provide('kemia.view.PlusRenderer');
 goog.require('kemia.view.Renderer');
 
 /**
- * Class to render an Plus object to a graphics object
+ * Class to render a Plus object to a graphics representation
  * 
+ *
+ * @param {goog.graphics.AbstractGraphics} graphics to draw on.
+ * @param {Object=} opt_config override default configuration
  * @constructor
- * @param graphics
- *            {goog.graphics.AbstractGraphics} graphics to draw on.
  * @extends {kemia.view.Renderer}
  */
-kemia.view.PlusRenderer = function( graphics, opt_config) {
-	kemia.view.Renderer.call(
-			this, 
-			graphics, 
-			kemia.view.PlusRenderer.defaultConfig, 
-			opt_config);
+kemia.view.PlusRenderer = function(graphics, opt_config) {
+	kemia.view.Renderer.call(this, graphics,
+			kemia.view.PlusRenderer.defaultConfig, opt_config);
 }
 goog.inherits(kemia.view.PlusRenderer, kemia.view.Renderer);
 
-kemia.view.PlusRenderer.prototype.render = function(coord, transform) {
+/**
+ * @param {kemia.model.Plus} plus
+ * @param {kemia.graphics.AffineTransform}
+ */
+kemia.view.PlusRenderer.prototype.render = function(plus, transform) {
 	this.setTransform(transform);
-
+	var coord = plus.coord;
 	var w = this.config.get('plus')['size'];
 	h0 = new goog.math.Coordinate(coord.x, coord.y - w);
 	h1 = new goog.math.Coordinate(coord.x, coord.y + w);
@@ -28,7 +30,8 @@ kemia.view.PlusRenderer.prototype.render = function(coord, transform) {
 	v1 = new goog.math.Coordinate(coord.x + w, coord.y);
 
 	var path = new goog.graphics.Path();
-	var stroke = new goog.graphics.Stroke(this.config.get("plus")['stroke']['width'],
+	var stroke = new goog.graphics.Stroke(
+			this.config.get("plus")['stroke']['width'],
 			this.config.get("plus")['stroke']['color']);
 
 	var coords = transform.transformCoords( [ h0, h1, v0, v1 ]);
@@ -40,14 +43,40 @@ kemia.view.PlusRenderer.prototype.render = function(coord, transform) {
 
 	// the visible plus sign
 	this.graphics.drawPath(path, stroke, null);
-	
-}
+
+};
+
+/**
+ * @param {kemia.model.Plus}
+ *            plus
+ * @param {goog.graphics.Group=}
+ *            opt_group
+ */
+kemia.view.PlusRenderer.prototype.highlightOn = function(plus, opt_group) {
+	if (!opt_group) {
+		opt_group = this.graphics.createGroup();
+	}
+	var color = this.config.get("plus")['highlight']["color"];
+	var stroke = null;
+	var fill = new goog.graphics.SolidFill(color, .2);
+	var radius = this.config.get("plus")['highlight']['radius']
+			* this.transform.getScaleX();
+	var coords = this.transform.transformCoords( [ plus.coord ])[0];
+	this.graphics.drawCircle(coords.x, coords.y, radius, stroke, fill,
+			opt_group);
+
+	return opt_group;
+};
 
 /**
  * A default configuration for renderer
  */
 kemia.view.PlusRenderer.defaultConfig = {
 	'plus' : {
+		'highlight' : {
+			'color' : 'blue',
+			'radius' : .4
+		},
 		'size' : .25,
 		'stroke' : {
 			'width' : 2,

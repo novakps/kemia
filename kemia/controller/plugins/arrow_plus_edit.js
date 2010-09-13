@@ -93,7 +93,7 @@ kemia.controller.plugins.ArrowPlusEdit.prototype.handleMouseDown = function(
 				.createInverse();
 		var coords = trans.transformCoords( [ new goog.math.Coordinate(
 				e.offsetX, e.offsetY) ]);
-		this.editorObject.getModels()[0].addPlus(coords[0]);
+		this.editorObject.getModels()[0].addPlus(new kemia.model.Plus(coords[0]));
 		this.editorObject.setModels(this.editorObject.getModels());
 		this.editorObject.dispatchChange();
 	}

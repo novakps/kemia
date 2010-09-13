@@ -4,10 +4,16 @@ goog.require('goog.array');
 goog.require('goog.math.Line');
 
 /**
+ * @typedef {{obj:Object, getCenter:(function():goog.math.Coordinate),
+ *          getDistance:function(goog.math.Coordinate):number}}
+ */
+kemia.model.Neighbor;
+
+/**
  * Class for locating the objects nearest to a specified coordinate.
  * 
  * <pre class="code">
- * var neighborList = new kemia.model.NeighborList(molecule);
+ * var neighborList = new kemia.model.NeighborList( [ neighbors ]);
  * neighborList.getNearest( {
  * 	x : 4,
  * 	y : 5
@@ -16,17 +22,19 @@ goog.require('goog.math.Line');
  * 
  * @class Class for computing objects for a specified coordinate.
  * @param {Array.
- *            <Object>} objects The objects to initialize the grid.
- * @param {Number}
+ *            <kemia.model.Neighbor>} objects The objects to initialize the
+ *            grid.
+ * @param {number=}
  *            opt_cellSize The cell size, default is 2. This is in atomic units.
- * @param {Number}
+ * @param {number=}
  *            opt_tolerance The tolerance to consider an atom close enough to
  *            the specified coordinate. The default is 0.3. This is in atomic
  *            units.
  * @constructor
  */
+
 kemia.model.NeighborList = function(objects, opt_cellSize, opt_tolerance) {
-	this.cells = [];
+	this.cells = {};
 	this.cellSize = opt_cellSize ? opt_cellSize : 2;
 	this.tolerance = opt_tolerance ? opt_tolerance : 0.3;
 	this.xMin = 100000;
@@ -36,37 +44,19 @@ kemia.model.NeighborList = function(objects, opt_cellSize, opt_tolerance) {
 
 	// find min/max values for the grid
 	for ( var i = 0, li = objects.length; i < li; i++) {
-		var obj = objects[i];
-		if (obj instanceof kemia.model.Molecule) {
-			for ( var j = 0, lj = obj.countAtoms(); j < lj; j++) {
-				var atom = obj.atoms[j];
-				if (atom.coord.x < this.xMin) {
-					this.xMin = atom.coord.x;
-				}
-				if (atom.coord.x > this.xMax) {
-					this.xMax = atom.coord.x;
-				}
-				if (atom.coord.y < this.yMin) {
-					this.yMin = atom.coord.y;
-				}
-				if (atom.coord.y > this.yMax) {
-					this.yMax = atom.coord.y;
-				}
-			}
-		} else if (obj instanceof goog.math.Coordinate) {
-			var coord = obj;
-			if (coord.x < this.xMin) {
-				this.xMin = coord.x;
-			}
-			if (coord.x > this.xMax) {
-				this.xMax = coord.x;
-			}
-			if (coord.y < this.yMin) {
-				this.yMin = coord.y;
-			}
-			if (coord.y > this.yMax) {
-				this.yMax = coord.y;
-			}
+		var o = objects[i];
+		var center = o.getCenter();
+		if (center.x < this.xMin) {
+			this.xMin = center.x;
+		}
+		if (center.x > this.xMax) {
+			this.xMax = center.x;
+		}
+		if (center.y < this.yMin) {
+			this.yMin = center.y;
+		}
+		if (center.y > this.yMax) {
+			this.yMax = center.y;
 		}
 	}
 
@@ -80,35 +70,22 @@ kemia.model.NeighborList = function(objects, opt_cellSize, opt_tolerance) {
 	this.height = this.yMax - this.yMin;
 	this.xDim = Math.ceil(this.width / this.cellSize);
 	this.yDim = Math.ceil(this.height / this.cellSize);
-	for ( var i = 0, li = this.xDim * this.yDim; i < li; i++) {
-		this.cells.push( []);
-	}
+	// for ( var i = 0, li = this.xDim * this.yDim; i < li; i++) {
+	// this.cells.push( []);
+	// }
 
 	// add the objects to the grid
-	goog.array.forEach(objects, function(obj) {
-		if (obj instanceof kemia.model.Molecule) {
-			var molecule = obj;
-			goog.array.forEach(molecule.atoms, function(atom) {
-				var x = Math.floor((atom.coord.x - this.xMin) / this.cellSize);
-				var y = Math.floor((atom.coord.y - this.yMin) / this.cellSize);
-				this.cells[y * this.xDim + x].push(atom);
-			}, this);
-			goog.array.forEach(molecule.bonds, function(bond) {
-				var midPoint = goog.math.Vec2
-						.fromCoordinate(goog.math.Coordinate.sum(
-								bond.source.coord, bond.target.coord));
-				midPoint.scale(0.5);
-				bond.midPoint = midPoint;
-				var x = Math.floor((midPoint.x - this.xMin) / this.cellSize);
-				var y = Math.floor((midPoint.y - this.yMin) / this.cellSize);
-				this.cells[y * this.xDim + x].push(bond);
-			}, this);
-		} else if (obj instanceof goog.math.Coordinate) {
-			var coord = obj;
-			var x = Math.floor((coord.x - this.xMin) / this.cellSize);
-			var y = Math.floor((coord.y - this.yMin) / this.cellSize);
-			this.cells[y * this.xDim + x].push(coord);
+	goog.array.forEach(objects, function(o) {
+
+		var center = o.getCenter();
+		var x = Math.floor((center.x - this.xMin) / this.cellSize);
+		var y = Math.floor((center.y - this.yMin) / this.cellSize);
+		var key = y * this.xDim + x;
+		if (!this.cells[key]) {
+			this.cells[key] = [];
 		}
+		this.cells[key].push(o);
+
 	}, this);
 };
 
@@ -144,21 +121,22 @@ kemia.model.NeighborList.prototype.triangleSign = function(a, b, c) {
 	return (a.x - c.x) * (b.y - c.y) - (a.y - c.y) * (b.x - c.x);
 };
 
-/**
- * calculate distance from a point to the nearest point on the bond line segment
- * 
- * @param {kemia.model.Bond}
- *            bond, the subject bond
- * @param {goog.math.Coordinate}
- *            coord coordinate of the subject point
- * @return {number} distance from the point to the nearest point on the bond
- */
-kemia.model.NeighborList.prototype.bondDistance = function(bond, coord) {
-	var line = new goog.math.Line(bond.source.coord.x, bond.source.coord.y,
-			bond.target.coord.x, bond.target.coord.y);
-	return goog.math.Coordinate.distance(line.getClosestSegmentPoint(coord.x,
-			coord.y), coord);
-};
+// /**
+// * calculate distance from a point to the nearest point on the bond line
+// segment
+// *
+// * @param {kemia.model.Bond}
+// * bond, the subject bond
+// * @param {goog.math.Coordinate}
+// * coord coordinate of the subject point
+// * @return {number} distance from the point to the nearest point on the bond
+// */
+// kemia.model.NeighborList.prototype.bondDistance = function(bond, coord) {
+// var line = new goog.math.Line(bond.source.coord.x, bond.source.coord.y,
+// bond.target.coord.x, bond.target.coord.y);
+// return goog.math.Coordinate.distance(line.getClosestSegmentPoint(coord.x,
+// coord.y), coord);
+// };
 
 kemia.model.NeighborList.prototype.getNearest = function(coord) {
 	var nearestList = this.getNearestList(coord);
@@ -186,39 +164,19 @@ kemia.model.NeighborList.prototype.getNearestList = function(coord) {
 	var rMin = this.tolerance;
 	for (i = 0, li = cells.length; i < li; i++) {
 		var cell = this.cells[cells[i]];
-		for (j = 0, lj = cell.length; j < lj; j++) {
-			var obj = cell[j];
-			if (obj instanceof kemia.model.Atom) {
-				var r = goog.math.Coordinate.distance(obj.coord, coord);
+		if (cell) {
+			for (j = 0, lj = cell.length; j < lj; j++) {
+				var o = cell[j];
+				var r = o.getDistance(coord);
 				if (r < this.tolerance) {
+					// console.log( [ o.obj.toString(), r ])
 					nearest.push( {
-						obj : obj,
-						distance : r
-					});
-				} else if (r < 3 * this.tolerance) {
-					nearest.push( {
-						obj : obj.molecule,
-						distance : r * 2
-					});
-				}
-			} else if (obj instanceof kemia.model.Bond) {
-				var r = this.bondDistance(obj, coord);
-				if (r < this.tolerance) {
-					nearest.push( {
-						obj : obj,
-						distance : r + this.tolerance
-					});
-				}
-			} else if (obj instanceof goog.math.Coordinate) {
-				var r = goog.math.Coordinate.distance(obj, coord);
-				if (r < this.tolerance) {
-					nearest.push( {
-						obj : obj,
+						obj : o.obj,
 						distance : r
 					});
 				}
-			}
 
+			}
 		}
 	}
 
@@ -229,4 +187,107 @@ kemia.model.NeighborList.prototype.getNearestList = function(coord) {
 	return goog.array.map(nearest, function(n) {
 		return n.obj;
 	});
+};
+
+/**
+ * @param {Array.
+ *            <kemia.model.Reaction>} reactions
+ * @return {Array.<kemia.model.Neighbor>}
+ */
+kemia.model.NeighborList.reactionsToNeighbors = function(reactions) {
+	return goog.array.flatten(goog.array.map(reactions, function(reaction) {
+		return goog.array.concat(kemia.model.NeighborList
+				.moleculesToNeighbors(reaction.reactants),
+				kemia.model.NeighborList
+						.moleculesToNeighbors(reaction.products), goog.array
+						.map(reaction.pluses, function(p) {
+							return {
+								obj : p,
+								getCenter : function() {
+									return p.coord;
+								},
+								getDistance : function(point) {
+									return goog.math.Coordinate.distance(
+											p.coord, point);
+								}
+							};
+						}), goog.array.map(reaction.arrows, function(a) {
+					return {
+						obj : a,
+						getCenter : function() {
+							var midPoint = goog.math.Vec2
+									.fromCoordinate(goog.math.Coordinate.sum(
+											a.source, a.target));
+							return midPoint.scale(0.5);
+						},
+						getDistance : function(point) {
+							var line = new goog.math.Line(a.source.x,
+									a.source.y, a.target.x,
+									a.target.y);
+							return goog.math.Coordinate.distance(line
+									.getClosestSegmentPoint(point.x, point.y),
+									point);
+						}
+					};
+				})
+
+		)
+	}))
+
+};
+
+/**
+ * @param {Array.
+ *            <kemia.model.Molecule>} molecules
+ * @return {Array.<kemia.model.Neighbor>}
+ */
+kemia.model.NeighborList.moleculesToNeighbors = function(molecules) {
+	var neighbors = goog.array.map(molecules, function(mol) {
+		return {
+			obj : mol,
+			getCenter : function() {
+				return mol.getCenter();
+			},
+			getDistance : function(point) {
+				return goog.math.Coordinate.distance(mol.getCenter(), point);
+			}
+		};
+	});
+	goog.array.forEach(molecules, function(mol) {
+		neighbors = goog.array.concat(neighbors, goog.array.map(mol.atoms,
+				function(a) {
+					return {
+						obj : a,
+						getCenter : function() {
+							return a.coord;
+						},
+						getDistance : function(point) {
+							return goog.math.Coordinate
+									.distance(a.coord, point);
+						}
+					};
+				}));
+
+		neighbors = goog.array.concat(neighbors, goog.array.map(mol.bonds,
+				function(b) {
+					return {
+						obj : b,
+						getCenter : function() {
+							var midPoint = goog.math.Vec2
+									.fromCoordinate(goog.math.Coordinate.sum(
+											b.source.coord, b.target.coord));
+							return midPoint.scale(0.5);
+						},
+						getDistance : function(point) {
+							var line = new goog.math.Line(b.source.coord.x,
+									b.source.coord.y, b.target.coord.x,
+									b.target.coord.y);
+							return goog.math.Coordinate.distance(line
+									.getClosestSegmentPoint(point.x, point.y),
+									point);
+						}
+					};
+				}));
+	});
+	return neighbors
 };
