@@ -159,6 +159,19 @@ kemia.controller.plugins.MoleculeEdit.prototype.dragTemplate = function(e,
 kemia.controller.plugins.MoleculeEdit.prototype.logger = goog.debug.Logger
 		.getLogger('kemia.controller.plugins.MoleculeEdit');
 
+kemia.controller.plugins.MoleculeEdit.prototype.handleMouseMove = function(e) {
+	
+	var target = this.editorObject.findTarget(e);
+	
+	if (target instanceof kemia.model.Molecule) {
+		this.editorObject.getOriginalElement().style.cursor = "move";
+		return true;
+	} else {
+		this.editorObject.getOriginalElement().style.cursor = "default";
+		return false;
+	}
+}
+
 kemia.controller.plugins.MoleculeEdit.prototype.handleMouseDown = function(e) {
 
 	// if (this.isActive) {

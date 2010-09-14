@@ -249,7 +249,8 @@ kemia.model.NeighborList.moleculesToNeighbors = function(molecules) {
 				return mol.getCenter();
 			},
 			getDistance : function(point) {
-				return goog.math.Coordinate.distance(mol.getCenter(), point);
+
+				return goog.math.Coordinate.distance(mol.getCenter(), point)/4;
 			}
 		};
 	});

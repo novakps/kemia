@@ -156,10 +156,10 @@ kemia.controller.ReactionEditor.prototype.setModels = function(models) {
 	this.models = models;
 	var objects = goog.array.flatten(goog.array.map(models, function(model) {
 		if (model instanceof kemia.model.Molecule) {
-			return kemia.model.NeighborList.moleculesToNeighbors([model]);
+			return kemia.model.NeighborList.moleculesToNeighbors( [ model ]);
 		}
 		if (model instanceof kemia.model.Reaction) {
-			return kemia.model.NeighborList.reactionsToNeighbors([model]);
+			return kemia.model.NeighborList.reactionsToNeighbors( [ model ]);
 		}
 	}));
 
@@ -317,13 +317,50 @@ kemia.controller.ReactionEditor.prototype.handleChange = function() {
 //
 // };
 
+/**
+ * returns first target within tolerance in preferential order
+ * first Atom, then Bond, then Molecule, then Arrow, then Plus
+ * In other words, if a Bond and Molecule are both returned by findTargetList, 
+ * then the Bond will be preferred and returned.
+ */
 kemia.controller.ReactionEditor.prototype.findTarget = function(e) {
-	var target = this.getAtomicCoords(kemia.controller.ReactionEditor
-			.getMouseCoords(e));
-	return this.neighborList.getNearest( {
-		x : target.x,
-		y : target.y
+	var targets = this.findTargetList(e);
+
+	var atom_targets = goog.array.filter(targets, function(t) {
+		return t instanceof kemia.model.Atom;
 	});
+	if (atom_targets.length > 0) {
+		return atom_targets[0];
+	}
+
+	var bond_targets = goog.array.filter(targets, function(t) {
+		return t instanceof kemia.model.Bond;
+	});
+	if (bond_targets.length > 0) {
+		return bond_targets[0];
+	}
+
+	var molecule_targets = goog.array.filter(targets, function(t) {
+		return t instanceof kemia.model.Molecule;
+	});
+	if (molecule_targets.length > 0) {
+		return molecule_targets[0];
+	}
+
+	var arrow_targets = goog.array.filter(targets, function(t) {
+		return t instanceof kemia.model.Arrow;
+	});
+	if (arrow_targets.length > 0) {
+		return arrow_targets[0];
+	}
+
+	var plus_targets = goog.array.filter(targets, function(t) {
+		return t instanceof kemia.model.Plus;
+	});
+	if (plus_targets.length > 0) {
+		return plus_targets[0];
+	}
+
 }
 
 kemia.controller.ReactionEditor.prototype.getAtomicCoords = function(

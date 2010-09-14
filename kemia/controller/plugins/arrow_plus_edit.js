@@ -10,9 +10,9 @@ kemia.controller.plugins.ArrowPlusEdit = function() {
 	this.activeCommand = {};
 	kemia.controller.Plugin.call(this);
 }
-goog.inherits(kemia.controller.plugins.ArrowPlusEdit,
-		kemia.controller.Plugin);
-goog.exportSymbol("kemia.controller.plugins.ArrowPlusEdit", kemia.controller.plugins.ArrowPlusEdit);
+goog.inherits(kemia.controller.plugins.ArrowPlusEdit, kemia.controller.Plugin);
+goog.exportSymbol("kemia.controller.plugins.ArrowPlusEdit",
+		kemia.controller.plugins.ArrowPlusEdit);
 
 /**
  * Commands implemented by this plugin.
@@ -76,15 +76,54 @@ kemia.controller.plugins.ArrowPlusEdit.prototype.handleArrowMouseDown = function
 	}
 }
 
-kemia.controller.plugins.ArrowPlusEdit.prototype.handleMouseDown = function(
-		e) {
+kemia.controller.plugins.ArrowPlusEdit.prototype.handleMouseMove = function(e) {
+
+	var target = this.editorObject.findTarget(e);
+
+	if (target instanceof kemia.model.Arrow) {
+		if (!e.currentTarget.highlightGroup) {
+			e.currentTarget.highlightGroup = this.highlightArrow(target);
+		} else {
+			e.currentTarget.highlightGroup = this.highlightArrow(target,
+					e.currentTarget.highlightGroup);
+		}
+		return true;
+	} else if (target instanceof kemia.model.Plus) {
+		if (!e.currentTarget.highlightGroup) {
+			e.currentTarget.highlightGroup = this.highlightPlus(target);
+		} else {
+			e.currentTarget.highlightGroup = this.highlightPlus(target,
+					e.currentTarget.highlightGroup);
+		}
+		return true;
+	} else {
+		if (e.currentTarget.highlightGroup) {
+			e.currentTarget.highlightGroup.clear();
+		}
+		return false;
+	}
+}
+
+kemia.controller.plugins.ArrowPlusEdit.prototype.handleMouseDown = function(e) {
+	var target = this.editorObject.findTarget(e);
+
+	if (target instanceof kemia.model.Plus) {
+		// this.logger.info('target' + target.toString());
+		var plus = target;
+		this.editorObject.dispatchBeforeChange();
+		this.dragPlus(e, plus);
+		this.editorObject.dispatchChange();
+		return;
+	}
+
 	if (this.activeCommand[kemia.controller.plugins.ArrowPlusEdit.COMMAND.EDIT_ARROW]) {
 		this.editorObject.dispatchBeforeChange();
 		var trans = this.editorObject.reactionRenderer.moleculeRenderer.transform
 				.createInverse();
 		var coords = trans.transformCoords( [ new goog.math.Coordinate(
 				e.offsetX, e.offsetY) ]);
-		this.editorObject.getModels()[0].addArrow(new kemia.model.Arrow(coords[0]));
+		this.editorObject.getModels()[0].addArrow(new kemia.model.Arrow(
+				coords[0]));
 		this.editorObject.setModels(this.editorObject.getModels());
 		this.editorObject.dispatchChange();
 	} else if (this.activeCommand[kemia.controller.plugins.ArrowPlusEdit.COMMAND.EDIT_PLUS]) {
@@ -93,7 +132,8 @@ kemia.controller.plugins.ArrowPlusEdit.prototype.handleMouseDown = function(
 				.createInverse();
 		var coords = trans.transformCoords( [ new goog.math.Coordinate(
 				e.offsetX, e.offsetY) ]);
-		this.editorObject.getModels()[0].addPlus(new kemia.model.Plus(coords[0]));
+		this.editorObject.getModels()[0]
+				.addPlus(new kemia.model.Plus(coords[0]));
 		this.editorObject.setModels(this.editorObject.getModels());
 		this.editorObject.dispatchChange();
 	}
@@ -137,21 +177,78 @@ kemia.controller.plugins.ArrowPlusEdit.prototype.dragArrow = function(e) {
 	d.startDrag(e);
 };
 
-
 /**
- * reset to default state
- * called when another plugin is made active
+ * reset to default state called when another plugin is made active
  */
-kemia.controller.plugins.ArrowPlusEdit.prototype.resetState = function(){
+kemia.controller.plugins.ArrowPlusEdit.prototype.resetState = function() {
 	this.activeCommand[kemia.controller.plugins.ArrowPlusEdit.COMMAND.EDIT_ARROW] = false;
 	this.activeCommand[kemia.controller.plugins.ArrowPlusEdit.COMMAND.EDIT_PLUS] = false;
 }
 
 /** @inheritDoc */
-kemia.controller.plugins.ArrowPlusEdit.prototype.queryCommandValue = function(command) {
+kemia.controller.plugins.ArrowPlusEdit.prototype.queryCommandValue = function(
+		command) {
 	var state = null;
 	if (this.isSupportedCommand(command)) {
 		state = this.activeCommand[command];
-	} 
+	}
 	return state;
 };
+
+kemia.controller.plugins.ArrowPlusEdit.prototype.dragPlus = function(e, plus) {
+	this.dragSource = plus;
+	var d = new goog.fx.Dragger(this.editorObject.getOriginalElement());
+	d._prevX = e.clientX;
+	d._prevY = e.clientY;
+
+	d.plus = plus;
+	d.editor = this.editorObject;
+	d
+			.addEventListener(
+					goog.fx.Dragger.EventType.DRAG,
+					function(e) {
+
+						var trans = new goog.graphics.AffineTransform.getTranslateInstance(
+								e.clientX - d._prevX, e.clientY - d._prevY);
+
+						var coords = d.editor.reactionRenderer.transform
+								.createInverse().transformCoords(
+										[
+												new goog.math.Coordinate(
+														e.clientX, e.clientY),
+												new goog.math.Coordinate(
+														d._prevX, d._prevY) ]);
+						var diff = goog.math.Coordinate.difference(coords[0],
+								coords[1]);
+
+						d.plus.coord = goog.math.Coordinate.sum(plus.coord,
+								diff);
+						d.plus.group.clear();
+						d.editor.reactionRenderer.plusRenderer.render(d.plus,
+								d.editor.reactionRenderer.transform);
+
+						d._prevX = e.clientX;
+						d._prevY = e.clientY;
+
+					});
+	d.addEventListener(goog.fx.Dragger.EventType.END, function(e) {
+
+		d.editor.setModels(d.editor.getModels());
+		d.dispose();
+	});
+	d.startDrag(e);
+};
+
+kemia.controller.plugins.ArrowPlusEdit.prototype.highlightArrow = function(
+		arrow, opt_group) {
+	// this.logger.info('highlightArrow');
+	return this.editorObject.reactionRenderer.arrowRenderer.highlightOn(arrow,
+			opt_group);
+};
+
+kemia.controller.plugins.ArrowPlusEdit.prototype.highlightPlus = function(plus,
+		opt_group) {
+	// this.logger.info('highlightPlus');
+	return this.editorObject.reactionRenderer.plusRenderer.highlightOn(plus,
+			opt_group);
+}

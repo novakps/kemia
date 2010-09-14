@@ -71,7 +71,7 @@ kemia.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 	}, this);
 	this.graphics.drawPath(bondPath, bondStroke, bondFill, molecule.group);
 
-	this.logger.info("molecule has " + molecule.atoms.length + " atoms");
+	//this.logger.info("molecule has " + molecule.atoms.length + " atoms");
 	goog.array.forEach(molecule.atoms, function(atom) {
 		this.atomRenderer.render(atom, trans, molecule.group);
 	}, this);

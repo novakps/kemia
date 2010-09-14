@@ -12,7 +12,8 @@ kemia.controller.plugins.BondEdit = function() {
 
 }
 goog.inherits(kemia.controller.plugins.BondEdit, kemia.controller.Plugin);
-goog.exportSymbol('kemia.controller.plugins.BondEdit', kemia.controller.plugins.BondEdit);
+goog.exportSymbol('kemia.controller.plugins.BondEdit',
+		kemia.controller.plugins.BondEdit);
 
 /**
  * Command implemented by this plugin.
@@ -119,6 +120,33 @@ kemia.controller.plugins.BondEdit.prototype.handleKeyboardShortcut = function(e)
 		return true;
 	}
 }
+
+kemia.controller.plugins.BondEdit.prototype.handleMouseMove = function(e) {
+
+	var target = this.editorObject.findTarget(e);
+
+	if (target instanceof kemia.model.Bond) {
+		if (!e.currentTarget.highlightGroup) {
+			e.currentTarget.highlightGroup = this.highlightBond(target);
+		} else {
+			e.currentTarget.highlightGroup = this.highlightBond(target,
+					e.currentTarget.highlightGroup);
+		}
+		return true;
+	} else {
+		if (e.currentTarget.highlightGroup) {
+			e.currentTarget.highlightGroup.clear();
+		}
+		return false;
+	}
+	;
+}
+
+kemia.controller.plugins.BondEdit.prototype.highlightBond = function(bond,
+		opt_group) {
+	return this.editorObject.reactionRenderer.moleculeRenderer.bondRendererFactory
+			.get(bond).highlightOn(bond, opt_group);
+};
 
 kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 
@@ -309,16 +337,15 @@ kemia.controller.plugins.BondEdit.prototype.drag = function(e, bond) {
 };
 
 /**
- * reset to default state
- * called when another plugin is made active
+ * reset to default state called when another plugin is made active
  */
-kemia.controller.plugins.BondEdit.prototype.resetState = function(){
-	this.bond_type  = undefined;
+kemia.controller.plugins.BondEdit.prototype.resetState = function() {
+	this.bond_type = undefined;
 }
 
-
 /** @inheritDoc */
-kemia.controller.plugins.BondEdit.prototype.queryCommandValue = function(command) {
+kemia.controller.plugins.BondEdit.prototype.queryCommandValue = function(
+		command) {
 	if (command == kemia.controller.plugins.BondEdit.COMMAND) {
 		return this.bond_type;
 	}

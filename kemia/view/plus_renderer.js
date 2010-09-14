@@ -22,6 +22,7 @@ goog.inherits(kemia.view.PlusRenderer, kemia.view.Renderer);
  */
 kemia.view.PlusRenderer.prototype.render = function(plus, transform) {
 	this.setTransform(transform);
+	plus.group = this.graphics.createGroup();
 	var coord = plus.coord;
 	var w = this.config.get('plus')['size'];
 	h0 = new goog.math.Coordinate(coord.x, coord.y - w);
@@ -42,7 +43,7 @@ kemia.view.PlusRenderer.prototype.render = function(plus, transform) {
 	path.lineTo(coords[3].x, coords[3].y);
 
 	// the visible plus sign
-	this.graphics.drawPath(path, stroke, null);
+	this.graphics.drawPath(path, stroke, null, plus.group);
 
 };
 
