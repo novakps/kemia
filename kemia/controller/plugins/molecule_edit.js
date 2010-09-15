@@ -9,10 +9,10 @@ goog.require('kemia.model.Molecule');
  */
 kemia.controller.plugins.MoleculeEdit = function() {
 	kemia.controller.Plugin.call(this);
-
 }
 goog.inherits(kemia.controller.plugins.MoleculeEdit, kemia.controller.Plugin);
-goog.exportSymbol('kemia.controller.plugins.MoleculeEdit', kemia.controller.plugins.MoleculeEdit);
+goog.exportSymbol('kemia.controller.plugins.MoleculeEdit',
+		kemia.controller.plugins.MoleculeEdit);
 /**
  * Logging object.
  * 
@@ -68,8 +68,8 @@ kemia.controller.plugins.MoleculeEdit.prototype.execCommandInternal = function(
 	var center = this.editorObject.getGraphicsCoords(mol_center);
 	var origin = kemia.controller.ReactionEditor.getOffsetCoords(
 			this.editorObject.originalElement, document.body.scrollLeft
-			+ document.documentElement.scrollLeft, document.body.scrollTop
-			+ document.documentElement.scrollTop);
+					+ document.documentElement.scrollLeft,
+			document.body.scrollTop + document.documentElement.scrollTop);
 
 	e.clientX = center.x - origin.x;
 	e.clientY = center.y - origin.y;
@@ -169,21 +169,44 @@ kemia.controller.plugins.MoleculeEdit.prototype.handleMouseDown = function(e) {
 	// }
 };
 
-
 /**
- * reset to default state
- * called when another plugin is made active
+ * reset to default state called when another plugin is made active
  */
-kemia.controller.plugins.MoleculeEdit.prototype.resetState = function(){
-	this.template  = undefined;
+kemia.controller.plugins.MoleculeEdit.prototype.resetState = function() {
+	this.template = undefined;
 }
 
-
 /** @inheritDoc */
-kemia.controller.plugins.MoleculeEdit.prototype.queryCommandValue = function(command) {
+kemia.controller.plugins.MoleculeEdit.prototype.queryCommandValue = function(
+		command) {
 	if (command == kemia.controller.plugins.MoleculeEdit.COMMAND) {
 		return this.template;
 	}
+};
+
+kemia.controller.plugins.MoleculeEdit.prototype.findAtomMergePairs = function(
+		molecule) {
+	return goog.array.filter(goog.array.map(molecule.atoms, function(atom) {
+		var nearest = this.editorObject.neighborList.getNearestList( {
+			x : atom.coord.x,
+			y : atom.coord.y
+		}, this);
+		var other_atoms = goog.array.filter(nearest, function(other) {
+			if (other instanceof kemia.model.Atom) {
+				if (!goog.array.contains(molecule.atoms, other)) {
+					return true;
+				}
+			}
+			return false;
+		});
+		if (other_atoms.length > 0) {
+			return [ atom, other_atoms[0] ];
+		} else {
+			return false;
+		}
+	}, this), function(pair) {
+		return pair != false;
+	}, this);
 };
 
 /**

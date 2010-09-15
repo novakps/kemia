@@ -9,7 +9,6 @@ goog.require('kemia.model.Bond');
  */
 kemia.controller.plugins.BondEdit = function() {
 	kemia.controller.Plugin.call(this);
-
 }
 goog.inherits(kemia.controller.plugins.BondEdit, kemia.controller.Plugin);
 goog.exportSymbol('kemia.controller.plugins.BondEdit',
@@ -121,7 +120,7 @@ kemia.controller.plugins.BondEdit.prototype.handleKeyboardShortcut = function(e)
 	}
 }
 
-kemia.controller.plugins.BondEdit.prototype.handleMouseMove = function(e) {
+kemia.controller.plugins.BondEdit.prototype = function(e) {
 	if (this.bond_type) {
 		var target = this.editorObject.findTarget(e);
 		this.editorObject.getOriginalElement().style.cursor = 'default';

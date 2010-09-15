@@ -122,45 +122,47 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 }
 
 kemia.controller.plugins.Move.prototype.handleMouseDown = function(e) {
-	var target = this.editorObject.findTarget(e);
-	if (target instanceof kemia.model.Atom) {
-		var atom = target;
-		this.editorObject.dispatchBeforeChange();
-		this.dragAtom(e, atom);
-		this.editorObject.dispatchChange();
-		return true;
-	}
-	if (target instanceof kemia.model.Bond) {
-		var bond = target;
-		this.editorObject.dispatchBeforeChange();
-		this.dragBond(e, bond);
-		this.editorObject.dispatchChange();
-		return true;
-	}
-	if (target instanceof kemia.model.Molecule) {
-		var molecule = target;
-		this.editorObject.dispatchBeforeChange();
-		if (e.shiftKey) {
-			this.rotateMolecule(e, target);
-		} else {
-			this.dragMolecule(e, target);
+	if (this.isActive) {
+		var target = this.editorObject.findTarget(e);
+		if (target instanceof kemia.model.Atom) {
+			var atom = target;
+			this.editorObject.dispatchBeforeChange();
+			this.dragAtom(e, atom);
+			this.editorObject.dispatchChange();
+			return true;
 		}
-		this.editorObject.dispatchChange();
-		return true;
-	}
-	if (target instanceof kemia.model.Plus) {
-		var plus = target;
-		this.editorObject.dispatchBeforeChange();
-		this.dragPlus(e, plus);
-		this.editorObject.dispatchChange();
-		return true;
-	}
-	if (target instanceof kemia.model.Arrow) {
-		var arrow = target;
-		this.editorObject.dispatchBeforeChange();
-		this.dragArrow(e, arrow);
-		this.editorObject.dispatchChange();
-		return true;
+		if (target instanceof kemia.model.Bond) {
+			var bond = target;
+			this.editorObject.dispatchBeforeChange();
+			this.dragBond(e, bond);
+			this.editorObject.dispatchChange();
+			return true;
+		}
+		if (target instanceof kemia.model.Molecule) {
+			var molecule = target;
+			this.editorObject.dispatchBeforeChange();
+			if (e.shiftKey) {
+				this.rotateMolecule(e, target);
+			} else {
+				this.dragMolecule(e, target);
+			}
+			this.editorObject.dispatchChange();
+			return true;
+		}
+		if (target instanceof kemia.model.Plus) {
+			var plus = target;
+			this.editorObject.dispatchBeforeChange();
+			this.dragPlus(e, plus);
+			this.editorObject.dispatchChange();
+			return true;
+		}
+		if (target instanceof kemia.model.Arrow) {
+			var arrow = target;
+			this.editorObject.dispatchBeforeChange();
+			this.dragArrow(e, arrow);
+			this.editorObject.dispatchChange();
+			return true;
+		}
 	}
 	return false;
 };
@@ -359,7 +361,6 @@ kemia.controller.plugins.Move.prototype.dragAtom = function(e, atom) {
 	});
 	d.startDrag(e);
 };
-
 
 kemia.controller.plugins.Move.prototype.dragBond = function(e, bond) {
 
@@ -561,7 +562,7 @@ kemia.controller.plugins.Move.prototype.dragMolecule = function(e, molecule) {
 				merge_pairs = [ merge_pairs[0] ];
 			}
 			goog.array.forEach(merge_pairs, function(pair) {
-				kemia.controller.plugins.AtomEdit.mergeMolecules(pair[0],
+				kemia.controller.plugins.Move.mergeMolecules(pair[0],
 						pair[1]);
 			}, this);
 			d.editor.setModels(d.editor.getModels());

@@ -599,7 +599,7 @@ goog.addDependency("../../../../kemia/controller/plugins/atom_edit.js", ['kemia.
 goog.addDependency("../../../../kemia/controller/plugins/bond_edit.js", ['kemia.controller.plugins.BondEdit'], ['kemia.controller.Plugin', 'goog.debug.Logger', 'kemia.model.Bond']);
 goog.addDependency("../../../../kemia/controller/plugins/cleanup.js", ['kemia.controller.plugins.Cleanup'], ['goog.debug.Logger', 'kemia.layout.CoordinateGenerator']);
 goog.addDependency("../../../../kemia/controller/plugins/clear_editor.js", ['kemia.controller.plugins.ClearEditor'], ['kemia.controller.Plugin', 'goog.functions']);
-goog.addDependency("../../../../kemia/controller/plugins/erase.js", ['kemia.controller.plugins.Erase'], ['kemia.controller.Plugin', 'goog.debug.Logger']);
+goog.addDependency("../../../../kemia/controller/plugins/erase.js", ['kemia.controller.plugins.Erase'], ['kemia.controller.Plugin', 'goog.debug.Logger', 'goog.functions']);
 goog.addDependency("../../../../kemia/controller/plugins/molecule_edit.js", ['kemia.controller.plugins.MoleculeEdit'], ['kemia.controller.Plugin', 'goog.debug.Logger', 'kemia.model.Molecule']);
 goog.addDependency("../../../../kemia/controller/plugins/move.js", ['kemia.controller.plugins.Move'], ['kemia.controller.Plugin', 'goog.debug.Logger']);
 goog.addDependency("../../../../kemia/controller/plugins/selector_rectangle.js", ['kemia.controller.plugins.SelectorRectangle'], ['kemia.controller.Plugin', 'goog.functions', 'goog.debug.Logger']);
@@ -672,7 +672,7 @@ goog.addDependency("../../../../kemia/ring/sssr.js", ['kemia.ring.SSSR'], ['goog
 goog.addDependency("../../../../kemia/ring/sssr_test.js", [], ['goog.testing.jsunit', 'goog.debug.Console', 'goog.debug.Logger']);
 goog.addDependency("../../../../kemia/symmetry/symmetry.js", ['kemia.symmetry.Symmetry'], ['goog.array']);
 goog.addDependency("../../../../kemia/util/bond_util.js", ['kemia.util.BondUtil', 'kemia.util.BondUtil.Orders'], ['kemia.model.Atom', 'kemia.model.PseudoAtom', 'kemia.model.Bond']);
-goog.addDependency("../../../../kemia/view/arrow_renderer.js", ['kemia.view.ArrowRenderer'], ['kemia.view.Renderer', 'goog.graphics', 'goog.math']);
+goog.addDependency("../../../../kemia/view/arrow_renderer.js", ['kemia.view.ArrowRenderer'], ['kemia.view.Renderer', 'goog.graphics', 'goog.math.Vec2']);
 goog.addDependency("../../../../kemia/view/atom_renderer.js", ['kemia.view.AtomRenderer'], ['kemia.view.Renderer', 'goog.debug.Logger']);
 goog.addDependency("../../../../kemia/view/bond_renderer.js", ['kemia.view.BondRenderer'], ['kemia.view.Renderer', 'kemia.math.Line']);
 goog.addDependency("../../../../kemia/view/bond_renderer_factory.js", ['kemia.view.BondRendererFactory'], ['kemia.view.SingleBondRenderer', 'kemia.view.DoubleBondRenderer', 'kemia.view.TripleBondRenderer', 'kemia.view.QuadrupleBondRenderer', 'kemia.view.SingleUpBondRenderer', 'kemia.view.SingleDownBondRenderer', 'kemia.view.SingleUpOrDownBondRenderer', 'kemia.model.Bond', 'goog.object', 'goog.reflect']);

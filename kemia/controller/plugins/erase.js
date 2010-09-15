@@ -2,6 +2,7 @@ goog.provide('kemia.controller.plugins.Erase');
 
 goog.require('kemia.controller.Plugin');
 goog.require('goog.debug.Logger');
+goog.require('goog.functions');
 
 /**
  * Plugin to provide functionality to erase drawing elements
@@ -113,6 +114,7 @@ kemia.controller.plugins.Erase.prototype.handleMouseMove = function(e) {
 }
 
 kemia.controller.plugins.Erase.prototype.handleMouseDown = function(e) {
+	this.logger.info('handleMouseDown');
 	var result = false;
 	if (this.isActive) {
 		this.editorObject.dispatchBeforeChange();
