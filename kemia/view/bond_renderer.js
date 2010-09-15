@@ -36,11 +36,22 @@ kemia.view.BondRenderer = function(graphics, opt_config ) {
 }
 goog.inherits(kemia.view.BondRenderer, kemia.view.Renderer);
 
-kemia.view.BondRenderer.prototype.highlightOn = function(bond, opt_group) {
+/**
+ * @param {kemia.model.Bond} bond
+ * @param {string]} opt_color
+ * @param {goog.graphics.Group=} opt_group
+ */
+kemia.view.BondRenderer.prototype.highlightOn = function(bond, opt_color, opt_group) {
+	
+	if(!opt_color){
+		opt_color = this.config.get("highlight")['color'];
+	}
+	if (!opt_group) {
+		opt_group = this.graphics.createGroup();
+	}
 
 	var strokeWidth = this.config.get("bond")['stroke']['width'] * 2;
-	var color = this.config.get("highlight")['color'];
-	var stroke = new goog.graphics.Stroke(strokeWidth, color);
+	var stroke = new goog.graphics.Stroke(strokeWidth, opt_color);
 	var fill = null;
 	var radius = this.config.get("highlight")['radius']
 			* this.transform.getScaleX();
@@ -61,9 +72,6 @@ kemia.view.BondRenderer.prototype.highlightOn = function(bond, opt_group) {
 	path.arc(coords[0].x, coords[0].y, radius, radius, angle, arcExtent);
 	path.arc(coords[1].x, coords[1].y, radius, radius, angle, -arcExtent);
 
-	if (!opt_group) {
-		opt_group = this.graphics.createGroup();
-	}
 	this.graphics.drawPath(path, stroke, fill, opt_group);
 	return opt_group;
 }

@@ -14,22 +14,22 @@ goog.require('kemia.model.Arrow');
 kemia.model.Reaction = function() {
 	/** @type {string} */
 	this.header = "";
-	
+
 	/** @type {Array.<kemia.model.Molecule>} */
 	this.reactants = [];
-	
+
 	/** @type {Array.<kemia.model.Molecule>} */
 	this.products = [];
-	
+
 	/** @type {Array.<kemia.model.Arrow>} */
 	this.arrows = [];
-	
+
 	/** @type {Array.<kemia.model.Pluse>} */
 	this.pluses = [];
-	
+
 	/** @type {string} */
 	this.reagentsText = "";
-	
+
 	/** @type {string} */
 	this.conditionsText = "";
 };
@@ -40,7 +40,8 @@ kemia.model.Reaction = function() {
 kemia.model.Reaction.prototype.getHeader = function() {
 	return this.header;
 }
-goog.exportSymbol('kemia.model.Reaction.prototype.getHeader', kemia.model.Reaction.prototype.getHeader);
+goog.exportSymbol('kemia.model.Reaction.prototype.getHeader',
+		kemia.model.Reaction.prototype.getHeader);
 
 // TODO add docs
 kemia.model.Reaction.prototype.addReactant = function(mol) {
@@ -71,7 +72,8 @@ kemia.model.Reaction.prototype.removeMolecule = function(mol) {
 }
 
 /**
- * @param {kemia.model.Arrow} arrow
+ * @param {kemia.model.Arrow}
+ *            arrow
  */
 kemia.model.Reaction.prototype.addArrow = function(arrow) {
 	this.arrows.push(arrow);
@@ -79,7 +81,8 @@ kemia.model.Reaction.prototype.addArrow = function(arrow) {
 };
 
 /**
- * @param {kemia.model.Arrow} arrow
+ * @param {kemia.model.Arrow}
+ *            arrow
  */
 kemia.model.Reaction.prototype.removeArrow = function(arrow) {
 	goog.array.remove(this.arrows, arrow);
@@ -87,7 +90,8 @@ kemia.model.Reaction.prototype.removeArrow = function(arrow) {
 };
 
 /**
- * @param {kemia.model.Plus} plus
+ * @param {kemia.model.Plus}
+ *            plus
  */
 kemia.model.Reaction.prototype.addPlus = function(plus) {
 	this.pluses.push(plus);
@@ -95,21 +99,30 @@ kemia.model.Reaction.prototype.addPlus = function(plus) {
 };
 
 /**
- * @param {kemia.model.Plus} plus
+ * @param {kemia.model.Plus}
+ *            plus
  */
 kemia.model.Reaction.prototype.removePlus = function(plus) {
+	this.logger.info('removePlus');
 	goog.array.remove(this.pluses, plus);
 	plus.reaction = undefined;
 }
 /**
- * @param {kemia.model.Plus | kemia.model.Arrow} item
+ * @param {kemia.model.Arrow}
+ *            arrow
  */
-kemia.model.Reaction.prototype.removeArrowOrPlus = function(item) {
-	if (goog.array.contains(this.arrows, item)) {
-		this.removeArrow(coord);
-	} else if (goog.array.contains(this.pluses, item)) {
-		this.removePlus(coord);
-	}
+kemia.model.Reaction.prototype.removeArrow = function(arrow) {
+	this.removeArrow(arrow);
+	arrow.reaction = undefined;
+}
+
+/**
+ * @param {kemia.model.Plus}
+ *            plus
+ */
+kemia.model.Reaction.prototype.removePlus = function(plus) {
+	this.removePlus(plus);
+	plus.reaction = undefined;
 }
 
 /**
@@ -134,13 +147,15 @@ kemia.model.Reaction.prototype.generateArrowCoords = function(reactants,
 		products) {
 	var r_box = this.boundingBox(reactants);
 	var p_box = this.boundingBox(products);
-	this.addArrow(new kemia.model.Arrow(new goog.math.Coordinate((r_box.right + p_box.left) / 2,
-			(r_box.top + p_box.bottom) / 2)));
+	this.addArrow(new kemia.model.Arrow(new goog.math.Coordinate(
+			(r_box.right + p_box.left) / 2, (r_box.top + p_box.bottom) / 2)));
 };
 
 /**
  * bounding box of an array of molecules
- * @param {Array.<kemia.model.Molecule>} molecules
+ * 
+ * @param {Array.
+ *            <kemia.model.Molecule>} molecules
  * @return goog.math.Box
  */
 kemia.model.Reaction.prototype.boundingBox = function(molecules) {
@@ -155,7 +170,9 @@ kemia.model.Reaction.prototype.boundingBox = function(molecules) {
 
 /**
  * finds center of an array of molecules
- * @param {Array.<kemia.model.Molecule>} molecules
+ * 
+ * @param {Array.
+ *            <kemia.model.Molecule>} molecules
  * @return goog.math.Coordinate
  */
 kemia.model.Reaction.prototype.center = function(molecules) {
@@ -223,7 +240,8 @@ kemia.model.Reaction.prototype.translateMolecule = function(molecule, coord) {
  * 
  * @param {kemia.model.Molecule}
  *            molecule, the molecule to rotate
- * @param {number} degrees, angle of rotation
+ * @param {number}
+ *            degrees, angle of rotation
  * @param {goog.math.Coordinate}
  *            center, coordinates of center of rotation
  * 

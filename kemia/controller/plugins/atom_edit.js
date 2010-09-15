@@ -85,32 +85,32 @@ kemia.controller.plugins.AtomEdit.prototype.handleKeyboardShortcut = function(e)
 				return obj.id == e.identifier
 			});
 	if (shortcut) {
-		this.logger.info('handleKeyboardShortcut ' + e.identifier);
+		// this.logger.info('handleKeyboardShortcut ' + e.identifier);
 		this.symbol = shortcut.id;
 		return true;
 	}
 }
 
-kemia.controller.plugins.AtomEdit.prototype.handleMouseMove = function(e) {
-
-	// this.logger.info('handleMouseMove');
-	var target = this.editorObject.findTarget(e);
-
-	if (target instanceof kemia.model.Atom) {
-		if (!e.currentTarget.highlightGroup) {
-			e.currentTarget.highlightGroup = this.highlightAtom(target);
-		} else {
-			e.currentTarget.highlightGroup = this.highlightAtom(target,
-					e.currentTarget.highlightGroup);
-		}
-		return true;
-	} else {
-		if (e.currentTarget.highlightGroup) {
-			e.currentTarget.highlightGroup.clear();
-			return false;
-		}
-	}
-}
+// kemia.controller.plugins.AtomEdit.prototype.handleMouseMove = function(e) {
+//
+// // this.logger.info('handleMouseMove');
+// var target = this.editorObject.findTarget(e);
+//
+// if (target instanceof kemia.model.Atom) {
+// if (!e.currentTarget.highlightGroup) {
+// e.currentTarget.highlightGroup = this.highlightAtom(target);
+// } else {
+// e.currentTarget.highlightGroup = this.highlightAtom(target,
+// e.currentTarget.highlightGroup);
+// }
+// return true;
+// } else {
+// if (e.currentTarget.highlightGroup) {
+// e.currentTarget.highlightGroup.clear();
+// return false;
+// }
+// }
+// }
 
 kemia.controller.plugins.AtomEdit.prototype.handleMouseDown = function(e) {
 	var target = this.editorObject.findTarget(e);
@@ -122,10 +122,6 @@ kemia.controller.plugins.AtomEdit.prototype.handleMouseDown = function(e) {
 			this.editorObject.setModels(this.editorObject.getModels());
 			this.editorObject.dispatchChange();
 			return true;
-		} else {
-			this.editorObject.dispatchBeforeChange();
-			this.drag(e, atom);
-			this.editorObject.dispatchChange();
 		}
 	}
 	if (target == undefined && this.symbol) {
@@ -134,79 +130,16 @@ kemia.controller.plugins.AtomEdit.prototype.handleMouseDown = function(e) {
 		this.editorObject.dispatchChange();
 		return true;
 	}
-
+	return false;
 };
 
-kemia.controller.plugins.AtomEdit.prototype.handleMouseUp = function(e) {
-	var targets = goog.array
-			.filter(
-					this.editorObject.findTargetList(e),
-					function(obj) {
-						return (obj instanceof kemia.model.Atom && obj !== this.dragSource);
-					}, this);
-	var target = targets.length > 0 ? targets[0] : undefined;
-	if (this.dragSource && target instanceof kemia.model.Atom) {
-		this.editorObject.dispatchBeforeChange();
-		kemia.controller.plugins.AtomEdit.mergeMolecules(this.dragSource,
-				target);
-		this.dragSource = undefined;
-		this.editorObject.setModels(this.editorObject.getModels());
-		this.editorObject.dispatchChange();
-		return true;
-	}
-}
-/**
- * merge two molecules at a single atom
- * 
- * @param{kemia.model.Atom} source_atom, the atom being dragged
- * @param{kemia.model.Atom} target_atom, the drag-target atom
- * 
- * @return{kemia.model.Molecule} resulting merged molecule
- */
-kemia.controller.plugins.AtomEdit.mergeMolecules = function(source_atom,
-		target_atom) {
-	// replace target atom with source atom
 
-	// clone and connect target atom bonds to source atom
-	var source_molecule = source_atom.molecule;
-	var target_molecule = target_atom.molecule;
-
-	goog.array.forEach(target_atom.bonds.getValues(), function(bond) {
-		var new_bond = bond.clone();
-		target_atom == new_bond.source ? new_bond.source = source_atom
-				: new_bond.target = source_atom;
-		target_molecule.addBond(new_bond);
-		target_molecule.removeBond(bond);
-	});
-	target_molecule.removeAtom(target_atom);
-
-	goog.array.forEach(source_molecule.atoms, function(atom) {
-		target_molecule.addAtom(atom);
-	});
-
-	// replace source atom and bonds parent molecule with target parent molecule
-	goog.array.forEach(source_molecule.bonds, function(bond) {
-		var new_bond = bond.clone();
-		new_bond.molecule = undefined;
-		target_molecule.addBond(new_bond);
-	});
-	goog.array.forEach(source_molecule.atoms, function(atom) {
-		source_molecule.removeAtom(atom);
-	});
-	goog.array.forEach(source_molecule.bonds, function(bond) {
-		source_molecule.removeBond(bond);
-	});
-
-	source_molecule.reaction.removeMolecule(source_molecule);
-	delete source_molecule;
-	return target_molecule;
-}
 
 kemia.controller.plugins.AtomEdit.prototype.highlightAtom = function(atom,
 		opt_group) {
-	this.logger.info('highlightAtom');
+	// this.logger.info('highlightAtom');
 	return this.editorObject.reactionRenderer.moleculeRenderer.atomRenderer
-			.highlightOn(atom, opt_group);
+			.highlightOn(atom, 'green', opt_group);
 };
 
 kemia.controller.plugins.AtomEdit.prototype.setAtomSymbol = function(e, atom) {
@@ -247,50 +180,6 @@ kemia.controller.plugins.AtomEdit.prototype.createMolecule = function(pos) {
 		// no arrow
 		reaction.addReactant(molecule);
 	}
-};
-
-kemia.controller.plugins.AtomEdit.prototype.drag = function(e, atom) {
-	this.dragSource = atom;
-	var d = new goog.fx.Dragger(this.editorObject.getOriginalElement());
-	d._prevX = e.clientX;
-	d._prevY = e.clientY;
-
-	d.atom = atom;
-	d.editor = this.editorObject;
-	d
-			.addEventListener(
-					goog.fx.Dragger.EventType.DRAG,
-					function(e) {
-						d.atom.molecule.group.clear();
-						var trans = new goog.graphics.AffineTransform.getTranslateInstance(
-								e.clientX - d._prevX, e.clientY - d._prevY);
-
-						var coords = d.editor.reactionRenderer.transform
-								.createInverse().transformCoords(
-										[
-												new goog.math.Coordinate(
-														e.clientX, e.clientY),
-												new goog.math.Coordinate(
-														d._prevX, d._prevY) ]);
-						var diff = goog.math.Coordinate.difference(coords[0],
-								coords[1]);
-
-						atom.coord = goog.math.Coordinate.sum(atom.coord, diff);
-
-						d.editor.reactionRenderer.moleculeRenderer.render(
-								d.atom.molecule,
-								d.editor.reactionRenderer.transform);
-
-						d._prevX = e.clientX;
-						d._prevY = e.clientY;
-
-					});
-	d.addEventListener(goog.fx.Dragger.EventType.END, function(e) {
-
-		d.editor.setModels(d.editor.getModels());
-		d.dispose();
-	});
-	d.startDrag(e);
 };
 
 /** @inheritDoc */

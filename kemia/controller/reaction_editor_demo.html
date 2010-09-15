@@ -22,10 +22,10 @@
 	goog.require('kemia.io.json');
 	goog.require('kemia.controller.DefaultToolbar');
 	goog.require('kemia.controller.ToolbarController');
+	goog.require('kemia.controller.plugins.Move');
 	goog.require('kemia.controller.plugins.ClearEditor');
 	goog.require('kemia.controller.plugins.Zoom');
 	goog.require('kemia.controller.plugins.UndoRedo');
-	goog.require('kemia.controller.plugins.Highlight');
 	goog.require('kemia.controller.plugins.AtomEdit');
 	goog.require('kemia.controller.plugins.BondEdit');
 	goog.require('kemia.controller.plugins.ArrowPlusEdit');
@@ -53,7 +53,8 @@ function initPage(){
 	model.conditionsText = "90" + String.fromCharCode(186) +"C";
 	
 	var editor = new kemia.controller.ReactionEditor(goog.dom.getElement('reactionEditorContainer'),{background : {color : 'white'}});
-	editor.registerPlugin(new kemia.controller.plugins.Highlight());
+
+	editor.registerPlugin(new kemia.controller.plugins.Move());
 	editor.registerPlugin(new kemia.controller.plugins.ClearEditor());
 	editor.registerPlugin(new kemia.controller.plugins.Zoom());
 	editor.registerPlugin(new kemia.controller.plugins.UndoRedo());

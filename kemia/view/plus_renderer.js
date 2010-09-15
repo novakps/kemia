@@ -50,16 +50,20 @@ kemia.view.PlusRenderer.prototype.render = function(plus, transform) {
 /**
  * @param {kemia.model.Plus}
  *            plus
+ * @param {string=} opt_color
  * @param {goog.graphics.Group=}
  *            opt_group
  */
-kemia.view.PlusRenderer.prototype.highlightOn = function(plus, opt_group) {
+kemia.view.PlusRenderer.prototype.highlightOn = function(plus, opt_color, opt_group) {
+	if(!opt_color){
+		opt_color = this.config.get("plus")['highlight']["color"];
+	}
 	if (!opt_group) {
 		opt_group = this.graphics.createGroup();
 	}
-	var color = this.config.get("plus")['highlight']["color"];
+
 	var stroke = null;
-	var fill = new goog.graphics.SolidFill(color, .2);
+	var fill = new goog.graphics.SolidFill(opt_color, .2);
 	var radius = this.config.get("plus")['highlight']['radius']
 			* this.transform.getScaleX();
 	var coords = this.transform.transformCoords( [ plus.coord ])[0];

@@ -17,8 +17,8 @@
  */
 goog.provide('kemia.view.ArrowRenderer');
 goog.require('kemia.view.Renderer');
-goog.require('goog.graphics');
-goog.require('goog.math');
+goog.require('goog.graphics');	
+goog.require('goog.math.Vec2');
 
 /**
  * Class to render an Arrow object to a graphics representation
@@ -50,7 +50,7 @@ goog.inherits(kemia.view.ArrowRenderer, kemia.view.Renderer);
 kemia.view.ArrowRenderer.prototype.render = function(arrow, reagents_text,
 		conditions_text, transform) {
 	this.setTransform(transform);
-
+	arrow.group = this.graphics.createGroup();
 	var h = this.config.get('arrow')['height'];
 	var l = goog.math.Coordinate.distance(arrow.target, arrow.source);
 	var angle = goog.math.angle(arrow.source.x, arrow.source.y, arrow.target.x,
@@ -118,27 +118,33 @@ kemia.view.ArrowRenderer.prototype.render = function(arrow, reagents_text,
 
 	this.graphics.drawTextOnLine(reagents_text, reagents_nock.x,
 			reagents_nock.y, reagents_tip.x, reagents_tip.y, 'center', font,
-			textStroke, fill);
+			textStroke, fill, arrow.group);
 	this.graphics.drawTextOnLine(conditions_text, conditions_nock.x,
 			conditions_nock.y, conditions_tip.x, conditions_tip.y, 'center',
-			font, textStroke, fill);
+			font, textStroke, fill, arrow.group);
 
 	// visible arrow
-	this.graphics.drawPath(path, arrowStroke);
+	this.graphics.drawPath(path, arrowStroke, null, arrow.group);
 }
 /**
  * @param {kemia.model.Arrow}
  *            arrow
+ * @param {string=}
+ *            opt_color
  * @param {goog.graphics.Group=}
  *            opt_group
  */
-kemia.view.ArrowRenderer.prototype.highlightOn = function(arrow, opt_group) {
+kemia.view.ArrowRenderer.prototype.highlightOn = function(arrow, opt_color,
+		opt_group) {
+	if (!opt_color) {
+		opt_color = this.config.get("arrow")['highlight']["color"];
+	}
 	if (!opt_group) {
 		opt_group = this.graphics.createGroup();
 	}
-	var color = this.config.get("arrow")['highlight']["color"];
+
 	var stroke = null;
-	var fill = new goog.graphics.SolidFill(color, .3);
+	var fill = new goog.graphics.SolidFill(opt_color, .3);
 	var radius = this.config.get("arrow")['highlight']['radius']
 			* this.transform.getScaleX();
 	var center = goog.math.Vec2.fromCoordinate(

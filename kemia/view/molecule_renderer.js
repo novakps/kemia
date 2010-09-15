@@ -11,18 +11,15 @@ goog.require('kemia.view.AtomRenderer');
  *            {goog.graphics.AbstractGraphics} graphics to draw on.
  * @extends {kemia.view.Renderer}
  */
-kemia.view.MoleculeRenderer = function( graphics, opt_config) {
-	kemia.view.Renderer.call(this, 
-			graphics, 
-			kemia.view.MoleculeRenderer.defaultConfig, 
-			opt_config);
+kemia.view.MoleculeRenderer = function(graphics, opt_config) {
+	kemia.view.Renderer.call(this, graphics,
+			kemia.view.MoleculeRenderer.defaultConfig, opt_config);
 	this.scale_factor = 1;
-	
-	this.bondRendererFactory = new kemia.view.BondRendererFactory(
-			graphics, this.config);
 
-	this.atomRenderer = new kemia.view.AtomRenderer(
-			graphics, this.config);
+	this.bondRendererFactory = new kemia.view.BondRendererFactory(graphics,
+			this.config);
+
+	this.atomRenderer = new kemia.view.AtomRenderer(graphics, this.config);
 }
 goog.inherits(kemia.view.MoleculeRenderer, kemia.view.Renderer);
 
@@ -36,10 +33,9 @@ kemia.view.MoleculeRenderer.prototype.logger = goog.debug.Logger
 		.getLogger('kemia.view.MoleculeRenderer');
 
 kemia.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
-	
-	
+
 	molecule.group = this.graphics.createGroup();
-	
+
 	var atom_coords = goog.array.map(molecule.atoms, function(a) {
 		return a.coord;
 	});
@@ -52,7 +48,7 @@ kemia.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 		trans = this.buildTransform(ex_box);
 	}
 	this.setTransform(trans);
-	
+
 	var center = new goog.math.Coordinate((box.left + box.right) / 2,
 			(box.top + box.bottom) / 2);
 	var t_center = this.transform.transformCoords( [ center ])[0];
@@ -71,21 +67,36 @@ kemia.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 	}, this);
 	this.graphics.drawPath(bondPath, bondStroke, bondFill, molecule.group);
 
-	//this.logger.info("molecule has " + molecule.atoms.length + " atoms");
+	// this.logger.info("molecule has " + molecule.atoms.length + " atoms");
 	goog.array.forEach(molecule.atoms, function(atom) {
 		this.atomRenderer.render(atom, trans, molecule.group);
 	}, this);
 
 };
-
+/**
+ * @param {kemia.model.Molecule}
+ *            molecule
+ * @param {string=}
+ *            opt_color
+ * @param {goog.graphics.Group=}
+ *            opt_group
+ */
 kemia.view.MoleculeRenderer.prototype.highlightOn = function(molecule,
-		opt_group) {
+		opt_color, opt_group) {
+
+	if (!opt_color) {
+		opt_color = this.config.get("highlight")['color'];
+	}
 	if (!opt_group) {
 		opt_group = this.graphics.createGroup();
 	}
 
+	goog.array.forEach(molecule.bonds, function(bond) {
+		this.bondRendererFactory.get(bond).highlightOn(bond, opt_color, opt_group);
+	}, this);
+	
 	goog.array.forEach(molecule.atoms, function(atom) {
-		this.atomRenderer.highlightOn(atom, opt_group);
+		this.atomRenderer.highlightOn(atom, opt_color, opt_group);
 	}, this);
 
 	return opt_group;
@@ -104,5 +115,9 @@ kemia.view.MoleculeRenderer.defaultConfig = {
 			'color' : 'black'
 		}
 	},
-	'margin' : 4
+	'highlight' : {
+		'radius' : .3,
+		'color' : 'blue'
+	}
 };
+

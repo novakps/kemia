@@ -122,73 +122,85 @@ kemia.controller.plugins.BondEdit.prototype.handleKeyboardShortcut = function(e)
 }
 
 kemia.controller.plugins.BondEdit.prototype.handleMouseMove = function(e) {
-
-	var target = this.editorObject.findTarget(e);
-
-	if (target instanceof kemia.model.Bond) {
-		if (!e.currentTarget.highlightGroup) {
-			e.currentTarget.highlightGroup = this.highlightBond(target);
-		} else {
-			e.currentTarget.highlightGroup = this.highlightBond(target,
-					e.currentTarget.highlightGroup);
-		}
-		return true;
-	} else {
+	if (this.bond_type) {
+		var target = this.editorObject.findTarget(e);
+		this.editorObject.getOriginalElement().style.cursor = 'default';
 		if (e.currentTarget.highlightGroup) {
 			e.currentTarget.highlightGroup.clear();
 		}
+
+		if (target instanceof kemia.model.Atom) {
+			// this.editorObject.getOriginalElement().style.cursor =
+			// 'url("../../images/Cursor-Single-32.png"), hand';
+			if (!e.currentTarget.highlightGroup) {
+				e.currentTarget.highlightGroup = this.highlightAtom(target);
+			} else {
+				e.currentTarget.highlightGroup = this.highlightAtom(target,
+						e.currentTarget.highlightGroup);
+			}
+			return true;
+		} else if (target instanceof kemia.model.Bond) {
+			// this.editorObject.getOriginalElement().style.cursor =
+			// 'url("../../images/Cursor-Eraser-32.png"), hand';
+			if (!e.currentTarget.highlightGroup) {
+				e.currentTarget.highlightGroup = this.highlightBond(target);
+			} else {
+				e.currentTarget.highlightGroup = this.highlightBond(target,
+						e.currentTarget.highlightGroup);
+			}
+			return true;
+		}
+	} else {
+		e.currentTarget.highlightGroup = undefined;
 		return false;
 	}
-	;
-}
-
-kemia.controller.plugins.BondEdit.prototype.highlightBond = function(bond,
-		opt_group) {
-	return this.editorObject.reactionRenderer.moleculeRenderer.bondRendererFactory
-			.get(bond).highlightOn(bond, opt_group);
+	return false;
 };
 
 kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 
-	// if (this.isActive) {
-	this.editorObject.dispatchBeforeChange();
-	var target = this.editorObject.findTarget(e);
+	if (this.bond_type) {
+		var target = this.editorObject.findTarget(e);
 
-	if (target instanceof kemia.model.Atom) {
-		this.addBondToAtom(target);
-		this.editorObject.setModels(this.editorObject.getModels());
-		this.editorObject.dispatchChange();
-		return true;
-	}
-	if (target instanceof kemia.model.Bond) {
-		if (this.bond_type) {
-			this.replaceBond(target);
+		if (target instanceof kemia.model.Atom) {
+			this.editorObject.dispatchBeforeChange();
+			this.addBondToAtom(target);
 			this.editorObject.setModels(this.editorObject.getModels());
 			this.editorObject.dispatchChange();
 			return true;
-		} else {
-			if (target._last_click) {
-				if ((goog.now() - target._last_click) < 1000) {
-					this.toggleBondType(target);
-					this.editorObject.setModels(this.editorObject.getModels());
-					this.editorObject.dispatchChange();
-					return true;
-				} else {
-					this.drag(e, target);
-				}
-			}
-			target._last_click = goog.now();
-			this.drag(e, target);
 		}
-	}
-	if (target == undefined && this.bond_type) {
-		this.createMolecule(kemia.controller.ReactionEditor.getMouseCoords(e));
-		this.editorObject.setModels(this.editorObject.getModels());
-		this.editorObject.dispatchChange();
-		return true;
-	}
+		if (target instanceof kemia.model.Bond) {
+			if (this.bond_type) {
+				this.editorObject.dispatchBeforeChange();
+				this.replaceBond(target);
+				this.editorObject.setModels(this.editorObject.getModels());
+				this.editorObject.dispatchChange();
+				return true;
+			} else {
+				if (target._last_click) {
+					if ((goog.now() - target._last_click) < 1000) {
+						this.editorObject.dispatchBeforeChange();
+						this.toggleBondType(target);
+						this.editorObject.setModels(this.editorObject
+								.getModels());
+						this.editorObject.dispatchChange();
+						return true;
+					}
+				}
+				target._last_click = goog.now();
 
-	// }
+			}
+		}
+		if (target == undefined && this.bond_type) {
+			this.editorObject.dispatchBeforeChange();
+			this.createMolecule(kemia.controller.ReactionEditor
+					.getMouseCoords(e));
+			this.editorObject.setModels(this.editorObject.getModels());
+			this.editorObject.dispatchChange();
+			return true;
+		}
+
+	}
 
 };
 
@@ -290,50 +302,17 @@ kemia.controller.plugins.BondEdit.prototype.addBondToAtom = function(atom) {
 	}
 };
 
-kemia.controller.plugins.BondEdit.prototype.drag = function(e, bond) {
+kemia.controller.plugins.BondEdit.prototype.highlightAtom = function(atom,
+		opt_group) {
+	// this.logger.info('highlightAtom');
+	return this.editorObject.reactionRenderer.moleculeRenderer.atomRenderer
+			.highlightOn(atom, 'green', opt_group);
+};
 
-	var d = new goog.fx.Dragger(this.editorObject.getOriginalElement());
-	d._prevX = e.clientX;
-	d._prevY = e.clientY;
-
-	d.bond = bond;
-	d.editor = this.editorObject;
-	d
-			.addEventListener(
-					goog.fx.Dragger.EventType.DRAG,
-					function(e) {
-						d.bond.molecule.group.clear();
-						var trans = new goog.graphics.AffineTransform.getTranslateInstance(
-								e.clientX - d._prevX, e.clientY - d._prevY);
-
-						var coords = d.editor.reactionRenderer.transform
-								.createInverse().transformCoords(
-										[
-												new goog.math.Coordinate(
-														e.clientX, e.clientY),
-												new goog.math.Coordinate(
-														d._prevX, d._prevY) ]);
-						var diff = goog.math.Coordinate.difference(coords[0],
-								coords[1]);
-
-						bond.source.coord = goog.math.Coordinate.sum(
-								bond.source.coord, diff);
-						bond.target.coord = goog.math.Coordinate.sum(
-								bond.target.coord, diff);
-						d.editor.reactionRenderer.moleculeRenderer.render(
-								bond.molecule,
-								d.editor.reactionRenderer.transform);
-
-						d._prevX = e.clientX;
-						d._prevY = e.clientY;
-
-					});
-	d.addEventListener(goog.fx.Dragger.EventType.END, function(e) {
-
-		d.editor.setModels(d.editor.getModels());
-		d.dispose();
-	});
-	d.startDrag(e);
+kemia.controller.plugins.BondEdit.prototype.highlightBond = function(bond,
+		opt_group) {
+	return this.editorObject.reactionRenderer.moleculeRenderer.bondRendererFactory
+			.get(bond).highlightOn(bond, 'green', opt_group);
 };
 
 /**

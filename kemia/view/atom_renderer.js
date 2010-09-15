@@ -1,17 +1,18 @@
-/** 
+/**
  * Copyright 2010 Paul Novak (paul@wingu.com)
  * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ * 
  * @author paul@wingu.com (Paul Novak)
  */
 goog.provide('kemia.view.AtomRenderer');
@@ -21,17 +22,16 @@ goog.require('goog.debug.Logger');
 /**
  * Class to render an Atom object to a graphics representation
  * 
- * @param {goog.graphics.AbstractGraphics} graphics to draw on.
- * @param {Object=} opt_config override default configuration
+ * @param {goog.graphics.AbstractGraphics}
+ *            graphics to draw on
+ * @param {Object=}
+ *            opt_config override default configuration
  * @constructor
  * @extends {kemia.view.Renderer}
  */
-kemia.view.AtomRenderer = function( graphics, opt_config) {
-	kemia.view.Renderer.call(
-			this, 
-			graphics, 
-			kemia.view.AtomRenderer.defaultConfig, 
-			opt_config);
+kemia.view.AtomRenderer = function(graphics, opt_config) {
+	kemia.view.Renderer.call(this, graphics,
+			kemia.view.AtomRenderer.defaultConfig, opt_config);
 }
 goog.inherits(kemia.view.AtomRenderer, kemia.view.Renderer);
 
@@ -53,10 +53,10 @@ kemia.view.AtomRenderer.prototype.render = function(atom, transform, opt_group) 
 
 	var scale = transform.getScaleX();
 
-
-	var fontSize=(scale/1.8)>12 ? 15: (scale/1.8);
+	var fontSize = (scale / 1.8) > 12 ? 15 : (scale / 1.8);
 	var font = new goog.graphics.Font(fontSize, atom_config['fontName']);
-	var stroke = new goog.graphics.Stroke(atom_config['stroke']['width'], "black");
+	var stroke = new goog.graphics.Stroke(atom_config['stroke']['width'],
+			"black");
 
 	var fill = new goog.graphics.SolidFill(color);
 
@@ -100,17 +100,31 @@ kemia.view.AtomRenderer.prototype.render = function(atom, transform, opt_group) 
 				}
 			}
 		}
-	} 
+	}
 };
 
-kemia.view.AtomRenderer.prototype.highlightOn = function(atom, opt_group) {
+/**
+ * @param {kemia.model.Atom}
+ *            atom
+ * @param {string=}
+ *            opt_color
+ * @param {goog.graphics.Group=}
+ *            opt_group
+ */
+kemia.view.AtomRenderer.prototype.highlightOn = function(atom, opt_color,
+		opt_group) {
 	var atom_config = this.config.get("atom");
 	var strokeWidth = atom_config['stroke']['width'] * 24;
-	var color = this.config.get(atom.symbol) ? this.config.get(atom.symbol)['color']
-			: atom_config['color'];
+	if (!opt_color) {
+		opt_color = this.config.get(atom.symbol) ? 
+				this.config.get(atom.symbol)['color']: 
+				atom_config['color'];
+	}
+
 	var stroke = null
-	var fill = new goog.graphics.SolidFill(color, .3);
-	var radius = atom_config['highlight']['radius'] * this.transform.getScaleX();
+	var fill = new goog.graphics.SolidFill(opt_color, .3);
+	var radius = atom_config['highlight']['radius']
+			* this.transform.getScaleX();
 	var coords = this.transform.transformCoords( [ atom.coord ])[0];
 
 	if (!opt_group) {
@@ -186,7 +200,7 @@ kemia.view.AtomRenderer.prototype.compoundSymbol = function(atom) {
 kemia.view.AtomRenderer.bondOrientation = function(atom, i) {
 	if (atom.bonds.getValues().length == 0) {
 		return 0;
-	}	
+	}
 	var bond = atom.bonds.getValues()[i];
 	var target = bond.target.coord;
 	var source = bond.source.coord;
