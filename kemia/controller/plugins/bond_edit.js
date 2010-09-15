@@ -120,7 +120,7 @@ kemia.controller.plugins.BondEdit.prototype.handleKeyboardShortcut = function(e)
 	}
 }
 
-kemia.controller.plugins.BondEdit.prototype = function(e) {
+kemia.controller.plugins.BondEdit.prototype.handleMouseMove = function(e) {
 	if (this.bond_type) {
 		var target = this.editorObject.findTarget(e);
 		this.editorObject.getOriginalElement().style.cursor = 'default';
