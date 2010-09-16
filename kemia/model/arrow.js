@@ -22,9 +22,11 @@ goog.provide('kemia.model.Arrow');
  * @param {goog.math.Coordinate=} opt_source source point coordinates for arrow
  * @param {goog.math.Coordinate=} opt_target target point coordinates for arrow
  * @param {kemia.model.Arrow.STYLE=} opt_style
+ * @param {string=} opt_reagents_text
+ * @param {string=} opt_conditions_text 
  * @constructor
  */
-kemia.model.Arrow = function(opt_source, opt_target, opt_style) {
+kemia.model.Arrow = function(opt_source, opt_target, opt_style, opt_reagents_text, opt_conditions_text) {
 	this.source = goog.isDef(opt_source) ? 
 			opt_source : 
 			new goog.math.Coordinate(0, 0);
@@ -34,6 +36,12 @@ kemia.model.Arrow = function(opt_source, opt_target, opt_style) {
 	this.style = goog.isDef(opt_style) ? 
 			opt_style: 
 			kemia.model.Arrow.STYLES.FORWARD;
+	this.reagents_text = goog.isDef(opt_reagents_text) ?
+			opt_reagents_text:
+			"";
+	this.conditions_text = goog.isDef(opt_conditions_text) ? 
+			opt_conditions_text:
+			"";
 };
 
 /**

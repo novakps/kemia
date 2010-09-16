@@ -216,32 +216,32 @@ kemia.controller.plugins.Erase.prototype.highlightAtom = function(atom,
 		opt_group) {
 	// this.logger.info('highlightAtom');
 	return this.editorObject.reactionRenderer.moleculeRenderer.atomRenderer
-			.highlightOn(atom, 'red', opt_group);
+			.highlightOn(atom, '#ff6666', opt_group);
 };
 
 kemia.controller.plugins.Erase.prototype.highlightBond = function(bond,
 		opt_group) {
 	return this.editorObject.reactionRenderer.moleculeRenderer.bondRendererFactory
-			.get(bond).highlightOn(bond, 'red', opt_group);
+			.get(bond).highlightOn(bond, '#ff6666', opt_group);
 };
 
 kemia.controller.plugins.Erase.prototype.highlightArrow = function(arrow,
 		opt_group) {
 	// this.logger.info('highlightArrow');
 	return this.editorObject.reactionRenderer.arrowRenderer.highlightOn(arrow,
-			'red', opt_group);
+			'#ff6666', opt_group);
 };
 
 kemia.controller.plugins.Erase.prototype.highlightPlus = function(plus,
 		opt_group) {
 	// this.logger.info('highlightPlus');
 	return this.editorObject.reactionRenderer.plusRenderer.highlightOn(plus,
-			'red', opt_group);
+			'#ff6666', opt_group);
 };
 
 kemia.controller.plugins.Erase.prototype.highlightMolecule = function(molecule,
 		opt_group) {
 	// this.logger.info('highlightPlus');
 	return this.editorObject.reactionRenderer.moleculeRenderer.highlightOn(
-			molecule, 'red', opt_group);
+			molecule, '#ff6666', opt_group);
 }

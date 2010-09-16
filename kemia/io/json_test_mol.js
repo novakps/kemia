@@ -1047,5 +1047,9 @@ var jreactant3 = {
 var jreaction = {
 	"header" : "3-component UGI",
 	"reactants" : [ jreactant1, jreactant2, jreactant3 ],
-	"products" : [ jproduct1 ]
+	"products" : [ jproduct1 ],
+	"reagents_text" : "foo reagent",
+	"conditions_text" : "bar conditions",
+	"arrows" : [{"source":{"x":0,'y':0}, 'target': {'x': 1, 'y': 0}}],
+	'pluses' : [{'x':2, 'y':2}]
 };

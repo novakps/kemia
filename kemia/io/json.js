@@ -9,6 +9,9 @@ goog.require('kemia.model.Reaction');
 goog.require('kemia.model.Molecule');
 goog.require('kemia.model.Bond');
 goog.require('kemia.model.Atom');
+goog.require('kemia.model.Plus');
+goog.require('kemia.model.Arrow');
+goog.require('goog.math.Coordinate');
 goog.require('goog.json');
 goog.require('goog.array');
 
@@ -173,6 +176,16 @@ kemia.io.json.writeMolecule = function(mol) {
 goog.exportSymbol('kemia.io.json.writeMolecule', kemia.io.json.writeMolecule);
 
 
+kemia.io.json.readArrow = function(arrow_json){
+	return new kemia.model.Arrow(new goog.math.Coordinate(arrow_json['source']['x'], arrow_json['source']['y']), 
+			new goog.math.Coordinate(arrow_json['target']['x'], arrow_json['target']['y']));
+}
+
+kemia.io.json.readPlus = function(plus_json){
+	return new kemia.model.Plus(new goog.math.Coordinate(plus_json['x'], plus_json['y']));
+}
+
+
 /** @typedef {{header: string, reactants: Array, products: Array}} */ 
 kemia.io.json.Reaction;
 /** @typedef {{symbol: string, coord: kemia.io.json.Coordinate, charge: number}} */
@@ -182,10 +195,8 @@ kemia.io.json.Coordinate;
 /** @typedef {{source: number, target: number, type: string, stereo: string}} */
 kemia.io.json.Bond;
 /**
- * @typedef {{
- *     name: string, 
- *     atoms: Array.<kemia.io.json.Atom>, 
- *     bondindex: Array.<kemia.io.json.Bond>}}
+ * @typedef {{ name: string, atoms: Array.<kemia.io.json.Atom>, bondindex:
+ *          Array.<kemia.io.json.Bond>}}
  */
 kemia.io.json.Molecule;
 
@@ -216,6 +227,18 @@ kemia.io.json.moleculeToJson = function(mol) {
 	};
 };
 
+kemia.io.json.arrowToJson = function (arrow){
+	return {'source': { 'x': arrow.source.x,
+						'y': arrow.source.y},
+			'target': { 'x': arrow.target.x,
+						'y': arrow.target.y}};
+}
+
+kemia.io.json.plusToJson = function (plus){
+	return {'x': plus.coord.x,
+			'y': plus.coord.y};
+}
+
 /**
  * convert JSON reaction representation to reaction object
  * 
@@ -233,12 +256,20 @@ kemia.io.json.readReaction = function(arg) {
 	}
 	var rxn = new kemia.model.Reaction();
 	rxn.header = jrxn['header'];
+	rxn.reagentsText = jrxn['reagents_text'];
+	rxn.conditionsText = jrxn['conditions_text'];
 	goog.array.forEach(jrxn['reactants'], function(mol){
 		rxn.addReactant(kemia.io.json.readMolecule(mol));
 	});
 	goog.array.forEach(jrxn['products'], function(mol){
 		rxn.addProduct(kemia.io.json.readMolecule(mol));
 	});
+	goog.array.forEach(jrxn['arrows'], function(arrow){
+		rxn.addArrow(kemia.io.json.readArrow(arrow));
+	});
+	goog.array.forEach(jrxn['pluses'], function(plus){
+		rxn.addPlus(kemia.io.json.readPlus(plus));
+	})
 
 	return rxn;
 };
@@ -254,15 +285,23 @@ kemia.io.json.reactionToJson = function (rxn) {
 	var header = rxn.header;
 	var reactants = goog.array.map(rxn.reactants, kemia.io.json.moleculeToJson);
 	var products = goog.array.map(rxn.products, kemia.io.json.moleculeToJson);
-	return {header: header,
-		reactants: reactants,
-		products: products};
+	var arrows = goog.array.map(rxn.arrows, kemia.io.json.arrowToJson);
+	var pluses = goog.array.map(rxn.pluses, kemia.io.json.plusToJson);
+	return {'header': header,
+		'reactants': reactants,
+		'products': products,
+		'reagents_text': rxn.reagentsText,
+		'conditions_text': rxn.conditionsText,
+		'arrows': arrows,
+		'pluses': pluses
+		};
 };
 
-/** 
- * @param {kemia.model.Reaction} rxn the reaction to convert
- * @return {string} 
- * */
+/**
+ * @param {kemia.model.Reaction}
+ *            rxn the reaction to convert
+ * @return {string}
+ */
 kemia.io.json.writeReaction = function(rxn){
 	return new goog.json.Serializer().serialize(kemia.io.json.reactionToJson(rxn));
 }

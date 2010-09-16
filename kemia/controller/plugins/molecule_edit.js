@@ -45,9 +45,9 @@ kemia.controller.plugins.MoleculeEdit.prototype.getTrogClassId = goog.functions
  */
 kemia.controller.plugins.MoleculeEdit.prototype.execCommandInternal = function(
 		command, var_args) {
-	this.template = arguments[1];
+	
 	var e = arguments[3];
-	var molecule = kemia.io.json.readMolecule(this.template);
+	var molecule = kemia.io.json.readMolecule(arguments[1]);
 	// place template as new molecule at 0,0 of graphics canvas
 	var origin = this.editorObject.getAtomicCoords(new goog.math.Coordinate(0,
 			0));
@@ -141,9 +141,10 @@ kemia.controller.plugins.MoleculeEdit.prototype.dragTemplate = function(e,
 				merge_pairs = [ merge_pairs[0] ];
 			}
 			goog.array.forEach(merge_pairs, function(pair) {
-				kemia.controller.plugins.AtomEdit.mergeMolecules(pair[0],
+				kemia.controller.plugins.MoleculeEdit.mergeMolecules(pair[0],
 						pair[1]);
 			}, this);
+			this.resetState();
 			d.editor.setModels(d.editor.getModels());
 			d.dispose();
 		}, undefined, this);
@@ -159,15 +160,15 @@ kemia.controller.plugins.MoleculeEdit.prototype.dragTemplate = function(e,
 kemia.controller.plugins.MoleculeEdit.prototype.logger = goog.debug.Logger
 		.getLogger('kemia.controller.plugins.MoleculeEdit');
 
-kemia.controller.plugins.MoleculeEdit.prototype.handleMouseDown = function(e) {
-
-	// if (this.isActive) {
-	this.editorObject.dispatchBeforeChange();
-	var target = this.editorObject.findTarget(e);
-
-	this.editorObject.dispatchChange();
-	// }
-};
+//kemia.controller.plugins.MoleculeEdit.prototype.handleMouseDown = function(e) {
+//
+//	// if (this.isActive) {
+//	this.editorObject.dispatchBeforeChange();
+//	var target = this.editorObject.findTarget(e);
+//
+//	this.editorObject.dispatchChange();
+//	// }
+//};
 
 /**
  * reset to default state called when another plugin is made active

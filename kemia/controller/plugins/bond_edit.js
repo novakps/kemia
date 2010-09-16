@@ -303,7 +303,7 @@ kemia.controller.plugins.BondEdit.prototype.addBondToAtom = function(atom) {
 
 kemia.controller.plugins.BondEdit.prototype.highlightAtom = function(atom,
 		opt_group) {
-	// this.logger.info('highlightAtom');
+	
 	return this.editorObject.reactionRenderer.moleculeRenderer.atomRenderer
 			.highlightOn(atom, 'green', opt_group);
 };
@@ -311,7 +311,7 @@ kemia.controller.plugins.BondEdit.prototype.highlightAtom = function(atom,
 kemia.controller.plugins.BondEdit.prototype.highlightBond = function(bond,
 		opt_group) {
 	return this.editorObject.reactionRenderer.moleculeRenderer.bondRendererFactory
-			.get(bond).highlightOn(bond, 'green', opt_group);
+			.get(bond).highlightOn(bond, '#green', opt_group);
 };
 
 /**

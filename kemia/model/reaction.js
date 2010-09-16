@@ -35,6 +35,15 @@ kemia.model.Reaction = function() {
 };
 
 /**
+ * The logger for this class.
+ * 
+ * @type {goog.debug.Logger}
+ * @protected
+ */
+kemia.model.Reaction.prototype.logger = goog.debug.Logger
+		.getLogger('kemia.model.Reaction');
+
+/**
  * @return {string} the reaction header
  */
 kemia.model.Reaction.prototype.getHeader = function() {
@@ -85,8 +94,11 @@ kemia.model.Reaction.prototype.addArrow = function(arrow) {
  *            arrow
  */
 kemia.model.Reaction.prototype.removeArrow = function(arrow) {
-	goog.array.remove(this.arrows, arrow);
-	arrow.reaction = undefined;
+	this.logger.info('removeArrow');
+	if (goog.array.contains(this.arrows, arrow)) {
+		goog.array.remove(this.arrows, arrow);
+		arrow.reaction = undefined;
+	}
 };
 
 /**
@@ -112,7 +124,7 @@ kemia.model.Reaction.prototype.removePlus = function(plus) {
  *            arrow
  */
 kemia.model.Reaction.prototype.removeArrow = function(arrow) {
-	this.removeArrow(arrow);
+	goog.array.remove(this.arrows, arrow);
 	arrow.reaction = undefined;
 }
 
@@ -121,8 +133,11 @@ kemia.model.Reaction.prototype.removeArrow = function(arrow) {
  *            plus
  */
 kemia.model.Reaction.prototype.removePlus = function(plus) {
-	this.removePlus(plus);
-	plus.reaction = undefined;
+	this.logger.info('removePlus');
+	if (goog.array.contains(this.pluses, plus)) {
+		goog.array.remove(this.pluses, plus);
+		plus.reaction = undefined;
+	}
 }
 
 /**

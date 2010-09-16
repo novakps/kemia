@@ -61,16 +61,18 @@ function test2ImportReaction() {
 	assertEquals(rxn.reactants[1].countAtoms(), 4);
 	assertEquals(rxn.products[0].countBonds(), 15);
 	assertEquals(rxn.products.length, 1);
+	assertEquals('foo reagent', rxn.reagentsText);
+	assertEquals('bar conditions', rxn.conditionsText);
 }
 
 function test3ExportReaction() {
 	var rxn = kemia.io.json.readReaction(jreaction);
 	var jrxnstr = kemia.io.json.writeReaction(rxn);
-	assertEquals(3908, jrxnstr.length);
+	assertEquals(3973, jrxnstr.length);
 	// test the string representation
 	var rxn = kemia.io.json.readReaction(JSON.stringify(jreaction));
 	var jrxnstr = kemia.io.json.writeReaction(rxn);
-	assertEquals(3908, jrxnstr.length);
+	assertEquals(3973, jrxnstr.length);
 
 }
 
@@ -81,4 +83,6 @@ function test4ReactionToJson() {
 	assertEquals(rxn.products.length, rxn_json.products.length);
 	assertEquals(rxn.reactants[0].countAtoms(),
 			rxn_json.reactants[0].atoms.length);
+	assertEquals('foo reagent', rxn_json.reagents_text);
+	assertEquals('bar conditions', rxn_json.conditions_text);
 };

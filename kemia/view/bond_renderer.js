@@ -50,29 +50,59 @@ kemia.view.BondRenderer.prototype.highlightOn = function(bond, opt_color, opt_gr
 		opt_group = this.graphics.createGroup();
 	}
 
-	var strokeWidth = this.config.get("bond")['stroke']['width'] * 2;
-	var stroke = new goog.graphics.Stroke(strokeWidth, opt_color);
-	var fill = null;
+	var stroke = null;
+	var angle = goog.math.angle(bond.source.coord.x, bond.source.coord.y, bond.target.coord.x,
+			bond.target.coord.y);
+	var angle_up = goog.math.standardAngle(angle + 90);
+	var angle_down = goog.math.standardAngle(angle - 90);
+	
+
+	var angle_up_rads = goog.math.toRadians(angle_up);
+	var angle_down_rads = goog.math.toRadians(angle_down);
+	
+	var scale = this.transform.getScaleX();
 	var radius = this.config.get("highlight")['radius']
-			* this.transform.getScaleX();
-	var theta = -kemia.view.BondRenderer.getTheta(bond) * 180 / Math.PI;
-	var angle = theta + 90;
-
-	var arcExtent;
-	if (theta <= 0) {
-		arcExtent = (bond.source.coord.y <= bond.target.coord.y) ? 180 : -180;
-	} else {
-		arcExtent = (bond.source.coord.y > bond.target.coord.y) ? 180 : -180;
-	}
-
+			* scale ;
+	
+	
 	var coords = this.transform.transformCoords( [ bond.source.coord,
 			bond.target.coord ]);
 
-	var path = new goog.graphics.Path();
-	path.arc(coords[0].x, coords[0].y, radius, radius, angle, arcExtent);
-	path.arc(coords[1].x, coords[1].y, radius, radius, angle, -arcExtent);
+	var source_up = goog.math.Coordinate.sum(new goog.math.Coordinate(
+			radius * Math.cos(angle_up_rads), -radius
+					* Math.sin(angle_up_rads)), coords[0]);
 
-	this.graphics.drawPath(path, stroke, fill, opt_group);
+	var target_up = goog.math.Coordinate.sum(new goog.math.Coordinate(
+			radius * Math.cos(angle_up_rads), -radius
+					* Math.sin(angle_up_rads)), coords[1]);
+
+	var source_down = goog.math.Coordinate.sum(new goog.math.Coordinate(
+			radius * Math.cos(angle_down_rads), -radius
+					* Math.sin(angle_down_rads)), coords[0]);
+	var target_down = goog.math.Coordinate.sum(new goog.math.Coordinate(
+			radius * Math.cos(angle_down_rads), -radius
+					* Math.sin(angle_down_rads)), coords[1]);
+
+	var path_up = new goog.graphics.Path();
+	path_up.moveTo(coords[0].x, coords[0].y);
+	path_up.lineTo(source_up.x, source_up.y);
+	path_up.lineTo(target_up.x, target_up.y);
+	path_up.lineTo(coords[1].x, coords[1].y);
+	path_up.close();
+//	var fill = new goog.graphics.LinearGradient(coords[0].x, coords[0].y, source_up.x, source_up.y, opt_color, 'white');
+	var fill = new goog.graphics.SolidFill(opt_color, .3);
+	this.graphics.drawPath(path_up, stroke, fill, opt_group);
+	
+	var path_down = new goog.graphics.Path();
+	path_down.moveTo(coords[0].x, coords[0].y);
+	path_down.lineTo(source_down.x, source_down.y);
+	path_down.lineTo(target_down.x, target_down.y);
+	path_down.lineTo(coords[1].x, coords[1].y);
+	path_down.close();
+//	var fill = new goog.graphics.LinearGradient(coords[0].x, coords[0].y, source_down.x, source_down.y, opt_color, 'white');
+	this.graphics.drawPath(path_down, stroke, fill, opt_group);
+	
+	
 	return opt_group;
 }
 

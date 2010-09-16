@@ -9,6 +9,7 @@ goog.require('goog.debug.Logger');
 kemia.controller.plugins.Move = function() {
 	kemia.controller.Plugin.call(this);
 	this.isActive = true;
+	this.isDragging = false;
 }
 goog.inherits(kemia.controller.plugins.Move, kemia.controller.Plugin);
 goog.exportSymbol('kemia.controller.plugins.Move',
@@ -57,7 +58,7 @@ kemia.controller.plugins.Move.prototype.logger = goog.debug.Logger
 		.getLogger('kemia.controller.plugins.Move');
 
 kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
-	if (this.isActive) {
+	if (this.isActive && !this.isDragging) {
 		var target = this.editorObject.findTarget(e);
 		this.editorObject.getOriginalElement().style.cursor = 'default';
 		if (e.currentTarget.highlightGroup) {
@@ -123,6 +124,10 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 
 kemia.controller.plugins.Move.prototype.handleMouseDown = function(e) {
 	if (this.isActive) {
+		if (e.currentTarget.highlightGroup) {
+			e.currentTarget.highlightGroup.clear();
+		}
+		this.isDragging = true;
 		var target = this.editorObject.findTarget(e);
 		if (target instanceof kemia.model.Atom) {
 			var atom = target;
@@ -168,6 +173,7 @@ kemia.controller.plugins.Move.prototype.handleMouseDown = function(e) {
 };
 
 kemia.controller.plugins.Move.prototype.handleMouseUp = function(e) {
+	this.isDragging = false;
 	var targets = goog.array
 			.filter(
 					this.editorObject.findTargetList(e),
@@ -235,31 +241,31 @@ kemia.controller.plugins.Move.prototype.highlightAtom = function(atom,
 		opt_group) {
 	// this.logger.info('highlightAtom');
 	return this.editorObject.reactionRenderer.moleculeRenderer.atomRenderer
-			.highlightOn(atom, 'blue', opt_group);
+			.highlightOn(atom, '#3366ff', opt_group);
 };
 
 kemia.controller.plugins.Move.prototype.highlightBond = function(bond,
 		opt_group) {
 	return this.editorObject.reactionRenderer.moleculeRenderer.bondRendererFactory
-			.get(bond).highlightOn(bond, 'blue', opt_group);
+			.get(bond).highlightOn(bond, '#3366ff', opt_group);
 };
 
 kemia.controller.plugins.Move.prototype.highlightMolecule = function(molecule,
 		opt_group) {
 	return this.editorObject.reactionRenderer.moleculeRenderer.highlightOn(
-			molecule, 'blue', opt_group);
+			molecule, '#3366ff', opt_group);
 }
 
 kemia.controller.plugins.Move.prototype.highlightArrow = function(arrow,
 		opt_group) {
 	return this.editorObject.reactionRenderer.arrowRenderer.highlightOn(arrow,
-			'blue', opt_group);
+			'#3366ff', opt_group);
 };
 
 kemia.controller.plugins.Move.prototype.highlightPlus = function(plus,
 		opt_group) {
 	return this.editorObject.reactionRenderer.plusRenderer.highlightOn(plus,
-			'blue', opt_group);
+			'#3366ff', opt_group);
 };
 
 /** @inheritDoc */
@@ -453,36 +459,42 @@ kemia.controller.plugins.Move.prototype.dragPlus = function(e, plus) {
 };
 
 kemia.controller.plugins.Move.prototype.dragArrow = function(e, arrow) {
-	this.logger.info("dragArrow");
-	var d = new goog.fx.Dragger(this.editorObject.getOriginalElement());
 
-	d._initDeltaX = null;
-	d._initDeltaY = null;
-	d._prevDeltaX = 0;
-	d._prevDeltaY = 0;
+	var d = new goog.fx.Dragger(this.editorObject.getOriginalElement());
+	d._prevX = e.clientX;
+	d._prevY = e.clientY;
+
 	d.arrow = arrow;
 	d.editor = this.editorObject;
-	d.addEventListener(goog.fx.Dragger.EventType.DRAG, function(e) {
-		d._initDeltaX = d._initDeltaX || d.deltaX;
-		d._initDeltaY = d._initDeltaY || d.deltaY;
-		var deltaX = d.deltaX - d._initDeltaX;
-		var deltaY = d.deltaY - d._initDeltaY;
-		var deltaDeltaX = deltaX - d._prevDeltaX;
-		var deltaDeltaY = deltaY - d._prevDeltaY;
+	d
+			.addEventListener(
+					goog.fx.Dragger.EventType.DRAG,
+					function(e) {
+						
+						var trans = new goog.graphics.AffineTransform.getTranslateInstance(
+								e.clientX - d._prevX, e.clientY - d._prevY);
 
-		// move graphic
-			d.arrow.group.setTransformation(deltaX, deltaY, 0, 0, 0);
+						var coords = d.editor.reactionRenderer.transform
+								.createInverse().transformCoords(
+										[
+												new goog.math.Coordinate(
+														e.clientX, e.clientY),
+												new goog.math.Coordinate(
+														d._prevX, d._prevY) ]);
+						var diff = goog.math.Coordinate.difference(coords[0],
+								coords[1]);
 
-			// move molecule
-			var diff = new goog.math.Coordinate(deltaDeltaX
-					/ d.editor.reactionRenderer.transform.getScaleX(),
-					deltaDeltaY
-							/ d.editor.reactionRenderer.transform.getScaleY());
+						arrow.source = goog.math.Coordinate.sum(
+								arrow.source, diff);
+						arrow.target = goog.math.Coordinate.sum(
+								arrow.target, diff);
+						arrow.group.clear();
+						d.editor.reactionRenderer.arrowRenderer.render(arrow,d.editor.reactionRenderer.transform);
 
-			// d._prev = mouse_coord;
-			d._prevDeltaX = d.deltaX - d._initDeltaX;
-			d._prevDeltaY = d.deltaY - d._initDeltaY;
-		});
+						d._prevX = e.clientX;
+						d._prevY = e.clientY;
+
+					});
 	d.addEventListener(goog.fx.Dragger.EventType.END, function(e) {
 
 		d.editor.setModels(d.editor.getModels());

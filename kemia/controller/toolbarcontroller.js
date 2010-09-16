@@ -217,7 +217,7 @@ kemia.controller.ToolbarController.prototype.disposeInternal = function() {
  * @protected
  */
 kemia.controller.ToolbarController.prototype.updateToolbar = function(e) {
-	this.logger.info('updateToolbar');
+//	this.logger.info('updateToolbar');
 	if (!this.toolbar_.isEnabled()
 			|| !this.dispatchEvent(goog.ui.Component.EventType.CHANGE)) {
 		return;
@@ -251,13 +251,13 @@ kemia.controller.ToolbarController.prototype.updateToolbar = function(e) {
  */
 kemia.controller.ToolbarController.prototype.updateToolbarFromState = function(
 		state) {
-	this.logger.info('updateToobarFromState');
+//	this.logger.info('updateToobarFromState');
 
 	for ( var command in state) {
 		var button = this.toolbar_.getChild(this.getComponentId(command));
 		if (button) {
 			var value = state[command];
-			this.logger.info(command + ": " + value);
+//			this.logger.info(command + ": " + value);
 			if (button.updateFromValue) {
 				button.updateFromValue(value);
 			} else {

@@ -47,8 +47,7 @@ goog.inherits(kemia.view.ArrowRenderer, kemia.view.Renderer);
  * @param {kemia.graphics.AffineTransform}
  *            transform
  */
-kemia.view.ArrowRenderer.prototype.render = function(arrow, reagents_text,
-		conditions_text, transform) {
+kemia.view.ArrowRenderer.prototype.render = function(arrow, transform) {
 	this.setTransform(transform);
 	arrow.group = this.graphics.createGroup();
 	var h = this.config.get('arrow')['height'];
@@ -116,10 +115,10 @@ kemia.view.ArrowRenderer.prototype.render = function(arrow, reagents_text,
 			fontSize * Math.cos(angle_down_rads), -fontSize
 					* Math.sin(angle_down_rads)), coords[1]);
 
-	this.graphics.drawTextOnLine(reagents_text, reagents_nock.x,
+	this.graphics.drawTextOnLine(arrow.reagents_text, reagents_nock.x,
 			reagents_nock.y, reagents_tip.x, reagents_tip.y, 'center', font,
 			textStroke, fill, arrow.group);
-	this.graphics.drawTextOnLine(conditions_text, conditions_nock.x,
+	this.graphics.drawTextOnLine(arrow.conditions_text, conditions_nock.x,
 			conditions_nock.y, conditions_tip.x, conditions_tip.y, 'center',
 			font, textStroke, fill, arrow.group);
 
@@ -144,16 +143,54 @@ kemia.view.ArrowRenderer.prototype.highlightOn = function(arrow, opt_color,
 	}
 
 	var stroke = null;
-	var fill = new goog.graphics.SolidFill(opt_color, .3);
+	var angle = goog.math.angle(arrow.source.x, arrow.source.y, arrow.target.x,
+			arrow.target.y);
+	var angle_up = goog.math.standardAngle(angle + 90);
+	var angle_down = goog.math.standardAngle(angle - 90);
+	
+	var angle_up_rads = goog.math.toRadians(angle_up);
+	var angle_down_rads = goog.math.toRadians(angle_down);
+	
+	var scale = this.transform.getScaleX();
 	var radius = this.config.get("arrow")['highlight']['radius']
-			* this.transform.getScaleX();
-	var center = goog.math.Vec2.fromCoordinate(
-			goog.math.Coordinate.sum(arrow.source, arrow.target)).scale(0.5);
+			* scale ;
+	
+	var coords = this.transform.transformCoords( [ arrow.source,
+			arrow.target ]);
 
-	var coords = this.transform.transformCoords( [ center ])[0];
-	this.graphics.drawCircle(coords.x, coords.y, radius, stroke, fill,
-			opt_group);
+	var source_up = goog.math.Coordinate.sum(new goog.math.Coordinate(
+			radius * Math.cos(angle_up_rads), -radius
+					* Math.sin(angle_up_rads)), coords[0]);
 
+	var target_up = goog.math.Coordinate.sum(new goog.math.Coordinate(
+			radius * Math.cos(angle_up_rads), -radius
+					* Math.sin(angle_up_rads)), coords[1]);
+
+	var source_down = goog.math.Coordinate.sum(new goog.math.Coordinate(
+			radius * Math.cos(angle_down_rads), -radius
+					* Math.sin(angle_down_rads)), coords[0]);
+	var target_down = goog.math.Coordinate.sum(new goog.math.Coordinate(
+			radius * Math.cos(angle_down_rads), -radius
+					* Math.sin(angle_down_rads)), coords[1]);
+
+	var path_up = new goog.graphics.Path();
+	path_up.moveTo(coords[0].x, coords[0].y);
+	path_up.lineTo(source_up.x, source_up.y);
+	path_up.lineTo(target_up.x, target_up.y);
+	path_up.lineTo(coords[1].x, coords[1].y);
+	path_up.close();
+//	var fill = new goog.graphics.LinearGradient(coords[0].x, coords[0].y, source_up.x, source_up.y, opt_color, 'white');
+	var fill = new goog.graphics.SolidFill(opt_color, .3);
+	this.graphics.drawPath(path_up, stroke, fill, opt_group);
+	
+	var path_down = new goog.graphics.Path();
+	path_down.moveTo(coords[0].x, coords[0].y);
+	path_down.lineTo(source_down.x, source_down.y);
+	path_down.lineTo(target_down.x, target_down.y);
+	path_down.lineTo(coords[1].x, coords[1].y);
+	path_down.close();
+//	var fill = new goog.graphics.LinearGradient(coords[0].x, coords[0].y, source_down.x, source_down.y, opt_color, 'white');
+	this.graphics.drawPath(path_down, stroke, fill, opt_group);
 	return opt_group;
 }
 
@@ -186,7 +223,7 @@ kemia.view.ArrowRenderer.defaultConfig = {
 			}
 		},
 		'highlight' : {
-			'radius' : .5,
+			'radius' : .75,
 			'color' : 'grey'
 		}
 	}
