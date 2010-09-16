@@ -58,136 +58,152 @@ kemia.controller.plugins.Move.prototype.logger = goog.debug.Logger
 		.getLogger('kemia.controller.plugins.Move');
 
 kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
-	if (this.isActive && !this.isDragging) {
-		var target = this.editorObject.findTarget(e);
-		this.editorObject.getOriginalElement().style.cursor = 'default';
-		if (e.currentTarget.highlightGroup) {
-			e.currentTarget.highlightGroup.clear();
-		}
-		if (target instanceof kemia.model.Atom) {
-			this.editorObject.getOriginalElement().style.cursor = 'move';
-			if (!e.currentTarget.highlightGroup) {
-				e.currentTarget.highlightGroup = this.highlightAtom(target);
-			} else {
-				e.currentTarget.highlightGroup = this.highlightAtom(target,
-						e.currentTarget.highlightGroup);
+	try {
+		if (this.isActive && !this.isDragging) {
+			var target = this.editorObject.findTarget(e);
+			this.editorObject.getOriginalElement().style.cursor = 'default';
+			if (e.currentTarget.highlightGroup) {
+				e.currentTarget.highlightGroup.clear();
 			}
-			return true;
-		} else if (target instanceof kemia.model.Bond) {
-			this.editorObject.getOriginalElement().style.cursor = 'move';
-			if (!e.currentTarget.highlightGroup) {
-				e.currentTarget.highlightGroup = this.highlightBond(target);
-			} else {
-				e.currentTarget.highlightGroup = this.highlightBond(target,
-						e.currentTarget.highlightGroup);
-			}
-			return true;
-		} else if (target instanceof kemia.model.Molecule) {
-			if (e.shiftKey) {
-				this.editorObject.getOriginalElement().style.cursor = 'pointer';// TTD
-				// need
-				// better
-				// icon
-			} else {
+			if (target instanceof kemia.model.Atom) {
 				this.editorObject.getOriginalElement().style.cursor = 'move';
+				if (!e.currentTarget.highlightGroup) {
+					e.currentTarget.highlightGroup = this.highlightAtom(target);
+				} else {
+					e.currentTarget.highlightGroup = this.highlightAtom(target,
+							e.currentTarget.highlightGroup);
+				}
+				return true;
+			} else if (target instanceof kemia.model.Bond) {
+				this.editorObject.getOriginalElement().style.cursor = 'move';
+				if (!e.currentTarget.highlightGroup) {
+					e.currentTarget.highlightGroup = this.highlightBond(target);
+				} else {
+					e.currentTarget.highlightGroup = this.highlightBond(target,
+							e.currentTarget.highlightGroup);
+				}
+				return true;
+			} else if (target instanceof kemia.model.Molecule) {
+				if (e.shiftKey) {
+					this.editorObject.getOriginalElement().style.cursor = 'pointer';// TTD
+					// need
+					// better
+					// icon
+				} else {
+					this.editorObject.getOriginalElement().style.cursor = 'move';
+				}
+				if (!e.currentTarget.highlightGroup) {
+					e.currentTarget.highlightGroup = this
+							.highlightMolecule(target);
+				} else {
+					e.currentTarget.highlightGroup = this.highlightMolecule(
+							target, e.currentTarget.highlightGroup);
+				}
+				return true;
+			} else if (target instanceof kemia.model.Arrow) {
+				this.editorObject.getOriginalElement().style.cursor = 'move';
+				if (!e.currentTarget.highlightGroup) {
+					e.currentTarget.highlightGroup = this
+							.highlightArrow(target);
+				} else {
+					e.currentTarget.highlightGroup = this.highlightArrow(
+							target, e.currentTarget.highlightGroup);
+				}
+				return true;
+			} else if (target instanceof kemia.model.Plus) {
+				this.editorObject.getOriginalElement().style.cursor = 'move';
+				if (!e.currentTarget.highlightGroup) {
+					e.currentTarget.highlightGroup = this.highlightPlus(target);
+				} else {
+					e.currentTarget.highlightGroup = this.highlightPlus(target,
+							e.currentTarget.highlightGroup);
+				}
+				return true;
 			}
-			if (!e.currentTarget.highlightGroup) {
-				e.currentTarget.highlightGroup = this.highlightMolecule(target);
-			} else {
-				e.currentTarget.highlightGroup = this.highlightMolecule(target,
-						e.currentTarget.highlightGroup);
-			}
-			return true;
-		} else if (target instanceof kemia.model.Arrow) {
-			this.editorObject.getOriginalElement().style.cursor = 'move';
-			if (!e.currentTarget.highlightGroup) {
-				e.currentTarget.highlightGroup = this.highlightArrow(target);
-			} else {
-				e.currentTarget.highlightGroup = this.highlightArrow(target,
-						e.currentTarget.highlightGroup);
-			}
-			return true;
-		} else if (target instanceof kemia.model.Plus) {
-			this.editorObject.getOriginalElement().style.cursor = 'move';
-			if (!e.currentTarget.highlightGroup) {
-				e.currentTarget.highlightGroup = this.highlightPlus(target);
-			} else {
-				e.currentTarget.highlightGroup = this.highlightPlus(target,
-						e.currentTarget.highlightGroup);
-			}
-			return true;
-		}
-		return false;
+			return false;
 
+		}
+	} catch (e) {
+		this.logger.info(e);
 	}
 }
 
 kemia.controller.plugins.Move.prototype.handleMouseDown = function(e) {
-	if (this.isActive) {
-		if (e.currentTarget.highlightGroup) {
-			e.currentTarget.highlightGroup.clear();
-		}
-		this.isDragging = true;
-		var target = this.editorObject.findTarget(e);
-		if (target instanceof kemia.model.Atom) {
-			var atom = target;
-			this.editorObject.dispatchBeforeChange();
-			this.dragAtom(e, atom);
-			this.editorObject.dispatchChange();
-			return true;
-		}
-		if (target instanceof kemia.model.Bond) {
-			var bond = target;
-			this.editorObject.dispatchBeforeChange();
-			this.dragBond(e, bond);
-			this.editorObject.dispatchChange();
-			return true;
-		}
-		if (target instanceof kemia.model.Molecule) {
-			var molecule = target;
-			this.editorObject.dispatchBeforeChange();
-			if (e.shiftKey) {
-				this.rotateMolecule(e, target);
-			} else {
-				this.dragMolecule(e, target);
+	try {
+		if (this.isActive) {
+			if (e.currentTarget.highlightGroup) {
+				e.currentTarget.highlightGroup.clear();
 			}
-			this.editorObject.dispatchChange();
-			return true;
+			this.isDragging = true;
+			var target = this.editorObject.findTarget(e);
+			if (target instanceof kemia.model.Atom) {
+				var atom = target;
+				this.editorObject.dispatchBeforeChange();
+				this.dragAtom(e, atom);
+				this.editorObject.dispatchChange();
+				return true;
+			}
+			if (target instanceof kemia.model.Bond) {
+				var bond = target;
+				this.editorObject.dispatchBeforeChange();
+				this.dragBond(e, bond);
+				this.editorObject.dispatchChange();
+				return true;
+			}
+			if (target instanceof kemia.model.Molecule) {
+				var molecule = target;
+				this.editorObject.dispatchBeforeChange();
+				if (e.shiftKey) {
+					this.rotateMolecule(e, target);
+				} else {
+					this.dragMolecule(e, target);
+				}
+				this.editorObject.dispatchChange();
+				return true;
+			}
+			if (target instanceof kemia.model.Plus) {
+				var plus = target;
+				this.editorObject.dispatchBeforeChange();
+				this.dragPlus(e, plus);
+				this.editorObject.dispatchChange();
+				return true;
+			}
+			if (target instanceof kemia.model.Arrow) {
+				var arrow = target;
+				this.editorObject.dispatchBeforeChange();
+				this.dragArrow(e, arrow);
+				this.editorObject.dispatchChange();
+				return true;
+			}
 		}
-		if (target instanceof kemia.model.Plus) {
-			var plus = target;
-			this.editorObject.dispatchBeforeChange();
-			this.dragPlus(e, plus);
-			this.editorObject.dispatchChange();
-			return true;
-		}
-		if (target instanceof kemia.model.Arrow) {
-			var arrow = target;
-			this.editorObject.dispatchBeforeChange();
-			this.dragArrow(e, arrow);
-			this.editorObject.dispatchChange();
-			return true;
-		}
+		return false;
+
+	} catch (e) {
+		this.logger.info(e);
 	}
-	return false;
 };
 
 kemia.controller.plugins.Move.prototype.handleMouseUp = function(e) {
-	this.isDragging = false;
-	var targets = goog.array
-			.filter(
-					this.editorObject.findTargetList(e),
-					function(obj) {
-						return (obj instanceof kemia.model.Atom && obj !== this.dragSource);
-					}, this);
-	var target = targets.length > 0 ? targets[0] : undefined;
-	if (this.dragSource && target instanceof kemia.model.Atom) {
-		this.editorObject.dispatchBeforeChange();
-		kemia.controller.plugins.Move.mergeMolecules(this.dragSource, target);
-		this.dragSource = undefined;
-		this.editorObject.setModels(this.editorObject.getModels());
-		this.editorObject.dispatchChange();
-		return true;
+	try {
+		this.isDragging = false;
+		var targets = goog.array
+				.filter(
+						this.editorObject.findTargetList(e),
+						function(obj) {
+							return (obj instanceof kemia.model.Atom && obj !== this.dragSource);
+						}, this);
+		var target = targets.length > 0 ? targets[0] : undefined;
+		if (this.dragSource && target instanceof kemia.model.Atom) {
+			this.editorObject.dispatchBeforeChange();
+			kemia.controller.plugins.Move.mergeMolecules(this.dragSource,
+					target);
+			this.dragSource = undefined;
+			this.editorObject.setModels(this.editorObject.getModels());
+			this.editorObject.dispatchChange();
+			return true;
+		}
+	} catch (e) {
+		this.logger.info(e);
 	}
 }
 /**
@@ -470,7 +486,7 @@ kemia.controller.plugins.Move.prototype.dragArrow = function(e, arrow) {
 			.addEventListener(
 					goog.fx.Dragger.EventType.DRAG,
 					function(e) {
-						
+
 						var trans = new goog.graphics.AffineTransform.getTranslateInstance(
 								e.clientX - d._prevX, e.clientY - d._prevY);
 
@@ -484,12 +500,13 @@ kemia.controller.plugins.Move.prototype.dragArrow = function(e, arrow) {
 						var diff = goog.math.Coordinate.difference(coords[0],
 								coords[1]);
 
-						arrow.source = goog.math.Coordinate.sum(
-								arrow.source, diff);
-						arrow.target = goog.math.Coordinate.sum(
-								arrow.target, diff);
+						arrow.source = goog.math.Coordinate.sum(arrow.source,
+								diff);
+						arrow.target = goog.math.Coordinate.sum(arrow.target,
+								diff);
 						arrow.group.clear();
-						d.editor.reactionRenderer.arrowRenderer.render(arrow,d.editor.reactionRenderer.transform);
+						d.editor.reactionRenderer.arrowRenderer.render(arrow,
+								d.editor.reactionRenderer.transform);
 
 						d._prevX = e.clientX;
 						d._prevY = e.clientY;
@@ -574,8 +591,7 @@ kemia.controller.plugins.Move.prototype.dragMolecule = function(e, molecule) {
 				merge_pairs = [ merge_pairs[0] ];
 			}
 			goog.array.forEach(merge_pairs, function(pair) {
-				kemia.controller.plugins.Move.mergeMolecules(pair[0],
-						pair[1]);
+				kemia.controller.plugins.Move.mergeMolecules(pair[0], pair[1]);
 			}, this);
 			d.editor.setModels(d.editor.getModels());
 			d.dispose();

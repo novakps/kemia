@@ -3,8 +3,8 @@ goog.provide('kemia.controller.plugins.ClearEditor');
 goog.require('kemia.controller.Plugin');
 goog.require('goog.functions');
 
-//goog.exportSymbol('kemia.controller.plugins.ClearEditor.COMMAND',
-//		kemia.controller.plugins.ClearEditor.COMMAND);
+// goog.exportSymbol('kemia.controller.plugins.ClearEditor.COMMAND',
+// kemia.controller.plugins.ClearEditor.COMMAND);
 
 /**
  * simple Plugin for clearing editor.
@@ -15,9 +15,9 @@ goog.require('goog.functions');
 kemia.controller.plugins.ClearEditor = function() {
 	kemia.controller.Plugin.call(this);
 };
-goog.inherits(kemia.controller.plugins.ClearEditor,
-		kemia.controller.Plugin);
-goog.exportSymbol('kemia.controller.plugins.ClearEditor', kemia.controller.plugins.ClearEditor);
+goog.inherits(kemia.controller.plugins.ClearEditor, kemia.controller.Plugin);
+goog.exportSymbol('kemia.controller.plugins.ClearEditor',
+		kemia.controller.plugins.ClearEditor);
 
 /** The clear command. */
 kemia.controller.plugins.ClearEditor.COMMAND = 'clearEditor';
@@ -41,5 +41,10 @@ kemia.controller.plugins.ClearEditor.prototype.isSupportedCommand = function(
  */
 kemia.controller.plugins.ClearEditor.prototype.execCommandInternal = function(
 		command) {
-	this.editorObject.clear();
+	try {
+		this.editorObject.clear();
+
+	} catch (e) {
+		this.logger.info(e);
+	}
 };

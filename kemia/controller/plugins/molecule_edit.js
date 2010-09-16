@@ -45,36 +45,40 @@ kemia.controller.plugins.MoleculeEdit.prototype.getTrogClassId = goog.functions
  */
 kemia.controller.plugins.MoleculeEdit.prototype.execCommandInternal = function(
 		command, var_args) {
-	
-	var e = arguments[3];
-	var molecule = kemia.io.json.readMolecule(arguments[1]);
-	// place template as new molecule at 0,0 of graphics canvas
-	var origin = this.editorObject.getAtomicCoords(new goog.math.Coordinate(0,
-			0));
-	var mol_bbox = molecule.getBoundingBox();
-	var mol_offset = new goog.math.Coordinate(mol_bbox.right, mol_bbox.top);
-	var diff = goog.math.Coordinate.difference(origin, mol_offset);
-	// diff = goog.math.Coordinate.difference(diff, mol_offset);
-	if (this.editorObject.getModels().length > 0) {
-		var reaction = this.editorObject.getModels()[0];
-	} else {
-		reaction = new kemia.model.Reaction();
+	try {
+		var e = arguments[3];
+		var molecule = kemia.io.json.readMolecule(arguments[1]);
+		// place template as new molecule at 0,0 of graphics canvas
+		var origin = this.editorObject
+				.getAtomicCoords(new goog.math.Coordinate(0, 0));
+		var mol_bbox = molecule.getBoundingBox();
+		var mol_offset = new goog.math.Coordinate(mol_bbox.right, mol_bbox.top);
+		var diff = goog.math.Coordinate.difference(origin, mol_offset);
+		// diff = goog.math.Coordinate.difference(diff, mol_offset);
+		if (this.editorObject.getModels().length > 0) {
+			var reaction = this.editorObject.getModels()[0];
+		} else {
+			reaction = new kemia.model.Reaction();
+		}
+		reaction.addReactant(molecule);
+		reaction.translateMolecule(molecule, diff);
+		this.editorObject.setModels( [ reaction ]);
+		var mol_center = molecule.getCenter();
+
+		var center = this.editorObject.getGraphicsCoords(mol_center);
+		var origin = kemia.controller.ReactionEditor.getOffsetCoords(
+				this.editorObject.originalElement, document.body.scrollLeft
+						+ document.documentElement.scrollLeft,
+				document.body.scrollTop + document.documentElement.scrollTop);
+
+		e.clientX = center.x - origin.x;
+		e.clientY = center.y - origin.y;
+
+		this.dragTemplate(e, molecule);
+
+	} catch (e) {
+		this.logger.info(e);
 	}
-	reaction.addReactant(molecule);
-	reaction.translateMolecule(molecule, diff);
-	this.editorObject.setModels( [ reaction ]);
-	var mol_center = molecule.getCenter();
-
-	var center = this.editorObject.getGraphicsCoords(mol_center);
-	var origin = kemia.controller.ReactionEditor.getOffsetCoords(
-			this.editorObject.originalElement, document.body.scrollLeft
-					+ document.documentElement.scrollLeft,
-			document.body.scrollTop + document.documentElement.scrollTop);
-
-	e.clientX = center.x - origin.x;
-	e.clientY = center.y - origin.y;
-
-	this.dragTemplate(e, molecule);
 };
 
 kemia.controller.plugins.MoleculeEdit.prototype.dragTemplate = function(e,
@@ -160,15 +164,16 @@ kemia.controller.plugins.MoleculeEdit.prototype.dragTemplate = function(e,
 kemia.controller.plugins.MoleculeEdit.prototype.logger = goog.debug.Logger
 		.getLogger('kemia.controller.plugins.MoleculeEdit');
 
-//kemia.controller.plugins.MoleculeEdit.prototype.handleMouseDown = function(e) {
+// kemia.controller.plugins.MoleculeEdit.prototype.handleMouseDown = function(e)
+// {
 //
-//	// if (this.isActive) {
-//	this.editorObject.dispatchBeforeChange();
-//	var target = this.editorObject.findTarget(e);
+// // if (this.isActive) {
+// this.editorObject.dispatchBeforeChange();
+// var target = this.editorObject.findTarget(e);
 //
-//	this.editorObject.dispatchChange();
-//	// }
-//};
+// this.editorObject.dispatchChange();
+// // }
+// };
 
 /**
  * reset to default state called when another plugin is made active

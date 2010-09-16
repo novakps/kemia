@@ -9,7 +9,8 @@ kemia.controller.plugins.Cleanup = function() {
 	kemia.controller.Plugin.call(this);
 }
 goog.inherits(kemia.controller.plugins.Cleanup, kemia.controller.Plugin);
-goog.exportSymbol('kemia.controller.plugins.Cleanup', kemia.controller.plugins.Cleanup);
+goog.exportSymbol('kemia.controller.plugins.Cleanup',
+		kemia.controller.plugins.Cleanup);
 
 /**
  * Commands implemented by this plugin.
@@ -31,25 +32,30 @@ kemia.controller.plugins.Cleanup.prototype.isSupportedCommand = function(
 /** @inheritDoc */
 kemia.controller.plugins.Cleanup.prototype.execCommand = function(command,
 		var_args) {
+	try {
 
-	var models = this.editorObject.getModels();
-	goog.array.forEach(models, function(model){
-		if (model instanceof kemia.model.Molecule){
-			var molecule = model;
-			kemia.layout.CoordinateGenerator.generate(molecule);
-		} else if (model instanceof kemia.model.Reaction){
-			var reaction = model;
-			goog.array.forEach(reaction.reactants, function(molecule){
+		var models = this.editorObject.getModels();
+		goog.array.forEach(models, function(model) {
+			if (model instanceof kemia.model.Molecule) {
+				var molecule = model;
 				kemia.layout.CoordinateGenerator.generate(molecule);
-			});
-			goog.array.forEach(reaction.products, function(molecule){
-				kemia.layout.CoordinateGenerator.generate(molecule);
-			});
-			reaction.removeOverlap();
-		}
-	});
+			} else if (model instanceof kemia.model.Reaction) {
+				var reaction = model;
+				goog.array.forEach(reaction.reactants, function(molecule) {
+					kemia.layout.CoordinateGenerator.generate(molecule);
+				});
+				goog.array.forEach(reaction.products, function(molecule) {
+					kemia.layout.CoordinateGenerator.generate(molecule);
+				});
+				reaction.removeOverlap();
+			}
+		});
 
-	this.editorObject.setModels(this.editorObject.getModels());
+		this.editorObject.setModels(this.editorObject.getModels());
+
+	} catch (e) {
+		this.logger.info(e);
+	}
 };
 
 /**

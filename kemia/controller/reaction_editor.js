@@ -318,10 +318,10 @@ kemia.controller.ReactionEditor.prototype.handleChange = function() {
 // };
 
 /**
- * returns first target within tolerance in preferential order
- * first Atom, then Bond, then Molecule, then Arrow, then Plus
- * In other words, if a Bond and Molecule are both returned by findTargetList, 
- * then the Bond will be preferred and returned.
+ * returns first target within tolerance in preferential order first Atom, then
+ * Bond, then Molecule, then Arrow, then Plus In other words, if a Bond and
+ * Molecule are both returned by findTargetList, then the Bond will be preferred
+ * and returned.
  */
 kemia.controller.ReactionEditor.prototype.findTarget = function(e) {
 	var targets = this.findTargetList(e);

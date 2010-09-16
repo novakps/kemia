@@ -42,7 +42,8 @@ kemia.controller.plugins.UndoRedo = function() {
 	this.currentState_ = null;
 }
 goog.inherits(kemia.controller.plugins.UndoRedo, kemia.controller.Plugin);
-goog.exportSymbol('kemia.controller.plugins.UndoRedo', kemia.controller.plugins.UndoRedo);
+goog.exportSymbol('kemia.controller.plugins.UndoRedo',
+		kemia.controller.plugins.UndoRedo);
 
 /**
  * Commands implemented by this plugin.
@@ -64,14 +65,18 @@ kemia.controller.plugins.UndoRedo.prototype.getKeyboardShortcuts = function() {
 }
 
 kemia.controller.plugins.UndoRedo.prototype.handleKeyboardShortcut = function(e) {
-	var id = e.identifier;
-	var shortcut = goog.array.find(kemia.controller.plugins.UndoRedo.SHORTCUTS,
-			function(obj) {
-				return obj.id == e.identifier
-			});
-	if (shortcut.id == 'undo') {
-		this.undo();
-		return true;
+	try {
+		var id = e.identifier;
+		var shortcut = goog.array.find(
+				kemia.controller.plugins.UndoRedo.SHORTCUTS, function(obj) {
+					return obj.id == e.identifier
+				});
+		if (shortcut.id == 'undo') {
+			this.undo();
+			return true;
+		}
+	} catch (e) {
+		this.logger.info(e);
 	}
 }
 
@@ -100,10 +105,14 @@ kemia.controller.plugins.UndoRedo.prototype.isSupportedCommand = function(
 /** @inheritDoc */
 kemia.controller.plugins.UndoRedo.prototype.execCommandInternal = function(
 		command) {
-	if (command == kemia.controller.plugins.UndoRedo.COMMAND.UNDO) {
-		this.undo();
-	} else if (command == kemia.controller.plugins.UndoRedo.COMMAND.REDO) {
-		this.redo();
+	try {
+		if (command == kemia.controller.plugins.UndoRedo.COMMAND.UNDO) {
+			this.undo();
+		} else if (command == kemia.controller.plugins.UndoRedo.COMMAND.REDO) {
+			this.redo();
+		}
+	} catch (e) {
+		this.logger.info(e);
 	}
 
 };
@@ -127,11 +136,15 @@ kemia.controller.plugins.UndoRedo.prototype.clearHistory = function() {
  * @private
  */
 kemia.controller.plugins.UndoRedo.prototype.handleBeforeChange_ = function(e) {
+	try {
 
-	var editorObj = /** @type {kemia.controller.ReactionEditor} */
-	(e.target);
+		var editorObj = /** @type {kemia.controller.ReactionEditor} */
+		(e.target);
 
-	this.updateCurrentState_(editorObj);
+		this.updateCurrentState_(editorObj);
+	} catch (e) {
+		this.logger.info(e);
+	}
 
 };
 
@@ -365,7 +378,8 @@ kemia.controller.plugins.UndoRedo.prototype.logger = goog.debug.Logger
 		.getLogger('kemia.controller.plugins.UndoRedo');
 
 /** @inheritDoc */
-kemia.controller.plugins.UndoRedo.prototype.queryCommandValue = function(command) {
+kemia.controller.plugins.UndoRedo.prototype.queryCommandValue = function(
+		command) {
 	var state = null;
 	if (command == kemia.controller.plugins.UndoRedo.COMMAND.UNDO) {
 		state = this.hasUndoState();
