@@ -119,7 +119,6 @@
 				<arg line='-f "--jscomp_warning=missingProperties"' />
 				<arg line='-f "--jscomp_warning=unknownDefines"' />
 				<arg line='-f "--jscomp_warning=strictModuleDepCheck"' />
-				<arg line='-f "--create_source_map=${build.dir}/@{outputfile}.map"' />
 				<extraflags />
 			</exec>
 		</sequential>

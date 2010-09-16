@@ -8,6 +8,7 @@ goog.require('goog.style');
 goog.require('goog.ui.ControlContent');
 goog.require('kemia.controller.ToolbarFactory');
 goog.require('kemia.controller.Command');
+goog.require('kemia.controller.plugins.Move');
 goog.require('kemia.controller.plugins.Erase');
 goog.require('kemia.controller.plugins.ClearEditor');
 goog.require('kemia.controller.plugins.Zoom');
