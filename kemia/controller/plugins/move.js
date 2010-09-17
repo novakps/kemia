@@ -66,29 +66,33 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 				e.currentTarget.highlightGroup.clear();
 			}
 			if (target instanceof kemia.model.Atom) {
-				this.editorObject.getOriginalElement().style.cursor = 'move';
-				if (!e.currentTarget.highlightGroup) {
-					e.currentTarget.highlightGroup = this.highlightAtom(target);
-				} else {
-					e.currentTarget.highlightGroup = this.highlightAtom(target,
-							e.currentTarget.highlightGroup);
+				if (!e.shiftKey) {
+					this.editorObject.getOriginalElement().style.cursor = 'move';
+					if (!e.currentTarget.highlightGroup) {
+						e.currentTarget.highlightGroup = this
+								.highlightAtom(target);
+					} else {
+						e.currentTarget.highlightGroup = this.highlightAtom(
+								target, e.currentTarget.highlightGroup);
+					}
+					return true;
 				}
-				return true;
 			} else if (target instanceof kemia.model.Bond) {
-				this.editorObject.getOriginalElement().style.cursor = 'move';
-				if (!e.currentTarget.highlightGroup) {
-					e.currentTarget.highlightGroup = this.highlightBond(target);
-				} else {
-					e.currentTarget.highlightGroup = this.highlightBond(target,
-							e.currentTarget.highlightGroup);
+				if (!e.shiftKey) {
+					this.editorObject.getOriginalElement().style.cursor = 'move';
+					if (!e.currentTarget.highlightGroup) {
+						e.currentTarget.highlightGroup = this
+								.highlightBond(target);
+					} else {
+						e.currentTarget.highlightGroup = this.highlightBond(
+								target, e.currentTarget.highlightGroup);
+					}
+					return true;
 				}
-				return true;
 			} else if (target instanceof kemia.model.Molecule) {
 				if (e.shiftKey) {
-					this.editorObject.getOriginalElement().style.cursor = 'pointer';// TTD
-					// need
-					// better
-					// icon
+					this.editorObject.getOriginalElement().style.cursor = 'url("../../images/rotate-cursor-32.png") 16 16, pointer';
+
 				} else {
 					this.editorObject.getOriginalElement().style.cursor = 'move';
 				}
@@ -101,24 +105,29 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 				}
 				return true;
 			} else if (target instanceof kemia.model.Arrow) {
-				this.editorObject.getOriginalElement().style.cursor = 'move';
-				if (!e.currentTarget.highlightGroup) {
-					e.currentTarget.highlightGroup = this
-							.highlightArrow(target);
-				} else {
-					e.currentTarget.highlightGroup = this.highlightArrow(
-							target, e.currentTarget.highlightGroup);
+				if (!e.shiftKey) {
+					this.editorObject.getOriginalElement().style.cursor = 'move';
+					if (!e.currentTarget.highlightGroup) {
+						e.currentTarget.highlightGroup = this
+								.highlightArrow(target);
+					} else {
+						e.currentTarget.highlightGroup = this.highlightArrow(
+								target, e.currentTarget.highlightGroup);
+					}
+					return true;
 				}
-				return true;
 			} else if (target instanceof kemia.model.Plus) {
-				this.editorObject.getOriginalElement().style.cursor = 'move';
-				if (!e.currentTarget.highlightGroup) {
-					e.currentTarget.highlightGroup = this.highlightPlus(target);
-				} else {
-					e.currentTarget.highlightGroup = this.highlightPlus(target,
-							e.currentTarget.highlightGroup);
+				if (!e.shiftKey) {
+					this.editorObject.getOriginalElement().style.cursor = 'move';
+					if (!e.currentTarget.highlightGroup) {
+						e.currentTarget.highlightGroup = this
+								.highlightPlus(target);
+					} else {
+						e.currentTarget.highlightGroup = this.highlightPlus(
+								target, e.currentTarget.highlightGroup);
+					}
+					return true;
 				}
-				return true;
 			}
 			return false;
 
