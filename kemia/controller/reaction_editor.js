@@ -27,6 +27,7 @@ goog.require('goog.async.Delay');
 goog.require('kemia.controller.Plugin');
 goog.require('kemia.model.NeighborList');
 goog.require('goog.ui.Prompt');
+goog.require('goog.debug.Console');
 // goog.require('goog.ui.KeyboardShortcutHandler');
 
 /**
