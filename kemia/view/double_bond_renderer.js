@@ -90,7 +90,7 @@ kemia.view.DoubleBondRenderer.prototype.render = function(bond, transform,
 		}
 
 		var side = goog.math.Vec2.fromCoordinate(goog.math.Coordinate.sum(bond.source.coord, orthogonal));
-		goog.asserts.assert(goog.math.Vec2.distance(center, side) < goog.math.Vec2.distance(center, point_on_bond),'double bond side should be closer to center than bond point');
+		//goog.asserts.assert(goog.math.Vec2.distance(center, side) < goog.math.Vec2.distance(center, point_on_bond),'double bond side should be closer to center than bond point');
 
 		// the inner line coords
 		var coord1 = goog.math.Coordinate.sum(bond.source.coord, orthogonal);

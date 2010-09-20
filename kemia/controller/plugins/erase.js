@@ -52,6 +52,8 @@ kemia.controller.plugins.Erase.prototype.execCommandInternal = function(
 	this.isActive = active;
 };
 
+kemia.controller.plugins.Erase.CURSOR_STYLE = 'url("../../../../images/Cursor-Eraser-32.png") 0 32, url("../../images/Cursor-Eraser-32.png") 0 32, hand';
+
 kemia.controller.plugins.Erase.prototype.handleMouseMove = function(e) {
 
 	if (this.isActive) {
@@ -62,7 +64,7 @@ kemia.controller.plugins.Erase.prototype.handleMouseMove = function(e) {
 		}
 
 		if (target instanceof kemia.model.Atom) {
-			this.editorObject.getOriginalElement().style.cursor = 'url("../../images/Cursor-Eraser-32.png") 0 32, hand';
+			this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Erase.CURSOR_STYLE;
 			if (!e.currentTarget.highlightGroup) {
 				e.currentTarget.highlightGroup = this.highlightAtom(target);
 			} else {
@@ -71,7 +73,7 @@ kemia.controller.plugins.Erase.prototype.handleMouseMove = function(e) {
 			}
 			return true;
 		} else if (target instanceof kemia.model.Bond) {
-			this.editorObject.getOriginalElement().style.cursor = 'url("../../images/Cursor-Eraser-32.png") 0 32, hand';
+			this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Erase.CURSOR_STYLE;
 			if (!e.currentTarget.highlightGroup) {
 				e.currentTarget.highlightGroup = this.highlightBond(target);
 			} else {
@@ -80,7 +82,7 @@ kemia.controller.plugins.Erase.prototype.handleMouseMove = function(e) {
 			}
 			return true;
 		} else if (target instanceof kemia.model.Molecule) {
-			this.editorObject.getOriginalElement().style.cursor = 'url("../../images/Cursor-Eraser-32.png") 0 32, hand';
+			this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Erase.CURSOR_STYLE;
 			if (!e.currentTarget.highlightGroup) {
 				e.currentTarget.highlightGroup = this.highlightMolecule(target);
 			} else {
@@ -89,7 +91,7 @@ kemia.controller.plugins.Erase.prototype.handleMouseMove = function(e) {
 			}
 			return true;
 		} else if (target instanceof kemia.model.Arrow) {
-			this.editorObject.getOriginalElement().style.cursor = 'url("../../images/Cursor-Eraser-32.png") 0 32, hand';
+			this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Erase.CURSOR_STYLE;
 			if (!e.currentTarget.highlightGroup) {
 				e.currentTarget.highlightGroup = this.highlightArrow(target);
 			} else {
@@ -98,7 +100,7 @@ kemia.controller.plugins.Erase.prototype.handleMouseMove = function(e) {
 			}
 			return true;
 		} else if (target instanceof kemia.model.Plus) {
-			this.editorObject.getOriginalElement().style.cursor = 'url("../../images/Cursor-Eraser-32.png") 0 32, hand';
+			this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Erase.CURSOR_STYLE;
 			if (!e.currentTarget.highlightGroup) {
 				e.currentTarget.highlightGroup = this.highlightPlus(target);
 			} else {

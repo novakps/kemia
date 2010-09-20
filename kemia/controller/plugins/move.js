@@ -89,8 +89,8 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 			}
 		} else if (target instanceof kemia.model.Molecule) {
 			if (e.shiftKey) {
-				this.editorObject.getOriginalElement().style.cursor = 'url("../../images/rotate-cursor-32.png") 16 16, pointer';
-
+				this.editorObject.getOriginalElement().style.cursor = 'url("../../../../images//rotate-cursor-32.png") 16 16, url("../../images/rotate-cursor-32.png") 16 16, pointer';
+				
 			} else {
 				this.editorObject.getOriginalElement().style.cursor = 'move';
 			}

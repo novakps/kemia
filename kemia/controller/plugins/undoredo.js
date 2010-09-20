@@ -72,6 +72,7 @@ kemia.controller.plugins.UndoRedo.prototype.handleKeyboardShortcut = function(e)
 					return obj.id == e.identifier
 				});
 		if (shortcut.id == 'undo') {
+			
 			this.undo();
 			return true;
 		}
@@ -167,6 +168,7 @@ kemia.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 		// serialize to json object
 		serialized = goog.json.serialize(goog.array.map(editorObj.getModels(),
 				kemia.io.json.reactionToJson));
+		
 		// this.logger.info(serialized);
 	}
 
@@ -276,7 +278,6 @@ kemia.controller.plugins.UndoRedo.prototype.shiftState_ = function(fromStack,
 	this.logger.info("    toStack.length " + toStack.length);
 	if (fromStack.length) {
 		var state = fromStack.pop();
-
 		// Push the current state into the to-stack.
 		toStack.push(state);
 		this.editorObject.setModels(goog.array.map(
