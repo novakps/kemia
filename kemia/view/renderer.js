@@ -22,6 +22,7 @@ kemia.view.Renderer = function(graphics, opt_default_config, opt_config) {
 		// merge optional config into defaults
 		this.config.addAll(opt_config); 
 	}
+	
 }
 
 kemia.view.Renderer.prototype.render = goog.abstractMethod;

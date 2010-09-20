@@ -134,7 +134,7 @@ kemia.controller.ReactionEditor.getActiveEditorId = function() {
 kemia.controller.ReactionEditor.prototype.clear = function() {
 
 	this.graphics.clear();
-	this.models = [];
+	this.models = [new kemia.model.Reaction()];
 
 	this.neighborList = new kemia.model.NeighborList( [], 1, .5);
 	var fill = new goog.graphics.SolidFill(this.config.get("background").color);

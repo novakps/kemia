@@ -56,7 +56,7 @@ kemia.controller.plugins.ArrowPlusEdit.prototype.getTrogClassId = goog.functions
  */
 kemia.controller.plugins.ArrowPlusEdit.prototype.execCommandInternal = function(
 		command, value, active) {
-	this.logger.info(command + " active: " + active);
+	//this.logger.info(command + " active: " + active);
 	this.activeCommand[command] = active;
 };
 
