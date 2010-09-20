@@ -154,6 +154,9 @@ kemia.controller.plugins.Erase.prototype.eraseAtom = function(atom) {
 		molecule.removeBond(bond);
 	});
 	molecule.removeAtom(atom);
+	if (molecule.atoms.length == 0) {
+		molecule.reaction.removeMolecule(molecule);
+	}
 	this.editorObject.setModels(this.editorObject.getModels());
 };
 
