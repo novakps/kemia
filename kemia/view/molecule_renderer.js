@@ -2,6 +2,7 @@ goog.provide('kemia.view.MoleculeRenderer');
 goog.require('kemia.view.BondRenderer');
 goog.require('kemia.view.BondRendererFactory');
 goog.require('kemia.view.AtomRenderer');
+goog.require('goog.asserts');
 
 /**
  * Class to render a molecule object to a graphics object
@@ -33,7 +34,12 @@ kemia.view.MoleculeRenderer.prototype.logger = goog.debug.Logger
 		.getLogger('kemia.view.MoleculeRenderer');
 
 kemia.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
-
+//	goog.array.forEach(molecule.getRings(), function(ring){
+//		ring.resetRingCenter();	
+//	})
+//	goog.array.forEach(molecule.getRings(), function(ring) {
+//		goog.asserts.assert(!ring._center);
+//	})
 	molecule.group = this.graphics.createGroup();
 
 	var atom_coords = goog.array.map(molecule.atoms, function(a) {
@@ -92,9 +98,10 @@ kemia.view.MoleculeRenderer.prototype.highlightOn = function(molecule,
 	}
 
 	goog.array.forEach(molecule.bonds, function(bond) {
-		this.bondRendererFactory.get(bond).highlightOn(bond, opt_color, opt_group);
+		this.bondRendererFactory.get(bond).highlightOn(bond, opt_color,
+				opt_group);
 	}, this);
-	
+
 	goog.array.forEach(molecule.atoms, function(atom) {
 		this.atomRenderer.highlightOn(atom, opt_color, opt_group);
 	}, this);
@@ -120,4 +127,3 @@ kemia.view.MoleculeRenderer.defaultConfig = {
 		'color' : 'blue'
 	}
 };
-

@@ -70,32 +70,29 @@ kemia.controller.plugins.ArrowPlusEdit.prototype.logger = goog.debug.Logger
 		.getLogger('kemia.controller.plugins.ArrowPlusEdit');
 
 kemia.controller.plugins.ArrowPlusEdit.prototype.handleMouseDown = function(e) {
-	try {
 
-		if (this.activeCommand[kemia.controller.plugins.ArrowPlusEdit.COMMAND.EDIT_ARROW]) {
-			this.editorObject.dispatchBeforeChange();
-			var trans = this.editorObject.reactionRenderer.moleculeRenderer.transform
-					.createInverse();
-			var coords = trans.transformCoords( [ new goog.math.Coordinate(
-					e.offsetX, e.offsetY) ]);
-			this.editorObject.getModels()[0].addArrow(new kemia.model.Arrow(
-					coords[0]));
-			this.editorObject.setModels(this.editorObject.getModels());
-			this.editorObject.dispatchChange();
-		} else if (this.activeCommand[kemia.controller.plugins.ArrowPlusEdit.COMMAND.EDIT_PLUS]) {
-			this.editorObject.dispatchBeforeChange();
-			var trans = this.editorObject.reactionRenderer.moleculeRenderer.transform
-					.createInverse();
-			var coords = trans.transformCoords( [ new goog.math.Coordinate(
-					e.offsetX, e.offsetY) ]);
-			this.editorObject.getModels()[0].addPlus(new kemia.model.Plus(
-					coords[0]));
-			this.editorObject.setModels(this.editorObject.getModels());
-			this.editorObject.dispatchChange();
-		}
-	} catch (e) {
-		this.logger.info(e);
+	if (this.activeCommand[kemia.controller.plugins.ArrowPlusEdit.COMMAND.EDIT_ARROW]) {
+		this.editorObject.dispatchBeforeChange();
+		var trans = this.editorObject.reactionRenderer.moleculeRenderer.transform
+				.createInverse();
+		var coords = trans.transformCoords( [ new goog.math.Coordinate(
+				e.offsetX, e.offsetY) ]);
+		this.editorObject.getModels()[0].addArrow(new kemia.model.Arrow(
+				coords[0]));
+		this.editorObject.setModels(this.editorObject.getModels());
+		this.editorObject.dispatchChange();
+	} else if (this.activeCommand[kemia.controller.plugins.ArrowPlusEdit.COMMAND.EDIT_PLUS]) {
+		this.editorObject.dispatchBeforeChange();
+		var trans = this.editorObject.reactionRenderer.moleculeRenderer.transform
+				.createInverse();
+		var coords = trans.transformCoords( [ new goog.math.Coordinate(
+				e.offsetX, e.offsetY) ]);
+		this.editorObject.getModels()[0]
+				.addPlus(new kemia.model.Plus(coords[0]));
+		this.editorObject.setModels(this.editorObject.getModels());
+		this.editorObject.dispatchChange();
 	}
+
 }
 
 /**

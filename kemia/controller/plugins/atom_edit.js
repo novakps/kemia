@@ -97,56 +97,49 @@ kemia.controller.plugins.AtomEdit.prototype.handleKeyboardShortcut = function(e)
 }
 
 kemia.controller.plugins.AtomEdit.prototype.handleMouseMove = function(e) {
-	try {
-		if (this.symbol) {
-			// this.logger.info('handleMouseMove');
-			var target = this.editorObject.findTarget(e);
-			if (e.currentTarget.highlightGroup) {
-				e.currentTarget.highlightGroup.clear();
-			}
 
-			if (target instanceof kemia.model.Atom) {
-				if (!e.currentTarget.highlightGroup) {
-					e.currentTarget.highlightGroup = this.highlightAtom(target);
-				} else {
-					e.currentTarget.highlightGroup = this.highlightAtom(target,
-							e.currentTarget.highlightGroup);
-				}
-				return true;
-			}
+	if (this.symbol) {
+		// this.logger.info('handleMouseMove');
+		var target = this.editorObject.findTarget(e);
+		if (e.currentTarget.highlightGroup) {
+			e.currentTarget.highlightGroup.clear();
 		}
-		return false;
 
-	} catch (e) {
-		this.logger.info(e);
+		if (target instanceof kemia.model.Atom) {
+			if (!e.currentTarget.highlightGroup) {
+				e.currentTarget.highlightGroup = this.highlightAtom(target);
+			} else {
+				e.currentTarget.highlightGroup = this.highlightAtom(target,
+						e.currentTarget.highlightGroup);
+			}
+			return true;
+		}
 	}
+	return false;
+
 }
 
 kemia.controller.plugins.AtomEdit.prototype.handleMouseDown = function(e) {
-	try {
-		var target = this.editorObject.findTarget(e);
-		if (target instanceof kemia.model.Atom) {
-			var atom = target;
-			if (this.symbol && (this.symbol != atom.symbol)) {
-				this.editorObject.dispatchBeforeChange();
-				this.setAtomSymbol(e, atom);
-				this.editorObject.setModels(this.editorObject.getModels());
-				this.editorObject.dispatchChange();
-				return true;
-			}
-		}
-		if (target == undefined && this.symbol) {
-			this.createMolecule(kemia.controller.ReactionEditor
-					.getMouseCoords(e));
+
+	var target = this.editorObject.findTarget(e);
+	if (target instanceof kemia.model.Atom) {
+		var atom = target;
+		if (this.symbol && (this.symbol != atom.symbol)) {
+			this.editorObject.dispatchBeforeChange();
+			this.setAtomSymbol(e, atom);
 			this.editorObject.setModels(this.editorObject.getModels());
 			this.editorObject.dispatchChange();
 			return true;
 		}
-		return false;
-
-	} catch (e) {
-		this.logger.info(e);
 	}
+	if (target == undefined && this.symbol) {
+		this.createMolecule(kemia.controller.ReactionEditor.getMouseCoords(e));
+		this.editorObject.setModels(this.editorObject.getModels());
+		this.editorObject.dispatchChange();
+		return true;
+	}
+	return false;
+
 };
 
 kemia.controller.plugins.AtomEdit.prototype.highlightAtom = function(atom,

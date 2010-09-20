@@ -198,7 +198,8 @@ kemia.controller.ReactionEditor.prototype.getModels = function() {
  * This dispatches the beforechange event on the editable reaction editor
  */
 kemia.controller.ReactionEditor.prototype.dispatchBeforeChange = function() {
-
+	this._serialized = goog.json.serialize(goog.array.map(this.getModels(),
+			kemia.io.json.reactionToJson));
 	this.dispatchEvent(kemia.controller.ReactionEditor.EventType.BEFORECHANGE);
 };
 
@@ -420,7 +421,11 @@ kemia.controller.ReactionEditor.prototype.handleMouseOut_ = function(e) {
 };
 
 kemia.controller.ReactionEditor.prototype.handleMouseMove_ = function(e) {
-	this.invokeShortCircuitingOp_(kemia.controller.Plugin.Op.MOUSEMOVE, e);
+	try{
+		this.invokeShortCircuitingOp_(kemia.controller.Plugin.Op.MOUSEMOVE, e);
+	} catch (e) {
+		this.logger.info(e);
+	}
 };
 
 kemia.controller.ReactionEditor.prototype.handleMouseUp_ = function(e) {
@@ -429,7 +434,14 @@ kemia.controller.ReactionEditor.prototype.handleMouseUp_ = function(e) {
 
 kemia.controller.ReactionEditor.prototype.handleMouseDown_ = function(e) {
 	// this.logger.info('handleMouseDown_');
+	try{
 	this.invokeShortCircuitingOp_(kemia.controller.Plugin.Op.MOUSEDOWN, e);
+	}catch (e) {
+		this.logger.info(e);
+		this.logger.info('reverting state');
+		this.setModels(goog.array.map(
+				goog.json.unsafeParse(this._serialized), kemia.io.json.readReaction));
+	}
 };
 
 kemia.controller.ReactionEditor.prototype.handleMouseUp_ = function(e) {
