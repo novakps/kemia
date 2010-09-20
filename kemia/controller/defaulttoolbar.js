@@ -61,13 +61,14 @@ kemia.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
 					.getCssName('tr-icon')
 					+ ' ' + goog.getCssName('tr-undo'));
 	undo.queryable = true;
-	buttons.push(undo);
+// disable undo-redo until it works
+//	buttons.push(undo);
 	var redo = kemia.controller.DefaultToolbar.undoRedoButtonFactory_(
 			kemia.controller.plugins.UndoRedo.COMMAND.REDO, 'Redo', '', goog
 					.getCssName('tr-icon')
 					+ ' ' + goog.getCssName('tr-redo'));
 	redo.queryable = true;
-	buttons.push(redo);
+//	buttons.push(redo);
 	var erase = kemia.controller.ToolbarFactory.makeToggleButton(
 			kemia.controller.plugins.Erase.COMMAND, 'Erase', '', goog
 					.getCssName('tr-icon')
@@ -183,10 +184,12 @@ kemia.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
 	arrow_button.queryable = true;
 	buttons.push(arrow_button);
 	
-	buttons.push(kemia.controller.ToolbarFactory.makeButton(
-			kemia.controller.plugins.Cleanup.COMMAND, 'Cleanup', '', goog
-					.getCssName('tr-icon')
-					+ ' ' + goog.getCssName('tr-cleanup')));
+	// remove clean-up until it works
+//	buttons.push(kemia.controller.ToolbarFactory.makeButton(
+//			kemia.controller.plugins.Cleanup.COMMAND, 'Cleanup', '', goog
+//					.getCssName('tr-icon')
+//					+ ' ' + goog.getCssName('tr-cleanup')));
+	
 	// buttons.push(kemia.controller.ToolbarFactory.makeButton(kemia.controller.plugins.Smiles.COMMAND,
 	// 'SMILES', 'paste SMILES'));
 	return kemia.controller.DefaultToolbar.makeToolbar(buttons, elem);
