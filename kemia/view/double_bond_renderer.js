@@ -57,10 +57,11 @@ function isOnSameSide(bond, p1, p2) {
  *            normalized line vector
  * @return {boolean}
  */
-kemia.view.DoubleBondRenderer.pointsOnSameSideOfLine = function (p1, p2, p_line, normal){
-	return goog.math.Vec2.dot(normal, goog.math.Vec2.difference(p1, p_line)) * goog.math.Vec2.dot(normal, goog.math.Vec2.difference(p2, p_line)) > 0;
+kemia.view.DoubleBondRenderer.pointsOnSameSideOfLine = function(p1, p2, p_line,
+		normal) {
+	return goog.math.Vec2.dot(normal, goog.math.Vec2.difference(p1, p_line))
+			* goog.math.Vec2.dot(normal, goog.math.Vec2.difference(p2, p_line)) > 0;
 }
-
 
 kemia.view.DoubleBondRenderer.prototype.render = function(bond, transform,
 		bondPath) {
@@ -69,71 +70,49 @@ kemia.view.DoubleBondRenderer.prototype.render = function(bond, transform,
 
 	var ring = kemia.view.DoubleBondRenderer.getFirstRing(bond);
 
+	// create the bondvector
+	var bv = goog.math.Vec2.fromCoordinate(goog.math.Coordinate.difference(
+			bond.target.coord, bond.source.coord));
+	
+	bv.scale(1 / this.config.get("bond")['width-ratio']);
+
+	// create a vector orthogonal to the bond vector
+	var orthogonal = new goog.math.Vec2(-bv.y, bv.x);
+
+	var space = bv.clone().normalize().scale(
+			this.config.get('bond')['symbol-space']);
+
 	if (ring) {
-		// create the bondvector
-		var bv = goog.math.Vec2.fromCoordinate(goog.math.Coordinate.difference(
-				bond.target.coord, bond.source.coord));
-		var bondLength = bv.magnitude();
-		var bondWidth = bondLength / 6;
-		bv.scale(1 / bondLength * bondWidth);
-		// create a vector orthogonal to the bond vector
-		var orthogonal = new goog.math.Vec2(-bv.y, bv.x);
-		var normal = bv.clone().normalize();
-		var point_on_bond = goog.math.Vec2.fromCoordinate(bond.source.coord);
-		var center = goog.math.Vec2.fromCoordinate(ring.getRingCenter());
 		// check the side, invert orthogonal if needed
-		var side = goog.math.Vec2.fromCoordinate(goog.math.Coordinate.sum(bond.source.coord, orthogonal));
-
-
-		if (!kemia.view.DoubleBondRenderer.pointsOnSameSideOfLine(center, side, point_on_bond, normal)) {
+		var side = goog.math.Coordinate.sum(bond.source.coord, orthogonal);
+		var line = new kemia.math.Line(bond.source.coord, bond.target.coord);
+		if (!line.isSameSide(ring.getCenter(), side)) {
 			orthogonal.invert();
 		}
-
-		var side = goog.math.Vec2.fromCoordinate(goog.math.Coordinate.sum(bond.source.coord, orthogonal));
-		//goog.asserts.assert(goog.math.Vec2.distance(center, side) < goog.math.Vec2.distance(center, point_on_bond),'double bond side should be closer to center than bond point');
-
-		// the inner line coords
+//		goog.asserts.assert(goog.math.Coordinate.distance(side, ring.getCenter()) < goog.math.Coordinate.distance(bond.source.coord, ring.getCenter()));
+		// inner line coords
 		var coord1 = goog.math.Coordinate.sum(bond.source.coord, orthogonal);
 		var coord2 = goog.math.Coordinate.sum(bond.target.coord, orthogonal);
+		// outer line coords
 		var coord3 = bond.source.coord;
 		var coord4 = bond.target.coord;
 
 		// adjust for symbols if needed
 		if (kemia.view.BondRenderer.hasSymbol(bond.source)) {
-			var space = bv.clone();
-			space.normalize();
-			space.scale(0.2);
 			coord1 = goog.math.Coordinate.sum(coord1, space);
 			coord3 = goog.math.Coordinate.sum(coord3, space)
 		} else {
 			coord1 = goog.math.Coordinate.sum(coord1, bv);
 		}
 		if (kemia.view.BondRenderer.hasSymbol(bond.target)) {
-			var space = bv.clone();
-			space.normalize();
-			space.scale(0.2);
 			coord2 = goog.math.Coordinate.difference(coord2, space);
 			coord4 = goog.math.Coordinate.difference(coord4, space)
 		} else {
 			coord2 = goog.math.Coordinate.difference(coord2, bv);
 		}
 
-		var coords = transform.transformCoords( [ coord1, coord2, coord3,
-				coord4 ]);
-
-		bondPath.moveTo(coords[0].x, coords[0].y);
-		bondPath.lineTo(coords[1].x, coords[1].y);
-		bondPath.moveTo(coords[2].x, coords[2].y);
-		bondPath.lineTo(coords[3].x, coords[3].y);
 	} else {
-		// create the bondvector
-		var bv = goog.math.Vec2.fromCoordinate(goog.math.Coordinate.difference(
-				bond.target.coord, bond.source.coord));
-		var bondLength = bv.magnitude();
-		var bondWidth = bondLength / 12;
-		bv.scale(1 / bondLength * bondWidth);
-		// create a vector orthogonal to the bond vector
-		var orthogonal = new goog.math.Vec2(bv.y, -bv.x);
+		orthogonal.scale(0.5);
 
 		var coord1 = goog.math.Coordinate.sum(bond.source.coord, orthogonal);
 		var coord2 = goog.math.Coordinate.sum(bond.target.coord, orthogonal);
@@ -144,28 +123,21 @@ kemia.view.DoubleBondRenderer.prototype.render = function(bond, transform,
 
 		// adjust for symbols if needed
 		if (kemia.view.BondRenderer.hasSymbol(bond.source)) {
-			var space = bv.clone();
-			space.normalize();
-			space.scale(0.2);
 			coord1 = goog.math.Coordinate.sum(coord1, space);
 			coord3 = goog.math.Coordinate.sum(coord3, space)
 		}
 		if (kemia.view.BondRenderer.hasSymbol(bond.target)) {
-			var space = bv.clone();
-			space.normalize();
-			space.scale(0.2);
 			coord2 = goog.math.Coordinate.difference(coord2, space);
 			coord4 = goog.math.Coordinate.difference(coord4, space)
 		}
 
-		var coords = transform.transformCoords( [ coord1, coord2, coord3,
-				coord4 ]);
-
-		bondPath.moveTo(coords[0].x, coords[0].y);
-		bondPath.lineTo(coords[1].x, coords[1].y);
-		bondPath.moveTo(coords[2].x, coords[2].y);
-		bondPath.lineTo(coords[3].x, coords[3].y);
 	}
+	var coords = transform.transformCoords( [ coord1, coord2, coord3, coord4 ]);
+
+	bondPath.moveTo(coords[0].x, coords[0].y);
+	bondPath.lineTo(coords[1].x, coords[1].y);
+	bondPath.moveTo(coords[2].x, coords[2].y);
+	bondPath.lineTo(coords[3].x, coords[3].y);
 
 };
 

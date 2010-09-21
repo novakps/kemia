@@ -1,44 +1,58 @@
-goog.provide("kemia.math.Line");
-goog.require("goog.math.Line");
-
 /**
- * representation of a line
+ * Copyright 2010 Paul Novak (paul@wingu.com)
  * 
- * @param {goog.math.Coordinate} coord0 start point
- * @param {goog.math.Coordinate} coord1 end point
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
- * @constructor
- * @extends {goog.math.Line}
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ * 
  */
 
-kemia.math.Line = function(coord0, coord1) {
-	goog.math.Line.call(this, coord0.x, coord0.y, coord1.x, coord1.y);
-	
+goog.provide('kemia.math.Line');
+goog.require('kemia.math.Triangle');
+goog.require('goog.math.Coordinate');
+
+/**
+ * representation of a line segment
+ * 
+ * @param {goog.math.Coordinate}
+ *            source start point
+ * @param {goog.math.Coordinate}
+ *            target end point
+ * 
+ * @constructor
+ */
+kemia.math.Line = function(source, target) {
+	this.source = source;
+	this.target = target;
 };
-goog.inherits(kemia.math.Line, goog.math.Line);
 
 /**
  * 
  * @return angle of elevation between this line and the x-axis in radians
  */
 kemia.math.Line.prototype.getTheta = function() {
-	var xdelta = this.x1 - this.x0;
-	var ydelta = this.y1 - this.y0;
-	return Math.atan2(ydelta, xdelta);
+	var diff = goog.math.Coordinate.difference(this.target, this.source);
+	return Math.atan2(diff.y, diff.x);
 }
-
 /**
+ * returns true if two points are on same side of line returns false if they are
+ * on opposite sides, or at least one is one the line
  * 
- * @return {goog.math.Coordinate} start point of line
+ * @param {goog.math.Coordinate}
+ *            point1
+ * @param {goog.math.Coordiante}
+ *            point2
+ * @return {boolean}
  */
-kemia.math.Line.prototype.getStart = function(){
-	return new goog.math.Coordinate(this.x0, this.y0);
-}
-
-/**
- * 
- * @return {goog.math.Coordinate} end point of line
- */
-kemia.math.Line.prototype.getEnd = function(){
-	return new goog.math.Coordinate(this.x1, this.y1);	
+kemia.math.Line.prototype.isSameSide = function(point1, point2){
+	return kemia.math.Triangle.signedArea(this.source, this.target, point1) * 
+		kemia.math.Triangle.signedArea(this.source, this.target, point2) > 0;
 }

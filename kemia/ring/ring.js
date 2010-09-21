@@ -67,7 +67,7 @@ kemia.ring.Ring.prototype.setFlag = function(flag_type, flag_value) {
  * 
  * @return {goog.math.Coordinate}
  */
-kemia.ring.Ring.prototype.getRingCenter = function() {
+kemia.ring.Ring.prototype.getCenter = function() {
 
 	if (!this._center) {
 		var avgX = 0;

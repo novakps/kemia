@@ -1,17 +1,18 @@
-/** 
+/**
  * Copyright 2010 Paul Novak (paul@wingu.com)
  * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ * 
  * @author paul@wingu.com (Paul Novak)
  */
 goog.provide('kemia.view.BondRenderer');
@@ -21,9 +22,11 @@ goog.require('kemia.math.Line');
 /**
  * Class to render an bond object to a graphics representation
  * 
- *
- * @param {goog.graphics.AbstractGraphics} graphics to draw on.
- * @param {Object=} opt_config override default configuration
+ * 
+ * @param {goog.graphics.AbstractGraphics}
+ *            graphics to draw on.
+ * @param {Object=}
+ *            opt_config override default configuration
  * @constructor
  * @extends {kemia.view.Renderer}
  */
@@ -37,9 +40,12 @@ kemia.view.BondRenderer = function(graphics, opt_config ) {
 goog.inherits(kemia.view.BondRenderer, kemia.view.Renderer);
 
 /**
- * @param {kemia.model.Bond} bond
- * @param {string]} opt_color
- * @param {goog.graphics.Group=} opt_group
+ * @param {kemia.model.Bond}
+ *            bond
+ * @param {string]}
+ *            opt_color
+ * @param {goog.graphics.Group=}
+ *            opt_group
  */
 kemia.view.BondRenderer.prototype.highlightOn = function(bond, opt_color, opt_group) {
 	
@@ -89,7 +95,8 @@ kemia.view.BondRenderer.prototype.highlightOn = function(bond, opt_color, opt_gr
 	path_up.lineTo(target_up.x, target_up.y);
 	path_up.lineTo(coords[1].x, coords[1].y);
 	path_up.close();
-//	var fill = new goog.graphics.LinearGradient(coords[0].x, coords[0].y, source_up.x, source_up.y, opt_color, 'white');
+// var fill = new goog.graphics.LinearGradient(coords[0].x, coords[0].y,
+// source_up.x, source_up.y, opt_color, 'white');
 	var fill = new goog.graphics.SolidFill(opt_color, .3);
 	this.graphics.drawPath(path_up, stroke, fill, opt_group);
 	
@@ -99,7 +106,8 @@ kemia.view.BondRenderer.prototype.highlightOn = function(bond, opt_color, opt_gr
 	path_down.lineTo(target_down.x, target_down.y);
 	path_down.lineTo(coords[1].x, coords[1].y);
 	path_down.close();
-//	var fill = new goog.graphics.LinearGradient(coords[0].x, coords[0].y, source_down.x, source_down.y, opt_color, 'white');
+// var fill = new goog.graphics.LinearGradient(coords[0].x, coords[0].y,
+// source_down.x, source_down.y, opt_color, 'white');
 	this.graphics.drawPath(path_down, stroke, fill, opt_group);
 	
 	
@@ -132,7 +140,9 @@ kemia.view.BondRenderer.defaultConfig = {
 		},
 		'fill' : {
 			'color' : 'black'
-		}
+		}, 
+		'width-ratio' : 6,
+		'symbol-space' : 0.3,
 	},
 	'highlight' : {
 		'radius' : .3,

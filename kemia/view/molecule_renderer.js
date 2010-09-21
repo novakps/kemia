@@ -34,12 +34,8 @@ kemia.view.MoleculeRenderer.prototype.logger = goog.debug.Logger
 		.getLogger('kemia.view.MoleculeRenderer');
 
 kemia.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
-//	goog.array.forEach(molecule.getRings(), function(ring){
-//		ring.resetRingCenter();	
-//	})
-//	goog.array.forEach(molecule.getRings(), function(ring) {
-//		goog.asserts.assert(!ring._center);
-//	})
+	molecule.resetRingCenters();
+
 	molecule.group = this.graphics.createGroup();
 
 	var atom_coords = goog.array.map(molecule.atoms, function(a) {

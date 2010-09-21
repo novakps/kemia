@@ -18,31 +18,58 @@
  */
 
 goog.provide('kemia.model.Arrow');
+goog.require('kemia.math.Line');
+goog.require('goog.math.Vec2');
+
 /**
- * @param {goog.math.Coordinate=} opt_source source point coordinates for arrow
- * @param {goog.math.Coordinate=} opt_target target point coordinates for arrow
- * @param {kemia.model.Arrow.STYLE=} opt_style
- * @param {string=} opt_reagents_text
- * @param {string=} opt_conditions_text 
+ * @param {goog.math.Coordinate=}
+ *            opt_source source point coordinates for arrow
+ * @param {goog.math.Coordinate=}
+ *            opt_target target point coordinates for arrow
+ * @param {kemia.model.Arrow.STYLE=}
+ *            opt_style
+ * @param {string=}
+ *            opt_reagents_text
+ * @param {string=}
+ *            opt_conditions_text
  * @constructor
  */
-kemia.model.Arrow = function(opt_source, opt_target, opt_style, opt_reagents_text, opt_conditions_text) {
-	this.source = goog.isDef(opt_source) ? 
-			opt_source : 
-			new goog.math.Coordinate(0, 0);
-	this.target = goog.isDef(opt_target) ? 
-			opt_target 
-			: goog.math.Coordinate.sum(this.source, new goog.math.Coordinate(2, 0));
-	this.style = goog.isDef(opt_style) ? 
-			opt_style: 
-			kemia.model.Arrow.STYLES.FORWARD;
-	this.reagents_text = goog.isDef(opt_reagents_text) ?
-			opt_reagents_text:
-			"";
-	this.conditions_text = goog.isDef(opt_conditions_text) ? 
-			opt_conditions_text:
-			"";
+kemia.model.Arrow = function(opt_source, opt_target, opt_style,
+		opt_reagents_text, opt_conditions_text) {
+	this.source = goog.isDef(opt_source) ? opt_source
+			: new goog.math.Coordinate(0, 0);
+	this.target = goog.isDef(opt_target) ? opt_target : goog.math.Coordinate
+			.sum(this.source, new goog.math.Coordinate(2, 0));
+	this.style = goog.isDef(opt_style) ? opt_style
+			: kemia.model.Arrow.STYLES.FORWARD;
+	this.reagents_text = goog.isDef(opt_reagents_text) ? opt_reagents_text : "";
+	this.conditions_text = goog.isDef(opt_conditions_text) ? opt_conditions_text
+			: "";
 };
+
+/**
+ * returns enum describing orientation of point relative to Arrow
+ * 
+ * @param {goog.math.Coordinate}
+ *            point
+ * @return {kemia.model.Arrow.ORIENTATION}
+ */
+kemia.model.Arrow.prototype.getOrientation = function(point){
+	var test_point = goog.math.Vec2.fromCoordinate(point);
+	var center = new goog.math.Vec2(
+			(this.source.x + this.target.x)/2, 
+			(this.source.y + this.target.y)/2);
+	var tip = goog.math.Vec2.fromCoordinate(this.target);
+
+	var arrow_vector  = goog.math.Vec2.fromCoordinate(
+			goog.math.Coordinate.difference(center, this.target));
+	var ortho = new goog.math.Vec2(-arrow_vector.y, arrow_vector.x).normalize();
+	if (kemia.math.Line.pointsOnSameSideOfLine(test_point, tip, center, ortho)){
+		return kemia.model.Arrow.ORIENTATION.AHEAD;
+	} else {
+		return kemia.model.Arrow.ORIENTATION.BEHIND;
+	}
+}
 
 /**
  * @enum {number}
@@ -51,4 +78,15 @@ kemia.model.Arrow.STYLES = {
 	FORWARD : 1,
 	BACKWARD : 2,
 	BIDIRECTIONAL : 3
+}
+
+/**
+ * description of position relative to Arrow used to determine if a molecule is
+ * a reactant or product by its position
+ * 
+ * @enum {number}
+ */
+kemia.model.Arrow.ORIENTATION = {
+	AHEAD : 1,
+	BEHIND : 2
 }
