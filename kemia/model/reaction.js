@@ -16,10 +16,7 @@ kemia.model.Reaction = function() {
 	this.header = "";
 
 	/** @type {Array.<kemia.model.Molecule>} */
-	this.reactants = [];
-
-	/** @type {Array.<kemia.model.Molecule>} */
-	this.products = [];
+	this.molecules = [];
 
 	/** @type {Array.<kemia.model.Arrow>} */
 	this.arrows = [];
@@ -53,46 +50,57 @@ goog.exportSymbol('kemia.model.Reaction.prototype.getHeader',
 		kemia.model.Reaction.prototype.getHeader);
 
 /**
- * @param {kemia.model.Molecule} mol
+ * @param {kemia.model.Molecule}
+ *            mol
  */
 kemia.model.Reaction.prototype.addReactant = function(mol) {
-	this.reactants.push(mol);
-	mol.reaction = this;
+	this.addMolecule(mol);
 };
 
 /**
- * @param {kemia.model.Molecule} mol
+ * @param {kemia.model.Molecule}
+ *            mol
+ */
+kemia.model.Reaction.prototype.addMolecule = function(mol) {
+	this.molecules.push(mol);
+	mol.reaction = this;
+}
+
+/**
+ * @param {kemia.model.Molecule}
+ *            mol
  */
 kemia.model.Reaction.prototype.addProduct = function(mol) {
-	this.products.push(mol);
-	mol.reaction = this;
+	this.addMolecule(mol);
 };
 
 /**
- * @param {kemia.model.Molecule} mol
+ * @param {kemia.model.Molecule}
+ *            mol
  */
 kemia.model.Reaction.prototype.isReactant = function(mol) {
-	return goog.array.contains(this.reactants, mol);
+	if(this.arrows[0]){
+		return this.arrows[0].getOrientation(mol.getCenter())==kemia.model.Arrow.ORIENTATION.BEHIND;
+	}
 }
 
 /**
- * @param {kemia.model.Molecule} mol
+ * @param {kemia.model.Molecule}
+ *            mol
  */
 kemia.model.Reaction.prototype.isProduct = function(mol) {
-	return goog.array.contains(this.products, mol);
+	if(this.arrows[0]){
+		return this.arrows[0].getOrientation(mol.getCenter())==kemia.model.Arrow.ORIENTATION.AHEAD;
+	}
 }
 
 /**
- * @param {kemia.model.Molecule} mol
+ * @param {kemia.model.Molecule}
+ *            mol
  */
 kemia.model.Reaction.prototype.removeMolecule = function(mol) {
-	if (goog.array.contains(this.reactants, mol)) {
 		goog.array.remove(this.reactants, mol);
 		mol.reaction = undefined;
-	} else if (goog.array.contains(this.products, mol)) {
-		goog.array.remove(this.products, mol);
-		mol.reaction = undefined;
-	}
 }
 
 /**

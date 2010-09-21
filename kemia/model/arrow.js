@@ -55,16 +55,19 @@ kemia.model.Arrow = function(opt_source, opt_target, opt_style,
  * @return {kemia.model.Arrow.ORIENTATION}
  */
 kemia.model.Arrow.prototype.getOrientation = function(point){
-	var test_point = goog.math.Vec2.fromCoordinate(point);
-	var center = new goog.math.Vec2(
+	
+	var center = new goog.math.Coordinate(
 			(this.source.x + this.target.x)/2, 
 			(this.source.y + this.target.y)/2);
-	var tip = goog.math.Vec2.fromCoordinate(this.target);
 
-	var arrow_vector  = goog.math.Vec2.fromCoordinate(
-			goog.math.Coordinate.difference(center, this.target));
-	var ortho = new goog.math.Vec2(-arrow_vector.y, arrow_vector.x).normalize();
-	if (kemia.math.Line.pointsOnSameSideOfLine(test_point, tip, center, ortho)){
+	var arrow_vector = new goog.math.Vec2.fromCoordinate(
+			goog.math.Coordinate.difference(this.source, this.target));
+	var ortho_vector = new goog.math.Vec2(-arrow_vector.y, arrow_vector.x);
+	var ortho_line = new kemia.math.Line(
+			center, 
+			goog.math.Coordinate.sum(center, ortho_vector));
+	
+	if (ortho_line.isSameSide(point, this.target)){
 		return kemia.model.Arrow.ORIENTATION.AHEAD;
 	} else {
 		return kemia.model.Arrow.ORIENTATION.BEHIND;

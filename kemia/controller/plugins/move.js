@@ -90,7 +90,7 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 		} else if (target instanceof kemia.model.Molecule) {
 			if (e.shiftKey) {
 				this.editorObject.getOriginalElement().style.cursor = 'url("../../../../images//rotate-cursor-32.png") 16 16, url("../../images/rotate-cursor-32.png") 16 16, pointer';
-				
+
 			} else {
 				this.editorObject.getOriginalElement().style.cursor = 'move';
 			}
@@ -255,21 +255,29 @@ kemia.controller.plugins.Move.mergeMolecules = function(source_atom,
 
 kemia.controller.plugins.Move.prototype.highlightAtom = function(atom,
 		opt_group) {
-	// this.logger.info('highlightAtom');
+
 	return this.editorObject.reactionRenderer.moleculeRenderer.atomRenderer
-			.highlightOn(atom, '#3366ff', opt_group);
+	.highlightOn(atom, '#3366ff', opt_group);
+	
 };
 
 kemia.controller.plugins.Move.prototype.highlightBond = function(bond,
 		opt_group) {
+
 	return this.editorObject.reactionRenderer.moleculeRenderer.bondRendererFactory
-			.get(bond).highlightOn(bond, '#3366ff', opt_group);
+	.get(bond).highlightOn(bond, '#3366ff', opt_group);
+
 };
 
 kemia.controller.plugins.Move.prototype.highlightMolecule = function(molecule,
 		opt_group) {
-	return this.editorObject.reactionRenderer.moleculeRenderer.highlightOn(
-			molecule, '#3366ff', opt_group);
+	if (molecule.reaction.isProduct(molecule)) {
+		return this.editorObject.reactionRenderer.moleculeRenderer.highlightOn(
+				molecule, 'purple', opt_group);
+	} else {
+		return this.editorObject.reactionRenderer.moleculeRenderer.highlightOn(
+				molecule, '#3366ff', opt_group);
+	}
 }
 
 kemia.controller.plugins.Move.prototype.highlightArrow = function(arrow,

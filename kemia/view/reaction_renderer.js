@@ -43,7 +43,7 @@ goog.inherits(kemia.view.ReactionRenderer, kemia.view.Renderer);
  * @return {goog.graphics.GroupElement}
  */
 kemia.view.ReactionRenderer.prototype.render = function(reaction) {
-	var molecules = goog.array.concat(reaction.reactants, reaction.products);
+	var molecules = reaction.molecules;
 	if(!this.transform){
 		if (molecules.length>0){
 			var box = this.boundingBox(molecules);

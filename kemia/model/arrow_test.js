@@ -17,4 +17,6 @@ function testGetOrientation() {
 	var product_center = new goog.math.Coordinate(2, 0);
 	assertEquals(kemia.model.Arrow.ORIENTATION.AHEAD, arrow
 			.getOrientation(product_center));
+	var reactant_center = new goog.math.Coordinate(-2, 0);
+	assertEquals(kemia.model.Arrow.ORIENTATION.BEHIND, arrow.getOrientation(reactant_center));
 }

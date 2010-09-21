@@ -196,44 +196,41 @@ kemia.model.NeighborList.prototype.getNearestList = function(coord) {
  */
 kemia.model.NeighborList.reactionsToNeighbors = function(reactions) {
 	return goog.array.flatten(goog.array.map(reactions, function(reaction) {
-		return goog.array.concat(kemia.model.NeighborList
-				.moleculesToNeighbors(reaction.reactants),
-				kemia.model.NeighborList
-						.moleculesToNeighbors(reaction.products), goog.array
-						.map(reaction.pluses, function(p) {
-							return {
-								obj : p,
-								getCenter : function() {
-									return p.coord;
-								},
-								getDistance : function(point) {
-									return goog.math.Coordinate.distance(
-											p.coord, point);
-								}
-							};
-						}), goog.array.map(reaction.arrows, function(a) {
+		return goog.array.concat(
+				kemia.model.NeighborList.moleculesToNeighbors(reaction.molecules), 
+				goog.array.map(reaction.pluses, function(p) {
+					return {
+						obj : p,
+						getCenter : function() {
+						return p.coord;
+					},
+					getDistance : function(point) {
+						return goog.math.Coordinate.distance(
+								p.coord, point);
+					}
+					};
+				}), 
+				goog.array.map(reaction.arrows, function(a) {
 					return {
 						obj : a,
 						getCenter : function() {
-							var midPoint = goog.math.Vec2
-									.fromCoordinate(goog.math.Coordinate.sum(
-											a.source, a.target));
-							return midPoint.scale(0.5);
-						},
-						getDistance : function(point) {
-							var line = new goog.math.Line(a.source.x,
-									a.source.y, a.target.x,
-									a.target.y);
-							return goog.math.Coordinate.distance(line
-									.getClosestSegmentPoint(point.x, point.y),
-									point);
-						}
+						var midPoint = goog.math.Vec2
+						.fromCoordinate(goog.math.Coordinate.sum(
+								a.source, a.target));
+						return midPoint.scale(0.5);
+					},
+					getDistance : function(point) {
+						var line = new goog.math.Line(a.source.x,
+								a.source.y, a.target.x,
+								a.target.y);
+						return goog.math.Coordinate.distance(line
+								.getClosestSegmentPoint(point.x, point.y),
+								point);
+					}
 					};
 				})
-
 		)
 	}))
-
 };
 
 /**
