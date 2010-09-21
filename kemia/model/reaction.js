@@ -99,7 +99,7 @@ kemia.model.Reaction.prototype.isProduct = function(mol) {
  *            mol
  */
 kemia.model.Reaction.prototype.removeMolecule = function(mol) {
-		goog.array.remove(this.reactants, mol);
+		goog.array.remove(this.molecules, mol);
 		mol.reaction = undefined;
 }
 

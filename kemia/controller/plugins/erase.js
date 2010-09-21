@@ -188,14 +188,14 @@ kemia.controller.plugins.Erase.prototype.eraseMolecule = function(molecule) {
 }
 
 kemia.controller.plugins.Erase.prototype.eraseArrow = function(arrow) {
-	this.logger.info('eraseArrow');
+	
 	var reaction = arrow.reaction;
 	reaction.removeArrow(arrow);
 	this.editorObject.setModels(this.editorObject.getModels());
 };
 
 kemia.controller.plugins.Erase.prototype.erasePlus = function(plus) {
-	this.logger.info('erasePlus');
+	
 	var reaction = plus.reaction;
 	reaction.removePlus(plus);
 	this.editorObject.setModels(this.editorObject.getModels());

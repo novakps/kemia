@@ -142,7 +142,7 @@ kemia.view.BondRenderer.defaultConfig = {
 			'color' : 'black'
 		}, 
 		'width-ratio' : 6,
-		'symbol-space' : 0.3,
+		'symbol-space' : 0.3
 	},
 	'highlight' : {
 		'radius' : .3,
