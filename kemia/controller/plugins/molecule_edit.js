@@ -60,7 +60,7 @@ kemia.controller.plugins.MoleculeEdit.prototype.execCommandInternal = function(
 		} else {
 			reaction = new kemia.model.Reaction();
 		}
-		reaction.addReactant(molecule);
+		reaction.addMolecule(molecule);
 		reaction.translateMolecule(molecule, diff);
 		this.editorObject.setModels( [ reaction ]);
 		var mol_center = molecule.getCenter();

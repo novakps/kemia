@@ -217,18 +217,7 @@ kemia.controller.plugins.BondEdit.prototype.createMolecule = function(pos) {
 	var reaction;
 	if (this.editorObject.getModels().length > 0) {
 		reaction = this.editorObject.getModels()[0];
-		if (reaction.arrows.length > 0) {
-			var arrow_pos = reaction.arrows[0];
-			if (arrow_pos.x > coord.x) {
-				// left of arrow, so reactant
-				reaction.addReactant(molecule);
-			} else {
-				// right of arrow so product
-				reaction.addProduct(molecule);
-			}
-		}
-		// no arrow
-		reaction.addReactant(molecule);
+		reaction.addMolecule(molecule);
 	}
 };
 
