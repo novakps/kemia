@@ -128,7 +128,7 @@ kemia.model.Reaction.prototype.addArrow = function(arrow) {
  *            arrow
  */
 kemia.model.Reaction.prototype.removeArrow = function(arrow) {
-	this.logger.info('removeArrow');
+//	this.logger.info('removeArrow');
 	if (goog.array.contains(this.arrows, arrow)) {
 		goog.array.remove(this.arrows, arrow);
 		arrow.reaction = undefined;
@@ -149,7 +149,7 @@ kemia.model.Reaction.prototype.addPlus = function(plus) {
  *            plus
  */
 kemia.model.Reaction.prototype.removePlus = function(plus) {
-	this.logger.info('removePlus');
+//	this.logger.info('removePlus');
 	goog.array.remove(this.pluses, plus);
 	plus.reaction = undefined;
 }
@@ -162,17 +162,6 @@ kemia.model.Reaction.prototype.removeArrow = function(arrow) {
 	arrow.reaction = undefined;
 }
 
-/**
- * @param {kemia.model.Plus}
- *            plus
- */
-kemia.model.Reaction.prototype.removePlus = function(plus) {
-	this.logger.info('removePlus');
-	if (goog.array.contains(this.pluses, plus)) {
-		goog.array.remove(this.pluses, plus);
-		plus.reaction = undefined;
-	}
-}
 
 /**
  * @deprecated
