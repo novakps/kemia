@@ -27,11 +27,10 @@ var _allTests = [ "kemia/controller/plugins/abstractdialog_test.html",
                   "kemia/model/model_test.html", 
                   "kemia/model/neighborlist_test.html",
                   "kemia/model/reaction_test.html",
-                  "kemia/query/query_test.html",
+//                  "kemia/query/query_test.html",
                   "kemia/ring/hanser_test.html",
                   "kemia/ring/ring_finder_test.html", 
                   "kemia/ring/ring_partitioner_test.html", 
                   "kemia/ring/sssr_test.html",
-                  "kemia/symmetry/symmetry_test.html",
-                  
+                  "kemia/symmetry/symmetry_test.html"
                   ];
