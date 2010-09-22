@@ -8,7 +8,7 @@ function setUp() {
 }
 
 function test01() {
-	var mol = new kemia.model.Molecule;
+	var mol = new kemia.model.Molecule();
 	var atom1 = new kemia.model.Atom("C");
 	var atom2 = new kemia.model.Atom("C");
 	var atom3 = new kemia.model.Atom("C");

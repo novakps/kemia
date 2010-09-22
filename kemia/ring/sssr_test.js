@@ -1,11 +1,11 @@
 goog.require('goog.testing.jsunit');
 goog.require('goog.debug.Console');
 goog.require('goog.debug.Logger');
-//goog.require('kemia.io.mdl');
-//goog.require('kemia.model.Molecule');
-//goog.require('kemia.model.Atom');
-//goog.require('kemia.model.Bond');
-//goog.require('kemia.ring.SSSR');
+goog.require('kemia.io.mdl');
+goog.require('kemia.model.Molecule');
+goog.require('kemia.model.Atom');
+goog.require('kemia.model.Bond');
+goog.require('kemia.ring.SSSR');
 
 function setUp() {
 	c = new goog.debug.Console();

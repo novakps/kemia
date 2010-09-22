@@ -74,8 +74,8 @@ function testRemoveOverlap() {
 	logger.info('mol2 ' + mol2.getBoundingBox().toString());
 
 	var rxn = new kemia.model.Reaction();
-	rxn.addReactant(mol1);
-	rxn.addProduct(mol2);
+	rxn.addMolecule(mol1);
+	rxn.addMolecule(mol2);
 
 	var bbox = rxn.boundingBox(rxn.molecules);
 	logger.info('rxn bbox ' + bbox.toString());

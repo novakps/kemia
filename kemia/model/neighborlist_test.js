@@ -38,12 +38,13 @@ function testReaction() {
 	m2.addBond(bb1);
 	m2.addBond(bb2);
 	var rxn = new kemia.model.Reaction();
+	rxn.addArrow(new kemia.model.Arrow(
+			new goog.math.Coordinate(5, 0),
+			new goog.math.Coordinate(6, 0)));
 	rxn.addReactant(m1);
 	rxn.addProduct(m2);
-	rxn.addArrow(new kemia.model.Arrow());
 	rxn.addPlus(new kemia.model.Plus());
-	var neighbors = kemia.model.NeighborList
-			.reactionsToNeighbors( [ rxn ]);
+	var neighbors = kemia.model.NeighborList.reactionsToNeighbors( [ rxn ]);
 	var neighborList = new kemia.model.NeighborList(neighbors, 1, .5);
 
 	var n = neighborList.getNearestList( {
@@ -235,9 +236,9 @@ function testMoleculeWithBonds1() {
 		y : 0.51
 	});
 
-	console.log(goog.array.map(n, function(o) {
-		return o.toString();
-	}))
+	// console.log(goog.array.map(n, function(o) {
+	// return o.toString();
+	// }))
 	assertEquals('# nearest objects', 3, n.length);
 	assertEquals('nearest object is bond b2', b2, n[0]);
 
@@ -245,10 +246,10 @@ function testMoleculeWithBonds1() {
 		x : 0.89,
 		y : 0.85
 	});
-	console.log(goog.array.map(n, function(o) {
-		return o.toString();
-	}))
-	assertEquals('# nearest objects', 2, n.length);
+	// console.log(goog.array.map(n, function(o) {
+	// return o.toString();
+	// }))
+	assertEquals('# nearest objects', 3, n.length);
 	assertEquals('nearest object is bond b2', b2, n[0]);
 	var nearest_atoms = goog.array.filter(n, function(o) {
 		return o instanceof kemia.model.Atom;
@@ -274,10 +275,10 @@ function testMoleculeWithBonds1() {
 		x : 2,
 		y : 0
 	});
-	assertEquals('# nearest objects', 0, n.length);
+	assertEquals('# nearest objects', 1, n.length);
 	n = nl.getNearestList( {
 		x : -2,
 		y : 0
 	});
-	assertEquals('# nearest objects', 0, n.length);
+	assertEquals('# nearest objects', 1, n.length);
 }
