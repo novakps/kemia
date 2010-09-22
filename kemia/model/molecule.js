@@ -102,6 +102,8 @@ kemia.model.Molecule.prototype.addBond = function(bond) {
 	this.bonds.push(bond);
 	bond.source.bonds.add(bond);
 	bond.target.bonds.add(bond);
+	this.addAtom(bond.source);
+	this.addAtom(bond.target);
 	bond.molecule = this;
 };
 
