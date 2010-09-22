@@ -675,105 +675,105 @@ var jproduct1 = {
 	"atoms" : [ {
 		"symbol" : "C",
 		"coord" : {
-			"x" : 4.0306,
+			"x" : 14.0306,
 			"y" : 0.0352
 		},
 		"charge" : 0
 	}, {
 		"symbol" : "C",
 		"coord" : {
-			"x" : 3.4175,
+			"x" : 13.4175,
 			"y" : 0.5872
 		},
 		"charge" : 0
 	}, {
 		"symbol" : "N",
 		"coord" : {
-			"x" : 2.6329,
+			"x" : 12.6329,
 			"y" : 0.3323
 		},
 		"charge" : 0
 	}, {
 		"symbol" : "C",
 		"coord" : {
-			"x" : 2.0198,
+			"x" : 12.0198,
 			"y" : 0.8843
 		},
 		"charge" : 0
 	}, {
 		"symbol" : "O",
 		"coord" : {
-			"x" : 2.1913,
+			"x" : 12.1913,
 			"y" : 1.6913
 		},
 		"charge" : 0
 	}, {
 		"symbol" : "C",
 		"coord" : {
-			"x" : 1.2352,
+			"x" : 11.2352,
 			"y" : 0.6294
 		},
 		"charge" : 0
 	}, {
 		"symbol" : "C",
 		"coord" : {
-			"x" : 0.9803,
+			"x" : 10.9803,
 			"y" : -0.1553
 		},
 		"charge" : 0
 	}, {
 		"symbol" : "C",
 		"coord" : {
-			"x" : 0.1553,
+			"x" : 10.1553,
 			"y" : -0.1553
 		},
 		"charge" : 0
 	}, {
 		"symbol" : "C",
 		"coord" : {
-			"x" : -0.0997,
+			"x" : 9.9003,
 			"y" : 0.6294
 		},
 		"charge" : 0
 	}, {
 		"symbol" : "N",
 		"coord" : {
-			"x" : 0.5678,
+			"x" : 10.5678,
 			"y" : 1.1143
 		},
 		"charge" : 0
 	}, {
 		"symbol" : "C",
 		"coord" : {
-			"x" : 0.5678,
+			"x" : 10.5678,
 			"y" : 1.9393
 		},
 		"charge" : 0
 	}, {
 		"symbol" : "O",
 		"coord" : {
-			"x" : 1.2822,
+			"x" : 11.2822,
 			"y" : 2.3518
 		},
 		"charge" : 0
 	}, {
 		"symbol" : "C",
 		"coord" : {
-			"x" : -0.1467,
+			"x" : 9.8533,
 			"y" : 2.3518
 		},
 		"charge" : 0
 	}, {
 		"symbol" : "C",
 		"coord" : {
-			"x" : -0.8612,
+			"x" : 9.1388,
 			"y" : 1.9393
 		},
 		"charge" : 0
 	}, {
 		"symbol" : "C",
 		"coord" : {
-			"x" : -0.1467,
+			"x" : 9.8533,
 			"y" : 3.1768
 		},
 		"charge" : 0
@@ -1050,6 +1050,6 @@ var jreaction = {
 	"products" : [ jproduct1 ],
 	"reagents_text" : "foo reagent",
 	"conditions_text" : "bar conditions",
-	"arrows" : [{"source":{"x":0,'y':0}, 'target': {'x': 1, 'y': 0}}],
+	"arrows" : [{"source":{"x":7,'y':0}, 'target': {'x': 8, 'y': 0}}],
 	'pluses' : [{'x':2, 'y':2}]
 };

@@ -119,6 +119,7 @@ goog.exportSymbol("kemia.model.Molecule.prototype.addBond",
 kemia.model.Molecule.prototype.getAtom = function(id) {
 	return this.atoms[id];
 };
+
 goog.exportSymbol("kemia.model.Molecule.prototype.getAtom",
 		kemia.model.Molecule.prototype.getAtom);
 
@@ -254,17 +255,20 @@ goog.exportSymbol("kemia.model.Molecule.prototype.countBonds",
 
 /**
  * Add an atom to molecule.
+ * Does nothing if atom already part of molecule
  * 
  * @param {kemia.model.Atom}
  *            atom The atom to add.
  */
 kemia.model.Molecule.prototype.addAtom = function(atom) {
-	var index = this.atoms.length;
-	// a new atom is always a new fragment
-	this.fragmentCount++;
-	this.fragments[index] = this.fragmentCount;
-	this.atoms.push(atom);
-	atom.molecule = this;
+	if (!goog.array.contains(this.atoms, atom)) {
+		var index = this.atoms.length;
+		// a new atom is always a new fragment
+		this.fragmentCount++;
+		this.fragments[index] = this.fragmentCount;
+		this.atoms.push(atom);
+		atom.molecule = this;
+	}
 };
 goog.exportSymbol("kemia.model.Molecule.prototype.addAtom",
 		kemia.model.Molecule.prototype.addAtom);

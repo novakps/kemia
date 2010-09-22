@@ -210,20 +210,34 @@ kemia.io.json.Molecule;
 kemia.io.json.moleculeToJson = function(mol) {
 	/** @type {Array.<kemia.io.json.Atom>} */
 	var atoms = goog.array.map(mol.atoms, function(a){
-		return {symbol: a.symbol, coord:{x: a.coord.x, y: a.coord.y}, charge: a.charge};
+		return {
+			'symbol': a.symbol, 
+			'coord':{
+				'x': a.coord.x, 
+				'y': a.coord.y}, 
+			'charge': a.charge
+			};
 	});
 	/** @type {Array.<kemia.io.json.Bond>} */
 	var bonds = goog.array.map(mol.bonds, function(b){
 		var btype =   kemia.io.json.getTypeCode(b);
 		var bstereo = kemia.io.json.getStereoCode(b);
-		return { source : mol.indexOfAtom(b.source), target : mol.indexOfAtom(b.target), type : btype, stereo : bstereo
+		var source_index = mol.indexOfAtom(b.source);
+		var target_index = mol.indexOfAtom(b.target);
+		goog.asserts.assert(source_index>-1);
+		goog.asserts.assert(target_index>-1);
+		return { 
+			'source' : mol.indexOfAtom(b.source), 
+			'target' : mol.indexOfAtom(b.target), 
+			'type' : btype, 
+			'stereo' : bstereo
 		}
 	});
 
 	return {
-		name : mol.name,
-		atoms : atoms,
-		bondindex : bonds
+		'name' : mol.name,
+		'atoms' : atoms,
+		'bondindex' : bonds
 	};
 };
 
@@ -258,14 +272,14 @@ kemia.io.json.readReaction = function(arg) {
 	rxn.header = jrxn['header'];
 	rxn.reagentsText = jrxn['reagents_text'];
 	rxn.conditionsText = jrxn['conditions_text'];
+	goog.array.forEach(jrxn['arrows'], function(arrow){
+		rxn.addArrow(kemia.io.json.readArrow(arrow));
+	});
 	goog.array.forEach(jrxn['reactants'], function(mol){
 		rxn.addReactant(kemia.io.json.readMolecule(mol));
 	});
 	goog.array.forEach(jrxn['products'], function(mol){
 		rxn.addProduct(kemia.io.json.readMolecule(mol));
-	});
-	goog.array.forEach(jrxn['arrows'], function(arrow){
-		rxn.addArrow(kemia.io.json.readArrow(arrow));
 	});
 	goog.array.forEach(jrxn['pluses'], function(plus){
 		rxn.addPlus(kemia.io.json.readPlus(plus));
@@ -283,8 +297,8 @@ goog.exportSymbol('kemia.io.json.readReaction', kemia.io.json.readReaction);
  */
 kemia.io.json.reactionToJson = function (rxn) {
 	var header = rxn.header;
-	var reactants = goog.array.map(rxn.reactants, kemia.io.json.moleculeToJson);
-	var products = goog.array.map(rxn.products, kemia.io.json.moleculeToJson);
+	var reactants = goog.array.map(rxn.getReactants(), kemia.io.json.moleculeToJson);
+	var products = goog.array.map(rxn.getProducts(), kemia.io.json.moleculeToJson);
 	var arrows = goog.array.map(rxn.arrows, kemia.io.json.arrowToJson);
 	var pluses = goog.array.map(rxn.pluses, kemia.io.json.plusToJson);
 	return {'header': header,

@@ -5,6 +5,7 @@ goog.require('goog.math.Rect');
 goog.require('goog.debug.Logger');
 goog.require('kemia.graphics.AffineTransform');
 goog.require('kemia.model.Arrow');
+goog.require('goog.asserts');
 
 /**
  * Creates a new Reaction.
@@ -54,8 +55,17 @@ goog.exportSymbol('kemia.model.Reaction.prototype.getHeader',
  *            mol
  */
 kemia.model.Reaction.prototype.addReactant = function(mol) {
+	goog.asserts.assert(this.isReactant(mol));
 	this.addMolecule(mol);
 };
+
+kemia.model.Reaction.prototype.getReactants = function() {
+	return goog.array.filter(this.molecules, this.isReactant, this);
+}
+
+kemia.model.Reaction.prototype.getProducts = function() {
+	return goog.array.filter(this.molecules, this.isProduct, this);
+}
 
 /**
  * @param {kemia.model.Molecule}
@@ -71,6 +81,7 @@ kemia.model.Reaction.prototype.addMolecule = function(mol) {
  *            mol
  */
 kemia.model.Reaction.prototype.addProduct = function(mol) {
+	goog.asserts.assert(this.isProduct(mol));
 	this.addMolecule(mol);
 };
 
@@ -179,17 +190,6 @@ kemia.model.Reaction.prototype.generatePlusCoords = function(molecules) {
 };
 
 /**
- * @deprecated
- */
-kemia.model.Reaction.prototype.generateArrowCoords = function(reactants,
-		products) {
-	var r_box = this.boundingBox(reactants);
-	var p_box = this.boundingBox(products);
-	this.addArrow(new kemia.model.Arrow(new goog.math.Coordinate(
-			(r_box.right + p_box.left) / 2, (r_box.top + p_box.bottom) / 2)));
-};
-
-/**
  * bounding box of an array of molecules
  * 
  * @param {Array.
@@ -226,10 +226,9 @@ kemia.model.Reaction.prototype.center = function(molecules) {
  */
 kemia.model.Reaction.prototype.removeOverlap = function() {
 	var margin = 4;
-	var molecules = goog.array.concat(this.reactants, this.products);
 	var accumulated_rect;
 	goog.array
-			.forEach(molecules,
+			.forEach(this.molecules,
 					function(mol) {
 						var mol_rect = goog.math.Rect.createFromBox(this
 								.boundingBox( [ mol ]));
