@@ -43,7 +43,7 @@ kemia.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
 			'File');
 	var file_menu = new goog.ui.Menu();
 	var erase_all = new goog.ui.Option(goog.dom.createDom(
-			goog.dom.TagName.DIV, undefined , 'Erase All'));
+			goog.dom.TagName.DIV, undefined , 'New'));
 	file_menu.addItem(erase_all);
 	file_select.setMenu(file_menu);
 	file_select.queryable = true;
