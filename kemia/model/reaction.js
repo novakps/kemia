@@ -181,43 +181,50 @@ kemia.model.Reaction.prototype.generatePlusCoords = function(molecules) {
 /**
  * bounding box of an array of molecules
  * 
- * @param {Array.
- *            <kemia.model.Molecule>} molecules
- * @return goog.math.Box
+ * @param {Array.<kemia.model.Molecule>} molecules
+ * @return {goog.math.Box}
  */
-kemia.model.Reaction.prototype.boundingBox = function(molecules) {
+kemia.model.Reaction.boundingBox = function(molecules) {
 	var atoms = goog.array.flatten(goog.array.map(molecules, function(mol) {
 		return mol.atoms;
 	}));
 	var coords = goog.array.map(atoms, function(a) {
 		return a.coord;
 	})
-	return goog.math.Box.boundingBox.apply(null, coords);
+	if(coords.length>0){
+		return goog.math.Box.boundingBox.apply(null, coords);
+	} else {
+		return null
+	}
 };
 
 /**
  * finds center of an array of molecules
  * 
- * @param {Array.
- *            <kemia.model.Molecule>} molecules
+ * @param {Array.<kemia.model.Molecule>} molecules
  * @return goog.math.Coordinate
  */
 kemia.model.Reaction.prototype.center = function(molecules) {
 
-	var bbox = this.boundingBox(molecules);
+	var bbox =kemia.model.Reaction.boundingBox(molecules);
 
 	return new goog.math.Coordinate((bbox.left + bbox.right) / 2,
 			(bbox.top + bbox.bottom) / 2);
 };
 
 /**
- * layout molecules to eliminate any molecule overlap, if necessary
+ * layout molecules to eliminate any molecule overlap plus a margin
  */
-kemia.model.Reaction.prototype.removeOverlap = function() {
+kemia.model.Reaction.removeOverlap = function(molecules) {
 	var margin = 4;
 	var accumulated_rect;
-	goog.array
-			.forEach(this.molecules,
+	// order molecules left-to-right
+	var mols = goog.array.sort(
+			molecules, 
+			goog.array.defaultCompare(
+					m1.boundingBox().left, 
+					m2.boundingBox().left));
+	goog.array.forEach(mols,
 					function(mol) {
 						var mol_rect = goog.math.Rect.createFromBox(this
 								.boundingBox( [ mol ]));
@@ -239,7 +246,7 @@ kemia.model.Reaction.prototype.removeOverlap = function() {
 					accumulated_rect = mol_rect;
 				}
 			}, this);
-
+	return molecules;
 };
 
 /**

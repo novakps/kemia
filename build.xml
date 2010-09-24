@@ -114,6 +114,9 @@
 				<arg line="-o @{outputmode}" />
 				<arg line='-c "@{compilerjarfile}"' />
 				<arg line='-f "--compilation_level=@{compilationlevel}"' />
+				<arg line='-f "--formatting=PRETTY_PRINT"' />
+				<arg line='-f "--formatting=PRINT_INPUT_DELIMITER"'/>
+				<arg line='-f "--debug=true"' />
 				<arg line='-f "--jscomp_warning=checkTypes"' />
 				<arg line='-f "--jscomp_warning=accessControls"' />
 				<arg line='-f "--jscomp_warning=missingProperties"' />

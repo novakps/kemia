@@ -272,15 +272,30 @@ kemia.io.json.readReaction = function(arg) {
 	rxn.header = jrxn['header'];
 	rxn.reagentsText = jrxn['reagents_text'];
 	rxn.conditionsText = jrxn['conditions_text'];
-	goog.array.forEach(jrxn['arrows'], function(arrow){
-		rxn.addArrow(kemia.io.json.readArrow(arrow));
-	});
-	goog.array.forEach(jrxn['reactants'], function(mol){
-		rxn.addReactant(kemia.io.json.readMolecule(mol));
-	});
-	goog.array.forEach(jrxn['products'], function(mol){
-		rxn.addProduct(kemia.io.json.readMolecule(mol));
-	});
+	var reactants = goog.array.map(jrxn['reactants'], kemia.io.json.readMolecule)
+	var products = goog.array.map(jrxn['products'], kemia.io.json.readMolecule);
+	if(jrxn['arrows'] && jrxn['arrows'].length > 0){
+		goog.array.forEach(jrxn['arrows'], function(arrow){
+			rxn.addArrow(kemia.io.json.readArrow(arrow));
+		});
+		goog.array.forEach(reactants, function(mol){
+			rxn.addReactant(kemia.io.json.readMolecule(mol));
+		});
+		
+		goog.array.forEach(products, function(mol){
+			rxn.addProduct(kemia.io.json.readMolecule(mol));
+		});
+	} else {
+		
+		// center new arrow between nearest reactant and nearest product
+		var r_box = rxn.boundingBox(reactants);
+		var p_box = rxn.boundingBox(products);
+		var arrow = new kemia.model.Arrow(
+				new goog.math.Coordinate(
+						r_box.right + p_box.left)/2 - 1 , 
+						(r_box.top + r_box.bottom)/2);
+	}
+	
 	goog.array.forEach(jrxn['pluses'], function(plus){
 		rxn.addPlus(kemia.io.json.readPlus(plus));
 	})
