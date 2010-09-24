@@ -219,12 +219,12 @@ kemia.model.Reaction.removeOverlap = function(molecules) {
 	var margin = 4;
 	var accumulated_rect;
 	// order molecules left-to-right
-	var mols = goog.array.sort(
-			molecules, 
-			goog.array.defaultCompare(
-					m1.boundingBox().left, 
-					m2.boundingBox().left));
-	goog.array.forEach(mols,
+	goog.array.sort(
+			molecules, function(m1, m2){
+				return goog.array.defaultCompare(
+						m1.getBoundingBox().left, 
+						m2.getBoundingBox().left)});
+	goog.array.forEach(molecules,
 					function(mol) {
 						var mol_rect = goog.math.Rect.createFromBox(this
 								.boundingBox( [ mol ]));
@@ -233,7 +233,7 @@ kemia.model.Reaction.removeOverlap = function(molecules) {
 
 							if (goog.math.Rect.intersection(accumulated_rect,
 									mol_rect)) {
-								this.translateMolecule(mol,
+								kemia.model.Reaction.translateMolecule(mol,
 										new goog.math.Coordinate(margin
 												+ accumulated_rect.left
 												+ accumulated_rect.width
@@ -259,7 +259,7 @@ kemia.model.Reaction.removeOverlap = function(molecules) {
  * 
  * @return {kemia.model.Molecule}
  */
-kemia.model.Reaction.prototype.translateMolecule = function(molecule, coord) {
+kemia.model.Reaction.translateMolecule = function(molecule, coord) {
 
 	goog.array.forEach(molecule.atoms, function(a) {
 		a.coord = goog.math.Coordinate.sum(a.coord, coord);

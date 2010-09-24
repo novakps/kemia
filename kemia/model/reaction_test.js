@@ -63,12 +63,12 @@ function testGetProducts() {
 }
 
 function testRemoveOverlap() {
-	var mol1 = new kemia.model.Molecule();
+	var mol1 = new kemia.model.Molecule('mol1');
 	mol1.addAtom(new kemia.model.Atom("C", -1, -1));
 	mol1.addAtom(new kemia.model.Atom("C", 1, 1));
 	logger.info('mol1 ' + mol1.getBoundingBox().toString());
 
-	var mol2 = new kemia.model.Molecule();
+	var mol2 = new kemia.model.Molecule('mol2');
 	mol2.addAtom(new kemia.model.Atom("O", -2, -2));
 	mol2.addAtom(new kemia.model.Atom("O", 0, 0));
 	logger.info('mol2 ' + mol2.getBoundingBox().toString());
@@ -77,16 +77,16 @@ function testRemoveOverlap() {
 	rxn.addMolecule(mol1);
 	rxn.addMolecule(mol2);
 
-	var bbox = rxn.boundingBox(rxn.molecules);
+	var bbox = kemia.model.Reaction.boundingBox(rxn.molecules);
 	logger.info('rxn bbox ' + bbox.toString());
 	assertEquals(3, bbox.right - bbox.left);
-	rxn.removeOverlap();
-	bbox =  rxn.boundingBox(rxn.molecules);
+	kemia.model.Reaction.removeOverlap(rxn.molecules);
+	bbox =  kemia.model.Reaction.boundingBox(rxn.molecules);
 	logger.info('rxn bbox after remove overlap ' + bbox.toString());
 	logger.info('mol1 ' + mol1.getBoundingBox().toString());
 	logger.info('mol2 ' + mol2.getBoundingBox().toString());
 
-	var bbox =  rxn.boundingBox(rxn.molecules);
+	var bbox =  kemia.model.Reaction.boundingBox(rxn.molecules);
 	assertEquals(2 + 2 + 4, bbox.right - bbox.left);
 
 };
