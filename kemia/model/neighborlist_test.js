@@ -38,7 +38,7 @@ function testReaction() {
 	m2.addBond(bb1);
 	m2.addBond(bb2);
 	var rxn = new kemia.model.Reaction();
-	rxn.addArrow(new kemia.model.Arrow(
+	rxn.setArrow(new kemia.model.Arrow(
 			new goog.math.Coordinate(5, 0),
 			new goog.math.Coordinate(6, 0)));
 	rxn.addReactant(m1);

@@ -36,14 +36,14 @@ function testWriteMolfile() {
 
 function testReadRxnfile() {
 	var reaction = kemia.io.mdl.readRxnfile(rxnsample);
-	assertEquals(3, reaction.reactants.length);
-	assertEquals(4, reaction.products.length);
+	assertEquals(2, reaction.getReactants().length);
+	assertEquals(1, reaction.getProducts().length);
 }
 
 function testReadWriteReadRxnfile() {
 	var reaction1 = kemia.io.mdl.readRxnfile(rxnsample);
 	var rxn_string = kemia.io.mdl.writeRxnfile(reaction1);
 	var reaction2 = kemia.io.mdl.readRxnfile(rxn_string);
-	assertEquals(reaction1.reactants.length, reaction2.reactants.length);
-	assertEquals(reaction2.reactants.length, reaction2.reactants.length);
+	assertEquals(reaction1.getReactants().length, reaction2.getReactants().length);
+	assertEquals(reaction1.getProducts().length, reaction2.getProducts().length);
 }

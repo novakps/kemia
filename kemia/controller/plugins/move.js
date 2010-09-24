@@ -560,12 +560,12 @@ kemia.controller.plugins.Move.prototype.dragMolecule = function(e, molecule) {
 								0, 0);
 
 						// move molecule
-						var diff = new goog.math.Coordinate(deltaDeltaX
+						var diff = new goog.math.Vec2(deltaDeltaX
 								/ d.editor.reactionRenderer.transform
 										.getScaleX(), deltaDeltaY
 								/ d.editor.reactionRenderer.transform
 										.getScaleY());
-						d.molecule.reaction.translateMolecule(d.molecule, diff);
+						d.molecule.translate( diff);
 
 						// d._prev = mouse_coord;
 						d._prevDeltaX = d.deltaX - d._initDeltaX;
@@ -665,7 +665,7 @@ kemia.controller.plugins.Move.prototype.rotateMolecule = function(e, molecule) {
 				+ d.deltaX, d._start.y + d.deltaY);
 
 		var degrees = new_angle - d._start_angle;
-		d.molecule.reaction.rotateMolecule(d.molecule, -degrees, mol_center);
+		d.molecule.rotate( -degrees, mol_center);
 		d.editor.setModels(d.editor.getModels());
 		d.dispose();
 	});

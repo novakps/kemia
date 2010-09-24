@@ -61,7 +61,7 @@ kemia.controller.plugins.MoleculeEdit.prototype.execCommandInternal = function(
 			reaction = new kemia.model.Reaction();
 		}
 		reaction.addMolecule(molecule);
-		reaction.translateMolecule(molecule, diff);
+		molecule.translate(diff);
 		this.editorObject.setModels( [ reaction ]);
 		var mol_center = molecule.getCenter();
 
@@ -114,7 +114,7 @@ kemia.controller.plugins.MoleculeEdit.prototype.dragTemplate = function(e,
 
 					var diff = goog.math.Coordinate.difference(mol_coords[0],
 							mol_coords[1]);
-					d.molecule.reaction.translateMolecule(d.molecule, diff);
+					d.molecule.translate( diff);
 					d._prev = mouse_coord;
 
 					// highlight merge sites

@@ -34,6 +34,7 @@ goog.require('goog.math.Vec2');
  *            opt_conditions_text
  * @constructor
  */
+
 kemia.model.Arrow = function(opt_source, opt_target, opt_style,
 		opt_reagents_text, opt_conditions_text) {
 	this.source = goog.isDef(opt_source) ? opt_source
@@ -45,6 +46,16 @@ kemia.model.Arrow = function(opt_source, opt_target, opt_style,
 	this.reagents_text = goog.isDef(opt_reagents_text) ? opt_reagents_text : "";
 	this.conditions_text = goog.isDef(opt_conditions_text) ? opt_conditions_text
 			: "";
+};
+
+/**
+ * translates Arrow coordinates
+ * 
+ * @param{goog.math.Vec2} vector translation amount
+ */
+kemia.model.Arrow.prototype.translate = function(vector){
+	this.source = goog.math.Coordinate.sum(this.source, vector);
+	this.target = goog.math.Coordiante.sum(this.target, vector);
 };
 
 /**

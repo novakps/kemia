@@ -269,37 +269,30 @@ kemia.io.json.readReaction = function(arg) {
 		jrxn = /** @type {kemia.io.json.Reaction} */(arg);
 	}
 	var rxn = new kemia.model.Reaction();
-	rxn.header = jrxn['header'];
-	rxn.reagentsText = jrxn['reagents_text'];
-	rxn.conditionsText = jrxn['conditions_text'];
 	var reactants = goog.array.map(jrxn['reactants'], kemia.io.json.readMolecule)
 	var products = goog.array.map(jrxn['products'], kemia.io.json.readMolecule);
-	
-	if(jrxn['arrows'] && jrxn['arrows'].length > 0){
+
+	if(jrxn['arrows']){
 		goog.array.forEach(jrxn['arrows'], function(arrow){
-			rxn.addArrow(kemia.io.json.readArrow(arrow));
+			rxn.setArrow(kemia.io.json.readArrow(arrow));
 		});
-		goog.array.forEach(reactants, function(mol){
-			rxn.addReactant(kemia.io.json.readMolecule(mol));
-		});
-		
-		goog.array.forEach(products, function(mol){
-			rxn.addProduct(kemia.io.json.readMolecule(mol));
-		});
-	} else {
-		
-		// center new arrow between nearest reactant and nearest product
-		var r_box = rxn.boundingBox(reactants);
-		var p_box = rxn.boundingBox(products);
-		var arrow = new kemia.model.Arrow(
-				new goog.math.Coordinate(
-						r_box.right + p_box.left)/2 - 1 , 
-						(r_box.top + r_box.bottom)/2);
-	}
+	};
+	rxn.header = jrxn['header'];
+	rxn.setReagentsText( jrxn['reagents_text']);
+	rxn.setConditionsText( jrxn['conditions_text']);
 	
-	goog.array.forEach(jrxn['pluses'], function(plus){
-		rxn.addPlus(kemia.io.json.readPlus(plus));
-	})
+	if(jrxn['pluses']){
+		goog.array.forEach(jrxn['pluses'], function(plus){
+			rxn.addPlus(kemia.io.json.readPlus(plus));
+		});
+	};
+	goog.array.forEach(reactants, function(mol){
+		rxn.addReactant(mol);
+	});
+
+	goog.array.forEach(products, function(mol){
+		rxn.addProduct(mol);
+	});
 
 	return rxn;
 };
@@ -320,8 +313,8 @@ kemia.io.json.reactionToJson = function (rxn) {
 	return {'header': header,
 		'reactants': reactants,
 		'products': products,
-		'reagents_text': rxn.reagentsText,
-		'conditions_text': rxn.conditionsText,
+		'reagents_text': rxn.getReagentsText(),
+		'conditions_text': rxn.getConditionsText(),
 		'arrows': arrows,
 		'pluses': pluses
 		};

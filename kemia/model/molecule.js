@@ -256,8 +256,7 @@ goog.exportSymbol("kemia.model.Molecule.prototype.countBonds",
 		kemia.model.Molecule.prototype.countBonds);
 
 /**
- * Add an atom to molecule.
- * Does nothing if atom already part of molecule
+ * Add an atom to molecule. Does nothing if atom already part of molecule
  * 
  * @param {kemia.model.Atom}
  *            atom The atom to add.
@@ -385,9 +384,13 @@ kemia.model.Molecule.prototype.getConnectedBondsList = function(atom) {
  * @return {string}
  */
 kemia.model.Molecule.prototype.toString = function() {
-	return 'kemia.model.Molecule[' + goog.array.map(this.atoms, function(atom) {
-		return atom.toString();
-	}).toString() + ']';
+	return 'kemia.model.Molecule - name: ' + this.name + "\n\t" + 
+		goog.array.map(this.atoms, function(atom) {
+			return atom.toString();
+		}).toString() + "\n\t" + 
+		goog.array.map(this.bonds, function(bond){
+			return bond.toString();
+		}).toString();
 };
 /**
  * returns center coordinates of molecule's atoms
@@ -410,4 +413,36 @@ kemia.model.Molecule.prototype.getBoundingBox = function() {
 			function(a) {
 				return a.coord;
 			}));
-}
+};
+
+/**
+ * rotate molecule coordinates
+ * 
+ * @param {number}
+ *            degrees, angle of rotation
+ * @param {goog.math.Coordinate}
+ *            center, coordinates of center of rotation
+ * 
+ */
+kemia.model.Molecule.prototype.rotate = function(degrees, center) {
+	var trans = kemia.graphics.AffineTransform.getRotateInstance(goog.math
+			.toRadians(degrees), center.x, center.y);
+	goog.array.forEach(this.atoms, function(a) {
+		a.coord = trans.transformCoords( [ a.coord ])[0];
+	});
+
+};
+
+/**
+ * translate molecule coordinates
+ * 
+ * @param {goog.math.Vec2}
+ *            vector, x and y change amounts
+ * 
+ */
+kemia.model.Molecule.prototype.translate = function(vector) {
+	goog.array.forEach(this.atoms, function(a) {
+		a.coord = goog.math.Coordinate.sum(a.coord, vector);
+	});
+
+};

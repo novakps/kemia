@@ -252,16 +252,16 @@ goog.exportSymbol('kemia.io.mdl.readMolfile', kemia.io.mdl.readMolfile);
 kemia.io.mdl.writeRxnfile = function(reaction) {
 	var result = "";
 	result+= "$RXN\n\n\n\n"; //minimal empty header
-	result+= (goog.string.repeat(" ", 3) + reaction.reactants.length).slice(-3); // reactant 
-	result+= (goog.string.repeat(" ", 3) + reaction.products.length).slice(-3);  // and product counts
+	result+= (goog.string.repeat(" ", 3) + reaction.getReactants().length).slice(-3); // reactant 
+	result+= (goog.string.repeat(" ", 3) + reaction.getProducts().length).slice(-3);  // and product counts
 	result+="\n";
 	
-	goog.array.forEach(reaction.reactants, function(mol){
+	goog.array.forEach(reaction.getReactants(), function(mol){
 		result+="$MOL\n";
 		result+=kemia.io.mdl.writeMolfile(mol);
 	});
 	
-	goog.array.forEach(reaction.products, function(mol){
+	goog.array.forEach(reaction.getProducts(), function(mol){
 		result+="$MOL\n";
 		result+=kemia.io.mdl.writeMolfile(mol);
 	});

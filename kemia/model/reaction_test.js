@@ -10,7 +10,6 @@ function setUp() {
 	c = new goog.debug.Console();
 	c.setCapturing(true);
 	logger = goog.debug.Logger.getLogger('ReactionTest');
-
 }
 
 function buildReaction() {
@@ -38,7 +37,7 @@ function buildReaction() {
 	mol2.addBond(b2);
 	rxn1.addMolecule(mol2);
 
-	rxn1.addArrow(new kemia.model.Arrow(new goog.math.Coordinate(3, 1.5),
+	rxn1.setArrow(new kemia.model.Arrow(new goog.math.Coordinate(3, 1.5),
 			new goog.math.Coordinate(4, 1.5)));
 
 	var mol3 = new kemia.model.Molecule('mol3');
@@ -50,6 +49,58 @@ function buildReaction() {
 	mol3.addBond(b3);
 	rxn1.addMolecule(mol3);
 	return rxn1;
+}
+
+function testAddReactantLeftOfArrow() {
+	var r = buildReaction();
+	var mol_left = new kemia.model.Molecule('mol_left');
+	var a1a = new kemia.model.Atom('C', 0, 1);
+	var a1b = new kemia.model.Atom('C', 0, 2);
+	var b1 = new kemia.model.Bond(a1a, a1b);
+	mol_left.addAtom(a1a);
+	mol_left.addAtom(a1a);
+	mol_left.addBond(b1);
+	r.addReactant(mol_left);
+	assertEquals(3, r.getReactants().length);
+}
+
+function testAddReactantRightOfArrow() {
+	var r = buildReaction();
+	var mol_right = new kemia.model.Molecule('mol_right');
+	var a3a = new kemia.model.Atom('C', 4, 1);
+	var a3b = new kemia.model.Atom('C', 4, 2);
+	var b3 = new kemia.model.Bond(a3a, a3b);
+	mol_right.addAtom(a3a);
+	mol_right.addAtom(a3b);
+	mol_right.addBond(b3);
+	r.addReactant(mol_right);
+	assertEquals(3, r.getReactants().length);
+}
+
+function testAddProductLeftOfArrow() {
+	var r = buildReaction();
+	var mol_left = new kemia.model.Molecule('mol_left');
+	var a1a = new kemia.model.Atom('C', 0, 1);
+	var a1b = new kemia.model.Atom('C', 0, 2);
+	var b1 = new kemia.model.Bond(a1a, a1b);
+	mol_left.addAtom(a1a);
+	mol_left.addAtom(a1a);
+	mol_left.addBond(b1);
+	r.addProduct(mol_left);
+	assertEquals(2, r.getProducts().length);
+}
+
+function testAddProductRightOfArrow() {
+	var r = buildReaction();
+	var mol_right = new kemia.model.Molecule('mol_right');
+	var a3a = new kemia.model.Atom('C', 4, 1);
+	var a3b = new kemia.model.Atom('C', 4, 2);
+	var b3 = new kemia.model.Bond(a3a, a3b);
+	mol_right.addAtom(a3a);
+	mol_right.addAtom(a3b);
+	mol_right.addBond(b3);
+	r.addProduct(mol_right);
+	assertEquals(2, r.getProducts().length);
 }
 
 function testGetReactants() {
@@ -81,12 +132,12 @@ function testRemoveOverlap() {
 	logger.info('rxn bbox ' + bbox.toString());
 	assertEquals(3, bbox.right - bbox.left);
 	kemia.model.Reaction.removeOverlap(rxn.molecules);
-	bbox =  kemia.model.Reaction.boundingBox(rxn.molecules);
+	bbox = kemia.model.Reaction.boundingBox(rxn.molecules);
 	logger.info('rxn bbox after remove overlap ' + bbox.toString());
 	logger.info('mol1 ' + mol1.getBoundingBox().toString());
 	logger.info('mol2 ' + mol2.getBoundingBox().toString());
 
-	var bbox =  kemia.model.Reaction.boundingBox(rxn.molecules);
+	var bbox = kemia.model.Reaction.boundingBox(rxn.molecules);
 	assertEquals(2 + 2 + 4, bbox.right - bbox.left);
 
 };

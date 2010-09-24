@@ -20,17 +20,18 @@ kemia.model.Reaction = function() {
 	this.molecules = [];
 
 	/** @type {Array.<kemia.model.Arrow>} */
-	this.arrows = [];
+	this.arrow = new kemia.model.Arrow();
 
 	/** @type {Array.<kemia.model.Pluse>} */
 	this.pluses = [];
 
-	/** @type {string} */
-	this.reagentsText = "";
-
-	/** @type {string} */
-	this.conditionsText = "";
 };
+
+/**
+ * @const
+ */
+kemia.model.Reaction.MOLECULE_MARGIN = 4;
+
 
 /**
  * The logger for this class.
@@ -51,11 +52,38 @@ goog.exportSymbol('kemia.model.Reaction.prototype.getHeader',
 		kemia.model.Reaction.prototype.getHeader);
 
 /**
+ * adds a molecule to reaction, changing layout if necessary to keep reactants
+ * behind arrow and products ahead of arrow
+ * 
  * @param {kemia.model.Molecule}
- *            mol
+ *            mol reactant to add
  */
 kemia.model.Reaction.prototype.addReactant = function(mol) {
-	goog.asserts.assert(this.isReactant(mol));
+	if(!this.isReactant(mol)){
+		// have to change layout to make room for a new reactant
+		var reactants = this.getReactants();
+		var r_diff;
+		var mol_box = mol.getBoundingBox();
+		if(reactants.length>0){
+			var reactant_box = kemia.model.Reaction.boundingBox(reactants);
+			r_diff = new goog.math.Vec2(reactant_box.right - mol_box.left, 0);
+		} else {
+			r_diff = new goog.math.Vec2(mol_box.left, 0);
+		}
+		// move new reactant to the right of existing reactants, if any
+		mol.translate(r_diff);
+		if(!this.isReactant(mol)){
+			// have to move the arrow and any products
+			var products = this.getProducts();
+			var diff = new goog.math.Vec2(mol.getBoundingBox().right - this.arrow.source.x);
+			this.arrow.translate(diff);
+			// move products, since arrow moved
+			goog.array.forEach(products, function(mol){
+				mol.translate(diff);
+			})
+		}
+		goog.asserts.assert(this.isReactant(mol));
+	} 
 	this.addMolecule(mol);
 };
 
@@ -77,11 +105,27 @@ kemia.model.Reaction.prototype.addMolecule = function(mol) {
 }
 
 /**
+ * adds a molecule as a product rearranging layout as necessary to keep
+ * reactants behind arrow and products ahead of arrow
+ * 
  * @param {kemia.model.Molecule}
- *            mol
+ *            mol product to add
  */
 kemia.model.Reaction.prototype.addProduct = function(mol) {
-	goog.asserts.assert(this.isProduct(mol));
+	if(!this.isProduct(mol)){
+		// translate mol to the right of products, or of arrow, if no products
+		var products = this.getProducts();
+		var mol_box = mol.getBoundingBox();
+		var x_diff;
+		if(products.length>0){
+			var prod_box = kemia.model.Reaction.boundingBox(products);
+			x_diff =  prod_box.right - mol_box.left;
+		} else {
+			x_diff = this.arrow.target.x - mol_box.left;
+		}
+		mol.translate(new goog.math.Vec2(x_diff, 0));
+		goog.asserts.assert(this.isProduct(mol));
+	}
 	this.addMolecule(mol);
 };
 
@@ -90,8 +134,8 @@ kemia.model.Reaction.prototype.addProduct = function(mol) {
  *            mol
  */
 kemia.model.Reaction.prototype.isReactant = function(mol) {
-	if(this.arrows[0]){
-		return this.arrows[0].getOrientation(mol.getCenter())==kemia.model.Arrow.ORIENTATION.BEHIND;
+	if(this.arrow){
+		return this.arrow.getOrientation(mol.getCenter())==kemia.model.Arrow.ORIENTATION.BEHIND;
 	}
 }
 
@@ -100,8 +144,8 @@ kemia.model.Reaction.prototype.isReactant = function(mol) {
  *            mol
  */
 kemia.model.Reaction.prototype.isProduct = function(mol) {
-	if(this.arrows[0]){
-		return this.arrows[0].getOrientation(mol.getCenter())==kemia.model.Arrow.ORIENTATION.AHEAD;
+	if(this.arrow){
+		return this.arrow.getOrientation(mol.getCenter())==kemia.model.Arrow.ORIENTATION.AHEAD;
 	}
 }
 
@@ -118,22 +162,48 @@ kemia.model.Reaction.prototype.removeMolecule = function(mol) {
  * @param {kemia.model.Arrow}
  *            arrow
  */
-kemia.model.Reaction.prototype.addArrow = function(arrow) {
-	this.arrows.push(arrow);
+kemia.model.Reaction.prototype.setArrow = function(arrow) {
+	
+	if(this.arrow){
+		this.arrow.reaction = undefined;
+	}
+	/** @type {kemia.model.Arrow} */
+	this.arrow = arrow;
 	arrow.reaction = this;
 };
 
 /**
- * @param {kemia.model.Arrow}
- *            arrow
+ * setter delegates to arrow
+ * @param{string} reagents_text
  */
-kemia.model.Reaction.prototype.removeArrow = function(arrow) {
-//	this.logger.info('removeArrow');
-	if (goog.array.contains(this.arrows, arrow)) {
-		goog.array.remove(this.arrows, arrow);
-		arrow.reaction = undefined;
-	}
+kemia.model.Reaction.prototype.setReagentsText = function(reagents_text){
+	this.arrow.reagents_text = reagents_text;
 };
+
+/** 
+ * getter delegates to arrow
+ * @return{string}
+ */
+kemia.model.Reaction.prototype.getReagentsText = function(){
+	return this.arrow.reagents_text;
+}
+
+/** 
+ * getter delegates to arrow
+ * @return{string}
+ */
+kemia.model.Reaction.prototype.getConditionsText = function(){
+	return this.arrow.conditions_text;
+}
+
+/**
+ * setter delegates to arrow
+ * @param{string} conditions_text
+ */
+kemia.model.Reaction.prototype.setConditionsText = function(conditions_text){
+	this.arrow.conditions_text = conditions_text;
+}
+
 
 /**
  * @param {kemia.model.Plus}
@@ -149,17 +219,9 @@ kemia.model.Reaction.prototype.addPlus = function(plus) {
  *            plus
  */
 kemia.model.Reaction.prototype.removePlus = function(plus) {
-//	this.logger.info('removePlus');
+// this.logger.info('removePlus');
 	goog.array.remove(this.pluses, plus);
 	plus.reaction = undefined;
-}
-/**
- * @param {kemia.model.Arrow}
- *            arrow
- */
-kemia.model.Reaction.prototype.removeArrow = function(arrow) {
-	goog.array.remove(this.arrows, arrow);
-	arrow.reaction = undefined;
 }
 
 
@@ -181,7 +243,8 @@ kemia.model.Reaction.prototype.generatePlusCoords = function(molecules) {
 /**
  * bounding box of an array of molecules
  * 
- * @param {Array.<kemia.model.Molecule>} molecules
+ * @param {Array.
+ *            <kemia.model.Molecule>} molecules
  * @return {goog.math.Box}
  */
 kemia.model.Reaction.boundingBox = function(molecules) {
@@ -201,13 +264,12 @@ kemia.model.Reaction.boundingBox = function(molecules) {
 /**
  * finds center of an array of molecules
  * 
- * @param {Array.<kemia.model.Molecule>} molecules
+ * @param {Array.
+ *            <kemia.model.Molecule>} molecules
  * @return goog.math.Coordinate
  */
 kemia.model.Reaction.prototype.center = function(molecules) {
-
-	var bbox =kemia.model.Reaction.boundingBox(molecules);
-
+	var bbox = kemia.model.Reaction.boundingBox(molecules);
 	return new goog.math.Coordinate((bbox.left + bbox.right) / 2,
 			(bbox.top + bbox.bottom) / 2);
 };
@@ -216,7 +278,6 @@ kemia.model.Reaction.prototype.center = function(molecules) {
  * layout molecules to eliminate any molecule overlap plus a margin
  */
 kemia.model.Reaction.removeOverlap = function(molecules) {
-	var margin = 4;
 	var accumulated_rect;
 	// order molecules left-to-right
 	goog.array.sort(
@@ -225,68 +286,28 @@ kemia.model.Reaction.removeOverlap = function(molecules) {
 						m1.getBoundingBox().left, 
 						m2.getBoundingBox().left)});
 	goog.array.forEach(molecules,
-					function(mol) {
-						var mol_rect = goog.math.Rect.createFromBox(this
-								.boundingBox( [ mol ]));
-
-						if (accumulated_rect) {
-
-							if (goog.math.Rect.intersection(accumulated_rect,
-									mol_rect)) {
-								kemia.model.Reaction.translateMolecule(mol,
-										new goog.math.Coordinate(margin
-												+ accumulated_rect.left
-												+ accumulated_rect.width
-												- mol_rect.left, 0));
-							}
-							// expand to include this molecule location
-					accumulated_rect.boundingRect(goog.math.Rect
-							.createFromBox(kemia.model.Reaction.boundingBox( [ mol ])));
-				} else {
-					accumulated_rect = mol_rect;
-				}
-			}, this);
+			function(mol) {
+		var mol_rect = goog.math.Rect.createFromBox(this
+				.boundingBox( [ mol ]));
+		if (accumulated_rect) {
+			if (goog.math.Rect.intersection(accumulated_rect,
+					mol_rect)) {
+				mol.translate(
+						new goog.math.Coordinate(kemia.model.Reaction.MOLECULE_MARGIN 
+								+ accumulated_rect.left
+								+ accumulated_rect.width
+								- mol_rect.left, 0));
+			}
+			// expand to include this molecule location
+			accumulated_rect.boundingRect(goog.math.Rect
+					.createFromBox(kemia.model.Reaction.boundingBox( [ mol ])));
+		} else {
+			accumulated_rect = mol_rect;
+		}
+	}, this);
 	return molecules;
 };
 
-/**
- * translate molecule coordinates
- * 
- * @param {kemia.model.Molecule}
- *            molecule, the molecule to translate
- * @param {goog.math.Coordinate}
- *            coord, contains x and y change amounts
- * 
- * @return {kemia.model.Molecule}
- */
-kemia.model.Reaction.translateMolecule = function(molecule, coord) {
 
-	goog.array.forEach(molecule.atoms, function(a) {
-		a.coord = goog.math.Coordinate.sum(a.coord, coord);
-	});
 
-	return molecule;
-};
 
-/**
- * rotate molecule coordinates
- * 
- * @param {kemia.model.Molecule}
- *            molecule, the molecule to rotate
- * @param {number}
- *            degrees, angle of rotation
- * @param {goog.math.Coordinate}
- *            center, coordinates of center of rotation
- * 
- * @return {kemia.model.Molecule}
- */
-kemia.model.Reaction.prototype.rotateMolecule = function(molecule, degrees,
-		center) {
-
-	var trans = kemia.graphics.AffineTransform.getRotateInstance(goog.math
-			.toRadians(degrees), center.x, center.y);
-	goog.array.forEach(molecule.atoms, function(a) {
-		a.coord = trans.transformCoords( [ a.coord ])[0];
-	});
-	return molecule;
-}

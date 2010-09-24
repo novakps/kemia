@@ -50,10 +50,14 @@ function test2ImportReaction() {
 	assertEquals("3-component UGI", rxn.getHeader());
 	assertEquals(3, rxn.getReactants().length);
 	assertEquals(rxn.getReactants()[1].name, "isocyanoethane");
-	assertEquals(rxn.getReactants()[1].countAtoms(), 4);
+	assertEquals(4, rxn.getReactants()[1].countAtoms());
+	assertEquals(3, rxn.getReactants()[1].countBonds());
 
 	assertEquals(1, rxn.getProducts().length);
-	assertEquals(rxn.getProducts()[0].countBonds(), 15);
+	assertEquals(15, rxn.getProducts()[0].countBonds());
+	assertEquals('foo reagent', rxn.getReagentsText());
+	assertEquals('bar conditions', rxn.getConditionsText());
+	
 	// test the string representation
 	rxn = kemia.io.json.readReaction(JSON.stringify(jreaction));
 	assertEquals(rxn.header, "3-component UGI");
@@ -62,8 +66,8 @@ function test2ImportReaction() {
 	assertEquals(rxn.getReactants()[1].countAtoms(), 4);
 	assertEquals(rxn.getProducts()[0].countBonds(), 15);
 	assertEquals(rxn.getProducts().length, 1);
-	assertEquals('foo reagent', rxn.reagentsText);
-	assertEquals('bar conditions', rxn.conditionsText);
+	assertEquals('foo reagent', rxn.getReagentsText());
+	assertEquals('bar conditions', rxn.getConditionsText());
 }
 
 function test3ExportReaction() {
@@ -122,7 +126,7 @@ function buildReaction() {
 	mol2.addBond(b2);
 	rxn1.addMolecule(mol2);
 
-	rxn1.addArrow(new kemia.model.Arrow(new goog.math.Coordinate(3, 1.5),
+	rxn1.setArrow(new kemia.model.Arrow(new goog.math.Coordinate(3, 1.5),
 			new goog.math.Coordinate(4, 1.5)));
 
 	var mol3 = new kemia.model.Molecule('mol3');
