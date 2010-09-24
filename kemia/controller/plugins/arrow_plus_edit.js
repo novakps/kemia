@@ -77,7 +77,7 @@ kemia.controller.plugins.ArrowPlusEdit.prototype.handleMouseDown = function(e) {
 				.createInverse();
 		var coords = trans.transformCoords( [ new goog.math.Coordinate(
 				e.offsetX, e.offsetY) ]);
-		this.editorObject.getModels()[0].addArrow(new kemia.model.Arrow(
+		this.editorObject.getModels()[0].setArrow(new kemia.model.Arrow(
 				coords[0]));
 		this.editorObject.setModels(this.editorObject.getModels());
 		this.editorObject.dispatchChange();

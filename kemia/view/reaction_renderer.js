@@ -61,11 +61,7 @@ kemia.view.ReactionRenderer.prototype.render = function(reaction) {
 	goog.array.forEach(reaction.pluses, function(plus){
 		this.plusRenderer.render(plus, this.transform);
 	},this);
-	goog.array.forEach(reaction.arrows, function(arrow){
-		arrow.reagents_text = reaction.reagentsText; 
-		arrow.conditions_text = reaction.conditionsText,
-		this.arrowRenderer.render(arrow, this.transform);
-	},this);
+	this.arrowRenderer.render(reaction.arrow, this.transform);
 }
 
 
