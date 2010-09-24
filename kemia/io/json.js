@@ -274,6 +274,7 @@ kemia.io.json.readReaction = function(arg) {
 	rxn.conditionsText = jrxn['conditions_text'];
 	var reactants = goog.array.map(jrxn['reactants'], kemia.io.json.readMolecule)
 	var products = goog.array.map(jrxn['products'], kemia.io.json.readMolecule);
+	
 	if(jrxn['arrows'] && jrxn['arrows'].length > 0){
 		goog.array.forEach(jrxn['arrows'], function(arrow){
 			rxn.addArrow(kemia.io.json.readArrow(arrow));

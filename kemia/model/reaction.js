@@ -241,7 +241,7 @@ kemia.model.Reaction.removeOverlap = function(molecules) {
 							}
 							// expand to include this molecule location
 					accumulated_rect.boundingRect(goog.math.Rect
-							.createFromBox(this.boundingBox( [ mol ])));
+							.createFromBox(kemia.model.Reaction.boundingBox( [ mol ])));
 				} else {
 					accumulated_rect = mol_rect;
 				}
