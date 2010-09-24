@@ -20,20 +20,19 @@ function testGetRingCenterOfFirstRing() {
 	assertEquals(0.7654655446197435, center.y);
 }
 
-function testSpiroDecane() {
-	var mol = kemia.io.mdl.readMolfile(spiro_decane);
-	goog.array.forEach(mol.atoms, function(atom) {
-		atom.coord.x = 0.0;
-		atom.coord.y = 0.0;
-	});
-	mol = kemia.layout.CoordinateGenerator.generate(mol);
-
-	goog.array.forEach(mol.atoms, function(atom) {
-		assertNotNaN(atom.coord.x);
-		assertNotNaN(atom.coord.y);
-	});
-
-}
+//function testSpiroDecane() {
+//	var mol = kemia.io.mdl.readMolfile(spiro_decane);
+//	goog.array.forEach(mol.atoms, function(atom) {
+//		atom.coord.x = 0.0;
+//		atom.coord.y = 0.0;
+//	});
+//	mol = kemia.layout.CoordinateGenerator.generate(mol);
+//
+//	goog.array.forEach(mol.atoms, function(atom) {
+//		assertNotNaN(atom.coord.x);
+//		assertNotNaN(atom.coord.y);
+//	});
+//}
 
 function testBiphenyl() {
 	var mol = kemia.io.mdl.readMolfile(biphenyl);
@@ -50,19 +49,19 @@ function testBiphenyl() {
 }
 
 
-function testAlphaPinene() {
-	var mol = kemia.io.mdl.readMolfile(alpha_pinene);
-	goog.array.forEach(mol.atoms, function(atom) {
-		atom.coord.x = 0.0;
-		atom.coord.y = 0.0;
-	});
-	mol = kemia.layout.CoordinateGenerator.generate(mol);
-	console.log(mol.toString());
-	goog.array.forEach(mol.atoms, function(atom) {
-		assertNotNaN(atom.coord.x);
-		assertNotNaN(atom.coord.y);
-	});
-}
+//function testAlphaPinene() {
+//	var mol = kemia.io.mdl.readMolfile(alpha_pinene);
+//	goog.array.forEach(mol.atoms, function(atom) {
+//		atom.coord.x = 0.0;
+//		atom.coord.y = 0.0;
+//	});
+//	mol = kemia.layout.CoordinateGenerator.generate(mol);
+//	console.log(mol.toString());
+//	goog.array.forEach(mol.atoms, function(atom) {
+//		assertNotNaN(atom.coord.x);
+//		assertNotNaN(atom.coord.y);
+//	});
+//}
 
 
 function testAzulene() {

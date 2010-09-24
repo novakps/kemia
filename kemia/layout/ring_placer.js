@@ -9,6 +9,7 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and limitations under the License.
  */
+
 goog.provide("kemia.layout.RingPlacer");
 goog.require("kemia.layout.Vector2D");
 goog.require("goog.math.Coordinate");
@@ -307,7 +308,7 @@ kemia.layout.RingPlacer.placeFusedRing = function(ring, sharedAtoms,
         else
             startAtom = bondAtom2;
         
-        //changes the drawing direction
+        // changes the drawing direction
         if (centerX < bondAtom1.coord.x)
             direction = 1;
         else
@@ -316,13 +317,13 @@ kemia.layout.RingPlacer.placeFusedRing = function(ring, sharedAtoms,
     // if bond is not vertical
     else
     {
-        //starts with the left Atom
+        // starts with the left Atom
         if (bondAtom1.coord.x > bondAtom2.coord.x)
             startAtom = bondAtom1;
         else
             startAtom = bondAtom2;
         
-        //changes the drawing direction
+        // changes the drawing direction
         if (centerY - bondAtom1.coord.y > (centerX - bondAtom1.coord.x) * yDiff / xDiff)
             direction = 1;
         else
