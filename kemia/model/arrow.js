@@ -55,7 +55,7 @@ kemia.model.Arrow = function(opt_source, opt_target, opt_style,
  */
 kemia.model.Arrow.prototype.translate = function(vector){
 	this.source = goog.math.Coordinate.sum(this.source, vector);
-	this.target = goog.math.Coordiante.sum(this.target, vector);
+	this.target = goog.math.Coordinate.sum(this.target, vector);
 };
 
 /**
@@ -83,6 +83,10 @@ kemia.model.Arrow.prototype.getOrientation = function(point){
 	} else {
 		return kemia.model.Arrow.ORIENTATION.BEHIND;
 	}
+}
+
+kemia.model.Arrow.prototype.toString = function() {
+	return 'kemia.model.Arrow ' + this.source.toString() + " " + this.target.toString();
 }
 
 /**

@@ -327,6 +327,16 @@ kemia.view.AtomRenderer.defaultConfig = {
 		'color' : 'black'
 
 	},
+	'R1' : {
+
+		'color' : 'black'
+
+	},
+	'R2' : {
+
+		'color' : 'black'
+
+	},
 	'H' : {
 
 		'color' : 'white'

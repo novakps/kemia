@@ -210,7 +210,7 @@ kemia.model.NeighborList.reactionsToNeighbors = function(reactions) {
 					}
 					};
 				}), 
-				goog.array.map(reaction.arrows, function(a) {
+				goog.array.map([reaction.arrow], function(a) {
 					return {
 						obj : a,
 						getCenter : function() {

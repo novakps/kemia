@@ -90,15 +90,6 @@ kemia.controller.plugins.Erase.prototype.handleMouseMove = function(e) {
 						e.currentTarget.highlightGroup);
 			}
 			return true;
-		} else if (target instanceof kemia.model.Arrow) {
-			this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Erase.CURSOR_STYLE;
-			if (!e.currentTarget.highlightGroup) {
-				e.currentTarget.highlightGroup = this.highlightArrow(target);
-			} else {
-				e.currentTarget.highlightGroup = this.highlightArrow(target,
-						e.currentTarget.highlightGroup);
-			}
-			return true;
 		} else if (target instanceof kemia.model.Plus) {
 			this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Erase.CURSOR_STYLE;
 			if (!e.currentTarget.highlightGroup) {
@@ -132,10 +123,6 @@ kemia.controller.plugins.Erase.prototype.handleMouseDown = function(e) {
 		}
 		if (target instanceof kemia.model.Molecule) {
 			this.eraseMolecule(target);
-			result = true;
-		}
-		if (target instanceof kemia.model.Arrow) {
-			this.eraseArrow(target);
 			result = true;
 		}
 		if (target instanceof kemia.model.Plus) {
@@ -187,13 +174,6 @@ kemia.controller.plugins.Erase.prototype.eraseMolecule = function(molecule) {
 	this.editorObject.setModels(this.editorObject.getModels());
 }
 
-kemia.controller.plugins.Erase.prototype.eraseArrow = function(arrow) {
-	
-	var reaction = arrow.reaction;
-	reaction.removeArrow(arrow);
-	this.editorObject.setModels(this.editorObject.getModels());
-};
-
 kemia.controller.plugins.Erase.prototype.erasePlus = function(plus) {
 	
 	var reaction = plus.reaction;
@@ -229,13 +209,6 @@ kemia.controller.plugins.Erase.prototype.highlightBond = function(bond,
 		opt_group) {
 	return this.editorObject.reactionRenderer.moleculeRenderer.bondRendererFactory
 			.get(bond).highlightOn(bond, '#ff6666', opt_group);
-};
-
-kemia.controller.plugins.Erase.prototype.highlightArrow = function(arrow,
-		opt_group) {
-	// this.logger.info('highlightArrow');
-	return this.editorObject.reactionRenderer.arrowRenderer.highlightOn(arrow,
-			'#ff6666', opt_group);
 };
 
 kemia.controller.plugins.Erase.prototype.highlightPlus = function(plus,

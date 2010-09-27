@@ -154,7 +154,12 @@ kemia.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
 			goog.dom.TagName.DIV, {
 				style : "color:DarkRed"
 			}, 'Br')));
-
+	atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(
+			goog.dom.TagName.DIV, {style : "color:black"
+			}, "R1")));
+	atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(
+			goog.dom.TagName.DIV, {style : "color:black"
+			}, "R2")));
 	// atom_menu.addItem(new goog.ui.Option('...'));//TTD periodic table
 	atom_select.setMenu(atom_menu);
 	buttons.push(atom_select);
