@@ -8908,10 +8908,7 @@ kemia.view.ReactionRenderer.prototype.render = function(reaction) {
   goog.array.forEach(reaction.pluses, function(plus) {
     this.plusRenderer.render(plus, this.transform)
   }, this);
-  goog.array.forEach(reaction.arrows, function(arrow) {
-    arrow.reagents_text = reaction.reagentsText;
-    arrow.conditions_text = reaction.conditionsText, this.arrowRenderer.render(arrow, this.transform)
-  }, this)
+  this.arrowRenderer.render(reaction.arrow, this.transform)
 };
 kemia.view.ReactionRenderer.prototype.boundingBox = function(molecules) {
   var atoms = goog.array.flatten(goog.array.map(molecules, function(mol) {
@@ -15621,8 +15618,8 @@ kemia.controller.plugins.Move.prototype.dragMolecule = function(e, molecule) {
     var deltaDeltaX = deltaX - d._prevDeltaX;
     var deltaDeltaY = deltaY - d._prevDeltaY;
     d.molecule.group.setTransformation(deltaX, deltaY, 0, 0, 0);
-    var diff = new goog.math.Coordinate(deltaDeltaX / d.editor.reactionRenderer.transform.getScaleX(), deltaDeltaY / d.editor.reactionRenderer.transform.getScaleY());
-    d.molecule.reaction.translateMolecule(d.molecule, diff);
+    var diff = new goog.math.Vec2(deltaDeltaX / d.editor.reactionRenderer.transform.getScaleX(), deltaDeltaY / d.editor.reactionRenderer.transform.getScaleY());
+    d.molecule.translate(diff);
     d._prevDeltaX = d.deltaX - d._initDeltaX;
     d._prevDeltaY = d.deltaY - d._initDeltaY;
     var merge_pairs = this.findAtomMergePairs(molecule);
@@ -15688,7 +15685,7 @@ kemia.controller.plugins.Move.prototype.rotateMolecule = function(e, molecule) {
     var mol_center = d.editor.reactionRenderer.transform.createInverse().transformCoords([d._center])[0];
     var new_angle = goog.math.angle(d._center.x, d._center.y, d._start.x + d.deltaX, d._start.y + d.deltaY);
     var degrees = new_angle - d._start_angle;
-    d.molecule.reaction.rotateMolecule(d.molecule, -degrees, mol_center);
+    d.molecule.rotate(-degrees, mol_center);
     d.editor.setModels(d.editor.getModels());
     d.dispose()
   });
@@ -16466,6 +16463,10 @@ kemia.model.Arrow = function(opt_source, opt_target, opt_style, opt_reagents_tex
   this.reagents_text = goog.isDef(opt_reagents_text) ? opt_reagents_text : "";
   this.conditions_text = goog.isDef(opt_conditions_text) ? opt_conditions_text : ""
 };
+kemia.model.Arrow.prototype.translate = function(vector) {
+  this.source = goog.math.Coordinate.sum(this.source, vector);
+  this.target = goog.math.Coordiante.sum(this.target, vector)
+};
 kemia.model.Arrow.prototype.getOrientation = function(point) {
   var center = new goog.math.Coordinate((this.source.x + this.target.x) / 2, (this.source.y + this.target.y) / 2);
   var arrow_vector = new goog.math.Vec2.fromCoordinate(goog.math.Coordinate.difference(this.source, this.target));
@@ -16511,7 +16512,7 @@ kemia.controller.plugins.ArrowPlusEdit.prototype.handleMouseDown = function(e) {
     this.editorObject.dispatchBeforeChange();
     var trans = this.editorObject.reactionRenderer.moleculeRenderer.transform.createInverse();
     var coords = trans.transformCoords([new goog.math.Coordinate(e.offsetX, e.offsetY)]);
-    this.editorObject.getModels()[0].addArrow(new kemia.model.Arrow(coords[0]));
+    this.editorObject.getModels()[0].setArrow(new kemia.model.Arrow(coords[0]));
     this.editorObject.setModels(this.editorObject.getModels());
     this.editorObject.dispatchChange()
   }else {
@@ -17410,9 +17411,11 @@ kemia.model.Molecule.prototype.getConnectedBondsList = function(atom) {
   }return bondsList
 };
 kemia.model.Molecule.prototype.toString = function() {
-  return"kemia.model.Molecule[" + goog.array.map(this.atoms, function(atom) {
+  return"kemia.model.Molecule - name: " + this.name + "\n\t" + goog.array.map(this.atoms, function(atom) {
     return atom.toString()
-  }).toString() + "]"
+  }).toString() + "\n\t" + goog.array.map(this.bonds, function(bond) {
+    return bond.toString()
+  }).toString()
 };
 kemia.model.Molecule.prototype.getCenter = function() {
   var box = this.getBoundingBox();
@@ -17422,6 +17425,17 @@ kemia.model.Molecule.prototype.getBoundingBox = function() {
   return goog.math.Box.boundingBox.apply(null, goog.array.map(this.atoms, function(a) {
     return a.coord
   }))
+};
+kemia.model.Molecule.prototype.rotate = function(degrees, center) {
+  var trans = kemia.graphics.AffineTransform.getRotateInstance(goog.math.toRadians(degrees), center.x, center.y);
+  goog.array.forEach(this.atoms, function(a) {
+    a.coord = trans.transformCoords([a.coord])[0]
+  })
+};
+kemia.model.Molecule.prototype.translate = function(vector) {
+  goog.array.forEach(this.atoms, function(a) {
+    a.coord = goog.math.Coordinate.sum(a.coord, vector)
+  })
 };
 // Input 176
 goog.provide("kemia.controller.plugins.MoleculeEdit");
@@ -17452,7 +17466,7 @@ kemia.controller.plugins.MoleculeEdit.prototype.execCommandInternal = function(c
     }else {
       reaction = new kemia.model.Reaction
     }reaction.addMolecule(molecule);
-    reaction.translateMolecule(molecule, diff);
+    molecule.translate(diff);
     this.editorObject.setModels([reaction]);
     var mol_center = molecule.getCenter();
     var center = this.editorObject.getGraphicsCoords(mol_center);
@@ -17481,7 +17495,7 @@ kemia.controller.plugins.MoleculeEdit.prototype.dragTemplate = function(e, molec
     d.molecule.group.setTransformation(diff.x, diff.y, 0, 0, 0);
     var mol_coords = d.editor.reactionRenderer.transform.createInverse().transformCoords([mouse_coord, d._prev]);
     var diff = goog.math.Coordinate.difference(mol_coords[0], mol_coords[1]);
-    d.molecule.reaction.translateMolecule(d.molecule, diff);
+    d.molecule.translate(diff);
     d._prev = mouse_coord;
     var merge_pairs = this.findAtomMergePairs(molecule);
     if(merge_pairs.length > 0) {
@@ -19171,19 +19185,35 @@ goog.require("goog.asserts");
 kemia.model.Reaction = function() {
   this.header = "";
   this.molecules = [];
-  this.arrows = [];
-  this.pluses = [];
-  this.reagentsText = "";
-  this.conditionsText = ""
+  this.arrow = new kemia.model.Arrow;
+  this.pluses = []
 };
+kemia.model.Reaction.MOLECULE_MARGIN = 4;
 kemia.model.Reaction.prototype.logger = goog.debug.Logger.getLogger("kemia.model.Reaction");
 kemia.model.Reaction.prototype.getHeader = function() {
   return this.header
 };
 goog.exportSymbol("kemia.model.Reaction.prototype.getHeader", kemia.model.Reaction.prototype.getHeader);
 kemia.model.Reaction.prototype.addReactant = function(mol) {
-  goog.asserts.assert(this.isReactant(mol));
-  this.addMolecule(mol)
+  if(!this.isReactant(mol)) {
+    var reactants = this.getReactants();
+    var r_diff;
+    var mol_box = mol.getBoundingBox();
+    if(reactants.length > 0) {
+      var reactant_box = kemia.model.Reaction.boundingBox(reactants);
+      r_diff = new goog.math.Vec2(reactant_box.right - mol_box.left, 0)
+    }else {
+      r_diff = new goog.math.Vec2(mol_box.left, 0)
+    }mol.translate(r_diff);
+    if(!this.isReactant(mol)) {
+      var products = this.getProducts();
+      var diff = new goog.math.Vec2(mol.getBoundingBox().right - this.arrow.source.x);
+      this.arrow.translate(diff);
+      goog.array.forEach(products, function(mol) {
+        mol.translate(diff)
+      })
+    }goog.asserts.assert(this.isReactant(mol))
+  }this.addMolecule(mol)
 };
 kemia.model.Reaction.prototype.getReactants = function() {
   return goog.array.filter(this.molecules, this.isReactant, this)
@@ -19196,32 +19226,50 @@ kemia.model.Reaction.prototype.addMolecule = function(mol) {
   mol.reaction = this
 };
 kemia.model.Reaction.prototype.addProduct = function(mol) {
-  goog.asserts.assert(this.isProduct(mol));
-  this.addMolecule(mol)
+  if(!this.isProduct(mol)) {
+    var products = this.getProducts();
+    var mol_box = mol.getBoundingBox();
+    var x_diff;
+    if(products.length > 0) {
+      var prod_box = kemia.model.Reaction.boundingBox(products);
+      x_diff = prod_box.right - mol_box.left
+    }else {
+      x_diff = this.arrow.target.x - mol_box.left
+    }mol.translate(new goog.math.Vec2(x_diff, 0));
+    goog.asserts.assert(this.isProduct(mol))
+  }this.addMolecule(mol)
 };
 kemia.model.Reaction.prototype.isReactant = function(mol) {
-  if(this.arrows[0]) {
-    return this.arrows[0].getOrientation(mol.getCenter()) == kemia.model.Arrow.ORIENTATION.BEHIND
+  if(this.arrow) {
+    return this.arrow.getOrientation(mol.getCenter()) == kemia.model.Arrow.ORIENTATION.BEHIND
   }
 };
 kemia.model.Reaction.prototype.isProduct = function(mol) {
-  if(this.arrows[0]) {
-    return this.arrows[0].getOrientation(mol.getCenter()) == kemia.model.Arrow.ORIENTATION.AHEAD
+  if(this.arrow) {
+    return this.arrow.getOrientation(mol.getCenter()) == kemia.model.Arrow.ORIENTATION.AHEAD
   }
 };
 kemia.model.Reaction.prototype.removeMolecule = function(mol) {
   goog.array.remove(this.molecules, mol);
   mol.reaction = undefined
 };
-kemia.model.Reaction.prototype.addArrow = function(arrow) {
-  this.arrows.push(arrow);
+kemia.model.Reaction.prototype.setArrow = function(arrow) {
+  if(this.arrow) {
+    this.arrow.reaction = undefined
+  }this.arrow = arrow;
   arrow.reaction = this
 };
-kemia.model.Reaction.prototype.removeArrow = function(arrow) {
-  if(goog.array.contains(this.arrows, arrow)) {
-    goog.array.remove(this.arrows, arrow);
-    arrow.reaction = undefined
-  }
+kemia.model.Reaction.prototype.setReagentsText = function(reagents_text) {
+  this.arrow.reagents_text = reagents_text
+};
+kemia.model.Reaction.prototype.getReagentsText = function() {
+  return this.arrow.reagents_text
+};
+kemia.model.Reaction.prototype.getConditionsText = function() {
+  return this.arrow.conditions_text
+};
+kemia.model.Reaction.prototype.setConditionsText = function(conditions_text) {
+  this.arrow.conditions_text = conditions_text
 };
 kemia.model.Reaction.prototype.addPlus = function(plus) {
   this.pluses.push(plus);
@@ -19230,10 +19278,6 @@ kemia.model.Reaction.prototype.addPlus = function(plus) {
 kemia.model.Reaction.prototype.removePlus = function(plus) {
   goog.array.remove(this.pluses, plus);
   plus.reaction = undefined
-};
-kemia.model.Reaction.prototype.removeArrow = function(arrow) {
-  goog.array.remove(this.arrows, arrow);
-  arrow.reaction = undefined
 };
 kemia.model.Reaction.prototype.generatePlusCoords = function(molecules) {
   var previousMol;
@@ -19244,45 +19288,39 @@ kemia.model.Reaction.prototype.generatePlusCoords = function(molecules) {
     }previousMol = mol
   }, this)
 };
-kemia.model.Reaction.prototype.boundingBox = function(molecules) {
+kemia.model.Reaction.boundingBox = function(molecules) {
   var atoms = goog.array.flatten(goog.array.map(molecules, function(mol) {
     return mol.atoms
   }));
   var coords = goog.array.map(atoms, function(a) {
     return a.coord
   });
-  return goog.math.Box.boundingBox.apply(null, coords)
+  if(coords.length > 0) {
+    return goog.math.Box.boundingBox.apply(null, coords)
+  }else {
+    return null
+  }
 };
 kemia.model.Reaction.prototype.center = function(molecules) {
-  var bbox = this.boundingBox(molecules);
+  var bbox = kemia.model.Reaction.boundingBox(molecules);
   return new goog.math.Coordinate((bbox.left + bbox.right) / 2, (bbox.top + bbox.bottom) / 2)
 };
-kemia.model.Reaction.prototype.removeOverlap = function() {
-  var margin = 4;
+kemia.model.Reaction.removeOverlap = function(molecules) {
   var accumulated_rect;
-  goog.array.forEach(this.molecules, function(mol) {
+  goog.array.sort(molecules, function(m1, m2) {
+    return goog.array.defaultCompare(m1.getBoundingBox().left, m2.getBoundingBox().left)
+  });
+  goog.array.forEach(molecules, function(mol) {
     var mol_rect = goog.math.Rect.createFromBox(this.boundingBox([mol]));
     if(accumulated_rect) {
       if(goog.math.Rect.intersection(accumulated_rect, mol_rect)) {
-        this.translateMolecule(mol, new goog.math.Coordinate(margin + accumulated_rect.left + accumulated_rect.width - mol_rect.left, 0))
-      }accumulated_rect.boundingRect(goog.math.Rect.createFromBox(this.boundingBox([mol])))
+        mol.translate(new goog.math.Coordinate(kemia.model.Reaction.MOLECULE_MARGIN + accumulated_rect.left + accumulated_rect.width - mol_rect.left, 0))
+      }accumulated_rect.boundingRect(goog.math.Rect.createFromBox(kemia.model.Reaction.boundingBox([mol])))
     }else {
       accumulated_rect = mol_rect
     }
-  }, this)
-};
-kemia.model.Reaction.prototype.translateMolecule = function(molecule, coord) {
-  goog.array.forEach(molecule.atoms, function(a) {
-    a.coord = goog.math.Coordinate.sum(a.coord, coord)
-  });
-  return molecule
-};
-kemia.model.Reaction.prototype.rotateMolecule = function(molecule, degrees, center) {
-  var trans = kemia.graphics.AffineTransform.getRotateInstance(goog.math.toRadians(degrees), center.x, center.y);
-  goog.array.forEach(molecule.atoms, function(a) {
-    a.coord = trans.transformCoords([a.coord])[0]
-  });
-  return molecule
+  }, this);
+  return molecules
 };
 // Input 192
 goog.provide("kemia.io.json");
@@ -19413,27 +19451,24 @@ kemia.io.json.readReaction = function(arg) {
   }else {
     jrxn = arg
   }var rxn = new kemia.model.Reaction;
-  rxn.header = jrxn["header"];
-  rxn.reagentsText = jrxn["reagents_text"];
-  rxn.conditionsText = jrxn["conditions_text"];
   var reactants = goog.array.map(jrxn["reactants"], kemia.io.json.readMolecule);
   var products = goog.array.map(jrxn["products"], kemia.io.json.readMolecule);
-  if(jrxn["arrows"] && jrxn["arrows"].length > 0) {
+  if(jrxn["arrows"]) {
     goog.array.forEach(jrxn["arrows"], function(arrow) {
-      rxn.addArrow(kemia.io.json.readArrow(arrow))
+      rxn.setArrow(kemia.io.json.readArrow(arrow))
     })
-  }else {
-    var r_box = rxn.boundingBox(reactants);
-    var p_box = rxn.boundingBox(products);
-    var arrow = new kemia.model.Arrow(new goog.math.Coordinate(r_box.right + p_box.left) / 2 - 1, (r_box.top + r_box.bottom) / 2)
+  }rxn.header = jrxn["header"];
+  rxn.setReagentsText(jrxn["reagents_text"]);
+  rxn.setConditionsText(jrxn["conditions_text"]);
+  if(jrxn["pluses"]) {
+    goog.array.forEach(jrxn["pluses"], function(plus) {
+      rxn.addPlus(kemia.io.json.readPlus(plus))
+    })
   }goog.array.forEach(reactants, function(mol) {
-    rxn.addReactant(kemia.io.json.readMolecule(mol))
+    rxn.addReactant(mol)
   });
   goog.array.forEach(products, function(mol) {
-    rxn.addProduct(kemia.io.json.readMolecule(mol))
-  });
-  goog.array.forEach(jrxn["pluses"], function(plus) {
-    rxn.addPlus(kemia.io.json.readPlus(plus))
+    rxn.addProduct(mol)
   });
   return rxn
 };
@@ -19444,7 +19479,7 @@ kemia.io.json.reactionToJson = function(rxn) {
   var products = goog.array.map(rxn.getProducts(), kemia.io.json.moleculeToJson);
   var arrows = goog.array.map(rxn.arrows, kemia.io.json.arrowToJson);
   var pluses = goog.array.map(rxn.pluses, kemia.io.json.plusToJson);
-  return{header:header, reactants:reactants, products:products, reagents_text:rxn.reagentsText, conditions_text:rxn.conditionsText, arrows:arrows, pluses:pluses}
+  return{header:header, reactants:reactants, products:products, reagents_text:rxn.getReagentsText(), conditions_text:rxn.getConditionsText(), arrows:arrows, pluses:pluses}
 };
 kemia.io.json.writeReaction = function(rxn) {
   return(new goog.json.Serializer).serialize(kemia.io.json.reactionToJson(rxn))
@@ -20679,14 +20714,14 @@ goog.exportSymbol("kemia.io.mdl.readMolfile", kemia.io.mdl.readMolfile);
 kemia.io.mdl.writeRxnfile = function(reaction) {
   var result = "";
   result += "$RXN\n\n\n\n";
-  result += (goog.string.repeat(" ", 3) + reaction.reactants.length).slice(-3);
-  result += (goog.string.repeat(" ", 3) + reaction.products.length).slice(-3);
+  result += (goog.string.repeat(" ", 3) + reaction.getReactants().length).slice(-3);
+  result += (goog.string.repeat(" ", 3) + reaction.getProducts().length).slice(-3);
   result += "\n";
-  goog.array.forEach(reaction.reactants, function(mol) {
+  goog.array.forEach(reaction.getReactants(), function(mol) {
     result += "$MOL\n";
     result += kemia.io.mdl.writeMolfile(mol)
   });
-  goog.array.forEach(reaction.products, function(mol) {
+  goog.array.forEach(reaction.getProducts(), function(mol) {
     result += "$MOL\n";
     result += kemia.io.mdl.writeMolfile(mol)
   });
