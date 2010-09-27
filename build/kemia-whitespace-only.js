@@ -15710,7 +15710,7 @@ kemia.controller.plugins.Erase.prototype.logger = goog.debug.Logger.getLogger("k
 kemia.controller.plugins.Erase.prototype.execCommandInternal = function(command, value, active) {
   this.isActive = active
 };
-kemia.controller.plugins.Erase.CURSOR_STYLE = 'url("../../../../images/Cursor-Eraser-32.png") 0 32, url("../../images/Cursor-Eraser-32.png") 0 32, hand';
+kemia.controller.plugins.Erase.CURSOR_STYLE = 'url("../../../../images/erase-cursor-32.png") 0 32, url("../../images/erase-cursor-32.png") 0 32, hand';
 kemia.controller.plugins.Erase.prototype.handleMouseMove = function(e) {
   if(this.isActive) {
     var target = this.editorObject.findTarget(e);
@@ -16456,6 +16456,20 @@ kemia.model.Arrow.prototype.getOrientation = function(point) {
     return kemia.model.Arrow.ORIENTATION.AHEAD
   }else {
     return kemia.model.Arrow.ORIENTATION.BEHIND
+  }
+};
+kemia.model.Arrow.prototype.setReagentsText = function(text) {
+  if(text) {
+    this.reagents_text = text
+  }else {
+    this.reagents_text = ""
+  }
+};
+kemia.model.Arrow.prototype.setConditionsText = function(text) {
+  if(text) {
+    this.conditions_text = text
+  }else {
+    this.conditions_text = ""
   }
 };
 kemia.model.Arrow.prototype.toString = function() {
@@ -18876,6 +18890,7 @@ kemia.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
   atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV, {style:"color:green"}, "F")));
   atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV, {style:"color:green"}, "Cl")));
   atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV, {style:"color:DarkRed"}, "Br")));
+  atom_menu.addItem(new goog.ui.MenuSeparator);
   atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV, {style:"color:black"}, "R1")));
   atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV, {style:"color:black"}, "R2")));
   atom_select.setMenu(atom_menu);
@@ -19244,8 +19259,8 @@ kemia.model.Reaction.prototype.setArrow = function(arrow) {
   }this.arrow = arrow;
   arrow.reaction = this
 };
-kemia.model.Reaction.prototype.setReagentsText = function(reagents_text) {
-  this.arrow.reagents_text = reagents_text
+kemia.model.Reaction.prototype.setReagentsText = function(text) {
+  this.arrow.setReagentsText(text)
 };
 kemia.model.Reaction.prototype.getReagentsText = function() {
   return this.arrow.reagents_text
@@ -19253,8 +19268,8 @@ kemia.model.Reaction.prototype.getReagentsText = function() {
 kemia.model.Reaction.prototype.getConditionsText = function() {
   return this.arrow.conditions_text
 };
-kemia.model.Reaction.prototype.setConditionsText = function(conditions_text) {
-  this.arrow.conditions_text = conditions_text
+kemia.model.Reaction.prototype.setConditionsText = function(text) {
+  this.arrow.setConditionsText(text)
 };
 kemia.model.Reaction.prototype.addPlus = function(plus) {
   this.pluses.push(plus);
@@ -19462,7 +19477,7 @@ kemia.io.json.reactionToJson = function(rxn) {
   var header = rxn.header;
   var reactants = goog.array.map(rxn.getReactants(), kemia.io.json.moleculeToJson);
   var products = goog.array.map(rxn.getProducts(), kemia.io.json.moleculeToJson);
-  var arrows = goog.array.map(rxn.arrows, kemia.io.json.arrowToJson);
+  var arrows = goog.array.map([rxn.arrow], kemia.io.json.arrowToJson);
   var pluses = goog.array.map(rxn.pluses, kemia.io.json.plusToJson);
   return{header:header, reactants:reactants, products:products, reagents_text:rxn.getReagentsText(), conditions_text:rxn.getConditionsText(), arrows:arrows, pluses:pluses}
 };

@@ -70,6 +70,15 @@ function test2ImportReaction() {
 	assertEquals('bar conditions', rxn.getConditionsText());
 }
 
+function testImportReactionWithUndefinedConditions() {
+
+	jreaction.conditions_text = undefined;
+	jreaction.reagents_text = undefined
+	var rxn = kemia.io.json.readReaction(jreaction);
+	assertEquals('', rxn.getReagentsText());
+	assertEquals('', rxn.getConditionsText());
+}
+
 function test3ExportReaction() {
 	var rxn1 = kemia.io.json.readReaction(jreaction);
 	var jrxnstr1 = kemia.io.json.writeReaction(rxn1);
@@ -88,8 +97,8 @@ function test4ReactionToJson() {
 	assertEquals(rxn.getProducts().length, rxn_json.products.length);
 	assertEquals(rxn.getReactants()[0].countAtoms(),
 			rxn_json.reactants[0].atoms.length);
-	assertEquals('foo reagent', rxn_json.reagents_text);
-	assertEquals('bar conditions', rxn_json.conditions_text);
+	assertEquals('NaOH', rxn_json.reagents_text);
+	assertEquals('90 C', rxn_json.conditions_text);
 };
 
 function test5ModelRxnExportImport() {

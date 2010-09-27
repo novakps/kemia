@@ -308,7 +308,7 @@ kemia.io.json.reactionToJson = function (rxn) {
 	var header = rxn.header;
 	var reactants = goog.array.map(rxn.getReactants(), kemia.io.json.moleculeToJson);
 	var products = goog.array.map(rxn.getProducts(), kemia.io.json.moleculeToJson);
-	var arrows = goog.array.map(rxn.arrows, kemia.io.json.arrowToJson);
+	var arrows = goog.array.map([rxn.arrow], kemia.io.json.arrowToJson);
 	var pluses = goog.array.map(rxn.pluses, kemia.io.json.plusToJson);
 	return {'header': header,
 		'reactants': reactants,

@@ -84,6 +84,27 @@ kemia.model.Arrow.prototype.getOrientation = function(point){
 		return kemia.model.Arrow.ORIENTATION.BEHIND;
 	}
 }
+/**
+ * @param{string} text
+ */
+kemia.model.Arrow.prototype.setReagentsText = function (text){
+	if(text){
+		this.reagents_text = text;
+	} else {
+		this.reagents_text = ''
+	}
+}
+
+/**
+ * @param{string} text
+ */
+kemia.model.Arrow.prototype.setConditionsText = function(text) {
+	if(text){
+		this.conditions_text = text;
+	} else {
+		this.conditions_text = '';
+	}
+}
 
 kemia.model.Arrow.prototype.toString = function() {
 	return 'kemia.model.Arrow ' + this.source.toString() + " " + this.target.toString();

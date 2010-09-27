@@ -64,6 +64,9 @@ function initPage(){
 	editor.registerPlugin(new kemia.controller.plugins.Cleanup());
 	
     var toolbarController = new kemia.controller.ToolbarController(editor, toolbar);
+	editor.disablePlugins();
+	toolbar.setVisible(false);
+	
 	editor.setModels([model]);
 
 	

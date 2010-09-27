@@ -73,6 +73,7 @@ kemia.controller.Plugin.prototype.enable = function(editorObject) {
  *            editorObject The reaction editor object.
  */
 kemia.controller.Plugin.prototype.disable = function(editorObject) {
+	this.logger.info('disable');
 	if (this.editorObject == editorObject) {
 		this.enabled_ = false;
 	} else {
@@ -184,6 +185,11 @@ kemia.controller.Plugin.Op = {
 	PASTE : 25,
 	DBLCLICK : 26
 };
+
+/**
+ * @enum
+ */
+kemia.controller.Plugin.IRREPRESSIBLE_OPS = {};
 
 /**
  * @return {boolean} If true, editor will not disable the command when the field

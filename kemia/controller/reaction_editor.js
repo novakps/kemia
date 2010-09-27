@@ -240,6 +240,24 @@ kemia.controller.ReactionEditor.prototype.invokeShortCircuitingOp_ = function(
 	return false;
 };
 
+kemia.controller.ReactionEditor.prototype.disablePlugins = function (){
+	this.logger.info('disablePlugins');
+	for ( var key in this.plugins_) {
+		var plugin = this.plugins_[key];
+		plugin.disable(this);
+	}
+}
+goog.exportSymbol('kemia.controller.ReactionEditor.prototype.disablePlugins', kemia.controller.ReactionEditor.prototype.disablePlugins);
+
+kemia.controller.ReactionEditor.prototype.enablePlugins = function (){
+	this.logger.info('enablePlugins');
+	for ( var key in this.plugins_) {
+		var plugin = this.plugins_[key];
+		plugin.enable(this);
+	}
+}
+goog.exportSymbol('kemia.controller.ReactionEditor.prototype.enablePlugins', kemia.controller.ReactionEditor.prototype.enablePlugins);
+
 /**
  * Handle a change in the Editor. Marks the editor as modified, dispatches the
  * change event on the editable field
@@ -501,7 +519,8 @@ kemia.controller.ReactionEditor.prototype.resetQueryablePlugins = function() {
 /**
  * Gets the value of command(s).
  * 
- * @param {string|Array.<string>} commands String name(s) of the command.
+ * @param {string|Array.
+ *            <string>} commands String name(s) of the command.
  * @return {*} Value of each command. Returns false (or array of falses) if
  *         designMode is off or the editor is otherwise uneditable, and there
  *         are no activeOnUneditable plugins for the command.
@@ -531,7 +550,8 @@ kemia.controller.ReactionEditor.prototype.dispatchChange = function() {
 /**
  * Dispatches a command value change event.
  * 
- * @param {Array.<string>=} opt_commands Commands whose state has changed.
+ * @param {Array.
+ *            <string>=} opt_commands Commands whose state has changed.
  */
 kemia.controller.ReactionEditor.prototype.dispatchCommandValueChange = function(
 		opt_commands) {
@@ -847,7 +867,8 @@ kemia.controller.ReactionEditor.prototype.dispatchLoadEvent_ = function() {
  * Gecko since the fields are contained in an iFrame and there is no way to
  * auto-propagate key events up to the main window.
  * 
- * @param {string|Array. <string>} type Event type to listen for or array of event types,
+ * @param {string|Array.
+ *            <string>} type Event type to listen for or array of event types,
  *            for example goog.events.EventType.KEYDOWN.
  * @param {Function}
  *            listener Function to be used as the listener.

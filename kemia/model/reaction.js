@@ -24,6 +24,7 @@ kemia.model.Reaction = function() {
 
 	/** @type {Array.<kemia.model.Pluse>} */
 	this.pluses = [];
+	
 
 };
 
@@ -174,10 +175,10 @@ kemia.model.Reaction.prototype.setArrow = function(arrow) {
 
 /**
  * setter delegates to arrow
- * @param{string} reagents_text
+ * @param{string} text
  */
-kemia.model.Reaction.prototype.setReagentsText = function(reagents_text){
-	this.arrow.reagents_text = reagents_text;
+kemia.model.Reaction.prototype.setReagentsText = function(text){
+	this.arrow.setReagentsText(text);
 };
 
 /** 
@@ -198,10 +199,10 @@ kemia.model.Reaction.prototype.getConditionsText = function(){
 
 /**
  * setter delegates to arrow
- * @param{string} conditions_text
+ * @param{string} text
  */
-kemia.model.Reaction.prototype.setConditionsText = function(conditions_text){
-	this.arrow.conditions_text = conditions_text;
+kemia.model.Reaction.prototype.setConditionsText = function(text){
+	this.arrow.setConditionsText(text);
 }
 
 
