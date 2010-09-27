@@ -3600,7 +3600,7 @@ kemia.view.AtomRenderer.bondDirection = function(atom) {
   }
 };
 kemia.view.AtomRenderer.prototype.logger = goog.debug.Logger.getLogger("kemia.view.AtomRenderer");
-kemia.view.AtomRenderer.defaultConfig = {atom:{color:"#FF9999", diameter:0.05, highlight:{radius:0.3}, stroke:{width:0.15}, fontName:"Arial"}, margin:20, subscriptSize:5, N:{color:"blue"}, O:{color:"red"}, S:{color:"yellow"}, P:{color:"orange"}, Cl:{color:"green"}, F:{color:"green"}, Br:{color:"DarkRed"}, I:{color:"purple"}, C:{color:"black"}, H:{color:"white"}};
+kemia.view.AtomRenderer.defaultConfig = {atom:{color:"#FF9999", diameter:0.05, highlight:{radius:0.3}, stroke:{width:0.15}, fontName:"Arial"}, margin:20, subscriptSize:5, N:{color:"blue"}, O:{color:"red"}, S:{color:"yellow"}, P:{color:"orange"}, Cl:{color:"green"}, F:{color:"green"}, Br:{color:"DarkRed"}, I:{color:"purple"}, C:{color:"black"}, R1:{color:"black"}, R2:{color:"black"}, H:{color:"white"}};
 // Input 36
 goog.provide("goog.debug.Error");
 goog.debug.Error = function(opt_msg) {
@@ -9603,7 +9603,7 @@ kemia.model.NeighborList.reactionsToNeighbors = function(reactions) {
       }, getDistance:function(point) {
         return goog.math.Coordinate.distance(p.coord, point)
       }}
-    }), goog.array.map(reaction.arrows, function(a) {
+    }), goog.array.map([reaction.arrow], function(a) {
       return{obj:a, getCenter:function() {
         var midPoint = goog.math.Vec2.fromCoordinate(goog.math.Coordinate.sum(a.source, a.target));
         return midPoint.scale(0.5)
@@ -15741,25 +15741,16 @@ kemia.controller.plugins.Erase.prototype.handleMouseMove = function(e) {
             e.currentTarget.highlightGroup = this.highlightMolecule(target, e.currentTarget.highlightGroup)
           }return true
         }else {
-          if(target instanceof kemia.model.Arrow) {
+          if(target instanceof kemia.model.Plus) {
             this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Erase.CURSOR_STYLE;
             if(!e.currentTarget.highlightGroup) {
-              e.currentTarget.highlightGroup = this.highlightArrow(target)
+              e.currentTarget.highlightGroup = this.highlightPlus(target)
             }else {
-              e.currentTarget.highlightGroup = this.highlightArrow(target, e.currentTarget.highlightGroup)
+              e.currentTarget.highlightGroup = this.highlightPlus(target, e.currentTarget.highlightGroup)
             }return true
           }else {
-            if(target instanceof kemia.model.Plus) {
-              this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Erase.CURSOR_STYLE;
-              if(!e.currentTarget.highlightGroup) {
-                e.currentTarget.highlightGroup = this.highlightPlus(target)
-              }else {
-                e.currentTarget.highlightGroup = this.highlightPlus(target, e.currentTarget.highlightGroup)
-              }return true
-            }else {
-              e.currentTarget.highlightGroup = undefined;
-              return false
-            }
+            e.currentTarget.highlightGroup = undefined;
+            return false
           }
         }
       }
@@ -15779,9 +15770,6 @@ kemia.controller.plugins.Erase.prototype.handleMouseDown = function(e) {
       result = true
     }if(target instanceof kemia.model.Molecule) {
       this.eraseMolecule(target);
-      result = true
-    }if(target instanceof kemia.model.Arrow) {
-      this.eraseArrow(target);
       result = true
     }if(target instanceof kemia.model.Plus) {
       this.erasePlus(target);
@@ -15822,11 +15810,6 @@ kemia.controller.plugins.Erase.prototype.eraseMolecule = function(molecule) {
   reaction.removeMolecule(molecule);
   this.editorObject.setModels(this.editorObject.getModels())
 };
-kemia.controller.plugins.Erase.prototype.eraseArrow = function(arrow) {
-  var reaction = arrow.reaction;
-  reaction.removeArrow(arrow);
-  this.editorObject.setModels(this.editorObject.getModels())
-};
 kemia.controller.plugins.Erase.prototype.erasePlus = function(plus) {
   var reaction = plus.reaction;
   reaction.removePlus(plus);
@@ -15847,9 +15830,6 @@ kemia.controller.plugins.Erase.prototype.highlightAtom = function(atom, opt_grou
 };
 kemia.controller.plugins.Erase.prototype.highlightBond = function(bond, opt_group) {
   return this.editorObject.reactionRenderer.moleculeRenderer.bondRendererFactory.get(bond).highlightOn(bond, "#ff6666", opt_group)
-};
-kemia.controller.plugins.Erase.prototype.highlightArrow = function(arrow, opt_group) {
-  return this.editorObject.reactionRenderer.arrowRenderer.highlightOn(arrow, "#ff6666", opt_group)
 };
 kemia.controller.plugins.Erase.prototype.highlightPlus = function(plus, opt_group) {
   return this.editorObject.reactionRenderer.plusRenderer.highlightOn(plus, "#ff6666", opt_group)
@@ -16465,7 +16445,7 @@ kemia.model.Arrow = function(opt_source, opt_target, opt_style, opt_reagents_tex
 };
 kemia.model.Arrow.prototype.translate = function(vector) {
   this.source = goog.math.Coordinate.sum(this.source, vector);
-  this.target = goog.math.Coordiante.sum(this.target, vector)
+  this.target = goog.math.Coordinate.sum(this.target, vector)
 };
 kemia.model.Arrow.prototype.getOrientation = function(point) {
   var center = new goog.math.Coordinate((this.source.x + this.target.x) / 2, (this.source.y + this.target.y) / 2);
@@ -16477,6 +16457,9 @@ kemia.model.Arrow.prototype.getOrientation = function(point) {
   }else {
     return kemia.model.Arrow.ORIENTATION.BEHIND
   }
+};
+kemia.model.Arrow.prototype.toString = function() {
+  return"kemia.model.Arrow " + this.source.toString() + " " + this.target.toString()
 };
 kemia.model.Arrow.STYLES = {FORWARD:1, BACKWARD:2, BIDIRECTIONAL:3};
 kemia.model.Arrow.ORIENTATION = {AHEAD:1, BEHIND:2};
@@ -18893,6 +18876,8 @@ kemia.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
   atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV, {style:"color:green"}, "F")));
   atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV, {style:"color:green"}, "Cl")));
   atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV, {style:"color:DarkRed"}, "Br")));
+  atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV, {style:"color:black"}, "R1")));
+  atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV, {style:"color:black"}, "R2")));
   atom_select.setMenu(atom_menu);
   buttons.push(atom_select);
   var bond_select = kemia.controller.ToolbarFactory.makeSelectButton(kemia.controller.plugins.BondEdit.COMMAND, "Bond Type", "Bond");

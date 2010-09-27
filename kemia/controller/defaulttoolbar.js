@@ -154,6 +154,7 @@ kemia.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
 			goog.dom.TagName.DIV, {
 				style : "color:DarkRed"
 			}, 'Br')));
+	atom_menu.addItem(new goog.ui.MenuSeparator());
 	atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {style : "color:black"
 			}, "R1")));
