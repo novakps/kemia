@@ -9409,6 +9409,7 @@ kemia.controller.Plugin.prototype.enable = function(editorObject) {
   }
 };
 kemia.controller.Plugin.prototype.disable = function(editorObject) {
+  this.logger.info("disable");
   if(this.editorObject == editorObject) {
     this.enabled_ = false
   }else {
@@ -9438,6 +9439,7 @@ kemia.controller.Plugin.prototype.isAutoDispose = function() {
   return this.autoDispose_
 };
 kemia.controller.Plugin.Op = {KEYDOWN:1, KEYPRESS:2, KEYUP:3, SELECTION:4, SHORTCUT:5, EXEC_COMMAND:6, QUERY_COMMAND:7, MOUSEDOWN:8, MOUSEUP:9, MOUSEOVER:10, MOUSEOUT:11, MOUSEMOVE:12, ATOM_MOUSEOVER:13, ATOM_MOUSEOUT:14, ATOM_MOUSEDOWN:15, BOND_MOUSEOVER:16, BOND_MOUSEOUT:17, BOND_MOUSEDOWN:18, ARROW_MOUSEOVER:19, ARROW_MOUSEOUT:20, ARROW_MOUSEDOWN:21, PLUS_MOUSEOVER:22, PLUS_MOUSEOUT:23, PLUS_MOUSEDOWN:24, PASTE:25, DBLCLICK:26};
+kemia.controller.Plugin.IRREPRESSIBLE_OPS = {};
 kemia.controller.Plugin.prototype.activeOnUneditableEditors = goog.functions.FALSE;
 kemia.controller.Plugin.OPCODE = goog.object.transpose(goog.reflect.object(kemia.controller.Plugin, {handleKeyDown:kemia.controller.Plugin.Op.KEYDOWN, handleKeyPress:kemia.controller.Plugin.Op.KEYPRESS, handleKeyUp:kemia.controller.Plugin.Op.KEYUP, handleSelectionChange:kemia.controller.Plugin.Op.SELECTION, handleKeyboardShortcut:kemia.controller.Plugin.Op.SHORTCUT, execCommand:kemia.controller.Plugin.Op.EXEC_COMMAND, queryCommandValue:kemia.controller.Plugin.Op.QUERY_COMMAND, handleMouseDown:kemia.controller.Plugin.Op.MOUSEDOWN, 
 handleMouseUp:kemia.controller.Plugin.Op.MOUSEUP, handleMouseOver:kemia.controller.Plugin.Op.MOUSEOVER, handleMouseOut:kemia.controller.Plugin.Op.MOUSEOUT, handleMouseMove:kemia.controller.Plugin.Op.MOUSEMOVE, handleAtomMouseOver:kemia.controller.Plugin.Op.ATOM_MOUSEOVER, handleAtomMouseOut:kemia.controller.Plugin.Op.ATOM_MOUSEOUT, handleAtomMouseDown:kemia.controller.Plugin.Op.ATOM_MOUSEDOWN, handleBondMouseOver:kemia.controller.Plugin.Op.BOND_MOUSEOVER, handleBondMouseOut:kemia.controller.Plugin.Op.BOND_MOUSEOUT, 
@@ -10894,6 +10896,22 @@ kemia.controller.ReactionEditor.prototype.invokeShortCircuitingOp_ = function(op
     }
   }return false
 };
+kemia.controller.ReactionEditor.prototype.disablePlugins = function() {
+  this.logger.info("disablePlugins");
+  for(var key in this.plugins_) {
+    var plugin = this.plugins_[key];
+    plugin.disable(this)
+  }
+};
+goog.exportSymbol("kemia.controller.ReactionEditor.prototype.disablePlugins", kemia.controller.ReactionEditor.prototype.disablePlugins);
+kemia.controller.ReactionEditor.prototype.enablePlugins = function() {
+  this.logger.info("enablePlugins");
+  for(var key in this.plugins_) {
+    var plugin = this.plugins_[key];
+    plugin.enable(this)
+  }
+};
+goog.exportSymbol("kemia.controller.ReactionEditor.prototype.enablePlugins", kemia.controller.ReactionEditor.prototype.enablePlugins);
 kemia.controller.ReactionEditor.prototype.handleChange = function() {
   this.isModified_ = true;
   this.isEverModified_ = true

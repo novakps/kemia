@@ -51,6 +51,47 @@ function buildReaction() {
 	return rxn1;
 }
 
+function buildReaction2() {
+	// same as above with reactants in reverse order
+	var rxn1 = new kemia.model.Reaction();
+
+	var mol2 = new kemia.model.Molecule('mol2');
+	var a2a = new kemia.model.Atom('C', 2, 1);
+	var a2b = new kemia.model.Atom('C', 2, 2);
+	var b2 = new kemia.model.Bond(a2a, a2b);
+	mol2.addAtom(a2a);
+	mol2.addAtom(a2b);
+	mol2.addBond(b2);
+	rxn1.addMolecule(mol2);
+	rxn1.header = 'my header';
+	rxn1.reagentsText = 'my reagents';
+	rxn1.conditionsText = 'my conditions';
+	var mol1 = new kemia.model.Molecule('mol1');
+	var a1a = new kemia.model.Atom('C', 0, 1);
+	var a1b = new kemia.model.Atom('C', 0, 2);
+	var b1 = new kemia.model.Bond(a1a, a1b);
+	mol1.addAtom(a1a);
+	mol1.addAtom(a1a);
+	mol1.addBond(b1);
+	rxn1.addMolecule(mol1);
+
+	rxn1.addPlus(new kemia.model.Plus(new goog.math.Coordinate(1, 1.5)));
+
+
+	rxn1.setArrow(new kemia.model.Arrow(new goog.math.Coordinate(3, 1.5),
+			new goog.math.Coordinate(4, 1.5)));
+
+	var mol3 = new kemia.model.Molecule('mol3');
+	var a3a = new kemia.model.Atom('C', 4, 1);
+	var a3b = new kemia.model.Atom('C', 4, 2);
+	var b3 = new kemia.model.Bond(a3a, a3b);
+	mol3.addAtom(a3a);
+	mol3.addAtom(a3b);
+	mol3.addBond(b3);
+	rxn1.addMolecule(mol3);
+	return rxn1;
+}
+
 function testAddReactantLeftOfArrow() {
 	var r = buildReaction();
 	var mol_left = new kemia.model.Molecule('mol_left');
@@ -139,5 +180,29 @@ function testRemoveOverlap() {
 
 	var bbox = kemia.model.Reaction.boundingBox(rxn.molecules);
 	assertEquals(2 + 2 + 4, bbox.right - bbox.left);
-
 };
+
+function testMidpoint() {
+	var rxn = buildReaction();
+	var r = rxn.getReactants()[1];
+	var p = rxn.getProducts()[0];
+	var m = kemia.model.Reaction.midpoint(r,p);
+	assertEquals(3, m.x);
+	assertEquals(1.5, m.y);
+}
+
+function testCenterArrow(){
+	var rxn = buildReaction();
+	rxn.centerArrow();
+	var c = rxn.arrow.getCenter();
+	assertEquals(3, c.x);
+	assertEquals(1.5, c.y);
+}
+
+function testCenterArrow2(){
+	var rxn = buildReaction2();
+	rxn.centerArrow();
+	var c = rxn.arrow.getCenter();
+	assertEquals(3, c.x);
+	assertEquals(1.5, c.y);
+}

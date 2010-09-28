@@ -59,6 +59,16 @@ kemia.model.Arrow.prototype.translate = function(vector){
 };
 
 /**
+ * center of arrow
+ * @return {goog.math.Coordinate}
+ */
+kemia.model.Arrow.prototype.getCenter = function(){
+	var source = goog.math.Vec2.fromCoordinate(this.source);
+	var target = goog.math.Vec2.fromCoordinate(this.target);
+	return source.add(target.subtract(source).scale(0.5));
+}
+
+/**
  * returns enum describing orientation of point relative to Arrow
  * 
  * @param {goog.math.Coordinate}

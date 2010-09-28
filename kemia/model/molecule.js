@@ -444,5 +444,4 @@ kemia.model.Molecule.prototype.translate = function(vector) {
 	goog.array.forEach(this.atoms, function(a) {
 		a.coord = goog.math.Coordinate.sum(a.coord, vector);
 	});
-
 };

@@ -175,22 +175,25 @@ kemia.model.Reaction.prototype.setArrow = function(arrow) {
 
 /**
  * setter delegates to arrow
+ * 
  * @param{string} text
  */
 kemia.model.Reaction.prototype.setReagentsText = function(text){
 	this.arrow.setReagentsText(text);
 };
 
-/** 
+/**
  * getter delegates to arrow
+ * 
  * @return{string}
  */
 kemia.model.Reaction.prototype.getReagentsText = function(){
 	return this.arrow.reagents_text;
 }
 
-/** 
+/**
  * getter delegates to arrow
+ * 
  * @return{string}
  */
 kemia.model.Reaction.prototype.getConditionsText = function(){
@@ -199,6 +202,7 @@ kemia.model.Reaction.prototype.getConditionsText = function(){
 
 /**
  * setter delegates to arrow
+ * 
  * @param{string} text
  */
 kemia.model.Reaction.prototype.setConditionsText = function(text){
@@ -227,14 +231,17 @@ kemia.model.Reaction.prototype.removePlus = function(plus) {
 
 
 /**
- * @deprecated
+ * inserts plus at midpoint between molecules
+ * 
+ * @param {Array.<kemia.model.Molecule} 
  */
-kemia.model.Reaction.prototype.generatePlusCoords = function(molecules) {
+kemia.model.Reaction.prototype.generatePluses = function(molecules) {
 	var previousMol;
+	
 	goog.array.forEach(molecules, function(mol) {
 		if (previousMol) {
-			var center = this.center( [ previousMol, mol ]);
-			this.addPlus(center);
+			var midpoint = this.midpoint( [ previousMol, mol ]);
+			this.addPlus(midpoint);
 		}
 		previousMol = mol;
 	}, this);
@@ -267,13 +274,28 @@ kemia.model.Reaction.boundingBox = function(molecules) {
  * 
  * @param {Array.
  *            <kemia.model.Molecule>} molecules
- * @return goog.math.Coordinate
+ * @return {goog.math.Coordinate}
  */
 kemia.model.Reaction.prototype.center = function(molecules) {
 	var bbox = kemia.model.Reaction.boundingBox(molecules);
 	return new goog.math.Coordinate((bbox.left + bbox.right) / 2,
 			(bbox.top + bbox.bottom) / 2);
 };
+
+/**
+ * finds midpoint in space between two molecules
+ * 
+ * @param {kemia.model.Molecule}
+ * @param {kemia.model.Molecule}
+ * @return {goog.math.Coordinate}
+ */
+kemia.model.Reaction.midpoint = function (mol1, mol2){
+	var box1 = mol1.getBoundingBox();
+	var box2 = mol2.getBoundingBox();
+	var right_top = new goog.math.Vec2(box1.right, box1.top);
+	var left_bottom = new goog.math.Vec2(box2.left, box2.bottom);
+	return right_top.add(left_bottom.subtract(right_top).scale(0.5));
+}
 
 /**
  * layout molecules to eliminate any molecule overlap plus a margin
@@ -308,6 +330,25 @@ kemia.model.Reaction.removeOverlap = function(molecules) {
 	}, this);
 	return molecules;
 };
+
+/**
+ * centers arrow between last reactant and first product
+ */
+kemia.model.Reaction.prototype.centerArrow = function(){	
+	var box1 = kemia.model.Reaction.boundingBox(this.getReactants());
+	var box2 = kemia.model.Reaction.boundingBox(this.getProducts());
+	var right_top = new goog.math.Vec2(box1.right, box1.top);
+	var left_bottom = new goog.math.Vec2(box2.left, box2.bottom);
+	var midpoint = right_top.add(left_bottom.subtract(right_top).scale(0.5));
+	
+	this.logger.info('midpoint: ' + midpoint.toString());
+	this.logger.info('arrowCenter ' + this.arrow.getCenter().toString());
+	var diff = goog.math.Vec2.fromCoordinate(midpoint).subtract (goog.math.Vec2.fromCoordinate(this.arrow.getCenter()));
+	this.logger.info('diff ' + diff.toString());
+	this.arrow.translate(diff);
+
+	this.logger.info('arrowCenter ' + this.arrow.getCenter().toString());
+}
 
 
 
