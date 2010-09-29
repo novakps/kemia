@@ -17,6 +17,7 @@ goog.provide('kemia.model.Molecule');
 goog.require('goog.array');
 goog.require('kemia.ring.RingFinder');
 goog.require('kemia.model.Atom');
+goog.require('goog.debug.Logger');
 
 /**
  * Class representing a Molecule
@@ -425,6 +426,7 @@ kemia.model.Molecule.prototype.getBoundingBox = function() {
  * 
  */
 kemia.model.Molecule.prototype.rotate = function(degrees, center) {
+//	this.logger.info('rotate ' + degrees);
 	var trans = kemia.graphics.AffineTransform.getRotateInstance(goog.math
 			.toRadians(degrees), center.x, center.y);
 	goog.array.forEach(this.atoms, function(a) {
@@ -445,3 +447,12 @@ kemia.model.Molecule.prototype.translate = function(vector) {
 		a.coord = goog.math.Coordinate.sum(a.coord, vector);
 	});
 };
+
+/**
+ * The logger for this class.
+ * 
+ * @type {goog.debug.Logger}
+ * @protected
+ */
+kemia.model.Molecule.prototype.logger = goog.debug.Logger
+		.getLogger('kemia.model.Molecule');

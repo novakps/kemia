@@ -20,6 +20,8 @@ goog.exportSymbol('kemia.controller.plugins.Move',
  */
 kemia.controller.plugins.Move.COMMAND = 'move';
 
+kemia.controller.plugins.Move.ROTATE_CURSOR_STYLE = 'url("../../elements/images/rotate-cursor-32.png") 16 16,  pointer';
+
 /** @inheritDoc */
 kemia.controller.plugins.Move.prototype.isSupportedCommand = function(command) {
 	return command == kemia.controller.plugins.Move.COMMAND;
@@ -47,15 +49,6 @@ kemia.controller.plugins.Move.prototype.execCommandInternal = function(command,
 		value, active) {
 	this.isActive = active;
 };
-
-/**
- * The logger for this class.
- * 
- * @type {goog.debug.Logger}
- * @protected
- */
-kemia.controller.plugins.Move.prototype.logger = goog.debug.Logger
-		.getLogger('kemia.controller.plugins.Move');
 
 kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 
@@ -89,8 +82,7 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 			}
 		} else if (target instanceof kemia.model.Molecule) {
 			if (e.shiftKey) {
-				this.editorObject.getOriginalElement().style.cursor = 'url("../../elements/images/rotate-cursor-32.png") 16 16,  pointer';
-
+				this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Move.ROTATE_CURSOR_STYLE;
 			} else {
 				this.editorObject.getOriginalElement().style.cursor = 'move';
 			}
@@ -157,6 +149,7 @@ kemia.controller.plugins.Move.prototype.handleMouseDown = function(e) {
 			var molecule = target;
 			this.editorObject.dispatchBeforeChange();
 			if (e.shiftKey) {
+				this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Move.ROTATE_CURSOR_STYLE;
 				this.rotateMolecule(e, target);
 			} else {
 				this.dragMolecule(e, target);
@@ -654,20 +647,22 @@ kemia.controller.plugins.Move.prototype.rotateMolecule = function(e, molecule) {
 		var deltaY = d.deltaY - d._initDeltaY;
 		var new_angle = goog.math.angle(d._center.x, d._center.y, d._start.x
 				+ deltaX, d._start.y + deltaY);
-		var g_trans = d.group.getTransform();
-		var degrees = new_angle - d._start_angle;
-		d.group.setTransformation(0, 0, degrees, d._center.x, d._center.y);
+		d._degrees = new_angle - d._start_angle;
+		d.group.setTransformation(0, 0, d._degrees, d._center.x, d._center.y);
 	});
 	d.addEventListener(goog.fx.Dragger.EventType.END, function(e) {
-		var mol_center = d.editor.reactionRenderer.transform.createInverse()
-				.transformCoords( [ d._center ])[0];
-		var new_angle = goog.math.angle(d._center.x, d._center.y, d._start.x
-				+ d.deltaX, d._start.y + d.deltaY);
-
-		var degrees = new_angle - d._start_angle;
-		d.molecule.rotate( -degrees, mol_center);
+		d.molecule.rotate( -d._degrees, d.molecule.getCenter());
 		d.editor.setModels(d.editor.getModels());
 		d.dispose();
 	});
 	d.startDrag(e);
 };
+
+/**
+ * The logger for this class.
+ * 
+ * @type {goog.debug.Logger}
+ * @protected
+ */
+kemia.controller.plugins.Move.prototype.logger = goog.debug.Logger
+		.getLogger('kemia.controller.plugins.Move');
