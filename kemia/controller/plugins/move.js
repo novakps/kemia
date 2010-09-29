@@ -155,6 +155,7 @@ kemia.controller.plugins.Move.prototype.handleMouseDown = function(e) {
 		if (e.currentTarget.highlightGroup) {
 			e.currentTarget.highlightGroup.clear();
 		}
+		e.currentTarget.highlightGroup = undefined;
 		this.isDragging = true;
 		var target = this.editorObject.findTarget(e);
 		
