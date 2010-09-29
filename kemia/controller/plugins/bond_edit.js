@@ -130,10 +130,10 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseMove = function(e) {
 		if (e.currentTarget.highlightGroup) {
 			e.currentTarget.highlightGroup.clear();
 		}
+		e.currentTarget.highlightGroup = undefined;
 
 		if (target instanceof kemia.model.Atom) {
-			// this.editorObject.getOriginalElement().style.cursor =
-			// 'url("../../images/Cursor-Single-32.png"), hand';
+			 this.editorObject.getOriginalElement().style.cursor = 'pointer';
 			if (!e.currentTarget.highlightGroup) {
 				e.currentTarget.highlightGroup = this.highlightAtom(target);
 			} else {
@@ -142,8 +142,7 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseMove = function(e) {
 			}
 			return true;
 		} else if (target instanceof kemia.model.Bond) {
-			// this.editorObject.getOriginalElement().style.cursor =
-			// 'url("../../images/Cursor-Eraser-32.png"), hand';
+			 this.editorObject.getOriginalElement().style.cursor = 'pointer';
 			if (!e.currentTarget.highlightGroup) {
 				e.currentTarget.highlightGroup = this.highlightBond(target);
 			} else {
@@ -152,12 +151,8 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseMove = function(e) {
 			}
 			return true;
 		}
-	} else {
-		e.currentTarget.highlightGroup = undefined;
-		return false;
-	}
+	} 
 	return false;
-
 };
 
 kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
@@ -191,7 +186,6 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 					}
 				}
 				target._last_click = goog.now();
-
 			}
 		}
 		if (target == undefined && this.bond_type) {
@@ -304,7 +298,7 @@ kemia.controller.plugins.BondEdit.prototype.highlightAtom = function(atom,
 kemia.controller.plugins.BondEdit.prototype.highlightBond = function(bond,
 		opt_group) {
 	return this.editorObject.reactionRenderer.moleculeRenderer.bondRendererFactory
-			.get(bond).highlightOn(bond, '#green', opt_group);
+			.get(bond).highlightOn(bond, 'green', opt_group);
 };
 
 /**

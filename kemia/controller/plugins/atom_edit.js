@@ -99,13 +99,15 @@ kemia.controller.plugins.AtomEdit.prototype.handleKeyboardShortcut = function(e)
 kemia.controller.plugins.AtomEdit.prototype.handleMouseMove = function(e) {
 
 	if (this.symbol) {
-		// this.logger.info('handleMouseMove');
+		this.editorObject.getOriginalElement().style.cursor = 'default';
 		var target = this.editorObject.findTarget(e);
 		if (e.currentTarget.highlightGroup) {
 			e.currentTarget.highlightGroup.clear();
 		}
 
 		if (target instanceof kemia.model.Atom) {
+
+			 this.editorObject.getOriginalElement().style.cursor = 'pointer';
 			if (!e.currentTarget.highlightGroup) {
 				e.currentTarget.highlightGroup = this.highlightAtom(target);
 			} else {
