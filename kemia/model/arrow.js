@@ -38,7 +38,7 @@ goog.require('goog.math.Vec2');
 kemia.model.Arrow = function(opt_source, opt_target, opt_style,
 		opt_reagents_text, opt_conditions_text) {
 	this.source = goog.isDef(opt_source) ? opt_source
-			: new goog.math.Coordinate(0, 0);
+			: new goog.math.Coordinate(10, 0);
 	this.target = goog.isDef(opt_target) ? opt_target : goog.math.Coordinate
 			.sum(this.source, new goog.math.Coordinate(2, 0));
 	this.style = goog.isDef(opt_style) ? opt_style

@@ -42,7 +42,7 @@ goog.inherits(kemia.view.BondRenderer, kemia.view.Renderer);
 /**
  * @param {kemia.model.Bond}
  *            bond
- * @param {string]}
+ * @param {string}
  *            opt_color
  * @param {goog.graphics.Group=}
  *            opt_group
@@ -97,7 +97,7 @@ kemia.view.BondRenderer.prototype.highlightOn = function(bond, opt_color, opt_gr
 	path_up.close();
 // var fill = new goog.graphics.LinearGradient(coords[0].x, coords[0].y,
 // source_up.x, source_up.y, opt_color, 'white');
-	var fill = new goog.graphics.SolidFill(opt_color, .3);
+	var fill = new goog.graphics.SolidFill(opt_color, .15);
 	this.graphics.drawPath(path_up, stroke, fill, opt_group);
 	
 	var path_down = new goog.graphics.Path();

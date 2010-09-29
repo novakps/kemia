@@ -67,16 +67,16 @@ kemia.model.Reaction.prototype.addReactant = function(mol) {
 		var mol_box = mol.getBoundingBox();
 		if(reactants.length>0){
 			var reactant_box = kemia.model.Reaction.boundingBox(reactants);
-			r_diff = new goog.math.Vec2(reactant_box.right - mol_box.left, 0);
+			r_diff = new goog.math.Vec2(reactant_box.right - mol_box.left + kemia.model.Reaction.MOLECULE_MARGIN, 0);
 		} else {
-			r_diff = new goog.math.Vec2(mol_box.left, 0);
+			r_diff = new goog.math.Vec2(mol_box.left + kemia.model.Reaction.MOLECULE_MARGIN, 0);
 		}
 		// move new reactant to the right of existing reactants, if any
 		mol.translate(r_diff);
 		if(!this.isReactant(mol)){
-			// have to move the arrow and any products
+			// have to move the arrow and any products too
 			var products = this.getProducts();
-			var diff = new goog.math.Vec2(mol.getBoundingBox().right - this.arrow.source.x);
+			var diff = new goog.math.Vec2(mol.getBoundingBox().right - this.arrow.source.x + kemia.model.Reaction.MOLECULE_MARGIN);
 			this.arrow.translate(diff);
 			// move products, since arrow moved
 			goog.array.forEach(products, function(mol){
@@ -120,9 +120,9 @@ kemia.model.Reaction.prototype.addProduct = function(mol) {
 		var x_diff;
 		if(products.length>0){
 			var prod_box = kemia.model.Reaction.boundingBox(products);
-			x_diff =  prod_box.right - mol_box.left;
+			x_diff =  prod_box.right - mol_box.left + kemia.model.Reaction.MOLECULE_MARGIN;
 		} else {
-			x_diff = this.arrow.target.x - mol_box.left;
+			x_diff = this.arrow.target.x - mol_box.left + kemia.model.Reaction.MOLECULE_MARGIN;
 		}
 		mol.translate(new goog.math.Vec2(x_diff, 0));
 		goog.asserts.assert(this.isProduct(mol));
@@ -233,15 +233,21 @@ kemia.model.Reaction.prototype.removePlus = function(plus) {
 /**
  * inserts plus at midpoint between molecules
  * 
- * @param {Array.<kemia.model.Molecule} 
+ * @param {Array.
+ *            <kemia.model.Molecule}
  */
 kemia.model.Reaction.prototype.generatePluses = function(molecules) {
 	var previousMol;
-	
+	goog.array.sort(
+			molecules, function(m1, m2){
+				return goog.array.defaultCompare(
+						m1.getBoundingBox().left, 
+						m2.getBoundingBox().left)});
 	goog.array.forEach(molecules, function(mol) {
-		if (previousMol) {
-			var midpoint = this.midpoint( [ previousMol, mol ]);
-			this.addPlus(midpoint);
+		if (previousMol) {	
+			this.addPlus(
+					new kemia.model.Plus(
+							kemia.model.Reaction.midpoint( previousMol, mol)));
 		}
 		previousMol = mol;
 	}, this);
@@ -337,17 +343,28 @@ kemia.model.Reaction.removeOverlap = function(molecules) {
 kemia.model.Reaction.prototype.centerArrow = function(){	
 	var box1 = kemia.model.Reaction.boundingBox(this.getReactants());
 	var box2 = kemia.model.Reaction.boundingBox(this.getProducts());
+	if (!box1 && !box2){
+		// cannot find center
+		return;
+	}
+	if (!box1) {
+		box1 = new goog.math.Box(box2.top, box2.left - 1, box2.bottom, box2.left - 1);
+	}
+	if (!box2) {
+		box = new goog.math.Box(box1.top, box1.right + 1, box1.bottom, box1.right + 1);
+	}
+	
 	var right_top = new goog.math.Vec2(box1.right, box1.top);
 	var left_bottom = new goog.math.Vec2(box2.left, box2.bottom);
 	var midpoint = right_top.add(left_bottom.subtract(right_top).scale(0.5));
 	
-	this.logger.info('midpoint: ' + midpoint.toString());
-	this.logger.info('arrowCenter ' + this.arrow.getCenter().toString());
+// this.logger.info('midpoint: ' + midpoint.toString());
+// this.logger.info('arrowCenter ' + this.arrow.getCenter().toString());
 	var diff = goog.math.Vec2.fromCoordinate(midpoint).subtract (goog.math.Vec2.fromCoordinate(this.arrow.getCenter()));
-	this.logger.info('diff ' + diff.toString());
+// this.logger.info('diff ' + diff.toString());
 	this.arrow.translate(diff);
 
-	this.logger.info('arrowCenter ' + this.arrow.getCenter().toString());
+// this.logger.info('arrowCenter ' + this.arrow.getCenter().toString());
 }
 
 

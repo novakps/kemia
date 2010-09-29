@@ -4,13 +4,11 @@ goog.require('goog.json.Serializer');
 goog.require('goog.debug.Console');
 goog.require('goog.debug.Logger');
 
-var rxn;
-var mol;
 function setUp() {
 	var c = new goog.debug.Console();
 	c.setCapturing(true);
 	logger = goog.debug.Logger.getLogger('JsonTest');
-
+	json_rxn = goog.json.parse(goog.json.serialize(jreaction));
 }
 
 function testReadWriteMolecule() {
@@ -46,7 +44,7 @@ function test1ExportMol() {
 }
 
 function test2ImportReaction() {
-	var rxn = kemia.io.json.readReaction(jreaction);
+	var rxn = kemia.io.json.readReaction(json_rxn);
 	assertEquals("3-component UGI", rxn.getHeader());
 	assertEquals(3, rxn.getReactants().length);
 	assertEquals(rxn.getReactants()[1].name, "isocyanoethane");
@@ -59,7 +57,7 @@ function test2ImportReaction() {
 	assertEquals('bar conditions', rxn.getConditionsText());
 	
 	// test the string representation
-	rxn = kemia.io.json.readReaction(JSON.stringify(jreaction));
+	rxn = kemia.io.json.readReaction(JSON.stringify(json_rxn));
 	assertEquals(rxn.header, "3-component UGI");
 	assertEquals(3, rxn.getReactants().length);
 	assertEquals(rxn.getReactants()[1].name, "isocyanoethane");
@@ -71,20 +69,34 @@ function test2ImportReaction() {
 }
 
 function testImportReactionWithUndefinedConditions() {
-
-	jreaction.conditions_text = undefined;
-	jreaction.reagents_text = undefined
-	var rxn = kemia.io.json.readReaction(jreaction);
+	json_rxn.conditions_text = undefined;
+	json_rxn.reagents_text = undefined
+	var rxn = kemia.io.json.readReaction(json_rxn);
 	assertEquals('', rxn.getReagentsText());
 	assertEquals('', rxn.getConditionsText());
 }
 
+function testImportReactionWithUndefinedPluses(){
+	json_rxn.pluses = undefined;
+	var rxn = kemia.io.json.readReaction(json_rxn);
+	assertEquals(3, rxn.getReactants().length);
+	assertEquals(1, rxn.getProducts().length);
+}
+
+function testImportReactionWithUndefinedArrows(){
+	json_rxn.arrows = undefined;
+	var rxn = kemia.io.json.readReaction(json_rxn);
+	assertEquals(3, rxn.getReactants().length);
+	assertEquals(1, rxn.getProducts().length);
+	assertEquals(5.218249999999999, rxn.arrow.source.x);
+}
+
 function test3ExportReaction() {
-	var rxn1 = kemia.io.json.readReaction(jreaction);
+	var rxn1 = kemia.io.json.readReaction(json_rxn);
 	var jrxnstr1 = kemia.io.json.writeReaction(rxn1);
 
 	// test the string representation
-	var rxn2 = kemia.io.json.readReaction(JSON.stringify(jreaction));
+	var rxn2 = kemia.io.json.readReaction(JSON.stringify(json_rxn));
 	var jrxnstr2 = kemia.io.json.writeReaction(rxn2);
 	assertEquals(jrxnstr1.length, jrxnstr2.length);
 

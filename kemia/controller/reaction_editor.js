@@ -385,14 +385,14 @@ kemia.controller.ReactionEditor.prototype.findTarget = function(e) {
 
 kemia.controller.ReactionEditor.prototype.getAtomicCoords = function(
 		graphicsCoord) {
-	var trans = this.reactionRenderer.moleculeRenderer.transform
+	var trans = this.reactionRenderer.transform
 			.createInverse();
 	return trans.transformCoords( [ graphicsCoord ])[0];
 }
 
 kemia.controller.ReactionEditor.prototype.getGraphicsCoords = function(
 		atomicCoords) {
-	var trans = this.reactionRenderer.moleculeRenderer.transform;
+	var trans = this.reactionRenderer.transform;
 	return trans.transformCoords( [ atomicCoords ])[0];
 }
 
@@ -419,7 +419,7 @@ kemia.controller.ReactionEditor.getOffsetCoords = function(elem, posx, posy) {
 }
 
 kemia.controller.ReactionEditor.prototype.findTargetList = function(e) {
-	var trans = this.reactionRenderer.moleculeRenderer.transform
+	var trans = this.reactionRenderer.transform
 			.createInverse();
 
 	var pos = kemia.controller.ReactionEditor.getMouseCoords(e)

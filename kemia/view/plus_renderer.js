@@ -18,7 +18,7 @@ goog.inherits(kemia.view.PlusRenderer, kemia.view.Renderer);
 
 /**
  * @param {kemia.model.Plus} plus
- * @param {kemia.graphics.AffineTransform}
+ * @param {kemia.graphics.AffineTransform} transform
  */
 kemia.view.PlusRenderer.prototype.render = function(plus, transform) {
 	this.setTransform(transform);
@@ -63,7 +63,7 @@ kemia.view.PlusRenderer.prototype.highlightOn = function(plus, opt_color, opt_gr
 	}
 
 	var stroke = null;
-	var fill = new goog.graphics.SolidFill(opt_color, .2);
+	var fill = new goog.graphics.SolidFill(opt_color, .3);
 	var radius = this.config.get("plus")['highlight']['radius']
 			* this.transform.getScaleX();
 	var coords = this.transform.transformCoords( [ plus.coord ])[0];

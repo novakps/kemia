@@ -179,8 +179,7 @@ kemia.view.ArrowRenderer.prototype.highlightOn = function(arrow, opt_color,
 	path_up.lineTo(target_up.x, target_up.y);
 	path_up.lineTo(coords[1].x, coords[1].y);
 	path_up.close();
-//	var fill = new goog.graphics.LinearGradient(coords[0].x, coords[0].y, source_up.x, source_up.y, opt_color, 'white');
-	var fill = new goog.graphics.SolidFill(opt_color, .3);
+	var fill = new goog.graphics.SolidFill(opt_color, .15);
 	this.graphics.drawPath(path_up, stroke, fill, opt_group);
 	
 	var path_down = new goog.graphics.Path();

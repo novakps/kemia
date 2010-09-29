@@ -2536,7 +2536,7 @@ kemia.view.BondRenderer.prototype.highlightOn = function(bond, opt_color, opt_gr
   path_up.lineTo(target_up.x, target_up.y);
   path_up.lineTo(coords[1].x, coords[1].y);
   path_up.close();
-  var fill = new goog.graphics.SolidFill(opt_color, 0.3);
+  var fill = new goog.graphics.SolidFill(opt_color, 0.15);
   this.graphics.drawPath(path_up, stroke, fill, opt_group);
   var path_down = new goog.graphics.Path;
   path_down.moveTo(coords[0].x, coords[0].y);
@@ -8792,7 +8792,7 @@ kemia.view.ArrowRenderer.prototype.highlightOn = function(arrow, opt_color, opt_
   path_up.lineTo(target_up.x, target_up.y);
   path_up.lineTo(coords[1].x, coords[1].y);
   path_up.close();
-  var fill = new goog.graphics.SolidFill(opt_color, 0.3);
+  var fill = new goog.graphics.SolidFill(opt_color, 0.15);
   this.graphics.drawPath(path_up, stroke, fill, opt_group);
   var path_down = new goog.graphics.Path;
   path_down.moveTo(coords[0].x, coords[0].y);
@@ -8836,7 +8836,7 @@ kemia.view.PlusRenderer.prototype.highlightOn = function(plus, opt_color, opt_gr
   }if(!opt_group) {
     opt_group = this.graphics.createGroup()
   }var stroke = null;
-  var fill = new goog.graphics.SolidFill(opt_color, 0.2);
+  var fill = new goog.graphics.SolidFill(opt_color, 0.3);
   var radius = this.config.get("plus")["highlight"]["radius"] * this.transform.getScaleX();
   var coords = this.transform.transformCoords([plus.coord])[0];
   this.graphics.drawCircle(coords.x, coords.y, radius, stroke, fill, opt_group);
@@ -9607,8 +9607,7 @@ kemia.model.NeighborList.reactionsToNeighbors = function(reactions) {
       }}
     }), goog.array.map([reaction.arrow], function(a) {
       return{obj:a, getCenter:function() {
-        var midPoint = goog.math.Vec2.fromCoordinate(goog.math.Coordinate.sum(a.source, a.target));
-        return midPoint.scale(0.5)
+        return a.getCenter()
       }, getDistance:function(point) {
         var line = new goog.math.Line(a.source.x, a.source.y, a.target.x, a.target.y);
         return goog.math.Coordinate.distance(line.getClosestSegmentPoint(point.x, point.y), point)
@@ -10946,11 +10945,11 @@ kemia.controller.ReactionEditor.prototype.findTarget = function(e) {
   }
 };
 kemia.controller.ReactionEditor.prototype.getAtomicCoords = function(graphicsCoord) {
-  var trans = this.reactionRenderer.moleculeRenderer.transform.createInverse();
+  var trans = this.reactionRenderer.transform.createInverse();
   return trans.transformCoords([graphicsCoord])[0]
 };
 kemia.controller.ReactionEditor.prototype.getGraphicsCoords = function(atomicCoords) {
-  var trans = this.reactionRenderer.moleculeRenderer.transform;
+  var trans = this.reactionRenderer.transform;
   return trans.transformCoords([atomicCoords])[0]
 };
 kemia.controller.ReactionEditor.getMouseCoords = function(e) {
@@ -10968,7 +10967,7 @@ kemia.controller.ReactionEditor.getOffsetCoords = function(elem, posx, posy) {
   }return new goog.math.Coordinate(posx, posy)
 };
 kemia.controller.ReactionEditor.prototype.findTargetList = function(e) {
-  var trans = this.reactionRenderer.moleculeRenderer.transform.createInverse();
+  var trans = this.reactionRenderer.transform.createInverse();
   var pos = kemia.controller.ReactionEditor.getMouseCoords(e);
   var target = trans.transformCoords([pos])[0];
   return this.neighborList.getNearestList({x:target.x, y:target.y})
@@ -15347,7 +15346,7 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
       }else {
         if(target instanceof kemia.model.Molecule) {
           if(e.shiftKey) {
-            this.editorObject.getOriginalElement().style.cursor = 'url("../../../../images//rotate-cursor-32.png") 16 16, url("../../images/rotate-cursor-32.png") 16 16, pointer'
+            this.editorObject.getOriginalElement().style.cursor = 'url("../../elements/images/rotate-cursor-32.png") 16 16,  pointer'
           }else {
             this.editorObject.getOriginalElement().style.cursor = "move"
           }if(!e.currentTarget.highlightGroup) {
@@ -15728,7 +15727,7 @@ kemia.controller.plugins.Erase.prototype.logger = goog.debug.Logger.getLogger("k
 kemia.controller.plugins.Erase.prototype.execCommandInternal = function(command, value, active) {
   this.isActive = active
 };
-kemia.controller.plugins.Erase.CURSOR_STYLE = 'url("../../../../images/erase-cursor-32.png") 0 32, url("../../images/erase-cursor-32.png") 0 32, hand';
+kemia.controller.plugins.Erase.CURSOR_STYLE = 'url("../../elements/images/erase-cursor-32.png") 0 32,  hand';
 kemia.controller.plugins.Erase.prototype.handleMouseMove = function(e) {
   if(this.isActive) {
     var target = this.editorObject.findTarget(e);
@@ -16455,7 +16454,7 @@ goog.provide("kemia.model.Arrow");
 goog.require("kemia.math.Line");
 goog.require("goog.math.Vec2");
 kemia.model.Arrow = function(opt_source, opt_target, opt_style, opt_reagents_text, opt_conditions_text) {
-  this.source = goog.isDef(opt_source) ? opt_source : new goog.math.Coordinate(0, 0);
+  this.source = goog.isDef(opt_source) ? opt_source : new goog.math.Coordinate(10, 0);
   this.target = goog.isDef(opt_target) ? opt_target : goog.math.Coordinate.sum(this.source, new goog.math.Coordinate(2, 0));
   this.style = goog.isDef(opt_style) ? opt_style : kemia.model.Arrow.STYLES.FORWARD;
   this.reagents_text = goog.isDef(opt_reagents_text) ? opt_reagents_text : "";
@@ -16464,6 +16463,11 @@ kemia.model.Arrow = function(opt_source, opt_target, opt_style, opt_reagents_tex
 kemia.model.Arrow.prototype.translate = function(vector) {
   this.source = goog.math.Coordinate.sum(this.source, vector);
   this.target = goog.math.Coordinate.sum(this.target, vector)
+};
+kemia.model.Arrow.prototype.getCenter = function() {
+  var source = goog.math.Vec2.fromCoordinate(this.source);
+  var target = goog.math.Vec2.fromCoordinate(this.target);
+  return source.add(target.subtract(source).scale(0.5))
 };
 kemia.model.Arrow.prototype.getOrientation = function(point) {
   var center = new goog.math.Coordinate((this.source.x + this.target.x) / 2, (this.source.y + this.target.y) / 2);
@@ -18458,6 +18462,45 @@ kemia.ring.RingPartitioner.directConnectedRings = function(ring, rings) {
     }
   }return result
 };
+kemia.ring.RingPartitioner.getPartitionedRings = function(rings) {
+  var partitions = [];
+  var search = rings;
+  goog.array.forEach(rings, function(ring) {
+    if(!goog.array.contains(goog.array.flatten(partitions), ring)) {
+      var connections = goog.array.find(partitions, function(rings) {
+        return goog.array.contains(rings, ring)
+      });
+      if(connections == null) {
+        connections = [ring];
+        search = goog.array.filter(search, function(r) {
+          return r !== ring
+        })
+      }var connected = kemia.ring.RingPartitioner.directConnectedRings(ring, search);
+      connections = goog.array.concat(connections, connected);
+      search = goog.array.filter(search, function(r) {
+        goog.array.contains(connected, r)
+      });
+      partitions.push(connections)
+    }
+  });
+  return partitions
+};
+kemia.ring.RingPartitioner.directConnectedRings = function(ring, rings) {
+  result = [];
+  goog.array.forEach(rings, function(r) {
+    var isConnected = goog.array.some(r.atoms, function(atom) {
+      if(r === ring) {
+        return false
+      }else {
+        return goog.array.contains(ring.atoms, atom)
+      }
+    });
+    if(isConnected) {
+      result.push(r)
+    }
+  });
+  return result
+};
 // Input 182
 goog.provide("kemia.layout.OverlapResolver");
 goog.require("kemia.layout.Vector2D");
@@ -19219,13 +19262,13 @@ kemia.model.Reaction.prototype.addReactant = function(mol) {
     var mol_box = mol.getBoundingBox();
     if(reactants.length > 0) {
       var reactant_box = kemia.model.Reaction.boundingBox(reactants);
-      r_diff = new goog.math.Vec2(reactant_box.right - mol_box.left, 0)
+      r_diff = new goog.math.Vec2(reactant_box.right - mol_box.left + kemia.model.Reaction.MOLECULE_MARGIN, 0)
     }else {
-      r_diff = new goog.math.Vec2(mol_box.left, 0)
+      r_diff = new goog.math.Vec2(mol_box.left + kemia.model.Reaction.MOLECULE_MARGIN, 0)
     }mol.translate(r_diff);
     if(!this.isReactant(mol)) {
       var products = this.getProducts();
-      var diff = new goog.math.Vec2(mol.getBoundingBox().right - this.arrow.source.x);
+      var diff = new goog.math.Vec2(mol.getBoundingBox().right - this.arrow.source.x + kemia.model.Reaction.MOLECULE_MARGIN);
       this.arrow.translate(diff);
       goog.array.forEach(products, function(mol) {
         mol.translate(diff)
@@ -19250,9 +19293,9 @@ kemia.model.Reaction.prototype.addProduct = function(mol) {
     var x_diff;
     if(products.length > 0) {
       var prod_box = kemia.model.Reaction.boundingBox(products);
-      x_diff = prod_box.right - mol_box.left
+      x_diff = prod_box.right - mol_box.left + kemia.model.Reaction.MOLECULE_MARGIN
     }else {
-      x_diff = this.arrow.target.x - mol_box.left
+      x_diff = this.arrow.target.x - mol_box.left + kemia.model.Reaction.MOLECULE_MARGIN
     }mol.translate(new goog.math.Vec2(x_diff, 0));
     goog.asserts.assert(this.isProduct(mol))
   }this.addMolecule(mol)
@@ -19297,12 +19340,14 @@ kemia.model.Reaction.prototype.removePlus = function(plus) {
   goog.array.remove(this.pluses, plus);
   plus.reaction = undefined
 };
-kemia.model.Reaction.prototype.generatePlusCoords = function(molecules) {
+kemia.model.Reaction.prototype.generatePluses = function(molecules) {
   var previousMol;
+  goog.array.sort(molecules, function(m1, m2) {
+    return goog.array.defaultCompare(m1.getBoundingBox().left, m2.getBoundingBox().left)
+  });
   goog.array.forEach(molecules, function(mol) {
     if(previousMol) {
-      var center = this.center([previousMol, mol]);
-      this.addPlus(center)
+      this.addPlus(new kemia.model.Plus(kemia.model.Reaction.midpoint(previousMol, mol)))
     }previousMol = mol
   }, this)
 };
@@ -19323,6 +19368,13 @@ kemia.model.Reaction.prototype.center = function(molecules) {
   var bbox = kemia.model.Reaction.boundingBox(molecules);
   return new goog.math.Coordinate((bbox.left + bbox.right) / 2, (bbox.top + bbox.bottom) / 2)
 };
+kemia.model.Reaction.midpoint = function(mol1, mol2) {
+  var box1 = mol1.getBoundingBox();
+  var box2 = mol2.getBoundingBox();
+  var right_top = new goog.math.Vec2(box1.right, box1.top);
+  var left_bottom = new goog.math.Vec2(box2.left, box2.bottom);
+  return right_top.add(left_bottom.subtract(right_top).scale(0.5))
+};
 kemia.model.Reaction.removeOverlap = function(molecules) {
   var accumulated_rect;
   goog.array.sort(molecules, function(m1, m2) {
@@ -19339,6 +19391,21 @@ kemia.model.Reaction.removeOverlap = function(molecules) {
     }
   }, this);
   return molecules
+};
+kemia.model.Reaction.prototype.centerArrow = function() {
+  var box1 = kemia.model.Reaction.boundingBox(this.getReactants());
+  var box2 = kemia.model.Reaction.boundingBox(this.getProducts());
+  if(!box1 && !box2) {
+    return
+  }if(!box1) {
+    box1 = new goog.math.Box(box2.top, box2.left - 1, box2.bottom, box2.left - 1)
+  }if(!box2) {
+    box = new goog.math.Box(box1.top, box1.right + 1, box1.bottom, box1.right + 1)
+  }var right_top = new goog.math.Vec2(box1.right, box1.top);
+  var left_bottom = new goog.math.Vec2(box2.left, box2.bottom);
+  var midpoint = right_top.add(left_bottom.subtract(right_top).scale(0.5));
+  var diff = goog.math.Vec2.fromCoordinate(midpoint).subtract(goog.math.Vec2.fromCoordinate(this.arrow.getCenter()));
+  this.arrow.translate(diff)
 };
 // Input 192
 goog.provide("kemia.io.json");
@@ -19471,24 +19538,29 @@ kemia.io.json.readReaction = function(arg) {
   }var rxn = new kemia.model.Reaction;
   var reactants = goog.array.map(jrxn["reactants"], kemia.io.json.readMolecule);
   var products = goog.array.map(jrxn["products"], kemia.io.json.readMolecule);
+  rxn.header = jrxn["header"];
   if(jrxn["arrows"]) {
     goog.array.forEach(jrxn["arrows"], function(arrow) {
       rxn.setArrow(kemia.io.json.readArrow(arrow))
     })
-  }rxn.header = jrxn["header"];
-  rxn.setReagentsText(jrxn["reagents_text"]);
+  }rxn.setReagentsText(jrxn["reagents_text"]);
   rxn.setConditionsText(jrxn["conditions_text"]);
-  if(jrxn["pluses"]) {
-    goog.array.forEach(jrxn["pluses"], function(plus) {
-      rxn.addPlus(kemia.io.json.readPlus(plus))
-    })
-  }goog.array.forEach(reactants, function(mol) {
+  goog.array.forEach(reactants, function(mol) {
     rxn.addReactant(mol)
   });
   goog.array.forEach(products, function(mol) {
     rxn.addProduct(mol)
   });
-  return rxn
+  if(!jrxn["arrows"]) {
+    rxn.centerArrow()
+  }if(jrxn["pluses"]) {
+    goog.array.forEach(jrxn["pluses"], function(plus) {
+      rxn.addPlus(kemia.io.json.readPlus(plus))
+    })
+  }else {
+    rxn.generatePluses(rxn.getReactants());
+    rxn.generatePluses(rxn.getProducts())
+  }return rxn
 };
 goog.exportSymbol("kemia.io.json.readReaction", kemia.io.json.readReaction);
 kemia.io.json.reactionToJson = function(rxn) {

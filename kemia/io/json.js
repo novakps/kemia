@@ -272,19 +272,29 @@ kemia.io.json.readReaction = function(arg) {
 	var reactants = goog.array.map(jrxn['reactants'], kemia.io.json.readMolecule)
 	var products = goog.array.map(jrxn['products'], kemia.io.json.readMolecule);
 
+	rxn.header = jrxn['header'];
+
 	if(jrxn['arrows']){
 		goog.array.forEach(jrxn['arrows'], function(arrow){
 			rxn.setArrow(kemia.io.json.readArrow(arrow));
 		});
-	} else {
-		rxn.centerArrow();
-	}
-	
-	;
-	rxn.header = jrxn['header'];
+	} 
+
 	rxn.setReagentsText( jrxn['reagents_text']);
 	rxn.setConditionsText( jrxn['conditions_text']);
+
+	goog.array.forEach(reactants, function(mol){
+		rxn.addReactant(mol);
+	});
 	
+	goog.array.forEach(products, function(mol){
+		rxn.addProduct(mol);
+	});
+
+	if(!jrxn['arrows']){
+		rxn.centerArrow();
+	}
+
 	if(jrxn['pluses']){
 		goog.array.forEach(jrxn['pluses'], function(plus){
 			rxn.addPlus(kemia.io.json.readPlus(plus));
@@ -293,13 +303,6 @@ kemia.io.json.readReaction = function(arg) {
 		rxn.generatePluses(rxn.getReactants());
 		rxn.generatePluses(rxn.getProducts());
 	}
-	goog.array.forEach(reactants, function(mol){
-		rxn.addReactant(mol);
-	});
-
-	goog.array.forEach(products, function(mol){
-		rxn.addProduct(mol);
-	});
 
 	return rxn;
 };

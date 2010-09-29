@@ -47,6 +47,7 @@ function initPage(){
 	c.setCapturing(true); 
 
 	var toolbar = kemia.controller.DefaultToolbar.makeDefaultToolbar(goog.dom.getElement('reactionEditorToolbar'));  
+
 	var model = kemia.io.json.readReaction(reactionDrawing); 
 	
 	var editor = new kemia.controller.ReactionEditor(goog.dom.getElement('reactionEditorContainer'),{background : {color : 'white'}});
@@ -64,8 +65,8 @@ function initPage(){
 	editor.registerPlugin(new kemia.controller.plugins.Cleanup());
 	
     var toolbarController = new kemia.controller.ToolbarController(editor, toolbar);
-	editor.disablePlugins();
-	toolbar.setVisible(false);
+//	editor.disablePlugins();
+//	toolbar.setVisible(false);
 	
 	editor.setModels([model]);
 

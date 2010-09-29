@@ -214,10 +214,7 @@ kemia.model.NeighborList.reactionsToNeighbors = function(reactions) {
 					return {
 						obj : a,
 						getCenter : function() {
-						var midPoint = goog.math.Vec2
-						.fromCoordinate(goog.math.Coordinate.sum(
-								a.source, a.target));
-						return midPoint.scale(0.5);
+						return a.getCenter();
 					},
 					getDistance : function(point) {
 						var line = new goog.math.Line(a.source.x,
@@ -225,7 +222,7 @@ kemia.model.NeighborList.reactionsToNeighbors = function(reactions) {
 								a.target.y);
 						return goog.math.Coordinate.distance(line
 								.getClosestSegmentPoint(point.x, point.y),
-								point);
+							point);
 					}
 					};
 				})

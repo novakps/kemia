@@ -52,7 +52,7 @@ kemia.controller.plugins.Erase.prototype.execCommandInternal = function(
 	this.isActive = active;
 };
 
-kemia.controller.plugins.Erase.CURSOR_STYLE = 'url("../../../../images/erase-cursor-32.png") 0 32, url("../../images/erase-cursor-32.png") 0 32, hand';
+kemia.controller.plugins.Erase.CURSOR_STYLE = 'url("../../elements/images/erase-cursor-32.png") 0 32,  hand';
 
 kemia.controller.plugins.Erase.prototype.handleMouseMove = function(e) {
 
