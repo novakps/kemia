@@ -68,11 +68,19 @@ kemia.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
 	buttons.push(new goog.ui.ToolbarSeparator());
 	
 	var move = kemia.controller.ToolbarFactory.makeToggleButton(
-			kemia.controller.plugins.Move.COMMAND, 'Move', '', goog
+			kemia.controller.plugins.Move.COMMAND.MOVE, 'Move', '', goog
 					.getCssName('tr-icon')
 					+ ' ' + goog.getCssName('tr-move'));
 	move.queryable = true;
 	buttons.push(move);
+	
+	var rotate = kemia.controller.ToolbarFactory.makeToggleButton(
+			kemia.controller.plugins.Move.COMMAND.ROTATE, 'Rotate', '', goog
+					.getCssName('tr-icon')
+					+ ' ' + goog.getCssName('tr-rotate'));
+	rotate.queryable = true;
+	buttons.push(rotate);
+	
 	var erase = kemia.controller.ToolbarFactory.makeToggleButton(
 			kemia.controller.plugins.Erase.COMMAND, 'Erase', '', goog
 					.getCssName('tr-icon')

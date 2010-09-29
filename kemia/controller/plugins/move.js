@@ -8,7 +8,8 @@ goog.require('goog.debug.Logger');
  */
 kemia.controller.plugins.Move = function() {
 	kemia.controller.Plugin.call(this);
-	this.isActive = true;
+	this.isActive = {};
+	this.isActive[kemia.controller.plugins.Move.COMMAND.MOVE] = true;
 	this.isDragging = false;
 }
 goog.inherits(kemia.controller.plugins.Move, kemia.controller.Plugin);
@@ -16,26 +17,44 @@ goog.exportSymbol('kemia.controller.plugins.Move',
 		kemia.controller.plugins.Move);
 
 /**
- * Command implemented by this plugin.
+ * Commands implemented by this plugin.
+ * 
+ * @enum {string}
  */
-kemia.controller.plugins.Move.COMMAND = 'move';
+kemia.controller.plugins.Move.COMMAND = {
+		MOVE : 'move',
+		ROTATE : 'rotate'
+}
+
+/**
+ * Inverse map of execCommand strings to
+ * {@link kemia.controller.plugins.Move.COMMAND} constants. Used to determine
+ * whether a string corresponds to a command this plugin handles
+ * 
+ * @type {Object}
+ * @private
+ */
+kemia.controller.plugins.Move.SUPPORTED_COMMANDS_ = goog.object
+		.transpose(kemia.controller.plugins.Move.COMMAND);
 
 kemia.controller.plugins.Move.ROTATE_CURSOR_STYLE = 'url("../../elements/images/rotate-cursor-32.png") 16 16,  pointer';
 
 /** @inheritDoc */
-kemia.controller.plugins.Move.prototype.isSupportedCommand = function(command) {
-	return command == kemia.controller.plugins.Move.COMMAND;
+kemia.controller.plugins.Move.prototype.isSupportedCommand = function(
+		command) {
+	return command in kemia.controller.plugins.Move.SUPPORTED_COMMANDS_;
 };
 
 /** @inheritDoc */
 kemia.controller.plugins.Move.prototype.getTrogClassId = goog.functions
-		.constant(kemia.controller.plugins.Move.COMMAND);
+		.constant('move');
 
 /**
  * reset to default state called when another plugin is made active
  */
 kemia.controller.plugins.Move.prototype.resetState = function() {
-	this.isActive = false;
+	this.isActive[kemia.controller.plugins.Move.COMMAND.MOVE] = false;
+	this.isActive[kemia.controller.plugins.Move.COMMAND.ROTATE] = false;
 }
 
 /**
@@ -47,19 +66,33 @@ kemia.controller.plugins.Move.prototype.resetState = function() {
  */
 kemia.controller.plugins.Move.prototype.execCommandInternal = function(command,
 		value, active) {
-	this.isActive = active;
+// this.logger.info(command + " " + active);
+	this.isActive[command] = active;
 };
 
 kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 
-	if (this.isActive && !this.isDragging) {
+	if ((this.isActive[kemia.controller.plugins.Move.COMMAND.MOVE] || 
+			this.isActive[kemia.controller.plugins.Move.COMMAND.ROTATE]) && 
+			!this.isDragging) {
 		var target = this.editorObject.findTarget(e);
 		this.editorObject.getOriginalElement().style.cursor = 'default';
 		if (e.currentTarget.highlightGroup) {
 			e.currentTarget.highlightGroup.clear();
 		}
-		if (target instanceof kemia.model.Atom) {
-			if (!e.shiftKey) {
+		if (this.isActive[kemia.controller.plugins.Move.COMMAND.ROTATE]){
+			if (target instanceof kemia.model.Molecule) {
+				this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Move.ROTATE_CURSOR_STYLE;
+				if (!e.currentTarget.highlightGroup) {
+					e.currentTarget.highlightGroup = this.highlightMolecule(target);
+				} else {
+					e.currentTarget.highlightGroup = this.highlightMolecule(target,
+							e.currentTarget.highlightGroup);
+				}
+				return true;
+			}
+		} else {
+			if (target instanceof kemia.model.Atom) {
 				this.editorObject.getOriginalElement().style.cursor = 'move';
 				if (!e.currentTarget.highlightGroup) {
 					e.currentTarget.highlightGroup = this.highlightAtom(target);
@@ -68,9 +101,7 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 							e.currentTarget.highlightGroup);
 				}
 				return true;
-			}
-		} else if (target instanceof kemia.model.Bond) {
-			if (!e.shiftKey) {
+			} else if (target instanceof kemia.model.Bond) {
 				this.editorObject.getOriginalElement().style.cursor = 'move';
 				if (!e.currentTarget.highlightGroup) {
 					e.currentTarget.highlightGroup = this.highlightBond(target);
@@ -79,97 +110,106 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 							e.currentTarget.highlightGroup);
 				}
 				return true;
-			}
-		} else if (target instanceof kemia.model.Molecule) {
-			if (e.shiftKey) {
-				this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Move.ROTATE_CURSOR_STYLE;
-			} else {
-				this.editorObject.getOriginalElement().style.cursor = 'move';
-			}
-			if (!e.currentTarget.highlightGroup) {
-				e.currentTarget.highlightGroup = this.highlightMolecule(target);
-			} else {
-				e.currentTarget.highlightGroup = this.highlightMolecule(target,
-						e.currentTarget.highlightGroup);
-			}
-			return true;
-		} else if (target instanceof kemia.model.Arrow) {
-			if (!e.shiftKey) {
+			} else if (target instanceof kemia.model.Molecule) {
 				this.editorObject.getOriginalElement().style.cursor = 'move';
 				if (!e.currentTarget.highlightGroup) {
-					e.currentTarget.highlightGroup = this
-							.highlightArrow(target);
+					e.currentTarget.highlightGroup = this.highlightMolecule(target);
 				} else {
-					e.currentTarget.highlightGroup = this.highlightArrow(
-							target, e.currentTarget.highlightGroup);
-				}
-				return true;
-			}
-		} else if (target instanceof kemia.model.Plus) {
-			if (!e.shiftKey) {
-				this.editorObject.getOriginalElement().style.cursor = 'move';
-				if (!e.currentTarget.highlightGroup) {
-					e.currentTarget.highlightGroup = this.highlightPlus(target);
-				} else {
-					e.currentTarget.highlightGroup = this.highlightPlus(target,
+					e.currentTarget.highlightGroup = this.highlightMolecule(target,
 							e.currentTarget.highlightGroup);
 				}
 				return true;
+			} else if (target instanceof kemia.model.Arrow) {
+				if (!e.shiftKey) {
+					this.editorObject.getOriginalElement().style.cursor = 'move';
+					if (!e.currentTarget.highlightGroup) {
+						e.currentTarget.highlightGroup = this
+						.highlightArrow(target);
+					} else {
+						e.currentTarget.highlightGroup = this.highlightArrow(
+								target, e.currentTarget.highlightGroup);
+					}
+					return true;
+				}
+			} else if (target instanceof kemia.model.Plus) {
+				if (!e.shiftKey) {
+					this.editorObject.getOriginalElement().style.cursor = 'move';
+					if (!e.currentTarget.highlightGroup) {
+						e.currentTarget.highlightGroup = this.highlightPlus(target);
+					} else {
+						e.currentTarget.highlightGroup = this.highlightPlus(target,
+								e.currentTarget.highlightGroup);
+					}
+					return true;
+				}
 			}
 		}
 		return false;
-
 	}
-
 }
 
 kemia.controller.plugins.Move.prototype.handleMouseDown = function(e) {
 
-	if (this.isActive) {
+	if (this.isActive[kemia.controller.plugins.Move.COMMAND.MOVE] || 
+			this.isActive[kemia.controller.plugins.Move.COMMAND.ROTATE]) {
 		if (e.currentTarget.highlightGroup) {
 			e.currentTarget.highlightGroup.clear();
 		}
 		this.isDragging = true;
 		var target = this.editorObject.findTarget(e);
-		if (target instanceof kemia.model.Atom) {
-			var atom = target;
-			this.editorObject.dispatchBeforeChange();
-			this.dragAtom(e, atom);
-			this.editorObject.dispatchChange();
-			return true;
-		}
-		if (target instanceof kemia.model.Bond) {
-			var bond = target;
-			this.editorObject.dispatchBeforeChange();
-			this.dragBond(e, bond);
-			this.editorObject.dispatchChange();
-			return true;
-		}
-		if (target instanceof kemia.model.Molecule) {
-			var molecule = target;
-			this.editorObject.dispatchBeforeChange();
-			if (e.shiftKey) {
+		
+		if(this.isActive[kemia.controller.plugins.Move.COMMAND.ROTATE]){
+			if (target instanceof kemia.model.Molecule) {
+				var molecule = target;
+				this.editorObject.dispatchBeforeChange();
 				this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Move.ROTATE_CURSOR_STYLE;
 				this.rotateMolecule(e, target);
-			} else {
-				this.dragMolecule(e, target);
+				this.editorObject.dispatchChange();
+				return true;
 			}
-			this.editorObject.dispatchChange();
-			return true;
 		}
-		if (target instanceof kemia.model.Plus) {
-			var plus = target;
-			this.editorObject.dispatchBeforeChange();
-			this.dragPlus(e, plus);
-			this.editorObject.dispatchChange();
-			return true;
-		}
-		if (target instanceof kemia.model.Arrow) {
-			var arrow = target;
-			this.editorObject.dispatchBeforeChange();
-			this.dragArrow(e, arrow);
-			this.editorObject.dispatchChange();
-			return true;
+		
+		if(this.isActive[kemia.controller.plugins.Move.COMMAND.MOVE]){
+			if (target instanceof kemia.model.Atom) {
+				var atom = target;
+				this.editorObject.dispatchBeforeChange();
+				this.dragAtom(e, atom);
+				this.editorObject.dispatchChange();
+				return true;
+			}
+			if (target instanceof kemia.model.Bond) {
+				var bond = target;
+				this.editorObject.dispatchBeforeChange();
+				this.dragBond(e, bond);
+				this.editorObject.dispatchChange();
+				return true;
+			}
+			if (target instanceof kemia.model.Molecule) {
+				var molecule = target;
+				this.editorObject.dispatchBeforeChange();
+				if (e.shiftKey) {
+					this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Move.ROTATE_CURSOR_STYLE;
+					this.rotateMolecule(e, target);
+				} else {
+					this.dragMolecule(e, target);
+				}
+				this.editorObject.dispatchChange();
+				return true;
+			}
+			if (target instanceof kemia.model.Plus) {
+				var plus = target;
+				this.editorObject.dispatchBeforeChange();
+				this.dragPlus(e, plus);
+				this.editorObject.dispatchChange();
+				return true;
+			}
+			if (target instanceof kemia.model.Arrow) {
+				var arrow = target;
+				this.editorObject.dispatchBeforeChange();
+				this.dragArrow(e, arrow);
+				this.editorObject.dispatchChange();
+				return true;
+			}
 		}
 	}
 	return false;
@@ -287,11 +327,8 @@ kemia.controller.plugins.Move.prototype.highlightPlus = function(plus,
 
 /** @inheritDoc */
 kemia.controller.plugins.Move.prototype.queryCommandValue = function(command) {
-	var state = null;
-	if (command == kemia.controller.plugins.Move.COMMAND) {
-		state = this.isActive;
-	}
-	return state;
+
+		return this.isActive[command];
 };
 
 /**

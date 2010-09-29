@@ -19,8 +19,7 @@ goog.require('goog.array');
 /**
  * partitions array of rings into connected lists
  * 
- * @param {Array.
- *            <kemia.ring.Ring>} rings list of rings to group into connected
+ * @param {Array.<kemia.ring.Ring>} rings list of rings to group into connected
  *            arrays
  * @return {Array.<Array.<kemia.ring.Ring>>} array of arrays of Rings
  */
@@ -94,8 +93,7 @@ kemia.ring.RingPartitioner.directConnectedRings = function(ring, rings){
 /**
  * partitions array of rings into connected lists
  * 
- * @param {Array.
- *            <kemia.ring.Ring>} rings list of rings to group into connected
+ * @param {Array.<kemia.ring.Ring>} rings list of rings to group into connected
  *            arrays
  * @return {Array.<Array.<kemia.ring.Ring>>} array of arrays of Rings
  */
