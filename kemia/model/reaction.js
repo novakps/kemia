@@ -351,7 +351,7 @@ kemia.model.Reaction.prototype.centerArrow = function(){
 		box1 = new goog.math.Box(box2.top, box2.left - 1, box2.bottom, box2.left - 1);
 	}
 	if (!box2) {
-		box = new goog.math.Box(box1.top, box1.right + 1, box1.bottom, box1.right + 1);
+		box2 = new goog.math.Box(box1.top, box1.right + 1, box1.bottom, box1.right + 1);
 	}
 	
 	var right_top = new goog.math.Vec2(box1.right, box1.top);
