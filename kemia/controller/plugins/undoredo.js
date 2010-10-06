@@ -2,7 +2,6 @@ goog.provide('kemia.controller.plugins.UndoRedo');
 goog.require('goog.debug.Logger');
 goog.require('goog.json');
 
-
 /**
  * @constructor
  * @extends{kemian.controller.Plugin}s
@@ -68,7 +67,7 @@ kemia.controller.plugins.UndoRedo.prototype.handleKeyboardShortcut = function(e)
 					return obj.id == e.identifier
 				});
 		if (shortcut.id == 'undo') {
-			
+
 			this.undo();
 			return true;
 		}
@@ -162,9 +161,14 @@ kemia.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 	var serialized = "[]";
 	if (content) {
 		// serialize to json object
-		serialized = goog.array.map(content,
-				kemia.io.json.reactionToJson);
-		
+		serialized = goog.array.map(content, function(model) {
+			if (model instanceof kemia.model.Reaction) {
+				return kemia.io.json.reactionToJson(model);
+			} else if (model instanceof kemia.model.Molecule) {
+				return kemia.io.json.moleculeToJson(model);
+			}
+		});
+
 		// this.logger.info(serialized);
 	}
 	serialized._timestamp = goog.now();
@@ -280,8 +284,8 @@ kemia.controller.plugins.UndoRedo.prototype.shiftState_ = function(fromStack,
 		// Push the current state into the to-stack.
 		this.logger.info("    state timestamp " + state._timestamp);
 		toStack.push(state);
-		this.editorObject.setModels(goog.array.map(
-				state, kemia.io.json.readReaction));
+		this.editorObject.setModels(goog.array.map(state,
+				kemia.io.json.readReaction));
 
 		// If either stack transitioned between 0 and 1 in size then the ability
 		// to do an undo or redo has changed and we must dispatch a state

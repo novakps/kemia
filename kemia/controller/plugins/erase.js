@@ -148,23 +148,29 @@ kemia.controller.plugins.Erase.prototype.eraseAtom = function(atom) {
 };
 
 kemia.controller.plugins.Erase.prototype.eraseBond = function(bond) {
+	var models = this.editorObject.getModels();
 	var molecule = bond.molecule;
 	molecule.removeBond(bond);
 	var fragments = molecule.getFragments();
 
 	var reaction = molecule.reaction;
-	if (reaction.isReactant(molecule)) {
-		goog.array.forEach(fragments, function(mol) {
-			reaction.addReactant(mol);
-		});
-	} else if (reaction.isProduct(molecule)) {
-		goog.array.forEach(fragments, function(mol) {
-			reaction.addProduct(mol);
-		});
+	if (reaction){
+		if (reaction.isReactant(molecule)) {
+			goog.array.forEach(fragments, function(mol) {
+				reaction.addReactant(mol);
+			});
+		} else if (reaction.isProduct(molecule)) {
+			goog.array.forEach(fragments, function(mol) {
+				reaction.addProduct(mol);
+			});
+		}
+		reaction.removeMolecule(molecule);
+	} else {
+		goog.array.remove(models, molecule);
+		goog.array.concat(models, fragments);
 	}
-	reaction.removeMolecule(molecule);
 
-	this.editorObject.setModels(this.editorObject.getModels());
+	this.editorObject.setModels(models);
 
 };
 

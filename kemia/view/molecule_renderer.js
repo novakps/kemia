@@ -33,6 +33,10 @@ goog.inherits(kemia.view.MoleculeRenderer, kemia.view.Renderer);
 kemia.view.MoleculeRenderer.prototype.logger = goog.debug.Logger
 		.getLogger('kemia.view.MoleculeRenderer');
 
+kemia.view.MoleculeRenderer.prototype.setScaleFactor = function(scale){
+	this.scale_factor = scale;
+}
+
 kemia.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 	molecule.resetRingCenters();
 

@@ -305,13 +305,13 @@ kemia.controller.plugins.Move.prototype.highlightBond = function(bond,
 
 kemia.controller.plugins.Move.prototype.highlightMolecule = function(molecule,
 		opt_group) {
-	if (molecule.reaction.isProduct(molecule)) {
-		return this.editorObject.reactionRenderer.moleculeRenderer.highlightOn(
-				molecule, 'purple', opt_group);
-	} else {
-		return this.editorObject.reactionRenderer.moleculeRenderer.highlightOn(
-				molecule, '#3366ff', opt_group);
-	}
+	var color = '#3366ff';
+
+	if (molecule.reaction && molecule.reaction.isProduct(molecule)) {
+		color='purple'; 
+	} 
+	return this.editorObject.reactionRenderer.moleculeRenderer.highlightOn(
+			molecule, color, opt_group);
 }
 
 kemia.controller.plugins.Move.prototype.highlightArrow = function(arrow,
@@ -394,9 +394,15 @@ kemia.controller.plugins.Move.prototype.dragAtom = function(e, atom) {
 						d.atom.molecule.group.clear();
 						var trans = new goog.graphics.AffineTransform.getTranslateInstance(
 								e.clientX - d._prevX, e.clientY - d._prevY);
+						var inverse;
+						if (d.editor.reactionRenderer.transform){
+							inverse = d.editor.reactionRenderer.transform
+							.createInverse();
+						} else {
+							inverse = d.editor.reactionRenderer.moleculeRenderer.transform.createInverse();
+						}
 
-						var coords = d.editor.reactionRenderer.transform
-								.createInverse().transformCoords(
+						var coords = inverse.transformCoords(
 										[
 												new goog.math.Coordinate(
 														e.clientX, e.clientY),
@@ -409,7 +415,7 @@ kemia.controller.plugins.Move.prototype.dragAtom = function(e, atom) {
 
 						d.editor.reactionRenderer.moleculeRenderer.render(
 								d.atom.molecule,
-								d.editor.reactionRenderer.transform);
+								d.editor.reactionRenderer.moleculeRenderer.transform);
 
 						d._prevX = e.clientX;
 						d._prevY = e.clientY;
@@ -438,9 +444,15 @@ kemia.controller.plugins.Move.prototype.dragBond = function(e, bond) {
 						d.bond.molecule.group.clear();
 						var trans = new goog.graphics.AffineTransform.getTranslateInstance(
 								e.clientX - d._prevX, e.clientY - d._prevY);
+						var inverse;
+						if (d.editor.reactionRenderer.transform){
+							inverse = d.editor.reactionRenderer.transform
+							.createInverse();
+						} else {
+							inverse = d.editor.reactionRenderer.moleculeRenderer.transform.createInverse();
+						}
 
-						var coords = d.editor.reactionRenderer.transform
-								.createInverse().transformCoords(
+						var coords = inverse.transformCoords(
 										[
 												new goog.math.Coordinate(
 														e.clientX, e.clientY),
@@ -589,13 +601,18 @@ kemia.controller.plugins.Move.prototype.dragMolecule = function(e, molecule) {
 						// move graphic
 						d.molecule.group.setTransformation(deltaX, deltaY, 0,
 								0, 0);
+						
+						var trans;
+						if (d.editor.reactionRenderer.transform){
+							trans = d.editor.reactionRenderer.transform;
+						} else {
+							trans = d.editor.reactionRenderer.moleculeRenderer.transform;
+						}
 
 						// move molecule
-						var diff = new goog.math.Vec2(deltaDeltaX
-								/ d.editor.reactionRenderer.transform
-										.getScaleX(), deltaDeltaY
-								/ d.editor.reactionRenderer.transform
-										.getScaleY());
+						var diff = new goog.math.Vec2(
+								deltaDeltaX / trans.getScaleX(), 
+								deltaDeltaY / trans.getScaleY());
 						d.molecule.translate( diff);
 
 						// d._prev = mouse_coord;
@@ -666,9 +683,15 @@ kemia.controller.plugins.Move.prototype.findAtomMergePairs = function(molecule) 
 kemia.controller.plugins.Move.prototype.rotateMolecule = function(e, molecule) {
 
 	var d = new goog.fx.Dragger(this.editorObject.getOriginalElement());
+	
+	var trans;
+	if (this.editorObject.reactionRenderer.transform){
+		trans = this.editorObject.reactionRenderer.transform;
+	} else {
+		trans = this.editorObject.reactionRenderer.moleculeRenderer.transform;
+	}
 
-	d._center = this.editorObject.reactionRenderer.transform
-			.transformCoords( [ molecule.getCenter() ])[0];
+	d._center = trans.transformCoords( [ molecule.getCenter() ])[0];
 	d._start = kemia.controller.ReactionEditor.getMouseCoords(e);
 	d._start_angle = goog.math.angle(d._center.x, d._center.y, d._start.x,
 			d._start.y);

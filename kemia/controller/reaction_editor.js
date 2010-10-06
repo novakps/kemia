@@ -149,7 +149,7 @@ kemia.controller.ReactionEditor.prototype.getScaleFactor = function() {
 
 kemia.controller.ReactionEditor.prototype.setScaleFactor = function(scale) {
 	this.reactionRenderer.transform = undefined; // to force new transform
-	this.reactionRenderer.scale_factor = scale;
+	this.reactionRenderer.setScaleFactor( scale);
 }
 
 kemia.controller.ReactionEditor.prototype.setModels = function(models) {
@@ -199,8 +199,13 @@ kemia.controller.ReactionEditor.prototype.getModels = function() {
  * This dispatches the beforechange event on the editable reaction editor
  */
 kemia.controller.ReactionEditor.prototype.dispatchBeforeChange = function() {
-	this._serialized = goog.json.serialize(goog.array.map(this.getModels(),
-			kemia.io.json.reactionToJson));
+	this._serialized = goog.json.serialize(goog.array.map(this.getModels(), function(model){
+		if (model instanceof kemia.model.Reaction){
+			return kemia.io.json.reactionToJson(model);
+		} else if (model instanceof kemia.model.Molecule){
+			return kemia.io.json.moleculeToJson(model);
+		}
+	}));
 	this.dispatchEvent(kemia.controller.ReactionEditor.EventType.BEFORECHANGE);
 };
 
@@ -384,15 +389,26 @@ kemia.controller.ReactionEditor.prototype.findTarget = function(e) {
 }
 
 kemia.controller.ReactionEditor.prototype.getAtomicCoords = function(
-		graphicsCoord) {
-	var trans = this.reactionRenderer.transform
-			.createInverse();
+		graphicsCoord) {	
+	var trans;
+	if (this.reactionRenderer.transform){
+		trans = this.reactionRenderer.transform
+		.createInverse();
+	} else {
+		trans = this.reactionRenderer.moleculeRenderer.transform.createInverse();
+	}
 	return trans.transformCoords( [ graphicsCoord ])[0];
 }
 
 kemia.controller.ReactionEditor.prototype.getGraphicsCoords = function(
 		atomicCoords) {
-	var trans = this.reactionRenderer.transform;
+	var trans;
+	if (this.reactionRenderer.transform){
+		trans = this.reactionRenderer.transform
+		.createInverse();
+	} else {
+		trans = this.reactionRenderer.moleculeRenderer.transform.createInverse();
+	}
 	return trans.transformCoords( [ atomicCoords ])[0];
 }
 
@@ -419,8 +435,13 @@ kemia.controller.ReactionEditor.getOffsetCoords = function(elem, posx, posy) {
 }
 
 kemia.controller.ReactionEditor.prototype.findTargetList = function(e) {
-	var trans = this.reactionRenderer.transform
-			.createInverse();
+	var trans;
+	if (this.reactionRenderer.transform){
+		trans = this.reactionRenderer.transform
+		.createInverse();
+	} else {
+		trans = this.reactionRenderer.moleculeRenderer.transform.createInverse();
+	}
 
 	var pos = kemia.controller.ReactionEditor.getMouseCoords(e)
 

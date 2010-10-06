@@ -97,6 +97,11 @@ kemia.view.ReactionRenderer.prototype.logger = goog.debug.Logger
 		.getLogger('kemia.view.ReactionRenderer');
 
 
+kemia.view.ReactionRenderer.prototype.setScaleFactor = function(scale){
+	this.scale_factor = scale;
+	this.moleculeRenderer.setScaleFactor(scale);
+}
+
 
 /**
  * A default configuration for renderer
