@@ -277,7 +277,7 @@ kemia.controller.Plugin.prototype.execCommand = function(command, var_args) {
  * @return {boolean} If true, field will not dispatch change events for commands
  *         of this type.
  */
-kemia.controller.Plugin.prototype.isSilentCommand = goog.functions.FALSE;
+kemia.controller.Plugin.prototype.isSilentCommand = goog.functions.TRUE;
 
 /**
  * Whether the string corresponds to a command this plugin handles.

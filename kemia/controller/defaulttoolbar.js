@@ -129,7 +129,10 @@ kemia.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
 			atom_select.setValue(value);
 		}
 	}
-	var atom_menu = new goog.ui.Menu();
+	var atom_menu = new goog.ui.Menu();	atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(
+			goog.dom.TagName.DIV, {
+				style : "color:grey"
+			}, 'H')));
 	atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
 				style : "color:black"

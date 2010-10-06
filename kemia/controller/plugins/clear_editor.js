@@ -48,3 +48,6 @@ kemia.controller.plugins.ClearEditor.prototype.execCommandInternal = function(
 		this.logger.info(e);
 	}
 };
+
+/** @inheritDoc */
+kemia.controller.plugins.ClearEditor.prototype.isSilentCommand = goog.functions.FALSE;

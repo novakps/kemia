@@ -15392,7 +15392,8 @@ kemia.controller.plugins.Move.prototype.handleMouseDown = function(e) {
   if(this.isActive[kemia.controller.plugins.Move.COMMAND.MOVE] || this.isActive[kemia.controller.plugins.Move.COMMAND.ROTATE]) {
     if(e.currentTarget.highlightGroup) {
       e.currentTarget.highlightGroup.clear()
-    }this.isDragging = true;
+    }e.currentTarget.highlightGroup = undefined;
+    this.isDragging = true;
     var target = this.editorObject.findTarget(e);
     if(this.isActive[kemia.controller.plugins.Move.COMMAND.ROTATE]) {
       if(target instanceof kemia.model.Molecule) {

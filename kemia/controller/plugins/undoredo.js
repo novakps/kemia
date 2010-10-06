@@ -2,10 +2,6 @@ goog.provide('kemia.controller.plugins.UndoRedo');
 goog.require('goog.debug.Logger');
 goog.require('goog.json');
 
-// goog.exportSymbol('kemia.controller.plugins.UndoRedo.COMMAND.UNDO',
-// kemia.controller.plugins.UndoRedo.COMMAND.UNDO);
-// goog.exportSymbol('kemia.controller.plugins.UndoRedo.COMMAND.REDO',
-// kemia.controller.plugins.UndoRedo.COMMAND.REDO);
 
 /**
  * @constructor
@@ -39,7 +35,7 @@ kemia.controller.plugins.UndoRedo = function() {
 	 */
 	this.redoStack_ = [];
 
-	this.currentState_ = null;
+	this.currentState_ = [];
 }
 goog.inherits(kemia.controller.plugins.UndoRedo, kemia.controller.Plugin);
 goog.exportSymbol('kemia.controller.plugins.UndoRedo',
@@ -166,11 +162,12 @@ kemia.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 	var serialized = "[]";
 	if (content) {
 		// serialize to json object
-		serialized = goog.json.serialize(goog.array.map(editorObj.getModels(),
-				kemia.io.json.reactionToJson));
+		serialized = goog.array.map(content,
+				kemia.io.json.reactionToJson);
 		
 		// this.logger.info(serialized);
 	}
+	serialized._timestamp = goog.now();
 
 	var currentState = this.currentState_;
 
@@ -249,6 +246,7 @@ kemia.controller.plugins.UndoRedo.prototype.redo = function() {
  *         possible to perform an undo operation.
  */
 kemia.controller.plugins.UndoRedo.prototype.hasUndoState = function() {
+	this.logger.info('hasUndoState ' + this.undoStack_.length > 0);
 	return this.undoStack_.length > 0;
 };
 
@@ -257,6 +255,7 @@ kemia.controller.plugins.UndoRedo.prototype.hasUndoState = function() {
  *         possible to perform a redo operation.
  */
 kemia.controller.plugins.UndoRedo.prototype.hasRedoState = function() {
+	this.logger.info('hasRedoState ' + this.redoStack_.length > 0);
 	return this.redoStack_.length > 0;
 };
 
@@ -279,9 +278,10 @@ kemia.controller.plugins.UndoRedo.prototype.shiftState_ = function(fromStack,
 	if (fromStack.length) {
 		var state = fromStack.pop();
 		// Push the current state into the to-stack.
+		this.logger.info("    state timestamp " + state._timestamp);
 		toStack.push(state);
 		this.editorObject.setModels(goog.array.map(
-				goog.json.unsafeParse(state), kemia.io.json.readReaction));
+				state, kemia.io.json.readReaction));
 
 		// If either stack transitioned between 0 and 1 in size then the ability
 		// to do an undo or redo has changed and we must dispatch a state
