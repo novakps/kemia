@@ -176,7 +176,11 @@ kemia.controller.plugins.Erase.prototype.eraseBond = function(bond) {
 
 kemia.controller.plugins.Erase.prototype.eraseMolecule = function(molecule) {
 	var reaction = molecule.reaction;
-	reaction.removeMolecule(molecule);
+	if(reaction){
+		reaction.removeMolecule(molecule);
+	} else {
+		goog.array.remove(this.editorObject.getModels(), molecule);
+	}
 	this.editorObject.setModels(this.editorObject.getModels());
 }
 

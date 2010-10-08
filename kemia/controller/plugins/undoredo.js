@@ -1,6 +1,7 @@
 goog.provide('kemia.controller.plugins.UndoRedo');
 goog.require('goog.debug.Logger');
 goog.require('goog.json');
+goog.require('goog.date.DateTime');
 
 /**
  * @constructor
@@ -153,10 +154,8 @@ kemia.controller.plugins.UndoRedo.prototype.handleBeforeChange_ = function(e) {
  */
 kemia.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 		editorObj) {
-	// this.logger.info("updateCurrentState_");
-	// this.logger.info(" undoStack_.length " + this.undoStack_.length);
-	// this.logger.info(" redoStack_.length " + this.redoStack_.length);
-
+	this.logger.info('updateCurrentState_  ');
+	this.logStackState();
 	var content = editorObj.getModels();
 	var serialized = "[]";
 	if (content) {
@@ -168,23 +167,31 @@ kemia.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 				return kemia.io.json.moleculeToJson(model);
 			}
 		});
-
-		// this.logger.info(serialized);
 	}
-	serialized._timestamp = goog.now();
+	serialized._timestamp = new goog.date.DateTime();
 
 	var currentState = this.currentState_;
 
 	if (currentState != serialized) {
-
 		this.addState(currentState);
 	}
 
 	this.currentState_ = serialized;
+	this.logStackState();
 
-	// this.logger.info(" undoStack_.length " + this.undoStack_.length);
-	// this.logger.info(" redoStack_.length " + this.redoStack_.length);
-};
+	this.logger.info('updateCurrentState_ -end ');
+
+	};
+
+	kemia.controller.plugins.UndoRedo.prototype.logStackState = function(){
+		var ts = "none";
+		if (this.currentState_ && this.currentState_._timestamp){
+			ts = this.currentState_._timestamp.toIsoTimeString();
+		}
+		this.logger.info(" currentState_ " + ts);
+		this.logger.info(" undoStack_ " + this.undoStack_.length + " [" + goog.array.map(this.undoStack_, function(s){if(s._timestamp){return s._timestamp.toIsoTimeString()} else {return 'none'}}) + "]");
+		this.logger.info(" redoStack_ " + this.redoStack_.length + " [" + goog.array.map(this.redoStack_, function(s){if(s._timestamp){return s._timestamp.toIsoTimeString()} else {return 'none'}}) + "]");
+	}
 
 /**
  * Add state to the undo stack. This clears the redo stack.
@@ -193,7 +200,8 @@ kemia.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
  *            state The state to add to the undo stack.
  */
 kemia.controller.plugins.UndoRedo.prototype.addState = function(state) {
-
+	this.logger.info('addState');
+	this.logStackState();
 	this.undoStack_.push(state);
 	if (this.undoStack_.length > this.maxUndoDepth_) {
 		this.undoStack_.shift();
@@ -214,6 +222,8 @@ kemia.controller.plugins.UndoRedo.prototype.addState = function(state) {
 			this.dispatchStateChange_();
 		}
 	}
+	this.logStackState();
+	this.logger.info('addState-end');
 };
 
 /**
@@ -233,7 +243,10 @@ kemia.controller.plugins.UndoRedo.prototype.dispatchStateChange_ = function() {
  */
 kemia.controller.plugins.UndoRedo.prototype.undo = function() {
 	this.logger.info('undo');
+	this.logStackState();
 	this.shiftState_(this.undoStack_, this.redoStack_);
+	this.logStackState();
+	this.logger.info('undo-end');
 };
 
 /**
@@ -242,7 +255,11 @@ kemia.controller.plugins.UndoRedo.prototype.undo = function() {
  * nothing.
  */
 kemia.controller.plugins.UndoRedo.prototype.redo = function() {
+	this.logger.info('redo');
+	this.logStackState();
 	this.shiftState_(this.redoStack_, this.undoStack_);
+	this.logStackState();
+	this.logger.info('redo-end');
 };
 
 /**
@@ -276,13 +293,10 @@ kemia.controller.plugins.UndoRedo.prototype.hasRedoState = function() {
 kemia.controller.plugins.UndoRedo.prototype.shiftState_ = function(fromStack,
 		toStack) {
 	this.logger.info("shiftState");
-
-	this.logger.info("    fromStack.length " + fromStack.length);
-	this.logger.info("    toStack.length " + toStack.length);
+	this.logStackState()
 	if (fromStack.length) {
 		var state = fromStack.pop();
 		// Push the current state into the to-stack.
-		this.logger.info("    state timestamp " + state._timestamp);
 		toStack.push(state);
 		this.editorObject.setModels(goog.array.map(state,
 				kemia.io.json.readReaction));
@@ -290,12 +304,13 @@ kemia.controller.plugins.UndoRedo.prototype.shiftState_ = function(fromStack,
 		// If either stack transitioned between 0 and 1 in size then the ability
 		// to do an undo or redo has changed and we must dispatch a state
 		// change.
-		this.logger.info("    fromStack.length " + fromStack.length);
-		this.logger.info("    toStack.length " + toStack.length);
-		if (fromStack.length == 0 || toStack.length == 1) {
-			this.dispatchStateChange_();
-		}
+
+//		if (fromStack.length == 0 || toStack.length == 1) {
+//			this.dispatchStateChange_();
+//		}
 	}
+	this.logStackState()
+	this.logger.info("shiftState-end");
 };
 
 /** @inheritDoc */

@@ -202,16 +202,27 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 };
 
 kemia.controller.plugins.BondEdit.prototype.createMolecule = function(pos) {
-	var coord = this.editorObject.reactionRenderer.transform.createInverse()
-			.transformCoords( [ pos ])[0];
+	var trans;
+	if (this.editorObject.reactionRenderer.transform){
+		trans = this.editorObject.reactionRenderer.transform;
+	} else {
+		trans = this.editorObject.reactionRenderer.moleculeRenderer.transform;
+	}
+	var coord = trans.createInverse().transformCoords( [ pos ])[0];
 	var atom = new kemia.model.Atom("C", coord.x, coord.y);
 	var molecule = new kemia.model.Molecule();
 	molecule.addAtom(atom);
 	this.addBondToAtom(atom);
-	var reaction;
+
 	if (this.editorObject.getModels().length > 0) {
-		reaction = this.editorObject.getModels()[0];
-		reaction.addMolecule(molecule);
+		var model = this.editorObject.getModels()[0];
+		if(model instanceof kemia.model.Reaction){
+			model.addMolecule(molecule);
+		} else {
+			goog.array.concat(this.editorObject.getModels(), molecule);
+		}
+	} else {
+		goog.array.concat(this.editorObject.getModels(), molecule);
 	}
 };
 
