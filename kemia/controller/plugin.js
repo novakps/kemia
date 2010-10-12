@@ -250,10 +250,9 @@ kemia.controller.Plugin.OPCODE = goog.object.transpose(goog.reflect.object(
 kemia.controller.Plugin.prototype.execCommand = function(command, var_args) {
 
 	var silent = this.isSilentCommand(command);
-	if (!silent) {
-
-		this.editorObject.dispatchBeforeChange();
-	}
+//	if (!silent) {
+//		this.editorObject.dispatchBeforeChange();
+//	}
 
 	try {
 		this.editorObject.resetQueryablePlugins();
@@ -277,7 +276,7 @@ kemia.controller.Plugin.prototype.execCommand = function(command, var_args) {
  * @return {boolean} If true, field will not dispatch change events for commands
  *         of this type.
  */
-kemia.controller.Plugin.prototype.isSilentCommand = goog.functions.TRUE;
+kemia.controller.Plugin.prototype.isSilentCommand = goog.functions.FALSE;
 
 /**
  * Whether the string corresponds to a command this plugin handles.

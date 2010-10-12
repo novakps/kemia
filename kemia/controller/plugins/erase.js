@@ -144,7 +144,7 @@ kemia.controller.plugins.Erase.prototype.eraseAtom = function(atom) {
 	if (molecule.atoms.length == 0) {
 		molecule.reaction.removeMolecule(molecule);
 	}
-	this.editorObject.setModels(this.editorObject.getModels());
+	this.editorObject.setModelsSilently(this.editorObject.getModels());
 };
 
 kemia.controller.plugins.Erase.prototype.eraseBond = function(bond) {
@@ -170,7 +170,7 @@ kemia.controller.plugins.Erase.prototype.eraseBond = function(bond) {
 		goog.array.concat(models, fragments);
 	}
 
-	this.editorObject.setModels(models);
+	this.editorObject.setModelsSilently(models);
 
 };
 
@@ -181,14 +181,14 @@ kemia.controller.plugins.Erase.prototype.eraseMolecule = function(molecule) {
 	} else {
 		goog.array.remove(this.editorObject.getModels(), molecule);
 	}
-	this.editorObject.setModels(this.editorObject.getModels());
+	this.editorObject.setModelsSilently(this.editorObject.getModels());
 }
 
 kemia.controller.plugins.Erase.prototype.erasePlus = function(plus) {
 	
 	var reaction = plus.reaction;
 	reaction.removePlus(plus);
-	this.editorObject.setModels(this.editorObject.getModels());
+	this.editorObject.setModelsSilently(this.editorObject.getModels());
 };
 
 /**

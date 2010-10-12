@@ -56,8 +56,8 @@ kemia.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
 					.getCssName('tr-icon')
 					+ ' ' + goog.getCssName('tr-undo'));
 	undo.queryable = true;
-// disable undo-redo until it works
 	buttons.push(undo);
+	
 	var redo = kemia.controller.DefaultToolbar.undoRedoButtonFactory_(
 			kemia.controller.plugins.UndoRedo.COMMAND.REDO, 'Redo', '', goog
 					.getCssName('tr-icon')

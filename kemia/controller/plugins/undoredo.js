@@ -146,17 +146,7 @@ kemia.controller.plugins.UndoRedo.prototype.handleBeforeChange_ = function(e) {
 
 };
 
-/**
- * Helper method for saving state.
- * 
- * @param {kemia.controller.ReactionEditor}
- *            edtiorObj The field object.
- * @private
- */
-kemia.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
-		editorObj) {
-	this.logger.info('updateCurrentState_  ');
-	this.logStackState();
+kemia.controller.plugins.UndoRedo.prototype.getContentState_ = function(editorObj){
 	var content = editorObj.getModels();
 	var serialized = "[]";
 	if (content) {
@@ -169,17 +159,32 @@ kemia.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 			}
 		});
 	}
+	return serialized;
+}
+
+/**
+ * Helper method for saving state.
+ * 
+ * @param {kemia.controller.ReactionEditor}
+ *            edtiorObj The field object.
+ * @private
+ */
+kemia.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
+		editorObj) {
+	this.logger.info('updateCurrentState_  ');
+	// this.logStackState();
+	var serialized = this.getContentState_(editorObj);
 
 	var currentState = this.currentState_;
 
 	if (currentState != serialized) {
-		this.addState(currentState);
+		this.addState(serialized);
 	}
 
 	this.currentState_ = serialized;
-	this.logStackState();
+// this.logStackState();
 
-	this.logger.info('updateCurrentState_ -end ');
+	this.logger.info('_end_updateCurrentState_ ');
 
 	};
 
@@ -192,9 +197,17 @@ kemia.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 				}, 0);
 			}, 0);
 		};
-		this.logger.info(" currentState_ " + atom_count(this.currentState_));
-		this.logger.info(" undoStack_ " + this.undoStack_.length + " [" + goog.array.map(this.undoStack_, atom_count) + "]");
-		this.logger.info(" redoStack_ " + this.redoStack_.length + " [" + goog.array.map(this.redoStack_, atom_count) + "]"); 
+		var msg = "    ";
+
+		msg +=" currentState_:" + atom_count(this.currentState_);
+		
+		if(this.undoStack_.length>0){
+			msg += " undoStack_:" + " [" + goog.array.map(this.undoStack_, atom_count) + "]";
+		}
+		if(this.redoStack_.length > 0){
+			msg+=" redoStack_:"+ " [" + goog.array.map(this.redoStack_, atom_count) + "]"; 
+		}
+		this.logger.info(msg);
 	}
 
 /**
@@ -205,7 +218,7 @@ kemia.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
  */
 kemia.controller.plugins.UndoRedo.prototype.addState = function(state) {
 	this.logger.info('addState');
-	this.logStackState();
+// this.logStackState();
 	this.undoStack_.push(state);
 	if (this.undoStack_.length > this.maxUndoDepth_) {
 		this.undoStack_.shift();
@@ -227,7 +240,7 @@ kemia.controller.plugins.UndoRedo.prototype.addState = function(state) {
 		}
 	}
 	this.logStackState();
-	this.logger.info('addState-end');
+	this.logger.info('_end_addState');
 };
 
 /**
@@ -247,10 +260,10 @@ kemia.controller.plugins.UndoRedo.prototype.dispatchStateChange_ = function() {
  */
 kemia.controller.plugins.UndoRedo.prototype.undo = function() {
 	this.logger.info('undo');
-	this.logStackState();
+// this.logStackState();
 	this.shiftState_(this.undoStack_, this.redoStack_);
-	this.logStackState();
-	this.logger.info('undo-end');
+// this.logStackState();
+	this.logger.info('_end_undo');
 };
 
 /**
@@ -260,10 +273,10 @@ kemia.controller.plugins.UndoRedo.prototype.undo = function() {
  */
 kemia.controller.plugins.UndoRedo.prototype.redo = function() {
 	this.logger.info('redo');
-	this.logStackState();
+// this.logStackState();
 	this.shiftState_(this.redoStack_, this.undoStack_);
-	this.logStackState();
-	this.logger.info('redo-end');
+// this.logStackState();
+	this.logger.info('_end_redo');
 };
 
 /**
@@ -271,7 +284,7 @@ kemia.controller.plugins.UndoRedo.prototype.redo = function() {
  *         possible to perform an undo operation.
  */
 kemia.controller.plugins.UndoRedo.prototype.hasUndoState = function() {
-	this.logger.info('hasUndoState ' + this.undoStack_.length > 0);
+// this.logger.info('hasUndoState ' + this.undoStack_.length > 0);
 	return this.undoStack_.length > 0;
 };
 
@@ -280,7 +293,7 @@ kemia.controller.plugins.UndoRedo.prototype.hasUndoState = function() {
  *         possible to perform a redo operation.
  */
 kemia.controller.plugins.UndoRedo.prototype.hasRedoState = function() {
-	this.logger.info('hasRedoState ' + this.redoStack_.length > 0);
+// this.logger.info('hasRedoState ' + this.redoStack_.length > 0);
 	return this.redoStack_.length > 0;
 };
 
@@ -297,41 +310,46 @@ kemia.controller.plugins.UndoRedo.prototype.hasRedoState = function() {
 kemia.controller.plugins.UndoRedo.prototype.shiftState_ = function(fromStack,
 		toStack) {
 	this.logger.info("shiftState");
-	this.logStackState()
+//	this.logStackState()
 	if (fromStack.length) {
 		var state = fromStack.pop();
 		// Push the current state into the to-stack.
 		toStack.push(state);
-		this.editorObject.setModels(goog.array.map(state,
-				kemia.io.json.readReaction));
+		var models = goog.array.map(state, function(s){
+			if (s.atoms){
+				return kemia.io.json.readMolecule(s);
+			} else {
+				return kemia.io.json.readReaction(s);
+			}
+		});
+
+		this.editorObject.setModelsSilently(models);
 
 		// If either stack transitioned between 0 and 1 in size then the ability
 		// to do an undo or redo has changed and we must dispatch a state
 		// change.
 
-//		if (fromStack.length == 0 || toStack.length == 1) {
-//			this.dispatchStateChange_();
-//		}
+		if (fromStack.length == 0 || toStack.length == 1) {
+			this.dispatchStateChange_();
+		}
 	}
 	this.logStackState()
-	this.logger.info("shiftState-end");
+	this.logger.info("_end_shiftState");
 };
 
 /** @inheritDoc */
 kemia.controller.plugins.UndoRedo.prototype.enable = function(editorObject) {
 	kemia.controller.plugins.UndoRedo.superClass_.enable.call(this,
 			editorObject);
-
+	this.logger.info('enable');
 	this.eventHandler = new goog.events.EventHandler(this);
 
 	this.eventHandler.listen(editorObject,
 			kemia.controller.ReactionEditor.EventType.BEFORECHANGE,
 			this.handleBeforeChange_);
 
-	// We want to capture the initial state of a Trogedit field before any
-	// editing has happened. This is necessary so that we can undo the first
-	// change to a field, even if we don't handle beforeChange.
-	this.updateCurrentState_(editorObject);
+//	this.updateCurrentState_(editorObject);
+	this.logger.info('_end_enable');
 };
 
 /** @inheritDoc */
@@ -404,7 +422,7 @@ kemia.controller.plugins.UndoRedo.prototype.logger = goog.debug.Logger
 /** @inheritDoc */
 kemia.controller.plugins.UndoRedo.prototype.queryCommandValue = function(
 		command) {
-	var state = null;
+	var state = false;
 	if (command == kemia.controller.plugins.UndoRedo.COMMAND.UNDO) {
 		state = this.hasUndoState();
 	} else if (command == kemia.controller.plugins.UndoRedo.COMMAND.REDO) {

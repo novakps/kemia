@@ -79,7 +79,7 @@ kemia.controller.plugins.ArrowPlusEdit.prototype.handleMouseDown = function(e) {
 				e.offsetX, e.offsetY) ]);
 		this.editorObject.getModels()[0].setArrow(new kemia.model.Arrow(
 				coords[0]));
-		this.editorObject.setModels(this.editorObject.getModels());
+		this.editorObject.setModelsSilently(this.editorObject.getModels());
 		this.editorObject.dispatchChange();
 	} else if (this.activeCommand[kemia.controller.plugins.ArrowPlusEdit.COMMAND.EDIT_PLUS]) {
 		this.editorObject.dispatchBeforeChange();
@@ -89,7 +89,7 @@ kemia.controller.plugins.ArrowPlusEdit.prototype.handleMouseDown = function(e) {
 				e.offsetX, e.offsetY) ]);
 		this.editorObject.getModels()[0]
 				.addPlus(new kemia.model.Plus(coords[0]));
-		this.editorObject.setModels(this.editorObject.getModels());
+		this.editorObject.setModelsSilently(this.editorObject.getModels());
 		this.editorObject.dispatchChange();
 	}
 

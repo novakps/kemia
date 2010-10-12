@@ -163,7 +163,7 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 		if (target instanceof kemia.model.Atom) {
 			this.editorObject.dispatchBeforeChange();
 			this.addBondToAtom(target);
-			this.editorObject.setModels(this.editorObject.getModels());
+			this.editorObject.setModelsSilently(this.editorObject.getModels());
 			this.editorObject.dispatchChange();
 			return true;
 		}
@@ -171,7 +171,7 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 			if (this.bond_type) {
 				this.editorObject.dispatchBeforeChange();
 				this.replaceBond(target);
-				this.editorObject.setModels(this.editorObject.getModels());
+				this.editorObject.setModelsSilently(this.editorObject.getModels());
 				this.editorObject.dispatchChange();
 				return true;
 			} else {
@@ -179,7 +179,7 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 					if ((goog.now() - target._last_click) < 1000) {
 						this.editorObject.dispatchBeforeChange();
 						this.toggleBondType(target);
-						this.editorObject.setModels(this.editorObject
+						this.editorObject.setModelsSilently(this.editorObject
 								.getModels());
 						this.editorObject.dispatchChange();
 						return true;
@@ -192,7 +192,7 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 			this.editorObject.dispatchBeforeChange();
 			this.createMolecule(kemia.controller.ReactionEditor
 					.getMouseCoords(e));
-			this.editorObject.setModels(this.editorObject.getModels());
+			this.editorObject.setModelsSilently(this.editorObject.getModels());
 			this.editorObject.dispatchChange();
 			return true;
 		}

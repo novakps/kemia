@@ -42,6 +42,7 @@ kemia.controller.plugins.ClearEditor.prototype.isSupportedCommand = function(
 kemia.controller.plugins.ClearEditor.prototype.execCommandInternal = function(
 		command) {
 	try {
+		this.editorObject.dispatchBeforeChange();
 		this.editorObject.clear();
 
 	} catch (e) {

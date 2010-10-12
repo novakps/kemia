@@ -232,7 +232,7 @@ kemia.controller.plugins.Move.prototype.handleMouseUp = function(e) {
 			kemia.controller.plugins.Move.mergeMolecules(this.dragSource,
 					target);
 			this.dragSource = undefined;
-			this.editorObject.setModels(this.editorObject.getModels());
+			this.editorObject.setModelsSilently(this.editorObject.getModels());
 			this.editorObject.dispatchChange();
 			return true;
 		}
@@ -423,7 +423,7 @@ kemia.controller.plugins.Move.prototype.dragAtom = function(e, atom) {
 					});
 	d.addEventListener(goog.fx.Dragger.EventType.END, function(e) {
 
-		d.editor.setModels(d.editor.getModels());
+		d.editor.setModelsSilently(d.editor.getModels());
 		d.dispose();
 	});
 	d.startDrag(e);
@@ -475,7 +475,7 @@ kemia.controller.plugins.Move.prototype.dragBond = function(e, bond) {
 					});
 	d.addEventListener(goog.fx.Dragger.EventType.END, function(e) {
 
-		d.editor.setModels(d.editor.getModels());
+		d.editor.setModelsSilently(d.editor.getModels());
 		d.dispose();
 	});
 	d.startDrag(e);
@@ -519,7 +519,7 @@ kemia.controller.plugins.Move.prototype.dragPlus = function(e, plus) {
 					});
 	d.addEventListener(goog.fx.Dragger.EventType.END, function(e) {
 
-		d.editor.setModels(d.editor.getModels());
+		d.editor.setModelsSilently(d.editor.getModels());
 		d.dispose();
 	});
 	d.startDrag(e);
@@ -565,7 +565,7 @@ kemia.controller.plugins.Move.prototype.dragArrow = function(e, arrow) {
 					});
 	d.addEventListener(goog.fx.Dragger.EventType.END, function(e) {
 
-		d.editor.setModels(d.editor.getModels());
+		d.editor.setModelsSilently(d.editor.getModels());
 		d.dispose();
 	});
 	d.startDrag(e);
@@ -649,7 +649,7 @@ kemia.controller.plugins.Move.prototype.dragMolecule = function(e, molecule) {
 			goog.array.forEach(merge_pairs, function(pair) {
 				kemia.controller.plugins.Move.mergeMolecules(pair[0], pair[1]);
 			}, this);
-			d.editor.setModels(d.editor.getModels());
+			d.editor.setModelsSilently(d.editor.getModels());
 			d.dispose();
 		}, undefined, this);
 
@@ -713,7 +713,7 @@ kemia.controller.plugins.Move.prototype.rotateMolecule = function(e, molecule) {
 	});
 	d.addEventListener(goog.fx.Dragger.EventType.END, function(e) {
 		d.molecule.rotate( -d._degrees, d.molecule.getCenter());
-		d.editor.setModels(d.editor.getModels());
+		d.editor.setModelsSilently(d.editor.getModels());
 		d.dispose();
 	});
 	d.startDrag(e);

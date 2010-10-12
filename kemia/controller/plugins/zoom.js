@@ -57,7 +57,7 @@ kemia.controller.plugins.Zoom.prototype.execCommand = function(command,
 		} else if (command == kemia.controller.plugins.Zoom.COMMAND.ZOOM_OUT) {
 			this.editorObject.setScaleFactor(current * 0.9);
 		}
-		this.editorObject.setModels(this.editorObject.getModels());
+		this.editorObject.setModelsSilently(this.editorObject.getModels());
 	} catch (e) {
 		this.logger.info(e);
 	}

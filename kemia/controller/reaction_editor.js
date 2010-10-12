@@ -132,7 +132,7 @@ kemia.controller.ReactionEditor.getActiveEditorId = function() {
 };
 
 kemia.controller.ReactionEditor.prototype.clear = function() {
-
+	
 	this.graphics.clear();
 	this.models = [new kemia.model.Reaction()];
 
@@ -152,9 +152,10 @@ kemia.controller.ReactionEditor.prototype.setScaleFactor = function(scale) {
 	this.reactionRenderer.setScaleFactor( scale);
 }
 
-kemia.controller.ReactionEditor.prototype.setModels = function(models) {
+kemia.controller.ReactionEditor.prototype.setModelsSilently = function(models) {
 	this.clear();
 	this.models = models;
+	
 	var objects = goog.array.flatten(goog.array.map(models, function(model) {
 		if (model instanceof kemia.model.Molecule) {
 			return kemia.model.NeighborList.moleculesToNeighbors( [ model ]);
@@ -169,6 +170,11 @@ kemia.controller.ReactionEditor.prototype.setModels = function(models) {
 	}
 	this.render();
 };
+
+kemia.controller.ReactionEditor.prototype.setModels = function(models){
+	this.dispatchBeforeChange();
+	this.setModelsSilently(models);
+}
 goog.exportSymbol('kemia.controller.ReactionEditor.prototype.setModels',
 		kemia.controller.ReactionEditor.prototype.setModels);
 
@@ -199,6 +205,7 @@ kemia.controller.ReactionEditor.prototype.getModels = function() {
  * This dispatches the beforechange event on the editable reaction editor
  */
 kemia.controller.ReactionEditor.prototype.dispatchBeforeChange = function() {
+	this.logger.info('dispatchBeforeChange');
 	this._serialized = goog.json.serialize(goog.array.map(this.getModels(), function(model){
 		if (model instanceof kemia.model.Reaction){
 			return kemia.io.json.reactionToJson(model);
@@ -207,6 +214,7 @@ kemia.controller.ReactionEditor.prototype.dispatchBeforeChange = function() {
 		}
 	}));
 	this.dispatchEvent(kemia.controller.ReactionEditor.EventType.BEFORECHANGE);
+	this.logger.info('_end_dispatchBeforeChange');
 };
 
 /**

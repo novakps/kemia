@@ -62,7 +62,7 @@ kemia.controller.plugins.MoleculeEdit.prototype.execCommandInternal = function(
 		}
 		reaction.addMolecule(molecule);
 		molecule.translate(diff);
-		this.editorObject.setModels( [ reaction ]);
+		this.editorObject.setModelsSilently( [ reaction ]);
 		var mol_center = molecule.getCenter();
 
 		var center = this.editorObject.getGraphicsCoords(mol_center);
