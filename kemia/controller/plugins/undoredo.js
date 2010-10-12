@@ -2,6 +2,7 @@ goog.provide('kemia.controller.plugins.UndoRedo');
 goog.require('goog.debug.Logger');
 goog.require('goog.json');
 goog.require('goog.date.DateTime');
+goog.require('goog.array');
 
 /**
  * @constructor
@@ -168,7 +169,6 @@ kemia.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 			}
 		});
 	}
-	serialized._timestamp = new goog.date.DateTime();
 
 	var currentState = this.currentState_;
 
@@ -184,13 +184,17 @@ kemia.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 	};
 
 	kemia.controller.plugins.UndoRedo.prototype.logStackState = function(){
-		var ts = "none";
-		if (this.currentState_ && this.currentState_._timestamp){
-			ts = this.currentState_._timestamp.toIsoTimeString();
-		}
-		this.logger.info(" currentState_ " + ts);
-		this.logger.info(" undoStack_ " + this.undoStack_.length + " [" + goog.array.map(this.undoStack_, function(s){if(s._timestamp){return s._timestamp.toIsoTimeString()} else {return 'none'}}) + "]");
-		this.logger.info(" redoStack_ " + this.redoStack_.length + " [" + goog.array.map(this.redoStack_, function(s){if(s._timestamp){return s._timestamp.toIsoTimeString()} else {return 'none'}}) + "]");
+		var atom_count = function(state){
+			return goog.array.reduce(state, function(sum, r){
+				var mols = goog.array.concat(r.reactants, r.products);
+				return sum + goog.array.reduce(mols, function(ss, m){
+					return ss + m.atoms.length;
+				}, 0);
+			}, 0);
+		};
+		this.logger.info(" currentState_ " + atom_count(this.currentState_));
+		this.logger.info(" undoStack_ " + this.undoStack_.length + " [" + goog.array.map(this.undoStack_, atom_count) + "]");
+		this.logger.info(" redoStack_ " + this.redoStack_.length + " [" + goog.array.map(this.redoStack_, atom_count) + "]"); 
 	}
 
 /**
