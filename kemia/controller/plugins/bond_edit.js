@@ -41,22 +41,7 @@ kemia.controller.plugins.BondEdit.prototype.execCommandInternal = function(
 	this.bond_type = arguments[1];
 };
 
-kemia.controller.plugins.BondEdit.SHORTCUTS = [ {
-	id : '1',
-	key : '1',
-	order : kemia.model.Bond.ORDER.SINGLE,
-	stereo : kemia.model.Bond.STEREO.NOT_STEREO
-}, {
-	id : '2',
-	key : '2',
-	order : kemia.model.Bond.ORDER.DOUBLE,
-	stereo : kemia.model.Bond.STEREO.NOT_STEREO
-}, {
-	id : '3',
-	key : '3',
-	order : kemia.model.Bond.ORDER.TRIPLE,
-	stereo : kemia.model.Bond.STEREO.NOT_STEREO
-} ];
+kemia.controller.plugins.BondEdit.SHORTCUTS = [ '1', '2', '3'];
 
 kemia.controller.plugins.BondEdit.prototype.getKeyboardShortcuts = function() {
 	return kemia.controller.plugins.BondEdit.SHORTCUTS;
@@ -260,41 +245,63 @@ kemia.controller.plugins.BondEdit.prototype.replaceBond = function(bond) {
 
 kemia.controller.plugins.BondEdit.prototype.addBondToAtom = function(atom) {
 	if (this.bond_type) {
-		var angles = goog.array.map(atom.bonds.getValues(), function(bond) {
-			var other_atom = bond.otherAtom(atom);
-			return goog.math.angle(atom.coord.x, atom.coord.y,
-					other_atom.coord.x, other_atom.coord.y);
-		});
 
 		var new_angle;
 
-		if (angles.length == 0) {
+		if (atom.bonds.getValues().length == 0) {
 			new_angle = 0;
 		}
-		if (angles.length == 1) {
-			if (angles[0] > 0) {
-				new_angle = goog.math.toRadians(angles[0] - 120);
+		if (atom.bonds.getValues().length == 1) {
+			var other_atom = atom.bonds.getValues()[0].otherAtom(atom);
+			var existing_angle = goog.math.angle(atom.coord.x, atom.coord.y, other_atom.coord.x, other_atom.coord.y);
+
+			var other_angles_diff	 = goog.array.map(other_atom.bonds.getValues(), function(b){
+				var not_other = b.otherAtom(other_atom);
+				if(not_other!=atom){
+				return goog.math.angleDifference(
+						existing_angle, 
+						goog.math.angle(
+								other_atom.coord.x, 
+								other_atom.coord.y, 
+								not_other.coord.x, 
+								not_other.coord.y ));
+				}
+			});
+			goog.array.sort(other_angles_diff);
+
+			var min_angle = other_angles_diff[0];
+
+			if (min_angle > 0){
+				new_angle = existing_angle -120;
 			} else {
-				new_angle = goog.math.toRadians(angles[0] + 120);
+				new_angle = existing_angle + 120;
 			}
-		} else if (angles.length == 2) {
+		} else if (atom.bonds.getValues().length == 2) {
+			var angles = goog.array.map(atom.bonds.getValues(), function(bond) {
+				var other_atom = bond.otherAtom(atom);
+				return goog.math.angle(atom.coord.x, atom.coord.y,
+						other_atom.coord.x, other_atom.coord.y);
+			});
 			var diff = goog.math.angleDifference(angles[0], angles[1]);
 			if (Math.abs(diff) < 180) {
 				diff = 180 + diff / 2
 			} else {
 				diff = diff / 2;
 			}
-			new_angle = goog.math.toRadians(angles[0] + diff);
+			new_angle = angles[0] + diff;
 		}
 		if (new_angle != undefined) {
-			var new_atom = new kemia.model.Atom("C", atom.coord.x
-					+ Math.cos(new_angle) * 1.25, atom.coord.y
-					+ Math.sin(new_angle) * 1.25);
+			var new_atom = new kemia.model.Atom(
+					"C", 
+					atom.coord.x + goog.math.angleDx(new_angle, 1.25), 
+					atom.coord.y + goog.math.angleDy(new_angle, 1.25));
+
 			var new_bond = new kemia.model.Bond(atom, new_atom,
 					this.bond_type.order, this.bond_type.stereo);
 			var molecule = atom.molecule;
 			molecule.addAtom(new_atom);
 			molecule.addBond(new_bond);
+			return new_bond;
 		}
 	}
 };
