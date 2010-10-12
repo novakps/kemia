@@ -205,7 +205,7 @@ kemia.controller.ReactionEditor.prototype.getModels = function() {
  * This dispatches the beforechange event on the editable reaction editor
  */
 kemia.controller.ReactionEditor.prototype.dispatchBeforeChange = function() {
-	this.logger.info('dispatchBeforeChange');
+//	this.logger.info('dispatchBeforeChange');
 	this._serialized = goog.json.serialize(goog.array.map(this.getModels(), function(model){
 		if (model instanceof kemia.model.Reaction){
 			return kemia.io.json.reactionToJson(model);
@@ -214,7 +214,7 @@ kemia.controller.ReactionEditor.prototype.dispatchBeforeChange = function() {
 		}
 	}));
 	this.dispatchEvent(kemia.controller.ReactionEditor.EventType.BEFORECHANGE);
-	this.logger.info('_end_dispatchBeforeChange');
+//	this.logger.info('_end_dispatchBeforeChange');
 };
 
 /**

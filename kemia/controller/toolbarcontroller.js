@@ -217,7 +217,7 @@ kemia.controller.ToolbarController.prototype.disposeInternal = function() {
  * @protected
  */
 kemia.controller.ToolbarController.prototype.updateToolbar = function(e) {
-	this.logger.info('updateToolbar');
+//	this.logger.info('updateToolbar');
 	if (!this.toolbar_.isEnabled()
 			|| !this.dispatchEvent(goog.ui.Component.EventType.CHANGE)) {
 		return;
