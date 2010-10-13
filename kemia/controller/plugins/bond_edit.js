@@ -188,45 +188,46 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseMove = function(e) {
 kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 
 	if (this.bond_type) {
-		goog.array.forEach(this.editorObject.getSelected(), function(target){
-
-			if (target instanceof kemia.model.Atom) {
-				this.editorObject.dispatchBeforeChange();
-				this.addBondToAtom(target);
-				this.editorObject.setModelsSilently(this.editorObject.getModels());
-				this.editorObject.dispatchChange();
-				return true;
-			}
-			if (target instanceof kemia.model.Bond) {
-				if (this.bond_type) {
+		var selected = this.editorObject.getSelected();
+		if(selected.length){
+			goog.array.forEach(selected, function(target){
+				if (target instanceof kemia.model.Atom) {
 					this.editorObject.dispatchBeforeChange();
-					this.replaceBond(target);
+					this.addBondToAtom(target);
 					this.editorObject.setModelsSilently(this.editorObject.getModels());
 					this.editorObject.dispatchChange();
 					return true;
-				} else {
-					if (target._last_click) {
-						if ((goog.now() - target._last_click) < 1000) {
-							this.editorObject.dispatchBeforeChange();
-							this.toggleBondType(target);
-							this.editorObject.setModelsSilently(this.editorObject
-									.getModels());
-							this.editorObject.dispatchChange();
-							return true;
-						}
-					}
-					target._last_click = goog.now();
 				}
-			}
-			if (target == undefined && this.bond_type) {
-				this.editorObject.dispatchBeforeChange();
-				this.createMolecule(kemia.controller.ReactionEditor
-						.getMouseCoords(e));
-				this.editorObject.setModelsSilently(this.editorObject.getModels());
-				this.editorObject.dispatchChange();
-				return true;
-			}
-		}, this);
+				if (target instanceof kemia.model.Bond) {
+					if (this.bond_type) {
+						this.editorObject.dispatchBeforeChange();
+						this.replaceBond(target);
+						this.editorObject.setModelsSilently(this.editorObject.getModels());
+						this.editorObject.dispatchChange();
+						return true;
+					} else {
+						if (target._last_click) {
+							if ((goog.now() - target._last_click) < 1000) {
+								this.editorObject.dispatchBeforeChange();
+								this.toggleBondType(target);
+								this.editorObject.setModelsSilently(this.editorObject
+										.getModels());
+								this.editorObject.dispatchChange();
+								return true;
+							}
+						}
+						target._last_click = goog.now();
+					}
+				}
+			}, this);
+		}else {
+			this.editorObject.dispatchBeforeChange();
+			this.createMolecule(kemia.controller.ReactionEditor
+					.getMouseCoords(e));
+			this.editorObject.setModelsSilently(this.editorObject.getModels());
+			this.editorObject.dispatchChange();
+			return true;
+		}
 	}
 };
 
