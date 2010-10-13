@@ -149,7 +149,7 @@ kemia.view.AtomRenderer.prototype.compoundSymbol = function(atom) {
 		superscript : '',
 		subscript : ''
 	};
-	if (atom.symbol != "C" || atom.countBonds() < 1) {
+	if (atom.symbol != "C" || atom.countBonds() < 1 || atom.charge) {
 		// terminal atom may need compound atom name
 		var hydrogen_count = atom.hydrogenCount();
 		if (hydrogen_count == 0) {

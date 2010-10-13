@@ -76,12 +76,14 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 			this.isActive[kemia.controller.plugins.Move.COMMAND.ROTATE]) && 
 			!this.isDragging) {
 		var target = this.editorObject.findTarget(e);
+		this.editorObject.clearSelected();
 		this.editorObject.getOriginalElement().style.cursor = 'default';
 		if (e.currentTarget.highlightGroup) {
 			e.currentTarget.highlightGroup.clear();
 		}
 		if (this.isActive[kemia.controller.plugins.Move.COMMAND.ROTATE]){
 			if (target instanceof kemia.model.Molecule) {
+				this.editorObject.addSelected(target);
 				this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Move.ROTATE_CURSOR_STYLE;
 				if (!e.currentTarget.highlightGroup) {
 					e.currentTarget.highlightGroup = this.highlightMolecule(target);
@@ -93,6 +95,7 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 			}
 		} else {
 			if (target instanceof kemia.model.Atom) {
+				this.editorObject.addSelected(target);
 				this.editorObject.getOriginalElement().style.cursor = 'move';
 				if (!e.currentTarget.highlightGroup) {
 					e.currentTarget.highlightGroup = this.highlightAtom(target);
@@ -102,6 +105,7 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 				}
 				return true;
 			} else if (target instanceof kemia.model.Bond) {
+				this.editorObject.addSelected(target);
 				this.editorObject.getOriginalElement().style.cursor = 'move';
 				if (!e.currentTarget.highlightGroup) {
 					e.currentTarget.highlightGroup = this.highlightBond(target);
@@ -111,6 +115,7 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 				}
 				return true;
 			} else if (target instanceof kemia.model.Molecule) {
+				this.editorObject.addSelected(target);
 				this.editorObject.getOriginalElement().style.cursor = 'move';
 				if (!e.currentTarget.highlightGroup) {
 					e.currentTarget.highlightGroup = this.highlightMolecule(target);
@@ -120,6 +125,7 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 				}
 				return true;
 			} else if (target instanceof kemia.model.Arrow) {
+				this.editorObject.addSelected(target);
 				if (!e.shiftKey) {
 					this.editorObject.getOriginalElement().style.cursor = 'move';
 					if (!e.currentTarget.highlightGroup) {
@@ -132,6 +138,7 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 					return true;
 				}
 			} else if (target instanceof kemia.model.Plus) {
+				this.editorObject.addSelected(target);
 				if (!e.shiftKey) {
 					this.editorObject.getOriginalElement().style.cursor = 'move';
 					if (!e.currentTarget.highlightGroup) {
