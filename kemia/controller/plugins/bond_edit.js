@@ -121,30 +121,37 @@ kemia.controller.plugins.BondEdit.prototype.logger = goog.debug.Logger
 // }
 
 kemia.controller.plugins.BondEdit.prototype.handleKeyboardShortcut = function(e) {
-//	this.logger.info('handleKeyboardShortcut');
-	if(this.bond_type) {
+	// this.logger.info('handleKeyboardShortcut');
+	if (this.bond_type) {
 		var id = e.identifier;
-		var shortcut = goog.array.find(kemia.controller.plugins.BondEdit.SHORTCUTS,
-				function(obj) {
-			return obj.id == e.identifier
-		});
+		var shortcut = goog.array.find(
+				kemia.controller.plugins.BondEdit.SHORTCUTS, function(obj) {
+					return obj.id == e.identifier
+				});
 		if (shortcut) {
-//			this.logger.info('getSelected ' + this.editorObject.getSelected().toString());
-			goog.array.forEach(this.editorObject.getSelected(), function(target){
-//				this.logger.info('target ' + target.toString());
-				var repeat = parseInt(shortcut.id);
-				var attachment_atom = target;
-				if (target instanceof kemia.model.Atom) {
-					this.editorObject.dispatchBeforeChange();
-					for(var i=0;i<repeat;i++){
-						attachment_atom = this.addBondToAtom(attachment_atom).otherAtom(attachment_atom);
-					}
-					this.editorObject.setModelsSilently(this.editorObject.getModels());
-					this.editorObject.dispatchChange();
-					return true;
-				}
-				return true;
-			}, this);
+			// this.logger.info('getSelected ' +
+			// this.editorObject.getSelected().toString());
+			goog.array
+					.forEach(this.editorObject.getSelected(), function(target) {
+						// this.logger.info('target ' + target.toString());
+							var repeat = parseInt(shortcut.id);
+							if (target instanceof kemia.model.Atom) {
+								var attachment_atom = target;
+								this.editorObject.dispatchBeforeChange();
+								for ( var i = 0; i < repeat; i++) {
+									var new_bond = this.addBondToAtom(attachment_atom);
+									if(new_bond){
+										attachment_atom = new_bond.otherAtom(attachment_atom);
+									}
+								}
+								this.editorObject
+										.setModelsSilently(this.editorObject
+												.getModels());
+								this.editorObject.dispatchChange();
+								return true;
+							}
+							return true;
+						}, this);
 		}
 	}
 }
@@ -181,7 +188,7 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseMove = function(e) {
 			}
 			return true;
 		}
-	} 
+	}
 	return false;
 };
 
@@ -189,12 +196,13 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 
 	if (this.bond_type) {
 		var selected = this.editorObject.getSelected();
-		if(selected.length){
-			goog.array.forEach(selected, function(target){
+		if (selected.length) {
+			goog.array.forEach(selected, function(target) {
 				if (target instanceof kemia.model.Atom) {
 					this.editorObject.dispatchBeforeChange();
 					this.addBondToAtom(target);
-					this.editorObject.setModelsSilently(this.editorObject.getModels());
+					this.editorObject.setModelsSilently(this.editorObject
+							.getModels());
 					this.editorObject.dispatchChange();
 					return true;
 				}
@@ -202,7 +210,8 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 					if (this.bond_type) {
 						this.editorObject.dispatchBeforeChange();
 						this.replaceBond(target);
-						this.editorObject.setModelsSilently(this.editorObject.getModels());
+						this.editorObject.setModelsSilently(this.editorObject
+								.getModels());
 						this.editorObject.dispatchChange();
 						return true;
 					} else {
@@ -210,8 +219,9 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 							if ((goog.now() - target._last_click) < 1000) {
 								this.editorObject.dispatchBeforeChange();
 								this.toggleBondType(target);
-								this.editorObject.setModelsSilently(this.editorObject
-										.getModels());
+								this.editorObject
+										.setModelsSilently(this.editorObject
+												.getModels());
 								this.editorObject.dispatchChange();
 								return true;
 							}
@@ -220,7 +230,7 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 					}
 				}
 			}, this);
-		}else {
+		} else {
 			this.editorObject.dispatchBeforeChange();
 			this.createMolecule(kemia.controller.ReactionEditor
 					.getMouseCoords(e));
@@ -233,7 +243,7 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 
 kemia.controller.plugins.BondEdit.prototype.createMolecule = function(pos) {
 	var trans;
-	if (this.editorObject.reactionRenderer.transform){
+	if (this.editorObject.reactionRenderer.transform) {
 		trans = this.editorObject.reactionRenderer.transform;
 	} else {
 		trans = this.editorObject.reactionRenderer.moleculeRenderer.transform;
@@ -246,7 +256,7 @@ kemia.controller.plugins.BondEdit.prototype.createMolecule = function(pos) {
 
 	if (this.editorObject.getModels().length > 0) {
 		var model = this.editorObject.getModels()[0];
-		if(model instanceof kemia.model.Reaction){
+		if (model instanceof kemia.model.Reaction) {
 			model.addMolecule(molecule);
 		} else {
 			goog.array.concat(this.editorObject.getModels(), molecule);
@@ -296,34 +306,34 @@ kemia.controller.plugins.BondEdit.prototype.addBondToAtom = function(atom) {
 
 		if (bonds.length == 0) {
 			new_angle = 0;
-		}
-		if (bonds.length == 1) {
+		} else if (bonds.length == 1) {
 			var other_atom = bonds[0].otherAtom(atom);
-			var existing_angle = goog.math.angle(atom.coord.x, atom.coord.y, other_atom.coord.x, other_atom.coord.y);
+			var existing_angle = goog.math.angle(atom.coord.x, atom.coord.y,
+					other_atom.coord.x, other_atom.coord.y);
 
-			var other_angles_diff	 = goog.array.map(bonds, function(b){
-				var not_other = b.otherAtom(other_atom);
-				if(not_other!=atom){
-				return goog.math.angleDifference(
-						existing_angle, 
-						goog.math.angle(
-								other_atom.coord.x, 
-								other_atom.coord.y, 
-								not_other.coord.x, 
-								not_other.coord.y ));
-				}
-			});
+			var other_angles_diff = goog.array.map(
+					other_atom.bonds.getValues(), function(b) {
+						var not_other = b.otherAtom(other_atom);
+						if (not_other != atom) {
+							return goog.math.angleDifference(existing_angle,
+									goog.math.angle(other_atom.coord.x,
+											other_atom.coord.y,
+											not_other.coord.x,
+											not_other.coord.y));
+						}
+					});
 			goog.array.sort(other_angles_diff);
 
 			var min_angle = other_angles_diff[0];
 
-			if (min_angle > 0){
-				new_angle = existing_angle -120;
+			if (min_angle > 0) {
+				new_angle = existing_angle - 120;
 			} else {
 				new_angle = existing_angle + 120;
 			}
-		} else if (atom.bonds.getValues().length == 2) {
-			var angles = goog.array.map(atom.bonds.getValues(), function(bond) {
+//			this.logger.info('existing_angle ' + existing_angle + ' other_angles_diff ' + other_angles_diff.toString() + ' new_angle ' + new_angle);
+		} else if (bonds.length == 2) {
+			var angles = goog.array.map(bonds, function(bond) {
 				var other_atom = bond.otherAtom(atom);
 				return goog.math.angle(atom.coord.x, atom.coord.y,
 						other_atom.coord.x, other_atom.coord.y);
@@ -336,30 +346,29 @@ kemia.controller.plugins.BondEdit.prototype.addBondToAtom = function(atom) {
 			}
 			new_angle = angles[0] + diff;
 		} else if (bonds.length == 3) {
-			// find two bonds with least number of bonds on other end to insert between
-			goog.array.sort(bonds, function(b1, b2){
-				return goog.array.defaultCompare(
-						b1.otherAtom(atom).bonds.getValues().length, 
-						b2.otherAtom(atom).bonds.getValues().length);
+			// find two bonds with least number of bonds on other end to insert
+			// between
+			goog.array.sort(bonds, function(b1, b2) {
+				return goog.array.defaultCompare(b1.otherAtom(atom).bonds
+						.getValues().length, b2.otherAtom(atom).bonds
+						.getValues().length);
 			})
 			var insert_between = goog.array.slice(bonds, 0, 2);
-			
-			var angles	 = goog.array.map(insert_between, function(b){
+
+			var angles = goog.array.map(insert_between, function(b) {
 				var other_atom = b.otherAtom(atom);
-				return goog.math.angle(
-						atom.coord.x, 
-						atom.coord.y, 
-						other_atom.coord.x, 
-						other_atom.coord.y );
+				return goog.math.angle(atom.coord.x, atom.coord.y,
+						other_atom.coord.x, other_atom.coord.y);
 			});
-			new_angle = angles[0] + goog.math.angleDifference(angles[0], angles[1]) / 2; 
-			this.logger.info('angles ' + angles.toString() + " new_angle " + new_angle);
+			new_angle = angles[0]
+					+ goog.math.angleDifference(angles[0], angles[1]) / 2;
+//			this.logger.info('angles ' + angles.toString() + " new_angle "
+//					+ new_angle);
 		}
 		if (new_angle != undefined) {
-			var new_atom = new kemia.model.Atom(
-					"C", 
-					atom.coord.x + goog.math.angleDx(new_angle, 1.25), 
-					atom.coord.y + goog.math.angleDy(new_angle, 1.25));
+			var new_atom = new kemia.model.Atom("C", atom.coord.x
+					+ goog.math.angleDx(new_angle, 1.25), atom.coord.y
+					+ goog.math.angleDy(new_angle, 1.25));
 
 			var new_bond = new kemia.model.Bond(atom, new_atom,
 					this.bond_type.order, this.bond_type.stereo);
