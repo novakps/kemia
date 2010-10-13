@@ -16520,12 +16520,12 @@ kemia.controller.plugins.Erase.prototype.eraseBond = function(bond) {
   var fragments = molecule.getFragments();
   var reaction = molecule.reaction;
   if(reaction) {
-    if(reaction.isReactant(molecule)) {
+    if(molecule.bonds.length && reaction.isReactant(molecule)) {
       goog.array.forEach(fragments, function(mol) {
         reaction.addReactant(mol)
       })
     }else {
-      if(reaction.isProduct(molecule)) {
+      if(molecule.bonds.length && reaction.isProduct(molecule)) {
         goog.array.forEach(fragments, function(mol) {
           reaction.addProduct(mol)
         })
