@@ -1,6 +1,8 @@
 goog.provide('kemia.controller.plugins.AtomEdit');
 goog.require('kemia.controller.Plugin');
 goog.require('goog.debug.Logger');
+goog.require('goog.ui.KeyboardShortcutHandler');
+goog.require('goog.events.KeyCodes');
 
 /**
  * @constructor
@@ -29,31 +31,47 @@ kemia.controller.plugins.AtomEdit.prototype.isSupportedCommand = function(
 kemia.controller.plugins.AtomEdit.prototype.getTrogClassId = goog.functions
 		.constant(kemia.controller.plugins.AtomEdit.COMMAND);
 
-kemia.controller.plugins.AtomEdit.SHORTCUTS = [ 
-{
-	id : 'C',
-	key : 'c'
-}, {
-	id : 'N',
-	key : 'n'
-}, {
-	id : 'S',
-	key : 's'
-}, {
-	id : 'P',
-	key : 'p'
-}, {
-	id : 'O',
-	key : 'o'
-}, {
-	id : '+',
-	key : 'up'
-}, {
-	id : '-',
-	key : 'down'
-}
-];
-
+kemia.controller.plugins.AtomEdit.SHORTCUTS = [
+		{
+			id : 'H',
+			key : 'h'
+		},
+		{
+			id : 'C',
+			key : 'c'
+		},
+		{
+			id : 'N',
+			key : 'n'
+		},
+		{
+			id : 'S',
+			key : 's'
+		},
+		{
+			id : 'P',
+			key : 'p'
+		},
+		{
+			id : 'O',
+			key : 'o'
+		},
+		{
+			id : 'F',
+			key : 'f'
+		},
+		{
+			id : 'Cl',
+			key : 'cl'
+		},
+		{
+			id : '+',
+			key : [ goog.events.KeyCodes.EQUALS,
+					goog.ui.KeyboardShortcutHandler.Modifiers.SHIFT ]
+		}, {
+			id : '-',
+			key : goog.events.KeyCodes.DASH
+		} ];
 
 kemia.controller.plugins.AtomEdit.prototype.getKeyboardShortcuts = function() {
 	return kemia.controller.plugins.AtomEdit.SHORTCUTS;
@@ -88,7 +106,7 @@ kemia.controller.plugins.AtomEdit.prototype.logger = goog.debug.Logger
 		.getLogger('kemia.controller.plugins.AtomEdit');
 
 kemia.controller.plugins.AtomEdit.prototype.handleKeyboardShortcut = function(e) {
-//	this.logger.info('handleKeyboardShortcut ' + e.identifier);
+	// this.logger.info('handleKeyboardShortcut ' + e.identifier);
 	try {
 		var id = e.identifier;
 		var shortcut = goog.array.find(
@@ -96,39 +114,38 @@ kemia.controller.plugins.AtomEdit.prototype.handleKeyboardShortcut = function(e)
 					return obj.id == id;
 				});
 		if (shortcut) {
-//			this.logger.info('shortcut ' + shortcut.id);
+			// this.logger.info('shortcut ' + shortcut.id);
 			goog.array.forEach(this.editorObject.getSelected(),
 					function(target) {
-				if (target instanceof kemia.model.Atom) {
-					var atom = target;
-					if ('+' == shortcut.id ){
+						if (target instanceof kemia.model.Atom) {
+							var atom = target;
+							if ('+' == shortcut.id) {
+								this.editorObject.dispatchBeforeChange();
+								atom.charge++;
+								this.editorObject.setModels(this.editorObject
+										.getModels());
+								this.editorObject.dispatchChange();
+							} else if ('-' == shortcut.id) {
+								this.editorObject.dispatchBeforeChange();
+								atom.charge--;
+								this.editorObject.setModels(this.editorObject
+										.getModels());
+								this.editorObject.dispatchChange();
+							} else {
+								var symbol = shortcut.id
+								// this.logger.info('symbol ' + symbol);
+					if (symbol != atom.symbol) {
 						this.editorObject.dispatchBeforeChange();
-						atom.charge++;
+						this.setAtomSymbol(symbol, atom);
 						this.editorObject.setModels(this.editorObject
 								.getModels());
 						this.editorObject.dispatchChange();
-					} else if ('-' == shortcut.id){
-						this.editorObject.dispatchBeforeChange();
-						atom.charge--;
-						this.editorObject.setModels(this.editorObject
-								.getModels());
-						this.editorObject.dispatchChange();
-					}
-					else{
-						var symbol = shortcut.id
-//						this.logger.info('symbol ' + symbol);
-						if (symbol != atom.symbol) {
-							this.editorObject.dispatchBeforeChange();
-							this.setAtomSymbol(symbol, atom);
-							this.editorObject.setModels(this.editorObject
-									.getModels());
-							this.editorObject.dispatchChange();
-							return true;
-						}
+						return true;
 					}
 				}
-			}, this);
-					return true;
+			}
+		}, this);
+			return true;
 		}
 	} catch (e) {
 		this.logger.info(e);
@@ -160,7 +177,7 @@ kemia.controller.plugins.AtomEdit.prototype.handleMouseMove = function(e) {
 }
 
 kemia.controller.plugins.AtomEdit.prototype.handleMouseDown = function(e) {
-	if(this.symbol){
+	if (this.symbol) {
 		var selected = this.editorObject.getSelected();
 		if (selected.length) {
 			goog.array.forEach(selected, function(target) {
@@ -169,14 +186,16 @@ kemia.controller.plugins.AtomEdit.prototype.handleMouseDown = function(e) {
 					if (this.symbol && (this.symbol != atom.symbol)) {
 						this.editorObject.dispatchBeforeChange();
 						this.setAtomSymbol(this.symbol, atom);
-						this.editorObject.setModels(this.editorObject.getModels());
+						this.editorObject.setModels(this.editorObject
+								.getModels());
 						this.editorObject.dispatchChange();
 						return true;
 					}
 				}
 			}, this)
 		} else {
-			this.createMolecule(kemia.controller.ReactionEditor.getMouseCoords(e));
+			this.createMolecule(kemia.controller.ReactionEditor
+					.getMouseCoords(e));
 			this.editorObject.setModels(this.editorObject.getModels());
 			this.editorObject.dispatchChange();
 			return true;
