@@ -62,20 +62,20 @@ kemia.controller.plugins.UndoRedo.prototype.getKeyboardShortcuts = function() {
 }
 
 kemia.controller.plugins.UndoRedo.prototype.handleKeyboardShortcut = function(e) {
-	try {
-		var id = e.identifier;
-		var shortcut = goog.array.find(
-				kemia.controller.plugins.UndoRedo.SHORTCUTS, function(obj) {
-					return obj.id == e.identifier
-				});
-		if (shortcut.id == 'undo') {
-
-			this.undo();
-			return true;
-		}
-	} catch (e) {
-		this.logger.info(e);
-	}
+//	try {
+//		var id = e.identifier;
+//		var shortcut = goog.array.find(
+//				kemia.controller.plugins.UndoRedo.SHORTCUTS, function(obj) {
+//					return obj.id == e.identifier
+//				});
+//		if (shortcut.id == 'undo') {
+//
+//			this.undo();
+//			return true;
+//		}
+//	} catch (e) {
+//		this.logger.info(e);
+//	}
 }
 
 /**

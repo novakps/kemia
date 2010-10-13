@@ -28,7 +28,7 @@ goog.require('kemia.controller.Plugin');
 goog.require('kemia.model.NeighborList');
 goog.require('goog.ui.Prompt');
 goog.require('goog.debug.Console');
-// goog.require('goog.ui.KeyboardShortcutHandler');
+goog.require('goog.ui.KeyboardShortcutHandler');
 
 /**
  * A graphical editor for reactions
@@ -85,7 +85,7 @@ kemia.controller.ReactionEditor = function(element, opt_config) {
 	 * @protected
 	 */
 	this.eventRegister = new goog.events.EventHandler(this);
-	// this.shortcutHandler = new goog.ui.KeyboardShortcutHandler(document);
+	 this.shortcutHandler = new goog.ui.KeyboardShortcutHandler(document);
 
 	// Wrappers around this editor, to be disposed when the editor is disposed.
 	this.wrappers_ = [];
@@ -116,6 +116,18 @@ goog.exportSymbol('kemia.controller.ReactionEditor',
 kemia.controller.ReactionEditor.setActiveEditorId = function(editorId) {
 	kemia.controller.ReactionEditor.activeEditorId_ = editorId;
 };
+
+kemia.controller.ReactionEditor.prototype.clearSelected = function() {
+	this.selected.length = 0;
+}
+
+kemia.controller.ReactionEditor.prototype.getSelected = function(){
+	return this.selected;	
+}
+
+kemia.controller.ReactionEditor.prototype.addSelected = function(obj){
+	this.selected.push(obj);
+}
 
 /**
  * @return {goog.dom.DomHelper?} The dom helper for the editable node.
@@ -288,45 +300,45 @@ kemia.controller.ReactionEditor.prototype.handleChange = function() {
 // * e The browser event.
 // * @private
 // */
-// kemia.controller.ReactionEditor.prototype.handleKeyDown_ = function(e) {
-// this.logger.info('handleKeyDown_');
-// if (!goog.editor.BrowserFeature.USE_MUTATION_EVENTS) {
-// if (!this.handleBeforeChangeKeyEvent_(e)) {
-// return;
-// }
-// }
-//
-// if (!this.invokeShortCircuitingOp_(kemia.controller.Plugin.Op.KEYDOWN, e)
-// && goog.editor.BrowserFeature.USES_KEYDOWN) {
-// this.handleKeyboardShortcut_(e);
-// }
-// };
-//
+//kemia.controller.ReactionEditor.prototype.handleKeyDown_ = function(e) {
+//	this.logger.info('handleKeyDown_');
+//	if (!goog.editor.BrowserFeature.USE_MUTATION_EVENTS) {
+//	if (!this.handleBeforeChangeKeyEvent_(e)) {
+//	return;
+//	}
+//	}
+
+//	if (!this.invokeShortCircuitingOp_(kemia.controller.Plugin.Op.KEYDOWN, e)
+//			&& goog.editor.BrowserFeature.USES_KEYDOWN) {
+//		this.handleKeyboardShortcut_(e);
+//	}
+//};
+
 // /**
-// * Handles keypress on the field.
-// *
-// * @param {goog.events.BrowserEvent}
-// * e The browser event.
-// * @private
-// */
-// kemia.controller.ReactionEditor.prototype.handleKeyPress_ = function(e) {
-// this.logger.info('handleKeyPress_');
-// if (goog.editor.BrowserFeature.USE_MUTATION_EVENTS) {
-// if (!this.handleBeforeChangeKeyEvent_(e)) {
-// return;
-// }
-// } else {
-// // In IE only keys that generate output trigger keypress
-// // In Mozilla charCode is set for keys generating content.
-// this.gotGeneratingKey_ = true;
-// this.dispatchBeforeChange();
-// }
-//
-// if (!this.invokeShortCircuitingOp_(goog.editor.Plugin.Op.KEYPRESS, e)
-// && !goog.editor.BrowserFeature.USES_KEYDOWN) {
-// this.handleKeyboardShortcut_(e);
-// }
-// };
+//	 * Handles keypress on the field.
+//	 * 
+//	 * @param {goog.events.BrowserEvent}
+//	 *            e The browser event.
+//	 * @private
+//	 */
+//kemia.controller.ReactionEditor.prototype.handleKeyPress_ = function(e) {
+//	this.logger.info('handleKeyPress_');
+//	if (goog.editor.BrowserFeature.USE_MUTATION_EVENTS) {
+//	if (!this.handleBeforeChangeKeyEvent_(e)) {
+//	return;
+//	}
+//	} else {
+//	// In IE only keys that generate output trigger keypress
+//	// In Mozilla charCode is set for keys generating content.
+//	this.gotGeneratingKey_ = true;
+//	this.dispatchBeforeChange();
+//	}
+
+//	if (!this.invokeShortCircuitingOp_(goog.editor.Plugin.Op.KEYPRESS, e)
+//			&& !goog.editor.BrowserFeature.USES_KEYDOWN) {
+//		this.handleKeyboardShortcut_(e);
+//	}
+//};
 
 // /**
 // * Handles keyup on the editor.
@@ -501,6 +513,7 @@ kemia.controller.ReactionEditor.prototype.handleMouseUp_ = function(e) {
 // };
 
 kemia.controller.ReactionEditor.prototype.handleKeyboardShortcut_ = function(e) {
+//	this.logger.info('handelKeyboardShortcut_ ' + e.identifier);
 	this.invokeShortCircuitingOp_(kemia.controller.Plugin.Op.SHORTCUT, e);
 }
 
@@ -933,18 +946,18 @@ kemia.controller.ReactionEditor.prototype.addListener = function(type,
  */
 kemia.controller.ReactionEditor.prototype.setupChangeListeners_ = function() {
 
-	// this.addListener(goog.events.EventType.KEYDOWN, this.handleKeyDown_);
-	// this.addListener(goog.events.EventType.KEYPRESS, this.handleKeyPress_);
-	// this.addListener(goog.events.EventType.KEYUP, this.handleKeyUp_);
+	 this.addListener(goog.events.EventType.KEYDOWN, this.handleKeyDown_);
+	 this.addListener(goog.events.EventType.KEYPRESS, this.handleKeyPress_);
+	 this.addListener(goog.events.EventType.KEYUP, this.handleKeyUp_);
 	this.addListener(goog.events.EventType.MOUSEDOWN, this.handleMouseDown_);
 	this.addListener(goog.events.EventType.MOUSEMOVE, this.handleMouseMove_);
 	this.addListener(goog.events.EventType.MOUSEUP, this.handleMouseUp_);
 	// this.addListener(goog.events.EventType.DBLCLICK, this.handleDblclick_);
 	this.addListener('paste', this.handlePaste_);
 
-	// goog.events.listen(this.shortcutHandler,
-	// goog.ui.KeyboardShortcutHandler.EventType.SHORTCUT_TRIGGERED,
-	// this.handleKeyboardShortcut_, undefined, this);
+	 goog.events.listen(this.shortcutHandler,
+	 goog.ui.KeyboardShortcutHandler.EventType.SHORTCUT_TRIGGERED,
+	 this.handleKeyboardShortcut_, undefined, this);
 
 };
 /*
@@ -958,7 +971,7 @@ kemia.controller.ReactionEditor.prototype.setupChangeListeners_ = function() {
  * goog.ui.KeyboardShortcutHandler.Modifiers.SHIFT, CONTROL, ALT, or META.
  */
 kemia.controller.ReactionEditor.prototype.registerShortcut = function(id, key) {
-	// this.shortcutHandler.registerShortcut(id, key);
+	 this.shortcutHandler.registerShortcut(id, key);
 };
 
 /**
