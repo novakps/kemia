@@ -237,7 +237,7 @@ kemia.controller.plugins.Move.prototype.handleMouseUp = function(e) {
 		var target = targets.length > 0 ? targets[0] : undefined;
 		if (this.dragSource && target instanceof kemia.model.Atom) {
 			this.editorObject.dispatchBeforeChange();
-			kemia.controller.plugins.Move.mergeMolecules(this.dragSource,
+			kemia.model.Molecule.mergeMolecules(this.dragSource,
 					target);
 			this.dragSource = undefined;
 			this.editorObject.setModelsSilently(this.editorObject.getModels());
@@ -247,52 +247,6 @@ kemia.controller.plugins.Move.prototype.handleMouseUp = function(e) {
 	} catch (e) {
 		this.logger.info(e);
 	}
-}
-/**
- * merge two molecules at a single atom
- * 
- * @param{kemia.model.Atom} source_atom, the atom being dragged
- * @param{kemia.model.Atom} target_atom, the drag-target atom
- * 
- * @return{kemia.model.Molecule} resulting merged molecule
- */
-kemia.controller.plugins.Move.mergeMolecules = function(source_atom,
-		target_atom) {
-	// replace target atom with source atom
-
-	// clone and connect target atom bonds to source atom
-	var source_molecule = source_atom.molecule;
-	var target_molecule = target_atom.molecule;
-
-	goog.array.forEach(target_atom.bonds.getValues(), function(bond) {
-		var new_bond = bond.clone();
-		target_atom == new_bond.source ? new_bond.source = source_atom
-				: new_bond.target = source_atom;
-		target_molecule.addBond(new_bond);
-		target_molecule.removeBond(bond);
-	});
-	target_molecule.removeAtom(target_atom);
-
-	goog.array.forEach(source_molecule.atoms, function(atom) {
-		target_molecule.addAtom(atom);
-	});
-
-	// replace source atom and bonds parent molecule with target parent molecule
-	goog.array.forEach(source_molecule.bonds, function(bond) {
-		var new_bond = bond.clone();
-		new_bond.molecule = undefined;
-		target_molecule.addBond(new_bond);
-	});
-	goog.array.forEach(source_molecule.atoms, function(atom) {
-		source_molecule.removeAtom(atom);
-	});
-	goog.array.forEach(source_molecule.bonds, function(bond) {
-		source_molecule.removeBond(bond);
-	});
-
-	source_molecule.reaction.removeMolecule(source_molecule);
-	delete source_molecule;
-	return target_molecule;
 }
 
 kemia.controller.plugins.Move.prototype.highlightAtom = function(atom,

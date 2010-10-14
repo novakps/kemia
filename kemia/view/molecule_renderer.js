@@ -67,11 +67,13 @@ kemia.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 	var bondFill = new goog.graphics.SolidFill(
 			this.config.get("bond")['fill']['color']);
 
-	var bondPath = new goog.graphics.Path();
-	goog.array.forEach(molecule.bonds, function(bond) {
-		this.bondRendererFactory.get(bond).render(bond, trans, bondPath);
-	}, this);
-	this.graphics.drawPath(bondPath, bondStroke, bondFill, molecule.group);
+	if(molecule.bonds.length){
+		var bondPath = new goog.graphics.Path();
+		goog.array.forEach(molecule.bonds, function(bond) {
+			this.bondRendererFactory.get(bond).render(bond, trans, bondPath);
+		}, this);
+		this.graphics.drawPath(bondPath, bondStroke, bondFill, molecule.group);
+	}
 
 	// this.logger.info("molecule has " + molecule.atoms.length + " atoms");
 	goog.array.forEach(molecule.atoms, function(atom) {

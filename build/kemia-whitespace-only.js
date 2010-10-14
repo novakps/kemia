@@ -16243,32 +16243,47 @@ kemia.controller.plugins.Move.prototype.dragAtom = function(e, atom) {
   d.startDrag(e)
 };
 kemia.controller.plugins.Move.prototype.dragBond = function(e, bond) {
-  var d = new goog.fx.Dragger(this.editorObject.getOriginalElement());
-  d._prevX = e.clientX;
-  d._prevY = e.clientY;
-  d.bond = bond;
-  d.editor = this.editorObject;
-  d.addEventListener(goog.fx.Dragger.EventType.DRAG, function(e) {
-    d.bond.molecule.group.clear();
-    var trans = new goog.graphics.AffineTransform.getTranslateInstance(e.clientX - d._prevX, e.clientY - d._prevY);
-    var inverse;
-    if(d.editor.reactionRenderer.transform) {
-      inverse = d.editor.reactionRenderer.transform.createInverse()
+  var center;
+  if(bond.source.bonds.getValues().length == 1) {
+    center = bond.target.coord
+  }else {
+    if(bond.target.bonds.getValues().length == 1) {
+      center = bond.source.coord
+    }
+  }if(center) {
+    var d = new goog.fx.Dragger(this.editorObject.getOriginalElement());
+    d._center = center;
+    var trans;
+    if(this.editorObject.reactionRenderer.transform) {
+      trans = this.editorObject.reactionRenderer.transform
     }else {
-      inverse = d.editor.reactionRenderer.moleculeRenderer.transform.createInverse()
-    }var coords = inverse.transformCoords([new goog.math.Coordinate(e.clientX, e.clientY), new goog.math.Coordinate(d._prevX, d._prevY)]);
-    var diff = goog.math.Coordinate.difference(coords[0], coords[1]);
-    bond.source.coord = goog.math.Coordinate.sum(bond.source.coord, diff);
-    bond.target.coord = goog.math.Coordinate.sum(bond.target.coord, diff);
-    d.editor.reactionRenderer.moleculeRenderer.render(bond.molecule, d.editor.reactionRenderer.transform);
-    d._prevX = e.clientX;
-    d._prevY = e.clientY
-  });
-  d.addEventListener(goog.fx.Dragger.EventType.END, function(e) {
-    d.editor.setModelsSilently(d.editor.getModels());
-    d.dispose()
-  });
-  d.startDrag(e)
+      trans = this.editorObject.reactionRenderer.moleculeRenderer.transform
+    }d._transformed_center = trans.transformCoords([center])[0];
+    d._start = kemia.controller.ReactionEditor.getMouseCoords(e);
+    d._prev_angle = goog.math.angle(d._transformed_center.x, d._transformed_center.y, d._start.x, d._start.y);
+    d.bond = bond;
+    d.editor = this.editorObject;
+    d.addEventListener(goog.fx.Dragger.EventType.DRAG, function(e) {
+      d.bond.molecule.group.clear();
+      d._initDeltaX = d._initDeltaX || d.deltaX;
+      d._initDeltaY = d._initDeltaY || d.deltaY;
+      var deltaX = d.deltaX - d._initDeltaX;
+      var deltaY = d.deltaY - d._initDeltaY;
+      var new_angle = goog.math.angle(d._transformed_center.x, d._transformed_center.y, d._start.x + deltaX, d._start.y + deltaY);
+      var delta_angle = new_angle - d._prev_angle;
+      delta_angle = delta_angle - delta_angle % 30;
+      d._prev_angle = d._prev_angle + delta_angle;
+      var trans = kemia.graphics.AffineTransform.getRotateInstance(-goog.math.toRadians(delta_angle), d._center.x, d._center.y);
+      var coords = trans.transformCoords([d.bond.source.coord, d.bond.target.coord]);
+      d.bond.source.coord = coords[0];
+      d.bond.target.coord = coords[1];
+      d.editor.setModelsSilently(d.editor.getModels())
+    });
+    d.addEventListener(goog.fx.Dragger.EventType.END, function(e) {
+      d.dispose()
+    });
+    d.startDrag(e)
+  }
 };
 kemia.controller.plugins.Move.prototype.dragPlus = function(e, plus) {
   var d = new goog.fx.Dragger(this.editorObject.getOriginalElement());
@@ -16701,37 +16716,40 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseMove = function(e) {
   }return false
 };
 kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
-  if(this.bond_type) {
-    var selected = this.editorObject.getSelected();
-    if(selected.length) {
-      goog.array.forEach(selected, function(target) {
-        if(target instanceof kemia.model.Atom) {
+  this.logger.info("handleMouseDown");
+  var selected = this.editorObject.getSelected();
+  if(selected.length) {
+    goog.array.forEach(selected, function(target) {
+      if(target instanceof kemia.model.Atom) {
+        if(this.bond_type) {
           this.editorObject.dispatchBeforeChange();
           this.addBondToAtom(target, this.bond_type);
           this.editorObject.setModelsSilently(this.editorObject.getModels());
           this.editorObject.dispatchChange();
           return true
-        }if(target instanceof kemia.model.Bond) {
-          if(this.bond_type) {
-            this.editorObject.dispatchBeforeChange();
-            this.replaceBond(target);
-            this.editorObject.setModelsSilently(this.editorObject.getModels());
-            this.editorObject.dispatchChange();
-            return true
-          }else {
-            if(target._last_click) {
-              if(goog.now() - target._last_click < 1E3) {
-                this.editorObject.dispatchBeforeChange();
-                this.toggleBondType(target);
-                this.editorObject.setModelsSilently(this.editorObject.getModels());
-                this.editorObject.dispatchChange();
-                return true
-              }
-            }target._last_click = goog.now()
-          }
         }
-      }, this)
-    }else {
+      }if(target instanceof kemia.model.Bond) {
+        if(this.bond_type) {
+          this.editorObject.dispatchBeforeChange();
+          this.replaceBond(target);
+          this.editorObject.setModelsSilently(this.editorObject.getModels());
+          this.editorObject.dispatchChange();
+          return true
+        }else {
+          if(target._last_click) {
+            if(goog.now() - target._last_click < 1E3) {
+              this.editorObject.dispatchBeforeChange();
+              this.toggleBondType(target);
+              this.editorObject.setModelsSilently(this.editorObject.getModels());
+              this.editorObject.dispatchChange();
+              return true
+            }
+          }target._last_click = goog.now()
+        }
+      }
+    }, this)
+  }else {
+    if(this.bond_type) {
       this.editorObject.dispatchBeforeChange();
       this.createMolecule(kemia.controller.ReactionEditor.getMouseCoords(e));
       this.editorObject.setModelsSilently(this.editorObject.getModels());

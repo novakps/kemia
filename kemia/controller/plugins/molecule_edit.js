@@ -145,7 +145,7 @@ kemia.controller.plugins.MoleculeEdit.prototype.dragTemplate = function(e,
 				merge_pairs = [ merge_pairs[0] ];
 			}
 			goog.array.forEach(merge_pairs, function(pair) {
-				kemia.controller.plugins.MoleculeEdit.mergeMolecules(pair[0],
+				kemia.model.Molecule.mergeMolecules(pair[0],
 						pair[1]);
 			}, this);
 			this.resetState();

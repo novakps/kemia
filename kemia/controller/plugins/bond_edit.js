@@ -193,18 +193,19 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseMove = function(e) {
 };
 
 kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
-
-	if (this.bond_type) {
+//	this.logger.info('handleMouseDown');
 		var selected = this.editorObject.getSelected();
 		if (selected.length) {
 			goog.array.forEach(selected, function(target) {
 				if (target instanceof kemia.model.Atom) {
-					this.editorObject.dispatchBeforeChange();
-					this.addBondToAtom(target, this.bond_type);
-					this.editorObject.setModelsSilently(this.editorObject
-							.getModels());
-					this.editorObject.dispatchChange();
-					return true;
+					if (this.bond_type) {
+						this.editorObject.dispatchBeforeChange();
+						this.addBondToAtom(target, this.bond_type);
+						this.editorObject.setModelsSilently(this.editorObject
+								.getModels());
+						this.editorObject.dispatchChange();
+						return true;
+					}
 				}
 				if (target instanceof kemia.model.Bond) {
 					if (this.bond_type) {
@@ -231,14 +232,15 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 				}
 			}, this);
 		} else {
-			this.editorObject.dispatchBeforeChange();
-			this.createMolecule(kemia.controller.ReactionEditor
-					.getMouseCoords(e));
-			this.editorObject.setModelsSilently(this.editorObject.getModels());
-			this.editorObject.dispatchChange();
-			return true;
+			if (this.bond_type) {
+				this.editorObject.dispatchBeforeChange();
+				this.createMolecule(kemia.controller.ReactionEditor
+						.getMouseCoords(e));
+				this.editorObject.setModelsSilently(this.editorObject.getModels());
+				this.editorObject.dispatchChange();
+				return true;
+			}
 		}
-	}
 };
 
 kemia.controller.plugins.BondEdit.prototype.createMolecule = function(pos) {
@@ -309,7 +311,7 @@ kemia.controller.plugins.BondEdit.prototype.addBondToAtom = function(atom,
 					b.source.coord, 
 					b.target.coord);}, 
 					0)/bonds.length;
-	} // average	
+	} // average of other bonds	
 
 	if (bonds.length == 0) {
 		new_angle = 0;
