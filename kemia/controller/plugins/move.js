@@ -463,7 +463,8 @@ kemia.controller.plugins.Move.prototype.dragBond = function(e, bond) {
 					+ deltaX, d._start.y + deltaY);
 			
 			var delta_angle = new_angle - d._prev_angle;
-			d._prev_angle = new_angle;
+			delta_angle = delta_angle - delta_angle % 30;
+			d._prev_angle = d._prev_angle + delta_angle;
 			var trans = kemia.graphics.AffineTransform.getRotateInstance(
 					-goog.math.toRadians(delta_angle), 
 					d._center.x, 
