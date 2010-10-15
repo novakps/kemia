@@ -129,5 +129,9 @@ kemia.model.Bond.STEREO = {
 }
 
 kemia.model.Bond.prototype.toString = function(){
-	return "kemia.model.Bond[" + this.order + "]";
+	return "kemia.model.Bond[" + 
+		this.order + ", " + 
+		this.stereo + "]  " + 
+		this.source.toString() + " -- " + 
+		this.target.toString();
 };

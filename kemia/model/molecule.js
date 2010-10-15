@@ -19,6 +19,7 @@ goog.require('kemia.ring.RingFinder');
 goog.require('kemia.model.Atom');
 goog.require('goog.debug.Logger');
 goog.require('goog.math.Vec2');
+goog.require('kemia.graphics.AffineTransform');
 
 /**
  * Class representing a Molecule
@@ -399,11 +400,11 @@ kemia.model.Molecule.prototype.getConnectedBondsList = function(atom) {
 kemia.model.Molecule.prototype.toString = function() {
 	return 'kemia.model.Molecule - name: ' + this.name + "\n\t" + 
 		goog.array.map(this.atoms, function(atom) {
-			return atom.toString();
-		}).toString() + "\n\t" + 
+			return " " + this.indexOfAtom(atom) + ": " + atom.toString();
+		}, this).join("\n\t")  + "\n\t" + 
 		goog.array.map(this.bonds, function(bond){
-			return bond.toString();
-		}).toString();
+			return " " + this.indexOfAtom(bond.source) + ", " + this.indexOfAtom(bond.target) + ":  " +  bond.toString();
+		}, this).join("\n\t");
 };
 /**
  * returns center coordinates of molecule's atoms
@@ -480,8 +481,8 @@ kemia.model.Molecule.prototype.translate = function(vector) {
 kemia.model.Molecule.prototype.merge = function(fragment, frag_bond, target_bond, frag_atom, target_atom){
 	goog.asserts.assert(goog.array.contains(fragment.bonds, frag_bond));
 	goog.asserts.assert(goog.array.contains(this.bonds, target_bond));
-	goog.asserts.assert(frag_atom.bonds.getValues(), frag_bond);
-	goog.asserts.assert(target_atom.bonds.getValues(), target_bond);
+	goog.asserts.assert(goog.array.contains(frag_atom.bonds.getValues(), frag_bond));
+	goog.asserts.assert(goog.array.contains(target_atom.bonds.getValues(), target_bond));
 	
 	// scale and translate and rotate fragment into position
 	var scale =  this.getAverageBondLength() / fragment.getAverageBondLength();
@@ -501,7 +502,6 @@ kemia.model.Molecule.prototype.merge = function(fragment, frag_bond, target_bond
 			other_frag_atom.coord.y);
 	var angle_diff = goog.math.angleDifference( fragment_angle, target_angle);
 
-	var fragment = frag_atom.molecule;
 	fragment.rotate(180 + angle_diff, frag_atom.coord);
 	fragment.translate(position_diff);
 
@@ -528,9 +528,11 @@ kemia.model.Molecule.prototype.merge = function(fragment, frag_bond, target_bond
 		}
 	}, this);
 	
-	fragment.removeAtom(frag_atom);
 	goog.array.forEach(fragment.atoms, function(atom) {
+		if(atom!==frag_atom && atom!==other_frag_atom){
 			this.addAtom(atom);
+			this.logger.info('add ' + atom.toString());
+		}
 	}, this);
 
 	fragment.removeBond(frag_bond);
