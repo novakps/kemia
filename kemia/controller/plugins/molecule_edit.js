@@ -625,8 +625,8 @@ kemia.controller.plugins.MoleculeEdit.TEMPLATES = [ {
 		"charge" : 0
 	} ],
 	"bondindex" : [ {
-		"source" : 0,
-		"target" : 1,
+		"source" : 1,
+		"target" : 0,
 		"type" : "SINGLE_BOND",
 		"stereo" : "NOT_STEREO"
 	}, {
