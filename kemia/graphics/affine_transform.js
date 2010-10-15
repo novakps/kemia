@@ -85,7 +85,11 @@ kemia.graphics.AffineTransform.prototype.createInverse = function() {
 };
 
 kemia.graphics.AffineTransform.getRotateInstance = function(theta, x, y) {
-	  return new kemia.graphics.AffineTransform().setToRotation(theta, x, y);
+	return new kemia.graphics.AffineTransform().setToRotation(theta, x, y);
+};
+
+kemia.graphics.AffineTransform.getScaleInstance = function(sx , sy){
+	return new kemia.graphics.AffineTransform().setToScale(sx, sy);
 };
 
 

@@ -84,6 +84,10 @@ kemia.model.Bond.prototype.otherAtom = function(atom) {
 	return null;
 };
 
+kemia.model.Bond.prototype.getLength = function(){
+	return goog.math.Coordinate.distance(this.source.coord, this.target.coord);
+}
+
 /**
  * clones this bond
  * 

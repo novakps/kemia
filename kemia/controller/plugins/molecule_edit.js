@@ -36,6 +36,63 @@ kemia.controller.plugins.MoleculeEdit.prototype.isSupportedCommand = function(
 kemia.controller.plugins.MoleculeEdit.prototype.getTrogClassId = goog.functions
 		.constant(kemia.controller.plugins.MoleculeEdit.COMMAND);
 
+kemia.controller.plugins.MoleculeEdit.SHORTCUTS = [ {
+	id : 'benzene',
+	key : 'a'
+} ]
+
+kemia.controller.plugins.MoleculeEdit.prototype.getKeyboardShortcuts = function() {
+	return kemia.controller.plugins.MoleculeEdit.SHORTCUTS;
+}
+
+kemia.controller.plugins.MoleculeEdit.prototype.handleKeyboardShortcut = function(
+		e) {
+	this.logger.info('handleKeyboardShortcut');
+	var id = e.identifier;
+	var shortcut = goog.array.find(
+			kemia.controller.plugins.MoleculeEdit.SHORTCUTS, function(obj) {
+				return obj.id == e.identifier
+			});
+	if (shortcut) {
+		var template = goog.array.find(
+				kemia.controller.plugins.MoleculeEdit.TEMPLATES, function(t) {
+					return t['name'] == shortcut.id;
+				});
+		var selected = this.editorObject.getSelected();
+		if (selected.length) {
+			goog.array.forEach(selected, function(target) {
+				if (target instanceof kemia.model.Atom) {
+					this.editorObject.dispatchBeforeChange();
+					var atom = target;
+					this.sproutTemplate(atom, template);
+					this.editorObject.setModelsSilently(this.editorObject
+							.getModels());
+					this.editorObject.dispatchChange();
+					return true;
+				}
+				if (target instanceof kemia.model.Bond) {
+					this.editorObject.dispatchBeforeChange();
+					this.fuseTemplate(target, template);
+					this.editorObject.setModelsSilently(this.editorObject
+							.getModels());
+					this.editorObject.dispatchChange();
+					return true;
+				}
+			}, this);
+		} else {
+			// TTD need to get current mouse coords
+			return false;
+			this.editorObject.dispatchBeforeChange();
+//			this.createMolecule(this.editorObject
+//					.getAtomicCoords(kemia.controller.ReactionEditor
+//							.getMouseCoords(e)), template);
+//			this.editorObject.setModelsSilently(this.editorObject.getModels());
+//			this.editorObject.dispatchChange();
+//			return true;
+		}
+	}
+}
+
 /**
  * sets template
  * 
@@ -90,7 +147,8 @@ kemia.controller.plugins.MoleculeEdit.prototype.handleMouseDown = function(e) {
 		goog.array.forEach(selected, function(target) {
 			if (target instanceof kemia.model.Atom) {
 				this.editorObject.dispatchBeforeChange();
-				this.addTemplateToAtom(target, this.template);
+				var atom = target;
+				this.sproutTemplate(atom, this.template);
 				this.editorObject.setModelsSilently(this.editorObject
 						.getModels());
 				this.editorObject.dispatchChange();
@@ -98,7 +156,7 @@ kemia.controller.plugins.MoleculeEdit.prototype.handleMouseDown = function(e) {
 			}
 			if (target instanceof kemia.model.Bond) {
 				this.editorObject.dispatchBeforeChange();
-				this.fuseTemplateToBond(target, this.template);
+				this.fuseTemplate(target, this.template);
 				this.editorObject.setModelsSilently(this.editorObject
 						.getModels());
 				this.editorObject.dispatchChange();
@@ -108,8 +166,9 @@ kemia.controller.plugins.MoleculeEdit.prototype.handleMouseDown = function(e) {
 	} else {
 		if (this.template) {
 			this.editorObject.dispatchBeforeChange();
-			this.createMolecule(kemia.controller.ReactionEditor
-					.getMouseCoords(e));
+			this.createMolecule(this.editorObject
+					.getAtomicCoords(kemia.controller.ReactionEditor
+							.getMouseCoords(e)), this.template);
 			this.editorObject.setModelsSilently(this.editorObject.getModels());
 			this.editorObject.dispatchChange();
 			return true;
@@ -237,6 +296,57 @@ kemia.controller.plugins.MoleculeEdit.prototype.dragTemplate = function(e,
 		}, undefined, this);
 	d.startDrag(e);
 };
+
+/**
+ * adds a new molecule to editor based on current template at atomic coords
+ * 
+ * @param {goog.math.Coordinate}
+ *            coords
+ * 
+ */
+kemia.controller.plugins.MoleculeEdit.prototype.createMolecule = function(
+		coords, template) {
+	if (template) {
+		var molecule = kemia.io.json.readMolecule(template)
+	}
+	var diff = goog.math.Coordinate.difference(coords, molecule.getCenter());
+	molecule.translate(diff);
+	if (this.editorObject.getModels().length > 0) {
+		var model = this.editorObject.getModels()[0];
+		if (model instanceof kemia.model.Reaction) {
+			model.addMolecule(molecule);
+		} else if (model instanceof kemia.model.Molecule) {
+			models.push(molecule);
+		}
+	} else {
+		reaction = new kemia.model.Reaction();
+		reaction.addMolecule(molecule);
+	}
+}
+
+kemia.controller.plugins.MoleculeEdit.prototype.fuseTemplate = function(bond,
+		template) {
+	var fragment = kemia.io.json.readMolecule(template);
+	bond.molecule.merge(fragment, fragment.bonds[0], bond,
+			fragment.bonds[0].target, bond.source);
+}
+
+kemia.controller.plugins.MoleculeEdit.prototype.sproutTemplate = function(atom,
+		template) {
+	var sprout_bond = atom.molecule.sproutBond(atom,
+			kemia.model.Bond.ORDER.SINGLE, kemia.model.Bond.STEREO.NOT_STEREO);
+	var sprout_atom = sprout_bond.otherAtom(atom);
+	var fragment = kemia.io.json.readMolecule(template);
+
+	// TTD need to provide means to identify template attachment point for
+	// assymetrical templates
+	var attachment_atom = fragment.atoms[0];
+	var attachment_bond = fragment.sproutBond(attachment_atom,
+			kemia.model.Bond.ORDER.SINGLE, kemia.model.Bond.STEREO.NOT_STEREO);
+
+	atom.molecule.merge(fragment, attachment_bond, sprout_bond,
+			attachment_atom, sprout_atom);
+}
 
 /**
  * The logger for this class.
