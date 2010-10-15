@@ -3555,12 +3555,13 @@ kemia.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
   var ry = Math.abs(this.transform.getScaleY() * (box.bottom - box.top) / 2);
   var bondStroke = new goog.graphics.Stroke(this.config.get("bond")["stroke"]["width"], this.config.get("bond")["stroke"]["color"]);
   var bondFill = new goog.graphics.SolidFill(this.config.get("bond")["fill"]["color"]);
-  var bondPath = new goog.graphics.Path;
-  goog.array.forEach(molecule.bonds, function(bond) {
-    this.bondRendererFactory.get(bond).render(bond, trans, bondPath)
-  }, this);
-  this.graphics.drawPath(bondPath, bondStroke, bondFill, molecule.group);
-  goog.array.forEach(molecule.atoms, function(atom) {
+  if(molecule.bonds.length) {
+    var bondPath = new goog.graphics.Path;
+    goog.array.forEach(molecule.bonds, function(bond) {
+      this.bondRendererFactory.get(bond).render(bond, trans, bondPath)
+    }, this);
+    this.graphics.drawPath(bondPath, bondStroke, bondFill, molecule.group)
+  }goog.array.forEach(molecule.atoms, function(atom) {
     this.atomRenderer.render(atom, trans, molecule.group)
   }, this)
 };
@@ -16128,7 +16129,7 @@ kemia.controller.plugins.Move.prototype.handleMouseUp = function(e) {
     var target = targets.length > 0 ? targets[0] : undefined;
     if(this.dragSource && target instanceof kemia.model.Atom) {
       this.editorObject.dispatchBeforeChange();
-      kemia.controller.plugins.Move.mergeMolecules(this.dragSource, target);
+      kemia.model.Molecule.mergeMolecules(this.dragSource, target);
       this.dragSource = undefined;
       this.editorObject.setModelsSilently(this.editorObject.getModels());
       this.editorObject.dispatchChange();
@@ -16137,34 +16138,6 @@ kemia.controller.plugins.Move.prototype.handleMouseUp = function(e) {
   }catch(e) {
     this.logger.info(e)
   }
-};
-kemia.controller.plugins.Move.mergeMolecules = function(source_atom, target_atom) {
-  var source_molecule = source_atom.molecule;
-  var target_molecule = target_atom.molecule;
-  goog.array.forEach(target_atom.bonds.getValues(), function(bond) {
-    var new_bond = bond.clone();
-    target_atom == new_bond.source ? (new_bond.source = source_atom) : (new_bond.target = source_atom);
-    target_molecule.addBond(new_bond);
-    target_molecule.removeBond(bond)
-  });
-  target_molecule.removeAtom(target_atom);
-  goog.array.forEach(source_molecule.atoms, function(atom) {
-    target_molecule.addAtom(atom)
-  });
-  goog.array.forEach(source_molecule.bonds, function(bond) {
-    var new_bond = bond.clone();
-    new_bond.molecule = undefined;
-    target_molecule.addBond(new_bond)
-  });
-  goog.array.forEach(source_molecule.atoms, function(atom) {
-    source_molecule.removeAtom(atom)
-  });
-  goog.array.forEach(source_molecule.bonds, function(bond) {
-    source_molecule.removeBond(bond)
-  });
-  source_molecule.reaction.removeMolecule(source_molecule);
-  delete source_molecule;
-  return target_molecule
 };
 kemia.controller.plugins.Move.prototype.highlightAtom = function(atom, opt_group) {
   return this.editorObject.reactionRenderer.moleculeRenderer.atomRenderer.highlightOn(atom, "#3366ff", opt_group)
@@ -16716,7 +16689,6 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseMove = function(e) {
   }return false
 };
 kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
-  this.logger.info("handleMouseDown");
   var selected = this.editorObject.getSelected();
   if(selected.length) {
     goog.array.forEach(selected, function(target) {
@@ -18836,6 +18808,34 @@ kemia.model.Molecule.prototype.translate = function(vector) {
     a.coord = goog.math.Coordinate.sum(a.coord, vector)
   })
 };
+kemia.model.Molecule.mergeMolecules = function(source_atom, target_atom) {
+  var source_molecule = source_atom.molecule;
+  var target_molecule = target_atom.molecule;
+  goog.array.forEach(target_atom.bonds.getValues(), function(bond) {
+    var new_bond = bond.clone();
+    target_atom == new_bond.source ? (new_bond.source = source_atom) : (new_bond.target = source_atom);
+    target_molecule.addBond(new_bond);
+    target_molecule.removeBond(bond)
+  });
+  target_molecule.removeAtom(target_atom);
+  goog.array.forEach(source_molecule.atoms, function(atom) {
+    target_molecule.addAtom(atom)
+  });
+  goog.array.forEach(source_molecule.bonds, function(bond) {
+    var new_bond = bond.clone();
+    new_bond.molecule = undefined;
+    target_molecule.addBond(new_bond)
+  });
+  goog.array.forEach(source_molecule.atoms, function(atom) {
+    source_molecule.removeAtom(atom)
+  });
+  goog.array.forEach(source_molecule.bonds, function(bond) {
+    source_molecule.removeBond(bond)
+  });
+  source_molecule.reaction.removeMolecule(source_molecule);
+  delete source_molecule;
+  return target_molecule
+};
 kemia.model.Molecule.prototype.logger = goog.debug.Logger.getLogger("kemia.model.Molecule");
 // Input 186
 goog.provide("kemia.controller.plugins.MoleculeEdit");
@@ -18910,7 +18910,7 @@ kemia.controller.plugins.MoleculeEdit.prototype.dragTemplate = function(e, molec
     if(merge_pairs.length > 0) {
       merge_pairs = [merge_pairs[0]]
     }goog.array.forEach(merge_pairs, function(pair) {
-      kemia.controller.plugins.MoleculeEdit.mergeMolecules(pair[0], pair[1])
+      kemia.model.Molecule.mergeMolecules(pair[0], pair[1])
     }, this);
     this.resetState();
     d.editor.setModels(d.editor.getModels());

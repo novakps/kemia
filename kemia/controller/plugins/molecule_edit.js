@@ -45,40 +45,124 @@ kemia.controller.plugins.MoleculeEdit.prototype.getTrogClassId = goog.functions
  */
 kemia.controller.plugins.MoleculeEdit.prototype.execCommandInternal = function(
 		command, var_args) {
-	try {
-		var e = arguments[3];
-		var molecule = kemia.io.json.readMolecule(arguments[1]);
-		// place template as new molecule at 0,0 of graphics canvas
-		var origin = this.editorObject
-				.getAtomicCoords(new goog.math.Coordinate(0, 0));
-		var mol_bbox = molecule.getBoundingBox();
-		var mol_offset = new goog.math.Coordinate(mol_bbox.right, mol_bbox.top);
-		var diff = goog.math.Coordinate.difference(origin, mol_offset);
-		// diff = goog.math.Coordinate.difference(diff, mol_offset);
-		if (this.editorObject.getModels().length > 0) {
-			var reaction = this.editorObject.getModels()[0];
-		} else {
-			reaction = new kemia.model.Reaction();
+
+	this.template = arguments[1];
+	// try {
+	// var e = arguments[3];
+	// var molecule = kemia.io.json.readMolecule(arguments[1]);
+	// // place template as new molecule at 0,0 of graphics canvas
+	// var origin = this.editorObject
+	// .getAtomicCoords(new goog.math.Coordinate(0, 0));
+	// var mol_bbox = molecule.getBoundingBox();
+	// var mol_offset = new goog.math.Coordinate(mol_bbox.right, mol_bbox.top);
+	// var diff = goog.math.Coordinate.difference(origin, mol_offset);
+	// // diff = goog.math.Coordinate.difference(diff, mol_offset);
+	// if (this.editorObject.getModels().length > 0) {
+	// var reaction = this.editorObject.getModels()[0];
+	// } else {
+	// reaction = new kemia.model.Reaction();
+	// }
+	// reaction.addMolecule(molecule);
+	// molecule.translate(diff);
+	// this.editorObject.setModelsSilently( [ reaction ]);
+	// var mol_center = molecule.getCenter();
+	//
+	// var center = this.editorObject.getGraphicsCoords(mol_center);
+	// var origin = kemia.controller.ReactionEditor.getOffsetCoords(
+	// this.editorObject.originalElement, document.body.scrollLeft
+	// + document.documentElement.scrollLeft,
+	// document.body.scrollTop + document.documentElement.scrollTop);
+	//
+	// e.clientX = center.x - origin.x;
+	// e.clientY = center.y - origin.y;
+	//
+	// this.dragTemplate(e, molecule);
+	//
+	// } catch (e) {
+	// this.logger.info(e);
+	// }
+};
+
+kemia.controller.plugins.MoleculeEdit.prototype.handleMouseDown = function(e) {
+	this.logger.info('handleMouseDown');
+	var selected = this.editorObject.getSelected();
+	if (selected.length && this.template) {
+		goog.array.forEach(selected, function(target) {
+			if (target instanceof kemia.model.Atom) {
+				this.editorObject.dispatchBeforeChange();
+				this.addTemplateToAtom(target, this.template);
+				this.editorObject.setModelsSilently(this.editorObject
+						.getModels());
+				this.editorObject.dispatchChange();
+				return true;
+			}
+			if (target instanceof kemia.model.Bond) {
+				this.editorObject.dispatchBeforeChange();
+				this.fuseTemplateToBond(target, this.template);
+				this.editorObject.setModelsSilently(this.editorObject
+						.getModels());
+				this.editorObject.dispatchChange();
+				return true;
+			}
+		}, this);
+	} else {
+		if (this.template) {
+			this.editorObject.dispatchBeforeChange();
+			this.createMolecule(kemia.controller.ReactionEditor
+					.getMouseCoords(e));
+			this.editorObject.setModelsSilently(this.editorObject.getModels());
+			this.editorObject.dispatchChange();
+			return true;
 		}
-		reaction.addMolecule(molecule);
-		molecule.translate(diff);
-		this.editorObject.setModelsSilently( [ reaction ]);
-		var mol_center = molecule.getCenter();
-
-		var center = this.editorObject.getGraphicsCoords(mol_center);
-		var origin = kemia.controller.ReactionEditor.getOffsetCoords(
-				this.editorObject.originalElement, document.body.scrollLeft
-						+ document.documentElement.scrollLeft,
-				document.body.scrollTop + document.documentElement.scrollTop);
-
-		e.clientX = center.x - origin.x;
-		e.clientY = center.y - origin.y;
-
-		this.dragTemplate(e, molecule);
-
-	} catch (e) {
-		this.logger.info(e);
 	}
+};
+
+kemia.controller.plugins.MoleculeEdit.prototype.handleMouseMove = function(e) {
+	if (this.template) {
+		var target = this.editorObject.findTarget(e);
+		this.editorObject.clearSelected();
+		this.editorObject.getOriginalElement().style.cursor = 'default';
+		if (e.currentTarget.highlightGroup) {
+			e.currentTarget.highlightGroup.clear();
+		}
+		e.currentTarget.highlightGroup = undefined;
+
+		if (target instanceof kemia.model.Atom) {
+			this.editorObject.addSelected(target);
+			this.editorObject.getOriginalElement().style.cursor = 'pointer';
+			if (!e.currentTarget.highlightGroup) {
+				e.currentTarget.highlightGroup = this.highlightAtom(target);
+			} else {
+				e.currentTarget.highlightGroup = this.highlightAtom(target,
+						e.currentTarget.highlightGroup);
+			}
+			return true;
+		} else if (target instanceof kemia.model.Bond) {
+			this.editorObject.addSelected(target);
+			this.editorObject.getOriginalElement().style.cursor = 'pointer';
+			if (!e.currentTarget.highlightGroup) {
+				e.currentTarget.highlightGroup = this.highlightBond(target);
+			} else {
+				e.currentTarget.highlightGroup = this.highlightBond(target,
+						e.currentTarget.highlightGroup);
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
+kemia.controller.plugins.MoleculeEdit.prototype.highlightAtom = function(atom,
+		opt_group) {
+
+	return this.editorObject.reactionRenderer.moleculeRenderer.atomRenderer
+			.highlightOn(atom, 'yellow', opt_group);
+};
+
+kemia.controller.plugins.MoleculeEdit.prototype.highlightBond = function(bond,
+		opt_group) {
+	return this.editorObject.reactionRenderer.moleculeRenderer.bondRendererFactory
+			.get(bond).highlightOn(bond, 'yellow', opt_group);
 };
 
 kemia.controller.plugins.MoleculeEdit.prototype.dragTemplate = function(e,
@@ -114,7 +198,7 @@ kemia.controller.plugins.MoleculeEdit.prototype.dragTemplate = function(e,
 
 					var diff = goog.math.Coordinate.difference(mol_coords[0],
 							mol_coords[1]);
-					d.molecule.translate( diff);
+					d.molecule.translate(diff);
 					d._prev = mouse_coord;
 
 					// highlight merge sites
@@ -145,8 +229,7 @@ kemia.controller.plugins.MoleculeEdit.prototype.dragTemplate = function(e,
 				merge_pairs = [ merge_pairs[0] ];
 			}
 			goog.array.forEach(merge_pairs, function(pair) {
-				kemia.model.Molecule.mergeMolecules(pair[0],
-						pair[1]);
+				kemia.model.Molecule.mergeMolecules(pair[0], pair[1]);
 			}, this);
 			this.resetState();
 			d.editor.setModels(d.editor.getModels());
@@ -163,6 +246,12 @@ kemia.controller.plugins.MoleculeEdit.prototype.dragTemplate = function(e,
  */
 kemia.controller.plugins.MoleculeEdit.prototype.logger = goog.debug.Logger
 		.getLogger('kemia.controller.plugins.MoleculeEdit');
+
+kemia.controller.plugins.MoleculeEdit.prototype.addTemplateToAtom = function(
+		atom, template) {
+	var new_angle = kemia.model.Atom.nextBondAngle(atom);
+
+}
 
 // kemia.controller.plugins.MoleculeEdit.prototype.handleMouseDown = function(e)
 // {
