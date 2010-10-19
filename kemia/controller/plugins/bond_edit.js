@@ -5,7 +5,7 @@ goog.require('kemia.model.Bond');
 
 /**
  * @constructor
- * @extends{kemia.controller.Plugin}s
+ * @extends{kemia.controller.Plugin}
  */
 kemia.controller.plugins.BondEdit = function() {
 	kemia.controller.Plugin.call(this);
