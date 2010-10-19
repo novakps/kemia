@@ -29,6 +29,7 @@ goog.require('kemia.model.NeighborList');
 goog.require('goog.ui.Prompt');
 goog.require('goog.debug.Console');
 goog.require('goog.ui.KeyboardShortcutHandler');
+goog.require('kemia.io.json');
 
 /**
  * A graphical editor for reactions

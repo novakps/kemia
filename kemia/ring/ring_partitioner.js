@@ -19,7 +19,8 @@ goog.require('goog.array');
 /**
  * partitions array of rings into connected lists
  * 
- * @param {Array.<kemia.ring.Ring>} rings list of rings to group into connected
+ * @param {Array.
+ *            <kemia.ring.Ring>} rings list of rings to group into connected
  *            arrays
  * @return {Array.<Array.<kemia.ring.Ring>>} array of arrays of Rings
  */
@@ -93,10 +94,10 @@ kemia.ring.RingPartitioner.directConnectedRings = function(ring, rings){
 /**
  * partitions array of rings into connected lists
  * 
- * @param {Array.<kemia.ring.Ring>} rings list of rings to group into connected
+ * @param {Array.
+ *            <kemia.ring.Ring>} rings list of rings to group into connected
  *            arrays
  * @return {Array.<Array.<kemia.ring.Ring>>} array of arrays of Rings
- */
  
 kemia.ring.RingPartitioner.getPartitionedRings = function(rings) {
 	var partitions = [];
@@ -129,13 +130,13 @@ kemia.ring.RingPartitioner.getPartitionedRings = function(rings) {
 /**
  * finds rings directly connected to the subject ring
  * 
- * @param {kemia.ring.Ring} ring, the ring which we want to find direct
+ * @param{kemia.ring.Ring} ring, the ring which we want to find direct
  *                         connections to
- * @param {Array.<kemia.ring.Ring>} rings, the rings we want to search for
+ * @param{Array.<kemia.ring.Ring>} rings, the rings we want to search for
  *               connections
- * @return {Array.<kemia.ring.Ring>} array of directly connected rings, which
+ * @return{Array.<kemia.ring.Ring>} array of directly connected rings, which
  *                does *not* include the subject ring
- */
+ *
 kemia.ring.RingPartitioner.directConnectedRings = function(ring, rings) {
 	result = [];
 	goog.array.forEach(rings, function(r) {
@@ -152,5 +153,5 @@ kemia.ring.RingPartitioner.directConnectedRings = function(ring, rings) {
 	});
 	return result;
 }
-
+*/
 
