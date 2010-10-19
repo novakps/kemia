@@ -30,3 +30,9 @@ function testSpiro45Decane(){
 	var rings = kemia.ring.RingFinder.findRings(mol);
 	assertEquals('should find 2 rings', 2, rings.length);
 }
+
+function testIsopropylcyclopentane(){
+	var mol = kemia.io.smiles.SmilesParser.parse('CC(C)C1CCCC1');
+	var rings = kemia.ring.RingFinder.findRings(mol);
+	assertEquals('should find 1 ring', 1, rings.length);
+}

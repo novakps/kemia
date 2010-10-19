@@ -138,14 +138,15 @@ kemia.controller.plugins.BondEdit.prototype.handleKeyboardShortcut = function(e)
 					this.editorObject.dispatchBeforeChange();
 					for ( var i = 0; i < repeat; i++) {
 						var new_bond = attachment_atom.molecule.sproutBond(
-								attachment_atom, 
-								kemia.model.Bond.ORDER.SINGLE,
+								attachment_atom, kemia.model.Bond.ORDER.SINGLE,
 								kemia.model.Bond.STEREO.NOT_STEREO);
 						if (new_bond) {
-							attachment_atom = new_bond.otherAtom(attachment_atom);
+							attachment_atom = new_bond
+									.otherAtom(attachment_atom);
 						}
 					}
-					this.editorObject.setModelsSilently(this.editorObject.getModels());
+					this.editorObject.setModelsSilently(this.editorObject
+							.getModels());
 					this.editorObject.dispatchChange();
 					return true;
 				}
@@ -192,53 +193,117 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseMove = function(e) {
 
 kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 	this.logger.info('handleMouseDown');
-		var selected = this.editorObject.getSelected();
-		if (selected.length) {
-			goog.array.forEach(selected, function(target) {
-				if (target instanceof kemia.model.Atom) {
-					if (this.bond_type) {
-						this.editorObject.dispatchBeforeChange();
-						target.molecule.sproutBond(target, this.bond_type.order, this.bond_type.stereo);
-						this.editorObject.setModelsSilently(this.editorObject
-								.getModels());
-						this.editorObject.dispatchChange();
-						return true;
-					}
+	var selected = this.editorObject.getSelected();
+	if (selected.length) {
+		goog.array.forEach(selected, function(target) {
+			if (target instanceof kemia.model.Atom) {
+				if (this.bond_type) {
+					this.editorObject.dispatchBeforeChange();
+					var new_bond = target.molecule.sproutBond(target, this.bond_type.order,
+							this.bond_type.stereo);
+					this.dragBond(e, new_bond);
+					this.editorObject.setModelsSilently(this.editorObject
+							.getModels());
+					this.editorObject.dispatchChange();
+					return true;
 				}
-				if (target instanceof kemia.model.Bond) {
-					if (this.bond_type) {
-						this.editorObject.dispatchBeforeChange();
-						this.replaceBond(target);
-						this.editorObject.setModelsSilently(this.editorObject
-								.getModels());
-						this.editorObject.dispatchChange();
-						return true;
-					} else {
-						if (target._last_click) {
-							if ((goog.now() - target._last_click) < 1000) {
-								this.editorObject.dispatchBeforeChange();
-								this.toggleBondType(target);
-								this.editorObject
-										.setModelsSilently(this.editorObject
-												.getModels());
-								this.editorObject.dispatchChange();
-								return true;
-							}
-						}
-						target._last_click = goog.now();
-					}
-				}
-			}, this);
-		} else {
-			if (this.bond_type) {
-				this.editorObject.dispatchBeforeChange();
-				this.createMolecule(kemia.controller.ReactionEditor
-						.getMouseCoords(e));
-				this.editorObject.setModelsSilently(this.editorObject.getModels());
-				this.editorObject.dispatchChange();
-				return true;
 			}
+			if (target instanceof kemia.model.Bond) {
+				var bond = target;
+				if (this.bond_type && this.bond_type.order != bond.order
+						&& this.bond_type.stereo != this.bond.stereo) {
+					this.editorObject.dispatchBeforeChange();
+					var bond = this.replaceBond(target);
+					this.editorObject.setModelsSilently(this.editorObject
+							.getModels());
+					this.editorObject.dispatchChange();
+					return true;
+				} else {
+					this.editorObject.dispatchBeforeChange();
+					this.dragBond(e, bond);
+					this.editorObject.dispatchChange();
+					return true;
+				}
+				// else {
+				// if (target._last_click) {
+				// if ((goog.now() - target._last_click) < 1000) {
+				// this.editorObject.dispatchBeforeChange();
+				// this.toggleBondType(target);
+				// this.editorObject
+				// .setModelsSilently(this.editorObject
+				// .getModels());
+				// this.editorObject.dispatchChange();
+				// return true;
+				// }
+				// }
+				// target._last_click = goog.now();
+				// }
+			}
+		}, this);
+	} else {
+		if (this.bond_type) {
+			this.editorObject.dispatchBeforeChange();
+			this.createMolecule(kemia.controller.ReactionEditor
+					.getMouseCoords(e));
+			this.editorObject.setModelsSilently(this.editorObject.getModels());
+			this.editorObject.dispatchChange();
+			return true;
 		}
+	}
+};
+
+kemia.controller.plugins.BondEdit.prototype.dragBond = function(e, bond) {
+	var center;
+	if (bond.source.bonds.getValues().length == 1) {
+		center = bond.target.coord;
+	} else if (bond.target.bonds.getValues().length == 1) {
+		center = bond.source.coord;
+	}
+
+	if (center) {
+		var d = new goog.fx.Dragger(this.editorObject.getOriginalElement());
+		d._center = center;
+		var trans;
+		if (this.editorObject.reactionRenderer.transform) {
+			trans = this.editorObject.reactionRenderer.transform;
+		} else {
+			trans = this.editorObject.reactionRenderer.moleculeRenderer.transform;
+		}
+		d._transformed_center = trans.transformCoords( [ center ])[0];
+		d._start = kemia.controller.ReactionEditor.getMouseCoords(e);
+		d._prev_angle = goog.math.angle(d._transformed_center.x,
+				d._transformed_center.y, d._start.x, d._start.y);
+		d.bond = bond;
+		d.editor = this.editorObject;
+
+		d.addEventListener(goog.fx.Dragger.EventType.DRAG, function(e) {
+			d.bond.molecule.group.clear();
+			d._initDeltaX = d._initDeltaX || d.deltaX;
+			d._initDeltaY = d._initDeltaY || d.deltaY;
+			var deltaX = d.deltaX - d._initDeltaX;
+			var deltaY = d.deltaY - d._initDeltaY;
+			var new_angle = goog.math.angle(d._transformed_center.x,
+					d._transformed_center.y, d._start.x + deltaX, d._start.y
+							+ deltaY);
+
+			var delta_angle = new_angle - d._prev_angle;
+			delta_angle = delta_angle - delta_angle % 30;
+			d._prev_angle = d._prev_angle + delta_angle;
+			var trans = kemia.graphics.AffineTransform
+					.getRotateInstance(-goog.math.toRadians(delta_angle),
+							d._center.x, d._center.y);
+			var coords = trans.transformCoords( [ d.bond.source.coord,
+					d.bond.target.coord ]);
+			d.bond.source.coord = coords[0];
+			d.bond.target.coord = coords[1];
+			d.editor.setModelsSilently(d.editor.getModels());
+
+		});
+		d.addEventListener(goog.fx.Dragger.EventType.END, function(e) {
+			d.dispose();
+		});
+		d.startDrag(e);
+	}
 };
 
 kemia.controller.plugins.BondEdit.prototype.createMolecule = function(pos) {
