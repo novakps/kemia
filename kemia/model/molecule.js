@@ -516,8 +516,8 @@ kemia.model.Molecule.prototype.merge = function(fragment, frag_bond,
 
 	fragment.rotate(180 + angle_diff, frag_atom.coord);
 	fragment.translate(position_diff);
-	this.logger.info('this ' + this.toString());
-	this.logger.info('fragment ' + fragment.toString());
+//	this.logger.info('this ' + this.toString());
+//	this.logger.info('fragment ' + fragment.toString());
 	// merge fragment into this molecule
 	// clone and transfer bonds attached to frag_atom (except frag_bond) to
 	// target_atom
@@ -573,8 +573,11 @@ kemia.model.Molecule.prototype.merge = function(fragment, frag_bond,
 		fragment.reaction.removeMolecule(source_molecule);
 	}
 	delete fragment;
-	this.logger.info('merged ' + this.toString());
+//	this.logger.info('merged ' + this.toString());
 	this.resetRingCenters();
+	this.sssr = [];
+	this.mustRecalcSSSR = true;
+	return this;
 
 }
 
@@ -655,40 +658,6 @@ kemia.model.Molecule.prototype.sproutFragment = function(attachment_atom,
 		kemia.model.Molecule.mergeMolecules(fragment_atom, attachment_atom);
 	}
 }
-/**
- * traversal of molecule graph to find all directly and indirectly
- * connected atoms, can exclude part of graph by specifying opt_exclude_atom
- * 
- * @param{kemia.model.Atom} atom starting point
- * @param{kemia.model.Atom=} opt_exclude_atom exclude this atom and its bonds from search
- * @return{Array.<kemia.model.Atom>}
- */
-kemia.model.Molecule.prototype.connectedAtoms = function(atom, opt_exclude_atom) {
-	var connected = [atom];
-	if (opt_exclude_atom) {
-		connected.push(opt_exclude_atom);
-	}
-	connected = kemia.model.Molecule.connectedAtomsHelper(connected, atom);
-	goog.array.remove(connected, opt_exclude_atom);
-	return connected;
-};
-
-/**
- * @private
- * @param {Array.<kemia.model.Atom>} seen_atoms
- * @param {kemia.model.Atom} atom
- * @return {Array.<kemia.model.Atom}
- */
-kemia.model.Molecule.connectedAtomsHelper = function(seen_atoms, atom) {
-	goog.array.forEach(atom.bonds.getValues(), function(b) {
-		var other_atom = b.otherAtom(atom);
-		if (!goog.array.contains(seen_atoms, other_atom)) {
-			seen_atoms.push(other_atom);
-			seen_atoms = kemia.model.Molecule.connectedAtomsHelper(seen_atoms, other_atom);
-		} 
-	});
-	return seen_atoms;
-};
 
 /**
  * sprouts a new bond at the atom

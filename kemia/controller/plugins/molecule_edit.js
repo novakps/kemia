@@ -149,8 +149,12 @@ kemia.controller.plugins.MoleculeEdit.prototype.handleMouseDown = function(e) {
 			if (target instanceof kemia.model.Atom) {
 				this.editorObject.dispatchBeforeChange();
 				var atom = target;
-				var sprout_bond = this.sproutTemplate(atom, this.template);
-				this.dragFragment(e, sprout_bond, atom);
+				var original_atoms = goog.array.clone(atom.molecule.atoms);
+				var molecule = this.sproutTemplate(atom, this.template);
+				var fragment_atoms = goog.array.filter(molecule.atoms, function(a){
+					return !goog.array.contains(original_atoms, a);
+				})
+				this.dragFragment(e, fragment_atoms, atom);
 				this.editorObject.setModelsSilently(this.editorObject
 						.getModels());
 				this.editorObject.dispatchChange();
@@ -226,11 +230,11 @@ kemia.controller.plugins.MoleculeEdit.prototype.highlightBond = function(bond,
 			.get(bond).highlightOn(bond, 'yellow', opt_group);
 };
 
-kemia.controller.plugins.MoleculeEdit.prototype.dragFragment = function(e, bond, pivot_atom) {
+kemia.controller.plugins.MoleculeEdit.prototype.dragFragment = function(e, fragment_atoms, pivot_atom) {
+	this.logger.info('dragFragment atoms: ' + fragment_atoms.length);
 	var center = pivot_atom.coord;
-	var fragment_atoms = pivot_atom.molecule.connectedAtoms(bond.otherAtom(pivot_atom), pivot_atom);
-	this.logger.info('fragment_atoms.length ' + fragment_atoms.length);
 	var d = new goog.fx.Dragger(this.editorObject.getOriginalElement());
+	d._molecule = pivot_atom.molecule;
 	d._center = center;
 	var trans;
 	if (this.editorObject.reactionRenderer.transform) {
@@ -242,11 +246,10 @@ kemia.controller.plugins.MoleculeEdit.prototype.dragFragment = function(e, bond,
 	d._start = kemia.controller.ReactionEditor.getMouseCoords(e);
 	d._prev_angle = goog.math.angle(d._transformed_center.x,
 			d._transformed_center.y, d._start.x, d._start.y);
-	d.bond = bond;
 	d.editor = this.editorObject;
 
 	d.addEventListener(goog.fx.Dragger.EventType.DRAG, function(e) {
-		d.bond.molecule.group.clear();
+		d._molecule.group.clear();
 		d._initDeltaX = d._initDeltaX || d.deltaX;
 		d._initDeltaY = d._initDeltaY || d.deltaY;
 		var deltaX = d.deltaX - d._initDeltaX;
@@ -401,7 +404,7 @@ kemia.controller.plugins.MoleculeEdit.prototype.sproutTemplate = function(atom,
 //		goog.array.remove(models, atom.molecule);
 //		models.push(molecule);
 //	}
-	return sprout_bond;
+	return molecule;
 }
 
 /**
