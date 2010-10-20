@@ -48,7 +48,7 @@ kemia.controller.plugins.MoleculeEdit.prototype.getKeyboardShortcuts = function(
 
 kemia.controller.plugins.MoleculeEdit.prototype.handleKeyboardShortcut = function(
 		e) {
-	this.logger.info('handleKeyboardShortcut');
+//	this.logger.info('handleKeyboardShortcut');
 	var id = e.identifier;
 	var shortcut = goog.array.find(
 			kemia.controller.plugins.MoleculeEdit.SHORTCUTS, function(obj) {
@@ -142,7 +142,7 @@ kemia.controller.plugins.MoleculeEdit.prototype.execCommandInternal = function(
 };
 
 kemia.controller.plugins.MoleculeEdit.prototype.handleMouseDown = function(e) {
-	this.logger.info('handleMouseDown');
+//	this.logger.info('handleMouseDown');
 	var selected = this.editorObject.getSelected();
 	if (selected.length && this.template) {
 		goog.array.forEach(selected, function(target) {
@@ -233,7 +233,7 @@ kemia.controller.plugins.MoleculeEdit.prototype.highlightBond = function(bond,
 
 kemia.controller.plugins.MoleculeEdit.prototype.dragFragment = function(e,
 		fragment_atoms, pivot_atom) {
-	this.logger.info('dragFragment atoms: ' + fragment_atoms.length);
+//	this.logger.info('dragFragment atoms: ' + fragment_atoms.length);
 	var center = pivot_atom.coord;
 	var d = new goog.fx.Dragger(this.editorObject.getOriginalElement());
 	d._molecule = pivot_atom.molecule;
