@@ -97,17 +97,3 @@ template_cyclopentane = {
 		"stereo" : "NOT_STEREO"
 	} ]
 };
-
-function testSproutTemplate() {
-	var mol = buildMolecule();
-	var me = new kemia.controller.plugins.MoleculeEdit();
-	var atom = mol.atoms[1];
-	var template = template_cyclopentane;
-	logger.info('template.name ' + template.name);
-	var sprout_bond = me.sproutTemplate(atom, template);
-	var fragment_atoms = atom.molecule.connectedAtoms(sprout_bond
-			.otherAtom(atom), atom);
-	logger.info('fragment_atoms.length ' + fragment_atoms.length);
-	assertEquals(template.atoms.length, fragment_atoms.length);
-
-}

@@ -129,9 +129,12 @@ kemia.model.Bond.STEREO = {
 }
 
 kemia.model.Bond.prototype.toString = function(){
+	var molname = this.molecule ? this.molecule.name : "no molecule"
 	return "kemia.model.Bond[" + 
 		this.order + ", " + 
 		this.stereo + "]  " + 
 		this.source.toString() + " -- " + 
-		this.target.toString();
+		this.target.toString() + " mol: " + 
+		molname;
+		
 };

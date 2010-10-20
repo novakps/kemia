@@ -12,19 +12,6 @@ function setUp() {
 	logger = goog.debug.Logger.getLogger('kemia.model.MoleculeTest');
 }
 
-
-function testConnectedAtomsAll(){
-	var mol = buildMolecule();
-	var connected = mol.connectedAtoms(mol.atoms[0]); 
-	assertEquals(mol.atoms.length, connected.length);
-}
-function testConnectedAtomsSome(){
-	var mol = buildMolecule();
-	assertEquals('b', mol.atoms[1].symbol);
-	assertEquals('d', mol.atoms[3].symbol);
-	var connected = mol.connectedAtoms(mol.atoms[3], mol.atoms[1]); 
-	assertEquals(5, connected.length);
-}
 	
 function buildMolecule(){
 	var mol1 = new kemia.model.Molecule('mol1');
@@ -76,22 +63,33 @@ function testMerge() {
 	mol1.addBond(b1b);
 
 	var mol2 = new kemia.model.Molecule('mol2');
-	var a2a = new kemia.model.Atom('d', 2, 1);
-	var a2b = new kemia.model.Atom('e', 2, 2);
-	var a2c = new kemia.model.Atom('f', 2, 3);
-	var b2a = new kemia.model.Bond(a2a, a2b);
-	var b2b = new kemia.model.Bond(a2b, a2c);
-	mol2.addAtom(a2a);
-	mol2.addAtom(a2b);
-	mol2.addAtom(a2c);
+	var a2d = new kemia.model.Atom('d', 2, 1);
+	var a2e = new kemia.model.Atom('e', 2, 2);
+	var a2f = new kemia.model.Atom('f', 2, 3);
+	var b2a = new kemia.model.Bond(a2d, a2e);
+	var b2b = new kemia.model.Bond(a2e, a2f);
+	mol2.addAtom(a2d);
+	mol2.addAtom(a2e);
+	mol2.addAtom(a2f);
 	mol2.addBond(b2a);
 	mol2.addBond(b2b);
 	
 	this.logger.info(mol1.toString());
 	this.logger.info(mol2.toString());
-	mol1.merge(mol2, b2a, b1b, a2a, a1c);
+	mol1.merge(mol2, b2a, b1b, a2d, a1c);
 	this.logger.info(mol1.toString());
 	
 	assertEquals(4, mol1.atoms.length);
 	assertEquals(3, mol1.bonds.length);
+		goog.array.forEach(mol1.bonds, function(b){
+			assertEquals(mol1, b.molecule);
+		})
+	goog.array.forEach(mol1.atoms, function(a){
+		logger.info(a.toString());
+		assertEquals(mol1, a.molecule);
+		goog.array.forEach(a.bonds.getValues(), function(b){
+			this.logger.info(b.toString());
+			assert(goog.array.contains(mol1.bonds, b));
+		})
+	});
 }

@@ -516,67 +516,56 @@ kemia.model.Molecule.prototype.merge = function(fragment, frag_bond,
 
 	fragment.rotate(180 + angle_diff, frag_atom.coord);
 	fragment.translate(position_diff);
-//	this.logger.info('this ' + this.toString());
-//	this.logger.info('fragment ' + fragment.toString());
+
 	// merge fragment into this molecule
-	// clone and transfer bonds attached to frag_atom (except frag_bond) to
+	// transfer bonds attached to frag_atom (except frag_bond, which will be discarded) to
 	// target_atom
+	var processed = [frag_bond];
 	goog.array.forEach(frag_atom.bonds.getValues(), function(bond) {
-		if (bond !== frag_bond) {
-			var new_bond = bond.clone();
-			frag_atom == new_bond.source ? new_bond.source = target_atom
-					: new_bond.target = target_atom;
-			this.addBond(new_bond);
-			fragment.removeBond(bond);
+		if (!goog.array.contains(processed, bond)) {
+			frag_atom == bond.source ? bond.source = target_atom
+					: bond.target = target_atom;
+			processed.push(bond);
+			this.addBond(bond);
 		}
 	}, this);
 	var other_frag_atom = frag_bond.otherAtom(frag_atom);
 	var other_target_atom = target_bond.otherAtom(target_atom);
-	// clone and transfer bonds attached to other end of frag_bond to atom at
+	
+	// transfer bonds attached to other end of frag_bond to atom at
 	// other end of target_bond (except frag_bond)
 	goog.array
 			.forEach(
 					other_frag_atom.bonds.getValues(),
 					function(bond) {
-						if (bond !== frag_bond) {
-							var new_bond = bond.clone();
-							other_frag_atom == new_bond.source ? new_bond.source = other_target_atom
-									: new_bond.target = other_target_atom;
-							this.addBond(new_bond);
-							fragment.removeBond(bond);
+						if (!goog.array.contains(processed, bond)) {
+							other_frag_atom == bond.source ? bond.source = other_target_atom
+									: bond.target = other_target_atom;
+							this.addBond(bond);
+							processed.push(bond);
 						}
 					}, this);
 
-	goog.array.forEach(fragment.atoms, function(atom) {
-		if (atom !== frag_atom && atom !== other_frag_atom) {
-			this.addAtom(atom);
-			//this.logger.info('add ' + atom.toString());
-		}
-	}, this);
 
-	fragment.removeBond(frag_bond);
+	var yes_copy = goog.array.filter(fragment.bonds, function(b){
+		return !goog.array.contains(processed, b);
+	})
+
 	// clone and replace fragment atoms and bonds parent molecule with this
 	// parent molecule
-	goog.array.forEach(fragment.bonds, function(bond) {
-		var new_bond = bond.clone();
-		new_bond.molecule = undefined;
-		this.addBond(new_bond);
+	goog.array.forEach(yes_copy, function(bond) {
+
+		this.addBond(bond.clone());
 	}, this);
-	goog.array.forEach(fragment.atoms, function(atom) {
-		fragment.removeAtom(atom);
-	});
-	goog.array.forEach(fragment.bonds, function(bond) {
-		fragment.removeBond(bond);
-	});
+	fragment.bonds.length=0;
+	fragment.atoms.length=0;
+
 
 	if (fragment.reaction) {
-		fragment.reaction.removeMolecule(source_molecule);
+		fragment.reaction.removeMolecule(fragment);
 	}
 	delete fragment;
-//	this.logger.info('merged ' + this.toString());
-	this.resetRingCenters();
-	this.sssr = [];
-	this.mustRecalcSSSR = true;
+	this.mustRecalcSSSR=true;
 	return this;
 
 }

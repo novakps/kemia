@@ -439,6 +439,10 @@ kemia.ring.RingFinder.findRings = function(molecule) {
 
 	// assign indexes
 	for (var i = 0, li = molecule.atoms.length; i < li; i++) {
+		var atom = molecule.atoms[i];
+		atom.index = i;
+		atom.depth = undefined;
+		atom.isInCycle = undefined;
 		molecule.atoms[i].index = i;
 	}
 	for (var i = 0, li = molecule.bonds.length; i < li; i++) {
