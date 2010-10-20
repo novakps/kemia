@@ -49,6 +49,7 @@ function buildMolecule(){
 	mol1.addBond(b1h);
 	return mol1;
 }
+
 function testMerge() {
 	var mol1 = new kemia.model.Molecule('mol1');
 	var a1a = new kemia.model.Atom('a', 0, 1);
