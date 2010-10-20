@@ -84,12 +84,12 @@ kemia.controller.plugins.MoleculeEdit.prototype.handleKeyboardShortcut = functio
 			// TTD need to get current mouse coords
 			return false;
 			this.editorObject.dispatchBeforeChange();
-//			this.createMolecule(this.editorObject
-//					.getAtomicCoords(kemia.controller.ReactionEditor
-//							.getMouseCoords(e)), template);
-//			this.editorObject.setModelsSilently(this.editorObject.getModels());
-//			this.editorObject.dispatchChange();
-//			return true;
+			// this.createMolecule(this.editorObject
+			// .getAtomicCoords(kemia.controller.ReactionEditor
+			// .getMouseCoords(e)), template);
+			// this.editorObject.setModelsSilently(this.editorObject.getModels());
+			// this.editorObject.dispatchChange();
+			// return true;
 		}
 	}
 }
@@ -151,9 +151,10 @@ kemia.controller.plugins.MoleculeEdit.prototype.handleMouseDown = function(e) {
 				var atom = target;
 				var original_atoms = goog.array.clone(atom.molecule.atoms);
 				var molecule = this.sproutTemplate(atom, this.template);
-				var fragment_atoms = goog.array.filter(molecule.atoms, function(a){
-					return !goog.array.contains(original_atoms, a);
-				})
+				var fragment_atoms = goog.array.filter(molecule.atoms,
+						function(a) {
+							return !goog.array.contains(original_atoms, a);
+						})
 				this.dragFragment(e, fragment_atoms, atom);
 				this.editorObject.setModelsSilently(this.editorObject
 						.getModels());
@@ -230,7 +231,8 @@ kemia.controller.plugins.MoleculeEdit.prototype.highlightBond = function(bond,
 			.get(bond).highlightOn(bond, 'yellow', opt_group);
 };
 
-kemia.controller.plugins.MoleculeEdit.prototype.dragFragment = function(e, fragment_atoms, pivot_atom) {
+kemia.controller.plugins.MoleculeEdit.prototype.dragFragment = function(e,
+		fragment_atoms, pivot_atom) {
 	this.logger.info('dragFragment atoms: ' + fragment_atoms.length);
 	var center = pivot_atom.coord;
 	var d = new goog.fx.Dragger(this.editorObject.getOriginalElement());
@@ -256,14 +258,13 @@ kemia.controller.plugins.MoleculeEdit.prototype.dragFragment = function(e, fragm
 		var deltaY = d.deltaY - d._initDeltaY;
 		var new_angle = goog.math.angle(d._transformed_center.x,
 				d._transformed_center.y, d._start.x + deltaX, d._start.y
-				+ deltaY);
+						+ deltaY);
 
 		var delta_angle = new_angle - d._prev_angle;
 		delta_angle = delta_angle - delta_angle % 30;
 		d._prev_angle = d._prev_angle + delta_angle;
-		var trans = kemia.graphics.AffineTransform
-		.getRotateInstance(-goog.math.toRadians(delta_angle),
-				d._center.x, d._center.y);
+		var trans = kemia.graphics.AffineTransform.getRotateInstance(-goog.math
+				.toRadians(delta_angle), d._center.x, d._center.y);
 		goog.array.forEach(fragment_atoms, function(a) {
 			a.coord = trans.transformCoords( [ a.coord ])[0];
 		});
@@ -394,16 +395,16 @@ kemia.controller.plugins.MoleculeEdit.prototype.sproutTemplate = function(atom,
 	var attachment_atom = fragment.atoms[0];
 	var attachment_bond = fragment.sproutBond(attachment_atom,
 			kemia.model.Bond.ORDER.SINGLE, kemia.model.Bond.STEREO.NOT_STEREO);
-//	var reaction = atom.molecule.reaction;
+	// var reaction = atom.molecule.reaction;
 	var molecule = atom.molecule.merge(fragment, attachment_bond, sprout_bond,
 			attachment_atom, sprout_atom);
-//	if(reaction){
-//		molecule.reaction = reaction;
-//	} else {
-//		var models = this.reactionEditor.getModels();
-//		goog.array.remove(models, atom.molecule);
-//		models.push(molecule);
-//	}
+	// if(reaction){
+	// molecule.reaction = reaction;
+	// } else {
+	// var models = this.reactionEditor.getModels();
+	// goog.array.remove(models, atom.molecule);
+	// models.push(molecule);
+	// }
 	return molecule;
 }
 
@@ -766,144 +767,6 @@ kemia.controller.plugins.MoleculeEdit.TEMPLATES = [ {
 		"source" : 2,
 		"target" : 3,
 		"type" : "SINGLE_BOND",
-		"stereo" : "NOT_STEREO"
-	}, {
-		"source" : 3,
-		"target" : 4,
-		"type" : "SINGLE_BOND",
-		"stereo" : "NOT_STEREO"
-	}, {
-		"source" : 4,
-		"target" : 0,
-		"type" : "SINGLE_BOND",
-		"stereo" : "NOT_STEREO"
-	} ]
-}, {
-	"name" : "pyrrole",
-	"atoms" : [ {
-		"symbol" : "C",
-		"coord" : {
-			"x" : 2.5981,
-			"y" : 0.75,
-			"z" : 0
-		},
-		"charge" : 0
-	}, {
-		"symbol" : "C",
-		"coord" : {
-			"x" : 2.5981,
-			"y" : 2.25,
-			"z" : 0
-		},
-		"charge" : 0
-	}, {
-		"symbol" : "C",
-		"coord" : {
-			"x" : 0,
-			"y" : 2.25,
-			"z" : 0
-		},
-		"charge" : 0
-	}, {
-		"symbol" : "C",
-		"coord" : {
-			"x" : 0,
-			"y" : 0.75,
-			"z" : 0
-		},
-		"charge" : 0
-	}, {
-		"symbol" : "N",
-		"coord" : {
-			"x" : 1.30,
-			"y" : 0,
-			"z" : 0
-		},
-		"charge" : 0
-	} ],
-	"bondindex" : [ {
-		"source" : 0,
-		"target" : 1,
-		"type" : "DOUBLE_BOND",
-		"stereo" : "NOT_STEREO"
-	}, {
-		"source" : 1,
-		"target" : 2,
-		"type" : "SINGLE_BOND",
-		"stereo" : "NOT_STEREO"
-	}, {
-		"source" : 2,
-		"target" : 3,
-		"type" : "DOUBLE_BOND",
-		"stereo" : "NOT_STEREO"
-	}, {
-		"source" : 3,
-		"target" : 4,
-		"type" : "SINGLE_BOND",
-		"stereo" : "NOT_STEREO"
-	}, {
-		"source" : 4,
-		"target" : 0,
-		"type" : "SINGLE_BOND",
-		"stereo" : "NOT_STEREO"
-	} ]
-}, {
-	"name" : "pyrrole",
-	"atoms" : [ {
-		"symbol" : "C",
-		"coord" : {
-			"x" : -2.3083,
-			"y" : 0.4635,
-			"z" : 0
-		},
-		"charge" : 0
-	}, {
-		"symbol" : "C",
-		"coord" : {
-			"x" : -2.3083,
-			"y" : 1.9635,
-			"z" : 0
-		},
-		"charge" : 0
-	}, {
-		"symbol" : "C",
-		"coord" : {
-			"x" : -0.8817,
-			"y" : 2.427,
-			"z" : 0
-		},
-		"charge" : 0
-	}, {
-		"symbol" : "C",
-		"coord" : {
-			"x" : 0,
-			"y" : 1.2135,
-			"z" : 0
-		},
-		"charge" : 0
-	}, {
-		"symbol" : "N",
-		"coord" : {
-			"x" : -0.8817,
-			"y" : 0,
-			"z" : 0
-		},
-		"charge" : 0
-	} ],
-	"bondindex" : [ {
-		"source" : 0,
-		"target" : 1,
-		"type" : "DOUBLE_BOND",
-		"stereo" : "NOT_STEREO"
-	}, {
-		"source" : 1,
-		"target" : 2,
-		"type" : "SINGLE_BOND",
-		"stereo" : "NOT_STEREO"
-	}, {
-		"source" : 2,
-		"target" : 3,
-		"type" : "DOUBLE_BOND",
 		"stereo" : "NOT_STEREO"
 	}, {
 		"source" : 3,
