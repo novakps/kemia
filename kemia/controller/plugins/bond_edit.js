@@ -195,51 +195,63 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 	this.logger.info('handleMouseDown');
 	var selected = this.editorObject.getSelected();
 	if (selected.length) {
-		goog.array.forEach(selected, function(target) {
-			if (target instanceof kemia.model.Atom) {
-				if (this.bond_type) {
-					this.editorObject.dispatchBeforeChange();
-					var new_bond = target.molecule.sproutBond(target, this.bond_type.order,
-							this.bond_type.stereo);
-					this.dragBond(e, new_bond);
-					this.editorObject.setModelsSilently(this.editorObject
-							.getModels());
-					this.editorObject.dispatchChange();
-					return true;
-				}
-			}
-			if (target instanceof kemia.model.Bond) {
-				var bond = target;
-				if (this.bond_type && this.bond_type.order != bond.order
-						&& this.bond_type.stereo != this.bond.stereo) {
-					this.editorObject.dispatchBeforeChange();
-					var bond = this.replaceBond(target);
-					this.editorObject.setModelsSilently(this.editorObject
-							.getModels());
-					this.editorObject.dispatchChange();
-					return true;
-				} else {
-					this.editorObject.dispatchBeforeChange();
-					this.dragBond(e, bond);
-					this.editorObject.dispatchChange();
-					return true;
-				}
-				// else {
-				// if (target._last_click) {
-				// if ((goog.now() - target._last_click) < 1000) {
-				// this.editorObject.dispatchBeforeChange();
-				// this.toggleBondType(target);
-				// this.editorObject
-				// .setModelsSilently(this.editorObject
-				// .getModels());
-				// this.editorObject.dispatchChange();
-				// return true;
-				// }
-				// }
-				// target._last_click = goog.now();
-				// }
-			}
-		}, this);
+		goog.array
+				.forEach(
+						selected,
+						function(target) {
+							if (target instanceof kemia.model.Atom) {
+								if (this.bond_type) {
+									this.editorObject.dispatchBeforeChange();
+									var new_bond = target.molecule.sproutBond(
+											target, this.bond_type.order,
+											this.bond_type.stereo);
+									this.dragBond(e, new_bond);
+									this.editorObject
+											.setModelsSilently(this.editorObject
+													.getModels());
+									this.editorObject.dispatchChange();
+									return true;
+								}
+							}
+							if (target instanceof kemia.model.Bond) {
+								var bond = target;
+								if (this.bond_type) {
+									if (this.bond_type.order != bond.order
+											|| this.bond_type.stereo != bond.stereo
+											|| bond.stereo != kemia.model.Bond.STEREO.NOT_STEREO) {
+										this.editorObject
+												.dispatchBeforeChange();
+										this.replaceBond(target);
+										this.editorObject
+												.setModelsSilently(this.editorObject
+														.getModels());
+										this.editorObject.dispatchChange();
+										return true;
+									}
+								} else {
+									this.editorObject.dispatchBeforeChange();
+									this.dragBond(e, bond);
+									this.editorObject.dispatchChange();
+									return true;
+								}
+
+								// else {
+								// if (target._last_click) {
+								// if ((goog.now() - target._last_click) < 1000)
+								// {
+								// this.editorObject.dispatchBeforeChange();
+								// this.toggleBondType(target);
+								// this.editorObject
+								// .setModelsSilently(this.editorObject
+								// .getModels());
+								// this.editorObject.dispatchChange();
+								// return true;
+								// }
+								// }
+								// target._last_click = goog.now();
+								// }
+							}
+						}, this);
 	} else {
 		if (this.bond_type) {
 			this.editorObject.dispatchBeforeChange();
