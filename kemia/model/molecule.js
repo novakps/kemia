@@ -411,7 +411,12 @@ kemia.model.Molecule.prototype.toString = function() {
 						return " " + this.indexOfAtom(bond.source) + ", "
 								+ this.indexOfAtom(bond.target) + ":  "
 								+ bond.toString();
-					}, this).join("\n\t");
+					}, this).join("\n\t") + "\n\t"
+			+ goog.array.map(
+					this.getRings(), 
+					function(ring){
+						return ring.toString();
+					}).join("\n\t");
 };
 /**
  * returns center coordinates of molecule's atoms
@@ -554,8 +559,7 @@ kemia.model.Molecule.prototype.merge = function(fragment, frag_bond,
 	// clone and replace fragment atoms and bonds parent molecule with this
 	// parent molecule
 	goog.array.forEach(yes_copy, function(bond) {
-
-		this.addBond(bond.clone());
+		this.addBond(bond);
 	}, this);
 	fragment.bonds.length=0;
 	fragment.atoms.length=0;
@@ -566,8 +570,8 @@ kemia.model.Molecule.prototype.merge = function(fragment, frag_bond,
 	}
 	delete fragment;
 	this.mustRecalcSSSR=true;
-	return this;
 
+	return this;
 }
 
 /**

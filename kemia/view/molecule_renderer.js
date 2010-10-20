@@ -33,13 +33,12 @@ goog.inherits(kemia.view.MoleculeRenderer, kemia.view.Renderer);
 kemia.view.MoleculeRenderer.prototype.logger = goog.debug.Logger
 		.getLogger('kemia.view.MoleculeRenderer');
 
-kemia.view.MoleculeRenderer.prototype.setScaleFactor = function(scale){
+kemia.view.MoleculeRenderer.prototype.setScaleFactor = function(scale) {
 	this.scale_factor = scale;
 }
 
 kemia.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 	molecule.resetRingCenters();
-
 	molecule.group = this.graphics.createGroup();
 
 	var atom_coords = goog.array.map(molecule.atoms, function(a) {
@@ -67,7 +66,7 @@ kemia.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 	var bondFill = new goog.graphics.SolidFill(
 			this.config.get("bond")['fill']['color']);
 
-	if(molecule.bonds.length){
+	if (molecule.bonds.length) {
 		var bondPath = new goog.graphics.Path();
 		goog.array.forEach(molecule.bonds, function(bond) {
 			this.bondRendererFactory.get(bond).render(bond, trans, bondPath);

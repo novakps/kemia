@@ -88,3 +88,17 @@ kemia.ring.Ring.prototype.getCenter = function() {
 kemia.ring.Ring.prototype.resetRingCenter = function(){
 	this._center = undefined;
 }
+
+kemia.ring.Ring.prototype.toString = function(){
+	return "kemia.ring.Ring " +			
+	"\n\t" +
+	goog.array.map(this.atoms, function(atom) {
+		return " " + atom.toString();
+	}, this).join("\n\t")
+	+ "\n\t"
+	+ goog.array.map(
+			this.bonds,
+			function(bond) {
+				return " " +  bond.toString();
+			}, this).join("\n\t") + "\n\t";
+}
