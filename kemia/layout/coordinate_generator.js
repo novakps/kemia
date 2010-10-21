@@ -126,8 +126,8 @@ kemia.layout.CoordinateGenerator.generate = function(molecule){
 
 	} while ( !kemia.layout.AtomPlacer.allPlaced(molecule, atCount) && safetyCounter <= molecule.countAtoms()  );
 	
-	//Malfunctioning
-    //kemia.layout.OverlapResolver.resolveOverlap(molecule, sssr)
+	//Optional..
+    kemia.layout.OverlapResolver.resolveOverlap(molecule, sssr)
 
 
     /* DEBUG coords   
@@ -156,24 +156,9 @@ kemia.layout.CoordinateGenerator.layoutRingSet=function(bondVector, ringset){
 	
 	// TODO apply templates to layout pre-fab rings
 
-    var bl=kemia.layout.CoordinateGenerator.BOND_LENGTH;	
-	var complexity = function(ring){
-		var others = goog.array.filter(ringset, function(r){
-			return goog.array.contains(ringset, r);
-		});
-		goog.array.reduce(others, function(r, val){
-			var common_atoms = goog.array.filter(val.atoms, function(atom){
-				goog.array.contains(ring.atoms, atom);
-			});
-			return r + common_atoms.length;
-		}, 0);
-	}
-	
-	goog.array.sort(ringset, function(a,b){
-		goog.array.defaultCompare(complexity(a), complexity(b));
-	});
-	
-	var most_complex_ring = goog.array.peek(ringset);
+    var bl=kemia.layout.CoordinateGenerator.BOND_LENGTH;
+
+	var most_complex_ring = this.getMostComplexRing(ringset);
 
     if (!most_complex_ring.flags[kemia.model.Flags.ISPLACED]) {
 		var shared_fragment = {atoms:this.placeFirstBond( most_complex_ring.bonds[0], bondVector),
@@ -311,4 +296,38 @@ kemia.layout.CoordinateGenerator.handleAliphatics = function(molecule, bondCount
     while (!done && cntr <= molecule.countAtoms());
 }
 
-
+kemia.layout.CoordinateGenerator.getMostComplexRing = function(ringSet){
+    var neighbors = new Array(ringSet.length);
+	for(i=0; i<neighbors.length; i++) {
+		neighbors[i]=0;
+	}
+    var mostComplex = 0;
+	var mostComplexPosition = 0;
+    for (i = 0; i < ringSet.length; i++) {
+        ring1 = ringSet[i];
+        for (j = 0; j < ring1.atoms.length; j++){
+            atom1 = ring1[j];
+            for (k = i + 1; k < ringSet.length; k++) {
+                ring2 = ringSet[k];
+                if (ring1 != ring2){
+                    for (l = 0; l < ring2.atoms.length; l++){
+                        atom2 = ring2[l];
+                        if (atom1 == atom2) {
+                            neighbors[i]++;                             
+                            neighbors[k]++;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    for (i = 0; i < neighbors.length; i++) {
+        if (neighbors[i] > mostComplex)
+        {
+            mostComplex = neighbors[i];
+            mostComplexPosition = i;
+        }
+    }
+    return ringSet[mostComplexPosition];
+}

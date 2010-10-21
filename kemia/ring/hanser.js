@@ -24,7 +24,7 @@ goog.require('kemia.ring.PathEdge');
 goog.require('kemia.ring.PathGraph');
 
 /**
- * Hansen ring finder.
+ * Hanser ring finder.
  * 
  * For details see: Th. Hanser, Ph. Jauffret, and G. Kaufmann A New Algorithm
  * for Exhaustive Ring Perception in a Molecular Graph J. kemia. Inf. Comput.
@@ -57,20 +57,14 @@ kemia.ring.Hanser.findRings = function(molecule, maxLen){
             // Hanser last atom is same as first atom, remove it..
             goog.array.removeAt(atom_ring, atom_ring.length - 1);
             for (var k = 0, lk = atom_ring.length; k < lk; k++) {
-                atom_ring[k] = atom_ring[k];
+                atom_ring[k] = molecule.indexOfAtom(atom_ring[k]);
             }
             atomOnlyRings.push(atom_ring);
         }
     }
     // xtra: sort array according to ring size
     goog.array.sort(atomOnlyRings);
-
     return atomOnlyRings;
-/*
- * var rings=new Array(); for (var i = 0, il = atomOnlyRings.length; i < il;
- * i++) { rings.push(this.createRing(atomOnlyRings[i],molecule)); } return
- * rings;
- */
 }
 
 /**

@@ -36,7 +36,7 @@ kemia.layout.OverlapResolver.resolveOverlap = function(molecule, sssr){
 kemia.layout.OverlapResolver.getOverlapScore = function(molecule, overlappingAtoms){
 
     overlapScore = 0;
-    overlapCutoff = 1; //kemia.layout.CoordinateGenerator.BOND_LENGTH / 10;
+    overlapCutoff = kemia.layout.CoordinateGenerator.BOND_LENGTH/5;
 	
     atCount= molecule.countAtoms();
     for (f = 0; f < atCount; f++)
@@ -70,7 +70,7 @@ kemia.layout.OverlapResolver.getOverlapScore = function(molecule, overlappingAto
  */
 kemia.layout.OverlapResolver.displace = function(molecule, overlappingAtoms)
 {
-    var maxSteps = 10000;
+    var maxSteps = 25;
 	var steps=0;
     do{
         p = Math.round(Math.random() * overlappingAtoms.length);
@@ -91,7 +91,7 @@ kemia.layout.OverlapResolver.displace = function(molecule, overlappingAtoms)
 			if (isNaN(v2.y)) 
 				v2.y = 0.01;
 			
-			v2.scale(kemia.layout.CoordinateGenerator.BOND_LENGTH / 20);
+			v2.scale(-1*kemia.layout.CoordinateGenerator.BOND_LENGTH/3);
 			
 			choice = Math.random();
 			if (choice > 0.5) {

@@ -162,17 +162,13 @@ kemia.layout.RingPlacer.placeBridgedRing = function(ring, shared_fragment,
 }
 
 kemia.layout.RingPlacer.atomsInPlacementOrder = function(atom, bond, bonds) {
-	var other_bonds = goog.array.filter(bonds, function(b){
-		return b!==bond;
-	});
-	var next_bond = goog.array.find(other_bonds, function(b) {
+	var next_bond = goog.array.find(bonds, function(b) {
 		return b.otherAtom(atom);
 	});
 
-	var remaining_bonds = goog.array.filter(other_bonds, function(b){
+	var remaining_bonds = goog.array.filter(bonds, function(b){
 		return b!==next_bond;
 	});
-
 	if (remaining_bonds.length > 0 ) {
 		var next_atom = next_bond.otherAtom(atom);
 		return goog.array.concat(next_atom, kemia.layout.RingPlacer
@@ -371,10 +367,8 @@ kemia.layout.RingPlacer.getNextBond = function(ring, bond,atom) {
  * @param bondLength
  *            The standard bondlength
  */
-kemia.layout.RingPlacer.placeSpiroRing = function(ring, shared_fragment,
-		sharedAtomsCenter, ringCenterVector, bondLength) {
-	var radius = kemia.layout.RingPlacer.getNativeRingRadius(ring.atoms.length,
-			bondLength);
+kemia.layout.RingPlacer.placeSpiroRing = function(ring, shared_fragment,sharedAtomsCenter, ringCenterVector, bondLength) {
+	var radius = kemia.layout.RingPlacer.getNativeRingRadius(ring.atoms.length,bondLength);
 	ringCenterVector.normalize();
 	ringCenterVector.scale(radius);
     var ringCenter = new goog.math.Coordinate(sharedAtomsCenter.x+ringCenterVector.x, sharedAtomsCenter.y+ringCenterVector.y);
@@ -382,8 +376,7 @@ kemia.layout.RingPlacer.placeSpiroRing = function(ring, shared_fragment,
 	var addAngle = 2 * Math.PI / ring.atoms.length;
 
 	var startAtom = shared_fragment.atoms[0];
-	var startAngle = new kemia.layout.Vector2D(startAtom.coord.x,
-			startAtom.coord.y).angle(ringCenterVector);
+    var startAngle = kemia.layout.AtomPlacer.getAngle(startAtom.coord.x-ringCenter.x,startAtom.coord.y-ringCenter.y)
 
 	var atoms_to_place = kemia.layout.RingPlacer.atomsInPlacementOrder(
 			startAtom, shared_fragment.bonds[0], ring.bonds);
