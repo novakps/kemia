@@ -73,7 +73,7 @@ kemia.view.DoubleBondRenderer.prototype.render = function(bond, transform,
 	// create the bondvector
 	var bv = goog.math.Vec2.fromCoordinate(goog.math.Coordinate.difference(
 			bond.target.coord, bond.source.coord));
-	
+
 	bv.scale(1 / this.config.get("bond")['width-ratio']);
 
 	// create a vector orthogonal to the bond vector
@@ -89,7 +89,9 @@ kemia.view.DoubleBondRenderer.prototype.render = function(bond, transform,
 		if (!line.isSameSide(ring.getCenter(), side)) {
 			orthogonal.invert();
 		}
-//		goog.asserts.assert(goog.math.Coordinate.distance(side, ring.getCenter()) < goog.math.Coordinate.distance(bond.source.coord, ring.getCenter()));
+		// goog.asserts.assert(goog.math.Coordinate.distance(side,
+		// ring.getCenter()) < goog.math.Coordinate.distance(bond.source.coord,
+		// ring.getCenter()));
 		// inner line coords
 		var coord1 = goog.math.Coordinate.sum(bond.source.coord, orthogonal);
 		var coord2 = goog.math.Coordinate.sum(bond.target.coord, orthogonal);
@@ -147,6 +149,6 @@ kemia.view.DoubleBondRenderer.prototype.render = function(bond, transform,
  */
 kemia.view.DoubleBondRenderer.getFirstRing = function(bond) {
 	return goog.array.find(bond.molecule.getRings(), function(ring) {
-		return goog.array.contains(ring.bonds, this);
-	}, bond);
+		return goog.array.contains(ring.bonds, bond);
+	});
 }

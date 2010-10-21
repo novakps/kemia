@@ -109,7 +109,7 @@ kemia.controller.DefaultToolbar.makeZoomButtons = function(buttons){
 	return buttons;
 }
 
-kemia.controller.DefaultToolbar.makeAtomBondButtons = function(buttons){
+kemia.controller.DefaultToolbar.makeAtomBondTemplateButtons = function(buttons){
 	var atom_select = kemia.controller.ToolbarFactory.makeSelectButton(
 			kemia.controller.plugins.AtomEdit.COMMAND, 'Atomic Symbol',
 			'Symbol');// ,goog.getCssName('tr-icon') + ' ' +
@@ -191,38 +191,7 @@ kemia.controller.DefaultToolbar.makeAtomBondButtons = function(buttons){
 	});
 	bond_select.setMenu(bond_menu);
 	buttons.push(bond_select);
-
-	return buttons;
-}
-
-kemia.controller.DefaultToolbar.makeDefaultMoleculeToolbar = function(elem) {
-	var buttons = this.makeActionButtons([]);
-	var buttons = this.makeZoomButtons(buttons);
-	var buttons = this.makeAtomBondButtons(buttons);
-	return kemia.controller.DefaultToolbar.makeToolbar(buttons, elem);
-}
-
-/**
- * Creates a {@link goog.ui.Toolbar} containing a default set of editor toolbar
- * buttons, and renders it into the given parent element.
- * 
- * @param {!Element}
- *            elem Toolbar parent element.
- * @param {boolean=}
- *            opt_isRightToLeft Whether the editor chrome is right-to-left;
- *            defaults to the directionality of the toolbar parent element.
- * @return {!goog.ui.Toolbar} Default editor toolbar, rendered into the given
- *         parent element.
- * @see kemia.controller.DefaultToolbar.DEFAULT_BUTTONS
- */
-kemia.controller.DefaultToolbar.makeDefaultReactionToolbar = function(elem) {
-
-	var buttons = this.makeActionButtons([]);
-	var buttons = this.makeArrowPlusButtons(buttons);
-	var buttons = this.makeZoomButtons(buttons);
-	var buttons = this.makeAtomBondButtons(buttons);
 	
-
 	// var renderer = kemia.controller.TemplateMenuButtonRenderer.getInstance();
 	var renderer = undefined;
 	var template_select = kemia.controller.ToolbarFactory.makeSelectButton(
@@ -254,6 +223,37 @@ kemia.controller.DefaultToolbar.makeDefaultReactionToolbar = function(elem) {
 	
 	// buttons.push(kemia.controller.ToolbarFactory.makeButton(kemia.controller.plugins.Smiles.COMMAND,
 	// 'SMILES', 'paste SMILES'));
+
+
+	return buttons;
+}
+
+kemia.controller.DefaultToolbar.makeDefaultMoleculeToolbar = function(elem) {
+	var buttons = this.makeActionButtons([]);
+	var buttons = this.makeZoomButtons(buttons);
+	var buttons = this.makeAtomBondTemplateButtons(buttons);
+	return kemia.controller.DefaultToolbar.makeToolbar(buttons, elem);
+}
+
+/**
+ * Creates a {@link goog.ui.Toolbar} containing a default set of editor toolbar
+ * buttons, and renders it into the given parent element.
+ * 
+ * @param {!Element}
+ *            elem Toolbar parent element.
+ * @param {boolean=}
+ *            opt_isRightToLeft Whether the editor chrome is right-to-left;
+ *            defaults to the directionality of the toolbar parent element.
+ * @return {!goog.ui.Toolbar} Default editor toolbar, rendered into the given
+ *         parent element.
+ * @see kemia.controller.DefaultToolbar.DEFAULT_BUTTONS
+ */
+kemia.controller.DefaultToolbar.makeDefaultReactionToolbar = function(elem) {
+
+	var buttons = this.makeActionButtons([]);
+	var buttons = this.makeArrowPlusButtons(buttons);
+	var buttons = this.makeZoomButtons(buttons);
+	var buttons = this.makeAtomBondTemplateButtons(buttons);
 	return kemia.controller.DefaultToolbar.makeToolbar(buttons, elem);
 
 };
