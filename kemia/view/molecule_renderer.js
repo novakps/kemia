@@ -2,6 +2,9 @@ goog.provide('kemia.view.MoleculeRenderer');
 goog.require('kemia.view.BondRenderer');
 goog.require('kemia.view.BondRendererFactory');
 goog.require('kemia.view.AtomRenderer');
+goog.require('kemia.view.AromaticityRenderer');
+
+
 goog.require('goog.asserts');
 
 /**
@@ -21,6 +24,9 @@ kemia.view.MoleculeRenderer = function(graphics, opt_config) {
 			this.config);
 
 	this.atomRenderer = new kemia.view.AtomRenderer(graphics, this.config);
+
+  this.aromaticityRenderer = new kemia.view.AromaticityRenderer(graphics, this.config);
+
 }
 goog.inherits(kemia.view.MoleculeRenderer, kemia.view.Renderer);
 
@@ -38,6 +44,7 @@ kemia.view.MoleculeRenderer.prototype.setScaleFactor = function(scale) {
 }
 
 kemia.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
+
 	molecule.resetRingCenters();
 	molecule.group = this.graphics.createGroup();
 
@@ -72,6 +79,17 @@ kemia.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 			this.bondRendererFactory.get(bond).render(bond, trans, bondPath);
 		}, this);
 		this.graphics.drawPath(bondPath, bondStroke, bondFill, molecule.group);
+
+		var aromRingRenderer = this.aromaticityRenderer;
+  	goog.array.forEach(molecule.getRings(), function(ring){
+			var aromatic_bonds = goog.array.filter(ring.bonds, function(b){
+				return b.aromatic;
+			});
+			if (aromatic_bonds.length==ring.bonds.length) {
+				aromRingRenderer.render(ring,trans);
+			}
+  	});
+
 	}
 
 	// this.logger.info("molecule has " + molecule.atoms.length + " atoms");
