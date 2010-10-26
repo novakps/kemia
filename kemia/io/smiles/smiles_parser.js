@@ -63,7 +63,7 @@ kemia.io.smiles.SmilesParser.punctuation = {
 };
 
 kemia.io.smiles.SmilesParser.smiPattern = new RegExp(
-		/\[[^[]+\]|Br|B|Cl|C|N|F|O|P]|S|c|n|o|s|-|=|#|%[0-9][0-9]|[0-9]|\(|\)|./g);
+		/\[[^[]+\]|Br|B|Cl|C|N|F|O|P]|S|c|n|o|s|-|=[0-9]|=[0-9]|=|#[0-9]|#[0-9][0-9]|#|\$|%[0-9][0-9]|[0-9]|\(|\)|./g);
 kemia.io.smiles.SmilesParser.atomPattern = new RegExp(
 		/^\[([0-9]*)([A-Z][a-z]?|c|n|o|se|s|as)(@|@@)?(H)?([0-9])?([+-][\d]?)?\]$/);
 kemia.io.smiles.SmilesParser.specialAtoms = [ 'C', 'c', 'N', 'n', 'O', 'o',
@@ -78,10 +78,13 @@ kemia.io.smiles.SmilesParser.parse = function(smi) {
 	var bond_type = kemia.io.smiles.SmilesParser.BondType.NONE;
 	var branch = new Array();
 	var ring = new Array();
+	var ringClosureOrder = new Array();
+
 	var errstr = "";
 	var chiralCenters = new Array();
 	for ( var i = 0; i < items.length; i++) {
 		var item = items[i];
+		//alert("item "+item)
 		if (item == kemia.io.smiles.SmilesParser.punctuation.nobond) {
 		} else if (item == kemia.io.smiles.SmilesParser.punctuation.openbranch) {
 			branch.push(previous_atom);
@@ -89,7 +92,7 @@ kemia.io.smiles.SmilesParser.parse = function(smi) {
 			if (branch.length) {
 				previous_atom = branch.pop();
 			} else {
-				errstr = " unbalanced parens";
+				errstr = " Unbalanced parents";
 			}
 		} else if (item == kemia.io.smiles.SmilesParser.punctuation.singlebond) {
 			bond_type = kemia.io.smiles.SmilesParser.BondType.SINGLE_BOND;
@@ -116,15 +119,38 @@ kemia.io.smiles.SmilesParser.parse = function(smi) {
 		} else if (item == kemia.io.smiles.SmilesParser.punctuation.trans) {
 		} else if (!isNaN(ringid = parseInt(item, 10))) {
 			ring_atom = ring[ringid];
-			if (ring_atom) {
-				mol.addBond(kemia.io.smiles.SmilesParser.createBond(bond_type,
-						previous_atom, ring_atom));
+			if (!ring_atom) {
+				ring[ringid] = previous_atom;
+			} else {
+				mol.addBond(kemia.io.smiles.SmilesParser.createBond(bond_type,previous_atom, ring_atom));
 				bond_type = kemia.io.smiles.SmilesParser.BondType.NONE;
 				ring[ringid] = null;
-			} else {
-				ring[ringid] = previous_atom;
 			}
-		} else {
+
+		// The default bond order for the ring closure is single (or aromatic) but may be specified by including a bond symbol between (!) the atom and the closure number.
+		// Example: alternatives for cyclohexene (there is only one double bond here): C1=CCCCC1 <=> C=1CCCCC1 <=> C1CCCCC=1 <=> C=1CCCCC=1
+		} else if (item.length>1 
+				   && 
+				   (
+					  goog.string.startsWith(item, kemia.io.smiles.SmilesParser.BondType.DOUBLE_BOND) ||
+					  goog.string.startsWith(item, kemia.io.smiles.SmilesParser.BondType.TRIPLE_BOND) ||
+					  goog.string.startsWith(item, kemia.io.smiles.SmilesParser.BondType.QUAD_BOND)
+				   )
+				   &&
+				   !isNaN(ringid = parseInt(item.substr(1), 10))
+				   ) {
+			ring_atom = ring[ringid];
+			if (!ring_atom) {
+				ring[ringid] = previous_atom;
+				ringClosureOrder[ringid]=item.substr(0,1)
+			} else {
+				mol.addBond(kemia.io.smiles.SmilesParser.createBond(ringClosureOrder[ringid],previous_atom, ring_atom));
+				bond_type = kemia.io.smiles.SmilesParser.BondType.NONE;
+				ring[ringid] = null;
+				ringClosureOrder[ringid]=null;
+			}
+		}
+		else {
 			smi_atom = kemia.io.smiles.SmilesParser.parseAtom(item) // ,chiralCenters);
 																	// parseAtom
 																	// takes one
