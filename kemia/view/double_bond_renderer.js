@@ -115,6 +115,7 @@ kemia.view.DoubleBondRenderer.prototype.render = function(bond, transform,
 
 	} else {
 		orthogonal.scale(0.5);
+		orthogonal=this.limitDoubleBondLinesDistance(orthogonal);
 
 		var coord1 = goog.math.Coordinate.sum(bond.source.coord, orthogonal);
 		var coord2 = goog.math.Coordinate.sum(bond.target.coord, orthogonal);
@@ -151,4 +152,24 @@ kemia.view.DoubleBondRenderer.getFirstRing = function(bond) {
 	return goog.array.find(bond.molecule.getRings(), function(ring) {
 		return goog.array.contains(ring.bonds, bond);
 	});
+}
+
+/**
+ * Double bond lines distance should not increase unlimitedly.
+ * @return{goog.math.Vec2} limited orthogonal
+ */
+kemia.view.DoubleBondRenderer.prototype.limitDoubleBondLinesDistance = function(orthogonal) {
+	var limit=0.08;
+	if (Math.abs(orthogonal.x)>limit) {
+		var corr=orthogonal.x/limit;
+		orthogonal.x = orthogonal.x/corr;
+		orthogonal.y = orthogonal.y/corr;
+	}
+	if (Math.abs(orthogonal.y)>limit) {
+		var corr=orthogonal.y/limit;
+		orthogonal.x = orthogonal.x/corr;
+		orthogonal.y = orthogonal.y/corr;
+	}
+
+	return orthogonal;
 }

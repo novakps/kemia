@@ -57,9 +57,10 @@ kemia.view.SingleUpBondRenderer.prototype.render = function(bond, transform, bon
 	var target2 = trans2.transformCoords( [ bond.target.coord ])[0];
 
 
-    //make target1 and target2 drop short of the target (prettier)
+  //make target1 and target2 drop short of the target (prettier)
 	if (bond.target.symbol!="C" ) { //TODO -> unless all Carbons are rendered (optional?)
-		var correct=3;
+      var dist=goog.math.Coordinate.distance(target1, bond.source.coord); 
+	  	var correct=3*dist;
 	    target1.x= ((target1.x*(correct-1))+(bond.source.coord.x)) / correct;
 	    target1.y= ((target1.y*(correct-1))+(bond.source.coord.y)) / correct;
 	

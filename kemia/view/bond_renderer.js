@@ -135,14 +135,17 @@ kemia.view.BondRenderer.hasSymbol = function(atom) {
 kemia.view.BondRenderer.defaultConfig = {
 	'bond' : {
 		'stroke' : {
-			'width' : 2,
+			'width' : 1.5,
 			'color' : 'black'
 		},
 		'fill' : {
 			'color' : 'black'
 		}, 
 		'width-ratio' : 6,
-		'symbol-space' : 0.3
+		'symbol-space' : 0.3,
+		'triple-dist' : 0.15,
+		'quad-dist' : 0.13
+
 	},
 	'highlight' : {
 		'radius' : .3,

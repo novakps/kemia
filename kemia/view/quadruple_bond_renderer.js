@@ -52,8 +52,8 @@ kemia.view.QuadrupleBondRenderer.prototype.render = function(bond,
 	var angle_left = theta + (Math.PI / 2);
 	var angle_right = theta - (Math.PI / 2);
 
-	var bondWidth = goog.math.Coordinate.distance(bond.source.coord,
-			bond.target.coord) / 6;
+	var bondWidth=this.config.get("bond")['quad-dist'];
+
 	var transleft1 = new kemia.graphics.AffineTransform(1, 0, 0, 1, Math
 			.cos(angle_left)
 			* bondWidth / 3, Math.sin(angle_left) * bondWidth / 3);
