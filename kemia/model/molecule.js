@@ -661,10 +661,12 @@ kemia.model.Molecule.prototype.sproutFragment = function(attachment_atom,
  *            opt_order
  * @param {kemia.model.Bond.STEREO}
  *            opt_stereo
+ * @param {String}
+ *            opt_symbol
  * @return {kemia.model.Bond}
  */
 kemia.model.Molecule.prototype.sproutBond = function(atom, opt_order,
-		opt_stereo) {
+		opt_stereo, opt_symbol) {
 	var bond_length = 1.25; // default
 	var bonds = atom.bonds.getValues();
 	if (bonds.length) {
@@ -678,7 +680,10 @@ kemia.model.Molecule.prototype.sproutBond = function(atom, opt_order,
 
 	var new_angle = kemia.model.Atom.nextBondAngle(atom);
 	if (new_angle != undefined) {
-		var new_atom = new kemia.model.Atom("C", atom.coord.x
+		var symb="C";
+		if (opt_symbol)
+		  symb=opt_symbol;
+		var new_atom = new kemia.model.Atom(symb, atom.coord.x
 				+ goog.math.angleDx(new_angle, bond_length), atom.coord.y
 				+ goog.math.angleDy(new_angle, bond_length));
 

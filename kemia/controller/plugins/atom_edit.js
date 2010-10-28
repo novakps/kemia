@@ -177,22 +177,33 @@ kemia.controller.plugins.AtomEdit.prototype.handleMouseMove = function(e) {
 }
 
 kemia.controller.plugins.AtomEdit.prototype.handleMouseDown = function(e) {
+	
+
 	if (this.symbol) {
 		var selected = this.editorObject.getSelected();
 		if (selected.length) {
-			goog.array.forEach(selected, function(target) {
-				if (target instanceof kemia.model.Atom) {
-					var atom = target;
-					if (this.symbol && (this.symbol != atom.symbol)) {
-						this.editorObject.dispatchBeforeChange();
-						this.setAtomSymbol(this.symbol, atom);
-						this.editorObject.setModels(this.editorObject
-								.getModels());
-						this.editorObject.dispatchChange();
-						return true;
+			if (selected.length==1 && e.shiftKey) {
+                var existingAtom = selected[0];
+				var molecule = existingAtom.molecule;
+                molecule.sproutBond(existingAtom, kemia.model.Bond.ORDER.SINGLE,kemia.model.Bond.STEREO.NOT_STEREO, this.symbol);
+                this.editorObject.setModels(this.editorObject.getModels());
+                this.editorObject.dispatchChange();
+				return true;
+            }
+			else
+				goog.array.forEach(selected, function(target) {
+					if (target instanceof kemia.model.Atom) {
+						var atom = target;
+						if (this.symbol && (this.symbol != atom.symbol)) {
+							this.editorObject.dispatchBeforeChange();
+							this.setAtomSymbol(this.symbol, atom);
+							this.editorObject.setModels(this.editorObject
+									.getModels());
+							this.editorObject.dispatchChange();
+							return true;
+						}
 					}
-				}
-			}, this)
+				}, this)
 		} else {
 			this.createMolecule(kemia.controller.ReactionEditor
 					.getMouseCoords(e));
