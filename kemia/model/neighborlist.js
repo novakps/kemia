@@ -210,7 +210,7 @@ kemia.model.NeighborList.reactionsToNeighbors = function(reactions) {
 					}
 					};
 				}), 
-				goog.array.map([reaction.arrow], function(a) {
+				goog.array.map(reaction.arrows, function(a) {
 					return {
 						obj : a,
 						getCenter : function() {
@@ -222,10 +222,11 @@ kemia.model.NeighborList.reactionsToNeighbors = function(reactions) {
 								a.target.y);
 						return goog.math.Coordinate.distance(line
 								.getClosestSegmentPoint(point.x, point.y),
-							point);
+								point);
 					}
 					};
 				})
+				
 		)
 	}))
 };

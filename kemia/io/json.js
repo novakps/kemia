@@ -278,7 +278,9 @@ kemia.io.json.readReaction = function(arg) {
 		goog.array.forEach(jrxn['arrows'], function(arrow){
 			rxn.setArrow(kemia.io.json.readArrow(arrow));
 		});
-	} 
+	} else {
+		rxn.setArrow(new kemia.model.Arrow());
+	}
 
 	rxn.setReagentsText( jrxn['reagents_text']);
 	rxn.setConditionsText( jrxn['conditions_text']);
@@ -318,7 +320,9 @@ kemia.io.json.reactionToJson = function (rxn) {
 	var header = rxn.header;
 	var reactants = goog.array.map(rxn.getReactants(), kemia.io.json.moleculeToJson);
 	var products = goog.array.map(rxn.getProducts(), kemia.io.json.moleculeToJson);
-	var arrows = goog.array.map([rxn.arrow], kemia.io.json.arrowToJson);
+	if(rxn.arrow){
+		var arrows = goog.array.map([rxn.arrow], kemia.io.json.arrowToJson);
+	}
 	var pluses = goog.array.map(rxn.pluses, kemia.io.json.plusToJson);
 	return {'header': header,
 		'reactants': reactants,

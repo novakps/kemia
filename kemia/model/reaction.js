@@ -20,7 +20,7 @@ kemia.model.Reaction = function() {
 	this.molecules = [];
 
 	/** @type {Array.<kemia.model.Arrow>} */
-	this.arrow = new kemia.model.Arrow();
+	this.arrows = [];
 
 	/** @type {Array.<kemia.model.Pluse>} */
 	this.pluses = [];
@@ -135,8 +135,10 @@ kemia.model.Reaction.prototype.addProduct = function(mol) {
  *            mol
  */
 kemia.model.Reaction.prototype.isReactant = function(mol) {
-	if(this.arrow){
-		return this.arrow.getOrientation(mol.getCenter())==kemia.model.Arrow.ORIENTATION.BEHIND;
+	if(this.arrows.length> 0){
+		return this.arrows[0].getOrientation(mol.getCenter())==kemia.model.Arrow.ORIENTATION.BEHIND;
+	} else {
+		return true
 	}
 }
 
@@ -145,8 +147,10 @@ kemia.model.Reaction.prototype.isReactant = function(mol) {
  *            mol
  */
 kemia.model.Reaction.prototype.isProduct = function(mol) {
-	if(this.arrow){
-		return this.arrow.getOrientation(mol.getCenter())==kemia.model.Arrow.ORIENTATION.AHEAD;
+	if(this.arrows.length > 0){
+		return this.arrows[0].getOrientation(mol.getCenter())==kemia.model.Arrow.ORIENTATION.AHEAD;
+	} else {
+		return false
 	}
 }
 
@@ -165,11 +169,12 @@ kemia.model.Reaction.prototype.removeMolecule = function(mol) {
  */
 kemia.model.Reaction.prototype.setArrow = function(arrow) {
 	
-	if(this.arrow){
-		this.arrow.reaction = undefined;
+	if(this.arrows.length){
+		this.arrows[0].reaction = undefined;
 	}
+	this.arrows.length = 0;
 	/** @type {kemia.model.Arrow} */
-	this.arrow = arrow;
+	this.arrows[0] = arrow;
 	arrow.reaction = this;
 };
 
@@ -179,7 +184,9 @@ kemia.model.Reaction.prototype.setArrow = function(arrow) {
  * @param{string} text
  */
 kemia.model.Reaction.prototype.setReagentsText = function(text){
-	this.arrow.setReagentsText(text);
+	if(this.arrows.length>0){
+		this.arrows[0].setReagentsText(text);
+	}
 };
 
 /**
@@ -188,7 +195,9 @@ kemia.model.Reaction.prototype.setReagentsText = function(text){
  * @return{string}
  */
 kemia.model.Reaction.prototype.getReagentsText = function(){
-	return this.arrow.reagents_text;
+	if(this.arrows.length>0){
+		return this.arrows[0].reagents_text;
+	}
 }
 
 /**
@@ -197,7 +206,9 @@ kemia.model.Reaction.prototype.getReagentsText = function(){
  * @return{string}
  */
 kemia.model.Reaction.prototype.getConditionsText = function(){
-	return this.arrow.conditions_text;
+	if(this.arrows.length>0){
+		return this.arrows[0].conditions_text;
+	}
 }
 
 /**
@@ -206,7 +217,9 @@ kemia.model.Reaction.prototype.getConditionsText = function(){
  * @param{string} text
  */
 kemia.model.Reaction.prototype.setConditionsText = function(text){
-	this.arrow.setConditionsText(text);
+	if (this.arrows.length>0){
+		this.arrows[0].setConditionsText(text);
+	}
 }
 
 
