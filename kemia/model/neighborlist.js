@@ -226,7 +226,7 @@ kemia.model.NeighborList.reactionsToNeighbors = function(reactions) {
 					}
 					};
 				})
-				
+
 		)
 	}))
 };

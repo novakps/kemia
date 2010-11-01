@@ -261,6 +261,7 @@ kemia.io.json.plusToJson = function (plus){
  * @return {kemia.model.Reaction}
  */
 kemia.io.json.readReaction = function(arg) {
+	kemia.io.json.logger.fine('readReaction')
 	/** @type {kemia.io.json.Reaction} */
 	var jrxn;
 	if (arg.constructor == String) {
@@ -278,7 +279,7 @@ kemia.io.json.readReaction = function(arg) {
 		goog.array.forEach(jrxn['arrows'], function(arrow){
 			rxn.setArrow(kemia.io.json.readArrow(arrow));
 		});
-	} else {
+	} else if (products.length>0) {
 		rxn.setArrow(new kemia.model.Arrow());
 	}
 
@@ -320,9 +321,7 @@ kemia.io.json.reactionToJson = function (rxn) {
 	var header = rxn.header;
 	var reactants = goog.array.map(rxn.getReactants(), kemia.io.json.moleculeToJson);
 	var products = goog.array.map(rxn.getProducts(), kemia.io.json.moleculeToJson);
-	if(rxn.arrow){
-		var arrows = goog.array.map([rxn.arrow], kemia.io.json.arrowToJson);
-	}
+	var arrows = goog.array.map(rxn.arrows, kemia.io.json.arrowToJson);
 	var pluses = goog.array.map(rxn.pluses, kemia.io.json.plusToJson);
 	return {'header': header,
 		'reactants': reactants,
@@ -343,5 +342,7 @@ kemia.io.json.writeReaction = function(rxn){
 	return new goog.json.Serializer().serialize(kemia.io.json.reactionToJson(rxn));
 }
 goog.exportSymbol('kemia.io.json.writeReaction', kemia.io.json.writeReaction);
+
+kemia.io.json.logger = goog.debug.Logger.getLogger('kemia.io.json');
 
 

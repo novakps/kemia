@@ -45,6 +45,7 @@ function initPage(){
 	// uncomment next two lines to debug to console
 	var c = new goog.debug.Console(); 
 	c.setCapturing(true); 
+	goog.debug.Logger.getLogger('kemia').setLevel(goog.debug.Logger.Level.ALL);
 
 	var toolbar = kemia.controller.DefaultToolbar.makeDefaultReactionToolbar(goog.dom.getElement('reactionEditorToolbar'));  
 

@@ -222,6 +222,15 @@ kemia.model.Reaction.prototype.setConditionsText = function(text){
 	}
 }
 
+/**
+ * @param {kemia.model.Arrow} arrow
+ * 
+ */
+kemia.model.Reaction.prototype.removeArrow = function(arrow) {
+	goog.array.remove(this.arrows, arrow);
+	arrow.reaction = undefined;
+}
+
 
 /**
  * @param {kemia.model.Plus}
@@ -354,30 +363,29 @@ kemia.model.Reaction.removeOverlap = function(molecules) {
  * centers arrow between last reactant and first product
  */
 kemia.model.Reaction.prototype.centerArrow = function(){	
-	var box1 = kemia.model.Reaction.boundingBox(this.getReactants());
-	var box2 = kemia.model.Reaction.boundingBox(this.getProducts());
-	if (!box1 && !box2){
-		// cannot find center
-		return;
-	}
-	if (!box1) {
-		box1 = new goog.math.Box(box2.top, box2.left - 1, box2.bottom, box2.left - 1);
-	}
-	if (!box2) {
-		box2 = new goog.math.Box(box1.top, box1.right + 1, box1.bottom, box1.right + 1);
-	}
-	
-	var right_top = new goog.math.Vec2(box1.right, box1.top);
-	var left_bottom = new goog.math.Vec2(box2.left, box2.bottom);
-	var midpoint = right_top.add(left_bottom.subtract(right_top).scale(0.5));
-	
-// this.logger.info('midpoint: ' + midpoint.toString());
-// this.logger.info('arrowCenter ' + this.arrow.getCenter().toString());
-	var diff = goog.math.Vec2.fromCoordinate(midpoint).subtract (goog.math.Vec2.fromCoordinate(this.arrow.getCenter()));
-// this.logger.info('diff ' + diff.toString());
-	this.arrow.translate(diff);
+	this.logger.info('centerArrow');
+	if(this.arrows.length>0){
+		var arrow = this.arrows[0];
+		var box1 = kemia.model.Reaction.boundingBox(this.getReactants());
+		var box2 = kemia.model.Reaction.boundingBox(this.getProducts());
+		if (!box1 && !box2){
+			// cannot find center
+			return;
+		}
+		if (!box1) {
+			box1 = new goog.math.Box(box2.top, box2.left - 1, box2.bottom, box2.left - 1);
+		}
+		if (!box2) {
+			box2 = new goog.math.Box(box1.top, box1.right + 1, box1.bottom, box1.right + 1);
+		}
 
-// this.logger.info('arrowCenter ' + this.arrow.getCenter().toString());
+		var right_top = new goog.math.Vec2(box1.right, box1.top);
+		var left_bottom = new goog.math.Vec2(box2.left, box2.bottom);
+		var midpoint = right_top.add(left_bottom.subtract(right_top).scale(0.5));
+
+		var diff = goog.math.Vec2.fromCoordinate(midpoint).subtract (goog.math.Vec2.fromCoordinate(arrow.getCenter()));
+		arrow.translate(diff);
+	}
 }
 
 
