@@ -179,15 +179,15 @@
 	<!-- Default Google Closure Compiler compilation levels -->
 
 	<target name="compile-advanced" description="compile with ADVANCED_OPTIMIZATIONS setting">
-		<calcdeps outputfile="kemia-advanced.js" />
+		<calcdeps outputfile="kemia.js" />
 	</target>
 
 	<target name="compile-simple" description="compile with SIMPLE_OPTIMIZATIONS setting">
-		<calcdeps outputfile="kemia-simple.js" compilationlevel="SIMPLE_OPTIMIZATIONS" />
+		<calcdeps outputfile="kemia.js" compilationlevel="SIMPLE_OPTIMIZATIONS" />
 	</target>
 
 	<target name="compile-whitespace-only" description="compile with WHITESPACE_ONLY setting">
-		<calcdeps outputfile="kemia-whitespace-only.js" compilationlevel="WHITESPACE_ONLY" />
+		<calcdeps outputfile="kemia.js" compilationlevel="WHITESPACE_ONLY" />
 	</target>
 
 	<!-- Custom targets with advanced optimizations -->
