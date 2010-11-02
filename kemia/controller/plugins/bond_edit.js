@@ -1,4 +1,4 @@
-goog.provide('kemia.controller.plugins.BondEdit');
+	goog.provide('kemia.controller.plugins.BondEdit');
 goog.require('kemia.controller.Plugin');
 goog.require('goog.debug.Logger');
 goog.require('kemia.model.Bond');

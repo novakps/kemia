@@ -149,7 +149,11 @@ kemia.view.AtomRenderer.prototype.compoundSymbol = function(atom) {
 		superscript : '',
 		subscript : ''
 	};
-	if (atom.symbol != "C" || atom.countBonds() <= 1 || atom.charge) {
+	if (atom.symbol != "C" || 
+			atom.countBonds() < 1 || 
+			atom.charge || 
+			(atom.countBonds()==1 && this.config.get("showTerminalCarbons"))) {
+		
 		// terminal atom may need compound atom name
 		var hydrogen_count = atom.hydrogenCount();
 		if (hydrogen_count == 0) {
@@ -282,6 +286,7 @@ kemia.view.AtomRenderer.defaultConfig = {
 		},
 		'fontName' : "Arial"
 	},
+	'showTerminalCarbons' : true,
 	'margin' : 20,
 	'subscriptSize' : 5,
 	'N' : {

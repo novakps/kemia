@@ -51,7 +51,9 @@ function initPage(){
 
 	var model = kemia.io.json.readReaction(reactionDrawing); 
 	
-	var editor = new kemia.controller.ReactionEditor(goog.dom.getElement('reactionEditorContainer'),{background : {color : 'white'}});
+	var editor = new kemia.controller.ReactionEditor(goog.dom.getElement('reactionEditorContainer'),
+		{background : {color : 'white'}, 
+			showTerminalCarbons:false});
 
 	editor.registerPlugin(new kemia.controller.plugins.Move());
 	editor.registerPlugin(new kemia.controller.plugins.ClearEditor());
