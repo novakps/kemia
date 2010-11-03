@@ -270,8 +270,14 @@ kemia.io.json.readReaction = function(arg) {
 		jrxn = /** @type {kemia.io.json.Reaction} */(arg);
 	}
 	var rxn = new kemia.model.Reaction();
-	var reactants = goog.array.map(jrxn['reactants'], kemia.io.json.readMolecule)
-	var products = goog.array.map(jrxn['products'], kemia.io.json.readMolecule);
+	var reactants = [];
+	if (jrxn['reactants']){
+		reactants = goog.array.map(jrxn['reactants'], kemia.io.json.readMolecule);
+	}
+	var products = [];
+	if (jrxn['products']){
+		goog.array.map(jrxn['products'], kemia.io.json.readMolecule);
+	}
 
 	rxn.header = jrxn['header'];
 

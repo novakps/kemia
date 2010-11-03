@@ -114,6 +114,18 @@ kemia.model.Reaction.prototype.addMolecule = function(mol) {
  */
 kemia.model.Reaction.prototype.addProduct = function(mol) {
 	if(!this.isProduct(mol)){
+		if (this.arrows.length==0){
+			var arrow = new kemia.model.Arrow();
+			var reactants = this.getReactants();
+			if(reactants.length>0){
+				var reactant_box = kemia.model.Reaction.boundingBox(reactants);
+				r_diff = new goog.math.Vec2(reactant_box.right + kemia.model.Reaction.MOLECULE_MARGIN, 0);
+			} else {
+				r_diff = new goog.math.Vec2( kemia.model.Reaction.MOLECULE_MARGIN, 0);
+			}
+			arrow.translate(r_diff);
+			this.setArrow(arrow);
+		}
 		// translate mol to the right of products, or of arrow, if no products
 		var products = this.getProducts();
 		var mol_box = mol.getBoundingBox();
@@ -122,7 +134,7 @@ kemia.model.Reaction.prototype.addProduct = function(mol) {
 			var prod_box = kemia.model.Reaction.boundingBox(products);
 			x_diff =  prod_box.right - mol_box.left + kemia.model.Reaction.MOLECULE_MARGIN;
 		} else {
-			x_diff = this.arrow.target.x - mol_box.left + kemia.model.Reaction.MOLECULE_MARGIN;
+			x_diff = this.arrows[0].target.x - mol_box.left + kemia.model.Reaction.MOLECULE_MARGIN;
 		}
 		mol.translate(new goog.math.Vec2(x_diff, 0));
 		goog.asserts.assert(this.isProduct(mol));
