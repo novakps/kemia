@@ -8,6 +8,7 @@ function setUp() {
 	var c = new goog.debug.Console();
 	c.setCapturing(true);
 	logger = goog.debug.Logger.getLogger('JsonTest');
+	logger.setLevel(goog.debug.Logger.Level.ALL);
 	json_rxn = goog.json.parse(goog.json.serialize(jreaction));
 }
 
@@ -88,7 +89,7 @@ function testImportReactionWithUndefinedArrows(){
 	var rxn = kemia.io.json.readReaction(json_rxn);
 	assertEquals(3, rxn.getReactants().length);
 	assertEquals(1, rxn.getProducts().length);
-	assertEquals(4.60065, rxn.arrow.source.x);
+	assertEquals(4.60065, rxn.arrows[0].source.x);
 }
 
 function testImportReactionWithNoReactantsAndNoProducts(){

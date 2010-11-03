@@ -63,7 +63,7 @@ function testReaction() {
 		return o instanceof kemia.model.Atom
 	});
 	assertEquals(aa2, nearest_atoms[0]);
-	assertEquals(rxn.arrow, neighborList.getNearestList({x: 5, y:0})[0]);
+	assertEquals(rxn.arrows[0], neighborList.getNearestList({x: 5, y:0})[0]);
 
 }
 

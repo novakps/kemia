@@ -194,7 +194,7 @@ function testMidpoint() {
 function testCenterArrow(){
 	var rxn = buildReaction();
 	rxn.centerArrow();
-	var c = rxn.arrow.getCenter();
+	var c = rxn.arrows[0].getCenter();
 	assertEquals(3, c.x);
 	assertEquals(1.5, c.y);
 }
@@ -202,7 +202,7 @@ function testCenterArrow(){
 function testCenterArrow2(){
 	var rxn = buildReaction2();
 	rxn.centerArrow();
-	var c = rxn.arrow.getCenter();
+	var c = rxn.arrows[0].getCenter();
 	assertEquals(3, c.x);
 	assertEquals(1.5, c.y);
 }

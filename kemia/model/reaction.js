@@ -76,8 +76,14 @@ kemia.model.Reaction.prototype.addReactant = function(mol) {
 		if(!this.isReactant(mol)){
 			// have to move the arrow and any products too
 			var products = this.getProducts();
-			var diff = new goog.math.Vec2(mol.getBoundingBox().right - this.arrow.source.x + kemia.model.Reaction.MOLECULE_MARGIN);
-			this.arrow.translate(diff);
+			var x = mol.getBoundingBox().right  + kemia.model.Reaction.MOLECULE_MARGIN;
+			if(this.arrows.length>0){
+				x = x - this.arrows[0].source.x;
+			}
+			var diff = new goog.math.Vec2(x, 0);
+			goog.array.forEach(this.arrows, function(arrow){
+				arrow.translate(diff);
+			});
 			// move products, since arrow moved
 			goog.array.forEach(products, function(mol){
 				mol.translate(diff);
@@ -235,7 +241,8 @@ kemia.model.Reaction.prototype.setConditionsText = function(text){
 }
 
 /**
- * @param {kemia.model.Arrow} arrow
+ * @param {kemia.model.Arrow}
+ *            arrow
  * 
  */
 kemia.model.Reaction.prototype.removeArrow = function(arrow) {

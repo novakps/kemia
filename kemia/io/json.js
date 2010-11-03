@@ -276,7 +276,7 @@ kemia.io.json.readReaction = function(arg) {
 	}
 	var products = [];
 	if (jrxn['products']){
-		goog.array.map(jrxn['products'], kemia.io.json.readMolecule);
+		products = goog.array.map(jrxn['products'], kemia.io.json.readMolecule);
 	}
 
 	rxn.header = jrxn['header'];
