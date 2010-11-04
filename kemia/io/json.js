@@ -174,6 +174,7 @@ kemia.io.json.readMolecule = function(arg) {
 	}
 	var mol = new kemia.model.Molecule();
 	mol.name = jmol['name'];
+	mol.id = jmol['id'];
 	goog.array.forEach(jmol['atoms'], function(a){
 		mol.addAtom(new kemia.model.Atom(a['symbol'], a['coord']['x'], a['coord']['y'], a['charge']));
 	});
@@ -210,7 +211,7 @@ kemia.io.json.Coordinate;
 /** @typedef {{source: number, target: number, type: string, stereo: string}} */
 kemia.io.json.Bond;
 /**
- * @typedef {{ name: string, atoms: Array.<kemia.io.json.Atom>, bondindex:
+ * @typedef {{ name: string, id: string, atoms: Array.<kemia.io.json.Atom>, bondindex:
  *          Array.<kemia.io.json.Bond>}}
  */
 kemia.io.json.Molecule;
@@ -251,6 +252,7 @@ kemia.io.json.moleculeToJson = function(mol) {
 
 	return {
 		'name' : mol.name,
+		'id' : mol.id,
 		'atoms' : atoms,
 		'bondindex' : bonds
 	};

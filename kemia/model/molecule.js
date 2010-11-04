@@ -50,6 +50,13 @@ kemia.model.Molecule = function(opt_name) {
 	 * @type {string}
 	 */
 	this.name = opt_name ? opt_name : "";
+	
+	/**
+	 * id of molecule
+	 * 
+	 * @type {string}
+	 */
+	this.id = undefined;
 
 	/**
 	 * SSSR calculated for this molecule
