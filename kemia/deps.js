@@ -638,7 +638,7 @@ goog.addDependency("../../../../kemia/controller/plugins/abstractdialog.js", ['k
 goog.addDependency("../../../../kemia/controller/plugins/abstractdialogplugin.js", ['kemia.controller.plugins.AbstractDialogPlugin', 'kemia.controller.plugins.AbstractDialogPlugin.EventType'], ['goog.dom', 'goog.dom.Range', 'goog.editor.Field.EventType', 'goog.editor.Plugin', 'goog.editor.range', 'goog.events', 'goog.ui.editor.AbstractDialog.EventType']);
 goog.addDependency("../../../../kemia/controller/plugins/arrow_plus_edit.js", ['kemia.controller.plugins.ArrowPlusEdit'], ['kemia.controller.Plugin', 'goog.debug.Logger', 'kemia.model.Arrow', 'kemia.model.Plus']);
 goog.addDependency("../../../../kemia/controller/plugins/atom_edit.js", ['kemia.controller.plugins.AtomEdit'], ['kemia.controller.Plugin', 'goog.debug.Logger', 'goog.ui.KeyboardShortcutHandler', 'goog.events.KeyCodes']);
-goog.addDependency("../../../../kemia/controller/plugins/bond_edit.js", [], ['kemia.controller.Plugin', 'goog.debug.Logger', 'kemia.model.Bond']);
+goog.addDependency("../../../../kemia/controller/plugins/bond_edit.js", ['kemia.controller.plugins.BondEdit'], ['kemia.controller.Plugin', 'goog.debug.Logger', 'kemia.model.Bond']);
 goog.addDependency("../../../../kemia/controller/plugins/cleanup.js", ['kemia.controller.plugins.Cleanup'], ['goog.debug.Logger', 'kemia.layout.CoordinateGenerator']);
 goog.addDependency("../../../../kemia/controller/plugins/clear_editor.js", ['kemia.controller.plugins.ClearEditor'], ['kemia.controller.Plugin', 'goog.functions']);
 goog.addDependency("../../../../kemia/controller/plugins/erase.js", ['kemia.controller.plugins.Erase'], ['kemia.controller.Plugin', 'goog.debug.Logger', 'goog.functions']);
@@ -657,7 +657,7 @@ goog.addDependency("../../../../kemia/io/json.js", ['kemia.io.json'], ['kemia.mo
 goog.addDependency("../../../../kemia/io/json_test.js", [], ['goog.testing.jsunit', 'kemia.io.json', 'goog.json.Serializer', 'goog.debug.Console', 'goog.debug.Logger']);
 goog.addDependency("../../../../kemia/io/json_test_mol.js", [], []);
 goog.addDependency("../../../../kemia/io/json_test_rxn.js", [], []);
-goog.addDependency("../../../../kemia/io/mdl.js", ['kemia.io.mdl'], ['goog.i18n.DateTimeFormat', 'goog.string', 'kemia.model.Reaction', 'kemia.model.Molecule', 'kemia.model.Bond', 'kemia.model.Atom']);
+goog.addDependency("../../../../kemia/io/mdl.js", ['kemia.io.mdl'], ['goog.i18n.DateTimeFormat', 'goog.string', 'goog.string.StringBuffer', 'kemia.model.Reaction', 'kemia.model.Molecule', 'kemia.model.Bond', 'kemia.model.Atom']);
 goog.addDependency("../../../../kemia/io/mdl_test.js", [], ['goog.testing.jsunit', 'kemia.io.mdl']);
 goog.addDependency("../../../../kemia/io/testdata.js", [], []);
 goog.addDependency("../../../../kemia/io/smiles/smiles_generator.js", ['kemia.io.smiles.SmilesGenerator'], ['kemia.model.Molecule', 'kemia.model.Atom', 'kemia.model.Bond', 'kemia.model.Reaction']);
