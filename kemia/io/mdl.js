@@ -22,6 +22,7 @@ goog.provide('kemia.io.mdl');
 
 goog.require('goog.i18n.DateTimeFormat');
 goog.require('goog.string');
+goog.require('goog.string.StringBuffer');
 goog.require('kemia.model.Reaction');
 goog.require('kemia.model.Molecule');
 goog.require('kemia.model.Bond');
@@ -141,6 +142,14 @@ kemia.io.mdl.readMolfile = function(molfile) {
 	var mol_lines = molfile.split(lineDelimiter);
 	var name = mol_lines[0]
 	var mol = new kemia.model.Molecule(name);
+	var reg_num = mol_lines[1].slice(46,52).trim();
+	mol.id = reg_num;
+	/**format of second line of header
+	 * IIPPPPPPPPMMDDYYHHmmddSSssssssssssEEEEEEEEEEEERRRRRR 
+	 * User's first and last initials (l), program name (P), date/time (M/D/Y,H:m), dimensional codes (d), 
+	 * scaling factors (S, s), energy (E) if modeling program input, internal registry number (R) if input 
+	 * through MDL form. 
+	 * **/
 	var atom_count = parseInt(mol_lines[3].substr(0, 3), 10);
 	var bond_count = parseInt(mol_lines[3].substr(3, 3), 10);
 
@@ -286,14 +295,18 @@ kemia.io.mdl.writeMolfile = function(mol) {
 	// Line 1: Molecule name
 	// Line 2: This line has the format:
 	// IIPPPPPPPPMMDDYYHHmmddSSssssssssssEEEEEEEEEEEERRRRRR
+	// APtclcactv11051012262D 0   0.00000     0.00000
 	// Line 3: A line for comments. If no comment is entered, a blank line must
 	// be present.
 	var now = new Date();
 	var line1 = mol.name + "\n";
-	var fmt = new goog.i18n.DateTimeFormat('mmddyyHHMM');
-	var line2 = " " + "JChemHub" + fmt.format(now) + "\n";
+	var fmt = new goog.i18n.DateTimeFormat('MMddyyHHmm');
+	var line2 = new goog.string.StringBuffer("  " , "Kemia   " , fmt.format(now));
+	line2.append("2D 0   0.00000     0.00000");
+	line2.append((goog.string.repeat(" ", 6) + goog.string.makeSafe(mol.id)).slice(-6)); 
+	line2.append("\n");
 	var line3 = "\n";
-	var headerBlock = line1 + line2 + line3;
+	var headerBlock = line1 + line2.toString() + line3;
 
 	// Counts line
 	var atomCount = (goog.string.repeat(" ", 3) + mol.countAtoms()).slice(-3);

@@ -34,6 +34,14 @@ function testWriteMolfile() {
 
 }
 
+function testMolRegNum() {
+	var mol = kemia.io.mdl.readMolfile(molfile);
+	mol.id = '123456';
+	var molfile2 = kemia.io.mdl.writeMolfile(mol);
+	var mol2 = kemia.io.mdl.readMolfile(molfile2);
+	assertEquals('123456', mol2.id);
+}
+
 function testReadRxnfile() {
 	var reaction = kemia.io.mdl.readRxnfile(rxnsample);
 	assertEquals(2, reaction.getReactants().length);
