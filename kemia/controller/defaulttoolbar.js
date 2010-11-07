@@ -30,7 +30,7 @@ kemia.controller.DefaultToolbar.makeActionButtons = function(buttons) {
 	var file_menu = new goog.ui.Menu();
 	var erase_all = new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, undefined , 'New'));
-	file_menu.addItem(erase_all);
+	file_menu.addChild(erase_all);
 	file_select.setMenu(file_menu);
 	file_select.queryable = true;
 	buttons.push(file_select);
@@ -124,50 +124,50 @@ kemia.controller.DefaultToolbar.makeAtomBondTemplateButtons = function(buttons){
 			atom_select.setValue(value);
 		}
 	}
-	var atom_menu = new goog.ui.Menu();	atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(
+	var atom_menu = new goog.ui.Menu();	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
 				style : "color:grey"
 			}, 'H')));
-	atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(
+	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
 				style : "color:black"
 			}, 'C')));
-	atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(
+	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
 				style : "color:blue"
 			}, 'N')));
-	atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(
+	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
 				style : "color:red"
 			}, 'O')));
-	atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(
+	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
 				style : "color:yellow"
 			}, 'S')));
-	atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(
+	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
 				style : "color:orange"
 			}, 'P')));
-	atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(
+	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
 				style : "color:green"
 			}, 'F')));
-	atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(
+	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
 				style : "color:green"
 			}, 'Cl')));
-	atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(
+	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
 				style : "color:DarkRed"
 			}, 'Br')));
-	atom_menu.addItem(new goog.ui.MenuSeparator());
-	atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(
+	atom_menu.addChild(new goog.ui.MenuSeparator());
+	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {style : "color:black"
 			}, "R1")));
-	atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(
+	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {style : "color:black"
 			}, "R2")));
-	// atom_menu.addItem(new goog.ui.Option('...'));//TTD periodic table
+	// atom_menu.addChild(new goog.ui.Option('...'));//TTD periodic table
 	atom_select.setMenu(atom_menu);
 	buttons.push(atom_select);
 
@@ -187,7 +187,7 @@ kemia.controller.DefaultToolbar.makeAtomBondTemplateButtons = function(buttons){
 	var bond_menu = new goog.ui.Menu();
 	goog.array.forEach(kemia.controller.plugins.BondEdit.BOND_TYPES, function(
 			entry) {
-		bond_menu.addItem(new goog.ui.Option(entry.caption, entry));
+		bond_menu.addChild(new goog.ui.Option(entry.caption, entry));
 	});
 	bond_select.setMenu(bond_menu);
 	buttons.push(bond_select);
@@ -209,7 +209,7 @@ kemia.controller.DefaultToolbar.makeAtomBondTemplateButtons = function(buttons){
 	var template_menu = new goog.ui.Menu();
 	goog.array.forEach(kemia.controller.plugins.MoleculeEdit.TEMPLATES,
 			function(template) {
-				template_menu.addItem(new goog.ui.Option(template.name,
+				template_menu.addChild(new goog.ui.Option(template.name,
 						template));
 			});
 	template_select.setMenu(template_menu);
