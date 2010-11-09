@@ -268,7 +268,7 @@ kemia.controller.plugins.Move.prototype.handleMouseUp = function(e) {
 			return true;
 		}
 	} catch (e) {
-		this.logger.info(e);
+		this.logger.severe(e);
 	}
 }
 
@@ -539,7 +539,7 @@ kemia.controller.plugins.Move.prototype.dragBond = function(e, bond) {
 		}
 		d._transformed_center = trans.transformCoords([ center ])[0];
 		d._start = kemia.controller.ReactionEditor.getMouseCoords(e);
-		this.logger.fine('d._start: ' + d._start.toString());
+//		this.logger.fine('d._start: ' + d._start.toString());
 		d._prev_angle = goog.math.angle(d._transformed_center.x,
 				d._transformed_center.y, d._start.x, d._start.y);
 		d._merge_pairs = [];
@@ -630,7 +630,7 @@ kemia.controller.plugins.Move.prototype.dragBond = function(e, bond) {
 				d.editor.setModelsSilently(d.editor.getModels());
 				d._merge_pairs = [];
 				d.dispose();
-				this.logger.fine('END drag');
+//				this.logger.fine('END drag');
 			} catch (e) {
 				this.logger.severe(e);
 			} finally {
@@ -638,7 +638,7 @@ kemia.controller.plugins.Move.prototype.dragBond = function(e, bond) {
 			}
 		}, undefined, this);
 		this._dragging = true;
-		this.logger.fine('START drag');
+//		this.logger.fine('START drag');
 		d.startDrag(e);
 	}
 };
@@ -788,9 +788,11 @@ kemia.controller.plugins.Move.prototype.dragMolecule = function(e, molecule) {
 						var merge_pairs = this.editorObject.findAtomMergePairs(
 								molecule.atoms, d._merge_exclusions);
 
-						// limit numbers of pairs that can be merged
-						d._merge_pairs = goog.array.slice(merge_pairs, 0, 2)
-
+						// limit numbers of pairs that can be merged to two for now
+						if (merge_pairs.length > 1) {
+							d._merge_pairs = goog.array
+									.slice(merge_pairs, 0, 2)
+						}
 						goog.array
 								.forEach(
 										d._merge_pairs,

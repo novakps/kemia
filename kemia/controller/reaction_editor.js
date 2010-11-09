@@ -167,8 +167,19 @@ kemia.controller.ReactionEditor.prototype.setScaleFactor = function(scale) {
 
 kemia.controller.ReactionEditor.prototype.setModelsSilently = function(models) {
 	this.clear();
-	this.models = models;
-	
+	this.models = [];
+	goog.array.forEach(models, function(model){
+		var reaction;
+		if(model instanceof kemia.model.Reaction){
+			reaction = model;
+		}
+		if(model instanceof kemia.model.Molecule){
+			// wrap in a single-reactant reaction
+			reaction = new kemia.model.Reaction();
+			reaction.addReactant(model);
+		}
+		this.models.push(reaction);
+	}, this);
 	var objects = goog.array.flatten(goog.array.map(models, function(model) {
 		if (model instanceof kemia.model.Molecule) {
 			return kemia.model.NeighborList.moleculesToNeighbors( [ model ]);
