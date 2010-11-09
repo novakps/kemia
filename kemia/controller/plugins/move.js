@@ -120,13 +120,16 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 				}
 				return true;
 			} else if (target instanceof kemia.model.Bond) {
-				this.editorObject.addSelected(target);
-				this.editorObject.getOriginalElement().style.cursor = 'move';
-				if (!e.currentTarget.highlightGroup) {
-					e.currentTarget.highlightGroup = this.highlightBond(target);
-				} else {
-					e.currentTarget.highlightGroup = this.highlightBond(target,
-							e.currentTarget.highlightGroup);
+				var bond = target;
+				if(bond.source.bonds.getValues().length == 1 || bond.target.bonds.getValues().length == 1){
+					this.editorObject.addSelected(target);
+					this.editorObject.getOriginalElement().style.cursor = 'move';
+					if (!e.currentTarget.highlightGroup) {
+						e.currentTarget.highlightGroup = this.highlightBond(target);
+					} else {
+						e.currentTarget.highlightGroup = this.highlightBond(target,
+								e.currentTarget.highlightGroup);
+					}
 				}
 				return true;
 			} else if (target instanceof kemia.model.Molecule) {
@@ -209,6 +212,7 @@ kemia.controller.plugins.Move.prototype.handleMouseDown = function(e) {
 				this.dragBond(e, bond);
 				this.editorObject.dispatchChange();
 				return true;
+
 			}
 
 			if (target instanceof kemia.model.Molecule) {
