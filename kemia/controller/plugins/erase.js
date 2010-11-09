@@ -185,11 +185,11 @@ kemia.controller.plugins.Erase.prototype.eraseBond = function(bond) {
 	if (reaction){
 		if (molecule.bonds.length && reaction.isReactant(molecule)) {
 			goog.array.forEach(fragments, function(mol) {
-				reaction.addReactant(mol);
+				reaction.addMolecule(mol);
 			});
 		} else if (molecule.bonds.length && reaction.isProduct(molecule)) {
 			goog.array.forEach(fragments, function(mol) {
-				reaction.addProduct(mol);
+				reaction.addMolecule(mol);
 			});
 		}
 		reaction.removeMolecule(molecule);
