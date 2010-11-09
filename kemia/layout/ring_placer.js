@@ -423,8 +423,8 @@ kemia.layout.RingPlacer.getIntersectingBonds = function(ring1, ring2) {
 /**
  * finds center of a list of atoms
  * 
- * @param {Array.
- *            <kemia.model.Atom>} atoms, list of atoms to find center of
+ * @param {Array.<kemia.model.Atom>} atoms 
+ * list of atoms to find center of
  * @return {goog.math.Coordinate} coordinate of center of atoms
  */
 kemia.layout.RingPlacer.center = function(atoms) {
@@ -470,8 +470,7 @@ kemia.layout.RingPlacer.placeConnectedRings = function(ringset, ring, handleType
 /**
  * flag all atoms in rings as unplaced atoms
  * 
- * @param {Array.Array.<
- *            <kemia.ring.Ring>>}
+ * @param {Array.Array.<<kemia.ring.Ring>>} ringset
  */
 kemia.layout.RingPlacer.resetUnplacedRingAtoms = function(ringset){
 	goog.array.forEach(ringset, function(ring){

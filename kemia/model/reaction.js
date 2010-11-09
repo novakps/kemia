@@ -293,8 +293,7 @@ kemia.model.Reaction.prototype.removePlus = function(plus) {
 /**
  * inserts plus at midpoint between molecules
  * 
- * @param {Array.
- *            <kemia.model.Molecule}
+ * @param {Array.<kemia.model.Molecule}
  */
 kemia.model.Reaction.prototype.generatePluses = function(molecules) {
 	var previousMol;
@@ -317,8 +316,7 @@ kemia.model.Reaction.prototype.generatePluses = function(molecules) {
 /**
  * bounding box of an array of molecules
  * 
- * @param {Array.
- *            <kemia.model.Molecule>} molecules
+ * @param {Array.<kemia.model.Molecule>} molecules
  * @return {goog.math.Box}
  */
 kemia.model.Reaction.boundingBox = function(molecules) {
@@ -338,8 +336,7 @@ kemia.model.Reaction.boundingBox = function(molecules) {
 /**
  * finds center of an array of molecules
  * 
- * @param {Array.
- *            <kemia.model.Molecule>} molecules
+ * @param {Array.<kemia.model.Molecule>} molecules
  * @return {goog.math.Coordinate}
  */
 kemia.model.Reaction.prototype.center = function(molecules) {
@@ -351,8 +348,8 @@ kemia.model.Reaction.prototype.center = function(molecules) {
 /**
  * finds midpoint in space between two molecules
  * 
- * @param {kemia.model.Molecule}
- * @param {kemia.model.Molecule}
+ * @param {kemia.model.Molecule} mol1
+ * @param {kemia.model.Molecule} mol2
  * @return {goog.math.Coordinate}
  */
 kemia.model.Reaction.midpoint = function (mol1, mol2){

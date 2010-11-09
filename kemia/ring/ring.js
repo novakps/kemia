@@ -24,10 +24,8 @@ goog.require('goog.memoize');
 /**
  * Creates a new Ring
  * 
- * @param {Array.
- *            <kemia.model.Atom>} atoms
- * @param {Array.
- *            <kemia.model.Bond>} bonds
+ * @param {Array.<kemia.model.Atom>} atoms
+ * @param {Array.<kemia.model.Bond>} bonds
  * @constructor
  */
 kemia.ring.Ring = function(atoms, bonds) {

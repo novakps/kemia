@@ -149,8 +149,8 @@ kemia.layout.CoordinateGenerator.generate = function(molecule){
  * 
  * @param {kemia.layout.Vector2D}
  *            bondVector A vector for placement for the first bond
- * @param {Array.
- *            <kemia.ring.Ring>} ringset The connected RingSet to be layed out
+ * @param {Array.<kemia.ring.Ring>} ringset 
+ * The connected RingSet to be layed out
  */
 kemia.layout.CoordinateGenerator.layoutRingSet=function(bondVector, ringset){
 	

@@ -21,8 +21,8 @@ kemia.model.Neighbor;
  * </pre>
  * 
  * @class Class for computing objects for a specified coordinate.
- * @param {Array.
- *            <kemia.model.Neighbor>} objects The objects to initialize the
+ * @param {Array.<kemia.model.Neighbor>} objects 
+ * The objects to initialize the
  *            grid.
  * @param {number=}
  *            opt_cellSize The cell size, default is 2. This is in atomic units.
@@ -91,8 +91,8 @@ kemia.model.NeighborList = function(objects, opt_cellSize, opt_tolerance) {
 
 /**
  * 
- * @param coord
- * @return
+ * @param {goog.math.Coordinate} coord
+ * @return {Array}
  */
 kemia.model.NeighborList.prototype.cellsAroundCoord = function(coord) {
 	var cells = [];
@@ -190,8 +190,7 @@ kemia.model.NeighborList.prototype.getNearestList = function(coord) {
 };
 
 /**
- * @param {Array.
- *            <kemia.model.Reaction>} reactions
+ * @param {Array.<kemia.model.Reaction>} reactions
  * @return {Array.<kemia.model.Neighbor>}
  */
 kemia.model.NeighborList.reactionsToNeighbors = function(reactions) {
@@ -232,8 +231,7 @@ kemia.model.NeighborList.reactionsToNeighbors = function(reactions) {
 };
 
 /**
- * @param {Array.
- *            <kemia.model.Molecule>} molecules
+ * @param {Array.<kemia.model.Molecule>} molecules
  * @return {Array.<kemia.model.Neighbor>}
  */
 kemia.model.NeighborList.moleculesToNeighbors = function(molecules) {
