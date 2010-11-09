@@ -470,7 +470,7 @@ kemia.layout.RingPlacer.placeConnectedRings = function(ringset, ring, handleType
 /**
  * flag all atoms in rings as unplaced atoms
  * 
- * @param {Array.Array.<<kemia.ring.Ring>>} ringset
+ * @param {Array.<Array.<kemia.ring.Ring>>} ringset
  */
 kemia.layout.RingPlacer.resetUnplacedRingAtoms = function(ringset){
 	goog.array.forEach(ringset, function(ring){
