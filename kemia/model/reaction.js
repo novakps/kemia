@@ -107,6 +107,7 @@ kemia.model.Reaction.prototype.addReactant = function(mol) {
 		goog.asserts.assert(this.isReactant(mol));
 	} 
 	this.addMolecule(mol);
+	kemia.model.Reaction.removeOverlap(this.getReactants());
 };
 
 kemia.model.Reaction.prototype.getReactants = function() {

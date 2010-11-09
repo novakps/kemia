@@ -215,10 +215,10 @@ kemia.model.Molecule.prototype.removeAtom = function(atomOrId) {
 		atom = atomOrId;
 	}
 	var neighborBonds = atom.bonds.getValues();
-	var molBonds = this.bonds; // for bond reference in anonymous method
-	goog.array.forEach(neighborBonds, function(element, index, array) {
-		goog.array.remove(molBonds, element);
-	});
+
+	goog.array.forEach(neighborBonds, function(element) {
+		goog.array.remove(this.bonds, element);
+	}, this);
 	atom.bonds.clear();
 	goog.array.remove(this.atoms, atom);
 	atom.molecule = undefined;
@@ -453,14 +453,17 @@ kemia.model.Molecule.prototype.getBoundingBox = function() {
  * 
  * @param {number}
  *            degrees, angle of rotation
- * @param {goog.math.Coordinate}
- *            center, coordinates of center of rotation
+ * @param {!goog.math.Coordinate}
+ *            opt_center, coordinates of center of rotation
  * 
  */
-kemia.model.Molecule.prototype.rotate = function(degrees, center) {
+kemia.model.Molecule.prototype.rotate = function(degrees, opt_center) {
 	// this.logger.info('rotate ' + degrees);
+	if(!goog.isDef(opt_center)){
+		opt_center = this.getCenter();
+	}
 	var trans = kemia.graphics.AffineTransform.getRotateInstance(goog.math
-			.toRadians(degrees), center.x, center.y);
+			.toRadians(degrees), opt_center.x, opt_center.y);
 	goog.array.forEach(this.atoms, function(a) {
 		a.coord = trans.transformCoords( [ a.coord ])[0];
 	});
@@ -487,6 +490,7 @@ kemia.model.Molecule.prototype.translate = function(vector) {
 		a.coord = goog.math.Coordinate.sum(a.coord, vector);
 	});
 };
+
 
 /**
  * merge with a molecule fragment target_bond replaces frag_bond and target_atom
@@ -581,53 +585,53 @@ kemia.model.Molecule.prototype.merge = function(fragment, frag_bond,
 	return this;
 }
 
-/**
- * merge two molecules at a single atom
- * 
- * @param{kemia.model.Atom} source_atom, the atom that will be kept
- * @param{kemia.model.Atom} target_atom, the atom that will be replaced
- * 
- * @return{kemia.model.Molecule} resulting merged molecule
- */
-kemia.model.Molecule.mergeMolecules = function(source_atom, target_atom) {
-	// replace target atom with source atom
-
-	// clone and connect target atom bonds to source atom
-	var source_molecule = source_atom.molecule;
-	var target_molecule = target_atom.molecule;
-
-	goog.array.forEach(target_atom.bonds.getValues(), function(bond) {
-		var new_bond = bond.clone();
-		target_atom == new_bond.source ? new_bond.source = source_atom
-				: new_bond.target = source_atom;
-		target_molecule.addBond(new_bond);
-		target_molecule.removeBond(bond);
-	});
-	target_molecule.removeAtom(target_atom);
-
-	goog.array.forEach(source_molecule.atoms, function(atom) {
-		target_molecule.addAtom(atom);
-	});
-
-	// replace source atom and bonds parent molecule with target parent molecule
-	goog.array.forEach(source_molecule.bonds, function(bond) {
-		var new_bond = bond.clone();
-		new_bond.molecule = undefined;
-		target_molecule.addBond(new_bond);
-	});
-	goog.array.forEach(source_molecule.atoms, function(atom) {
-		source_molecule.removeAtom(atom);
-	});
-	goog.array.forEach(source_molecule.bonds, function(bond) {
-		source_molecule.removeBond(bond);
-	});
-
-	if (source_molecule.reaction) {
-		source_molecule.reaction.removeMolecule(source_molecule);
-	}
-	delete source_molecule;
-	return target_molecule;
-}
+///**
+// * merge two molecules at a single atom
+// * 
+// * @param{kemia.model.Atom} source_atom, the atom that will be kept
+// * @param{kemia.model.Atom} target_atom, the atom that will be replaced
+// * 
+// * @return{kemia.model.Molecule} resulting merged molecule
+// */
+//kemia.model.Molecule.mergeMolecules = function(source_atom, target_atom) {
+//	// replace target atom with source atom
+//
+//	// clone and connect target atom bonds to source atom
+//	var source_molecule = source_atom.molecule;
+//	var target_molecule = target_atom.molecule;
+//
+//	goog.array.forEach(target_atom.bonds.getValues(), function(bond) {
+//		var new_bond = bond.clone();
+//		target_atom == new_bond.source ? new_bond.source = source_atom
+//				: new_bond.target = source_atom;
+//		target_molecule.addBond(new_bond);
+//		target_molecule.removeBond(bond);
+//	});
+//	target_molecule.removeAtom(target_atom);
+//
+//	goog.array.forEach(source_molecule.atoms, function(atom) {
+//		target_molecule.addAtom(atom);
+//	});
+//
+//	// replace source atom and bonds parent molecule with target parent molecule
+//	goog.array.forEach(source_molecule.bonds, function(bond) {
+//		var new_bond = bond.clone();
+//		new_bond.molecule = undefined;
+//		target_molecule.addBond(new_bond);
+//	});
+//	goog.array.forEach(source_molecule.atoms, function(atom) {
+//		source_molecule.removeAtom(atom);
+//	});
+//	goog.array.forEach(source_molecule.bonds, function(bond) {
+//		source_molecule.removeBond(bond);
+//	});
+//
+//	if (source_molecule.reaction) {
+//		source_molecule.reaction.removeMolecule(source_molecule);
+//	}
+//	delete source_molecule;
+//	return target_molecule;
+//}
 
 /**
  * sprouts a molecule fragment by merging fragment to this molecule

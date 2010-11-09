@@ -113,6 +113,7 @@ kemia.view.AtomRenderer.prototype.render = function(atom, transform, opt_group) 
  */
 kemia.view.AtomRenderer.prototype.highlightOn = function(atom, opt_color,
 		opt_group) {
+//	this.logger.fine('hightlightOn');
 	var atom_config = this.config.get("atom");
 	var strokeWidth = atom_config['stroke']['width'] * 24;
 	if (!opt_color) {

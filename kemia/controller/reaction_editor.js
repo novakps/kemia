@@ -368,13 +368,17 @@ kemia.controller.ReactionEditor.prototype.handleChange = function() {
  * Bond, then Molecule, then Arrow, then Plus In other words, if a Bond and
  * Molecule are both returned by findTargetList, then the Bond will be preferred
  * and returned.
+ * @param {goog.events.Event} e mouse event used to locate target
+ * @param {!goog.math.Coordinate} opt_coord used to locate target
+ * @return {kemia.model.Atom|kemia.model.Bond|kemia.model.Molecule|kemia.model.Arrow|kemia.model.Plus}
  */
-kemia.controller.ReactionEditor.prototype.findTarget = function(e) {
-	var targets = this.findTargetList(e);
+kemia.controller.ReactionEditor.prototype.findTarget = function(e, opt_coord) {
+	var targets = this.findTargetList(e, opt_coord);
+//	this.logger.fine('targets ' + targets.length + " at " + e.clientX + ", " + e.clientY);
 
 	var atom_targets = goog.array.filter(targets, function(t) {
 		return t instanceof kemia.model.Atom;
-	});
+	}, this);
 	if (atom_targets.length > 0) {
 		return atom_targets[0];
 	}
@@ -444,10 +448,8 @@ kemia.controller.ReactionEditor.getMouseCoords = function(e) {
 }
 
 kemia.controller.ReactionEditor.getOffsetCoords = function(elem, posx, posy) {
-
 	posx -= elem.offsetLeft;
 	posy -= elem.offsetTop;
-
 	while (elem = elem.offsetParent) {
 		posx -= elem.offsetLeft;
 		posy -= elem.offsetTop;
@@ -455,7 +457,16 @@ kemia.controller.ReactionEditor.getOffsetCoords = function(elem, posx, posy) {
 	return new goog.math.Coordinate(posx, posy);
 }
 
-kemia.controller.ReactionEditor.prototype.findTargetList = function(e) {
+/**
+* @param {goog.events.Event} e mouse event used to locate target, ignored if opt_coord is provided
+* @param {!goog.math.Coordinate} opt_coord used to locate target
+* @return {Array.<kemia.model.Atom|kemia.model.Bond|kemia.model.Molecule|kemia.model.Arrow|kemia.model.Plus>}
+*/
+kemia.controller.ReactionEditor.prototype.findTargetList = function(e, opt_coord) {
+	if(!goog.isDef(opt_coord)){
+		opt_coord = kemia.controller.ReactionEditor.getMouseCoords(e);
+	}
+	
 	var trans;
 	if (this.reactionRenderer.transform){
 		trans = this.reactionRenderer.transform
@@ -464,14 +475,39 @@ kemia.controller.ReactionEditor.prototype.findTargetList = function(e) {
 		trans = this.reactionRenderer.moleculeRenderer.transform.createInverse();
 	}
 
-	var pos = kemia.controller.ReactionEditor.getMouseCoords(e)
-
-	var target = trans.transformCoords( [ pos ])[0];
+	var target = trans.transformCoords( [ opt_coord ])[0];
 	return this.neighborList.getNearestList( {
 		x : target.x,
 		y : target.y
 	});
 }
+
+kemia.controller.ReactionEditor.prototype.findAtomMergePairs = function(atoms,
+		opt_exclusions) {
+	if (!goog.isDef(opt_exclusions)) {
+		opt_exclusions = [];
+	}
+	return goog.array.filter(goog.array.map(atoms, function(atom) {
+		var nearest = this.neighborList.getNearestList({
+			x : atom.coord.x,
+			y : atom.coord.y
+		}, this);
+
+		var nearest_atoms = goog.array.filter(nearest, function(a) {
+			if (a instanceof kemia.model.Atom) {
+				return !goog.array.contains(opt_exclusions, a);
+			};
+		});
+
+		if (nearest_atoms.length > 0) {
+			return [ atom, nearest_atoms[0] ];
+		} else {
+			return false;
+		}
+	}, this), function(pair) {
+		return pair != false;
+	}, this);
+};
 
 kemia.controller.ReactionEditor.prototype.handleMouseOver_ = function(e) {
 	this.invokeShortCircuitingOp_(kemia.controller.Plugin.Op.MOUSEOVER, e);

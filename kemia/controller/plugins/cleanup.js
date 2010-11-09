@@ -17,6 +17,8 @@
 goog.provide('kemia.controller.plugins.Cleanup');
 goog.require('goog.debug.Logger');
 goog.require('kemia.layout.CoordinateGenerator');
+goog.require('kemia.model.Reaction');
+goog.require('goog.math.Vec2');
 /**
  * @constructor
  * @extends{kemian.controller.Plugin}s
@@ -49,7 +51,7 @@ kemia.controller.plugins.Cleanup.prototype.isSupportedCommand = function(
 kemia.controller.plugins.Cleanup.prototype.execCommand = function(command,
 		var_args) {
 	try {
-
+		this.editorObject.dispatchBeforeChange();
 		var models = this.editorObject.getModels();
 		goog.array.forEach(models, function(model) {
 			if (model instanceof kemia.model.Molecule) {
@@ -57,15 +59,28 @@ kemia.controller.plugins.Cleanup.prototype.execCommand = function(command,
 				kemia.layout.CoordinateGenerator.generate(molecule);
 			} else if (model instanceof kemia.model.Reaction) {
 				var reaction = model;
-				goog.array.forEach(reaction.reactants, function(molecule) {
+				goog.array.forEach(reaction.molecules, function(molecule) {
+					// get position and orientation so we can restore it after coord gen
+					var center = molecule.getCenter();
+					var atom_coord = molecule.atoms[0].coord;
+					var angle = goog.math.angle(center.x, center.y, atom_coord.x, atom_coord.y);
+
 					kemia.layout.CoordinateGenerator.generate(molecule);
-				});
-				goog.array.forEach(reaction.products, function(molecule) {
-					kemia.layout.CoordinateGenerator.generate(molecule);
-				});
-				reaction.removeOverlap();
+					
+					// restore position an orientation
+					var new_center = molecule.getCenter();
+					atom_coord = molecule.atoms[0].coord;
+					var new_angle  = goog.math.angle(new_center.x, new_center.y, atom_coord.x, atom_coord.y);
+					molecule.rotate(goog.math.angleDifference(new_angle, angle));
+					molecule.translate(goog.math.Vec2.difference(center, new_center));
+					
+					// force future ring recalc
+					molecule.mustRecalcSSSR = true;
+					
+				}, this);
+
 			}
-		});
+		}, this);
 
 		this.editorObject.setModels(this.editorObject.getModels());
 

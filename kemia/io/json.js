@@ -278,7 +278,7 @@ kemia.io.json.plusToJson = function (plus){
  * @return {kemia.model.Reaction}
  */
 kemia.io.json.readReaction = function(arg) {
-	kemia.io.json.logger.fine('readReaction')
+//	kemia.io.json.logger.fine('readReaction')
 	/** @type {kemia.io.json.Reaction} */
 	var jrxn;
 	if (arg.constructor == String) {

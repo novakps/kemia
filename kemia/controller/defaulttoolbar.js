@@ -73,6 +73,11 @@ kemia.controller.DefaultToolbar.makeActionButtons = function(buttons) {
 					+ ' ' + goog.getCssName('tr-erase'));
 	erase.queryable = true;
 	buttons.push(erase);
+	
+	buttons.push(kemia.controller.ToolbarFactory.makeButton(
+			kemia.controller.plugins.Cleanup.COMMAND, 'Cleanup', '', goog
+					.getCssName('tr-icon')
+					+ ' ' + goog.getCssName('tr-cleanup')));
 
 	buttons.push(new goog.ui.ToolbarSeparator());
 	
@@ -214,12 +219,6 @@ kemia.controller.DefaultToolbar.makeAtomBondTemplateButtons = function(buttons){
 			});
 	template_select.setMenu(template_menu);
 	buttons.push(template_select);
-	
-	// remove clean-up until it works
-//	buttons.push(kemia.controller.ToolbarFactory.makeButton(
-//			kemia.controller.plugins.Cleanup.COMMAND, 'Cleanup', '', goog
-//					.getCssName('tr-icon')
-//					+ ' ' + goog.getCssName('tr-cleanup')));
 	
 	// buttons.push(kemia.controller.ToolbarFactory.makeButton(kemia.controller.plugins.Smiles.COMMAND,
 	// 'SMILES', 'paste SMILES'));

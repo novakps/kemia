@@ -45,7 +45,7 @@ kemia.view.MoleculeRenderer.prototype.setScaleFactor = function(scale) {
 
 kemia.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 
-	molecule.resetRingCenters();
+	molecule.mustRecalcSSSR = true;
 	molecule.group = this.graphics.createGroup();
 
 	var atom_coords = goog.array.map(molecule.atoms, function(a) {

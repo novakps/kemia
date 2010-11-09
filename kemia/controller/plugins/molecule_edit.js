@@ -411,16 +411,10 @@ kemia.controller.plugins.MoleculeEdit.prototype.sproutTemplate = function(atom,
 	var attachment_atom = fragment.atoms[0];
 	var attachment_bond = fragment.sproutBond(attachment_atom,
 			kemia.model.Bond.ORDER.SINGLE, kemia.model.Bond.STEREO.NOT_STEREO);
-	// var reaction = atom.molecule.reaction;
+	
 	var molecule = atom.molecule.merge(fragment, attachment_bond, sprout_bond,
 			attachment_atom, sprout_atom);
-	// if(reaction){
-	// molecule.reaction = reaction;
-	// } else {
-	// var models = this.reactionEditor.getModels();
-	// goog.array.remove(models, atom.molecule);
-	// models.push(molecule);
-	// }
+
 	return molecule;
 }
 
