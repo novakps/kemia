@@ -302,11 +302,9 @@ kemia.controller.plugins.BondEdit.prototype.createMolecule = function(pos) {
 		var model = this.editorObject.getModels()[0];
 		if (model instanceof kemia.model.Reaction) {
 			model.addMolecule(molecule);
-		} else {
-			goog.array.concat(this.editorObject.getModels(), molecule);
-		}
+		} 
 	} else {
-		goog.array.concat(this.editorObject.getModels(), molecule);
+		this.editorObject.setModels([molecule]);
 	}
 };
 

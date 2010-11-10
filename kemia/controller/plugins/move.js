@@ -398,6 +398,10 @@ kemia.controller.plugins.Move.closeRing = function(source_atom, target_atom) {
 	target_molecule.removeAtom(target_atom);
 
 	var result = target_molecule.clone();
+	goog.array.forEach(result.bonds, function(b){
+		goog.asserts.assert(b.source);
+		goog.asserts.assert(b.target);
+	});
 	var reaction = target_molecule.reaction;
 	reaction.removeMolecule(target_molecule);
 	reaction.addMolecule(result);

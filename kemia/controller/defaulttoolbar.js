@@ -17,7 +17,7 @@ goog.require('kemia.controller.plugins.AtomEdit');
 goog.require('kemia.controller.plugins.UndoRedo');
 goog.require('kemia.controller.plugins.ArrowPlusEdit');
 goog.require('kemia.controller.plugins.MoleculeEdit');
-goog.require('kemia.controller.plugins.Cleanup');
+//goog.require('kemia.controller.plugins.Cleanup');
 goog.require('kemia.controller.TemplateMenuButtonRenderer');
 goog.require('goog.ui.ToolbarSeparator');
 
@@ -74,10 +74,10 @@ kemia.controller.DefaultToolbar.makeActionButtons = function(buttons) {
 	erase.queryable = true;
 	buttons.push(erase);
 	
-	buttons.push(kemia.controller.ToolbarFactory.makeButton(
-			kemia.controller.plugins.Cleanup.COMMAND, 'Cleanup', '', goog
-					.getCssName('tr-icon')
-					+ ' ' + goog.getCssName('tr-cleanup')));
+//	buttons.push(kemia.controller.ToolbarFactory.makeButton(
+//			kemia.controller.plugins.Cleanup.COMMAND, 'Cleanup', '', goog
+//					.getCssName('tr-icon')
+//					+ ' ' + goog.getCssName('tr-cleanup')));
 
 	buttons.push(new goog.ui.ToolbarSeparator());
 	
