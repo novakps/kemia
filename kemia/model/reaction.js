@@ -423,6 +423,25 @@ kemia.model.Reaction.prototype.centerArrow = function(){
 	}
 }
 
+/**
+ * translate reaction coordinates
+ * 
+ * @param {goog.math.Vec2}
+ *            vector, x and y change amounts
+ * 
+ */
+kemia.model.Reaction.prototype.translate = function(vector) {
+	goog.array.forEach(this.molecules, function(mol) {
+		mol.translate(vector);
+	});
+	goog.array.forEach(this.pluses, function(plus){
+		plus.translate(vector);
+	})
+	goog.array.forEach(this.arrows, function(arrow){
+		arrow.translate(vector);
+	})
+};
+
 
 
 

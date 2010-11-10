@@ -25,3 +25,13 @@ goog.provide('kemia.model.Plus');
 kemia.model.Plus = function(coord) {
 	this.coord = goog.isDef(coord) ? coord : new goog.math.Coordinate(0, 0);
 }
+
+/**
+ * translates Plus coordinates
+ * 
+ * @param{goog.math.Vec2} vector translation amount
+ */
+kemia.model.Plus.prototype.translate = function(vector){
+	this.coord = goog.math.Coordinate.sum(this.coord, vector);
+
+};

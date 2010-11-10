@@ -96,6 +96,7 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 			e.currentTarget.highlightGroup.clear();
 		}
 		if (this.isActive[kemia.controller.plugins.Move.COMMAND.ROTATE]) {
+			//rotate
 			if (target instanceof kemia.model.Molecule) {
 				this.editorObject.addSelected(target);
 				this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Move.ROTATE_CURSOR_STYLE;
@@ -109,6 +110,7 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 				return true;
 			}
 		} else {
+			//move
 			if (target instanceof kemia.model.Atom) {
 				this.editorObject.addSelected(target);
 				this.editorObject.getOriginalElement().style.cursor = 'move';
@@ -171,6 +173,9 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 					}
 					return true;
 				}
+			} else if (!target){
+				this.editorObject.getOriginalElement().style.cursor = 'all-scroll';
+				return true;
 			}
 		}
 		return false;
@@ -240,6 +245,12 @@ kemia.controller.plugins.Move.prototype.handleMouseDown = function(e) {
 				var arrow = target;
 				this.editorObject.dispatchBeforeChange();
 				this.dragArrow(e, arrow);
+				this.editorObject.dispatchChange();
+				return true;
+			}
+			if (!target){
+				this.editorObject.dispatchBeforeChange();
+				this.dragCanvas(e);
 				this.editorObject.dispatchChange();
 				return true;
 			}
@@ -863,6 +874,37 @@ kemia.controller.plugins.Move.prototype.dragMolecule = function(e, molecule) {
 
 	d.startDrag(e);
 };
+
+kemia.controller.plugins.Move.prototype.dragCanvas = function(e){
+	var d = new goog.fx.Dragger(this.editorObject.getOriginalElement());
+	d.addEventListener(
+			goog.fx.Dragger.EventType.DRAG,
+			function(e) {
+				var trans= this.editorObject.reactionRenderer.transform;
+				var x = d.screenX - d.lastX;
+				var y = d.screenY - d.lastY;
+				if (x || y){					
+					var diff = new goog.math.Vec2(x
+							/ trans.getScaleX(), y
+							/ trans.getScaleY());
+					goog.array.forEach(this.editorObject.getModels(), function(model){
+						if(model instanceof kemia.model.Reaction){
+							model.translate(diff);
+						}
+					})
+					this.editorObject.setModelsSilently(this.editorObject.getModels());
+				}
+				d.lastX = d.screenX;
+				d.lastY = d.screenY;
+			}, undefined, this);
+	d.addEventListener(
+			goog.fx.Dragger.EventType.END, 
+			function(e) {
+				this.editorObject.setModelsSilently(this.editorObject.getModels());
+				d.dispose();
+			}, undefined, this);
+	d.startDrag(e);
+}
 
 kemia.controller.plugins.Move.prototype.rotateMolecule = function(e, molecule) {
 
