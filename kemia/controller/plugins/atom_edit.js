@@ -77,8 +77,8 @@ kemia.controller.plugins.AtomEdit.SHORTCUTS = [
 			key : 'f'
 		},
 		{
-			id : 'Cl',
-			key : 'cl'
+			id : 'I',
+			key : 'i'
 		},
 		{
 			id : '+',
