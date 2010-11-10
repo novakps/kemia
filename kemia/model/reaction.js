@@ -398,7 +398,7 @@ kemia.model.Reaction.removeOverlap = function(molecules) {
  * centers arrow between last reactant and first product
  */
 kemia.model.Reaction.prototype.centerArrow = function(){	
-	this.logger.info('centerArrow');
+//	this.logger.fine('centerArrow');
 	if(this.arrows.length>0){
 		var arrow = this.arrows[0];
 		var box1 = kemia.model.Reaction.boundingBox(this.getReactants());
