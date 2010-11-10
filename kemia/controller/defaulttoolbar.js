@@ -156,7 +156,7 @@ kemia.controller.DefaultToolbar.makeAtomBondTemplateButtons = function(buttons){
 	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
 				style : "color:green"
-			}, 'F')));
+			}, 'F')), true);
 	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
 				style : "color:green"
