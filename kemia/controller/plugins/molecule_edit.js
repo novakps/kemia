@@ -936,28 +936,28 @@ kemia.controller.plugins.MoleculeEdit.TEMPLATES = [ {
 			"x" : 0,
 			"y" : 0
 		},
-		"charge" : null
+		"charge" : 0
 	}, {
 		"symbol" : "C",
 		"coord" : {
 			"x" : 0,
 			"y" : 1.5
 		},
-		"charge" : null
+		"charge" : 0
 	}, {
 		"symbol" : "C",
 		"coord" : {
 			"x" : -1.5,
 			"y" : 1.5000000000000002
 		},
-		"charge" : null
+		"charge" : 0
 	}, {
 		"symbol" : "C",
 		"coord" : {
 			"x" : -1.5000000000000002,
 			"y" : 1.1102230246251565e-16
 		},
-		"charge" : null
+		"charge" : 0
 	} ],
 	"bondindex" : [ {
 		"source" : 0,
@@ -990,21 +990,21 @@ kemia.controller.plugins.MoleculeEdit.TEMPLATES = [ {
 			"x" : 0,
 			"y" : 0
 		},
-		"charge" : null
+		"charge" : 0
 	}, {
 		"symbol" : "C",
 		"coord" : {
 			"x" : 0,
 			"y" : 1.5
 		},
-		"charge" : null
+		"charge" : 0
 	}, {
 		"symbol" : "C",
 		"coord" : {
 			"x" : -1.2990381056766582,
 			"y" : 0.7500000000000001
 		},
-		"charge" : null
+		"charge" : 0
 	} ],
 	"bondindex" : [ {
 		"source" : 0,

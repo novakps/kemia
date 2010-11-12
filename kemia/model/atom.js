@@ -39,9 +39,9 @@ kemia.model.Atom = function(opt_symbol, opt_x, opt_y, opt_charge, opt_aromatic, 
 	 */
 	this.symbol = goog.isDef(opt_symbol) ? opt_symbol: "C";
 	
-	var x = goog.isDef(opt_x) ? opt_x : 0;
+	var x = opt_x ? opt_x : 0;
 	
-	var y = goog.isDef(opt_y) ? opt_y : 0;
+	var y = opt_y ? opt_y : 0;
 	
 	/**
 	 * 2d coordinates
@@ -60,14 +60,14 @@ kemia.model.Atom = function(opt_symbol, opt_x, opt_y, opt_charge, opt_aromatic, 
 	 * 
 	 * @type{number}
 	 */
-	this.charge = goog.isDef(opt_charge) ? opt_charge : 0;
+	this.charge = opt_charge ? opt_charge : 0;
 
 	/**
 	 * isotope
 	 * 
 	 * @type{number}
 	 */
-	this.isotope = goog.isDef(opt_isotope) ? opt_isotope : 0;
+	this.isotope = opt_isotope ? opt_isotope : 0;
 
 	/**
 	 * aromatic

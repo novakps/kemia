@@ -142,9 +142,7 @@ kemia.model.Reaction.prototype.addProduct = function(mol) {
 			var r_diff;
 			if(reactants.length>0){
 				var reactant_box = kemia.model.Reaction.boundingBox(reactants);
-
-					r_diff = new goog.math.Vec2(reactant_box.right + kemia.model.Reaction.MOLECULE_MARGIN, 0);
-		
+				r_diff = new goog.math.Vec2(-arrow.target.x + reactant_box.right + kemia.model.Reaction.MOLECULE_MARGIN, 0);
 			} else {
 				r_diff = new goog.math.Vec2( kemia.model.Reaction.MOLECULE_MARGIN, 0);
 			}
