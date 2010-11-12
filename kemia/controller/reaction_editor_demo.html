@@ -74,7 +74,7 @@ function initPage(){
 
 	
 	var sdfs = sdf.split("$$$$\n");
-	var mol_renderer = new kemia.controller.ReactionEditor(goog.dom.getElement('moleculeContainer'),{background : {color : 'white'}});
+	var mol_renderer = new kemia.controller.ReactionEditor(goog.dom.getElement('moleculeContainer'),{background : {color : 'white'},'showTerminalCarbons' : false,});
  
     var select1 = new goog.ui.Select();
     select1.addItem(new goog.ui.MenuItem('1', 1));
