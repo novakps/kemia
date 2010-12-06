@@ -105,7 +105,7 @@ function testImportReactionWithUndefinedArrows(){
 	var rxn = kemia.io.json.readReaction(json_rxn);
 	assertEquals(3, rxn.getReactants().length);
 	assertEquals(1, rxn.getProducts().length);
-	assertEquals(4.60065, rxn.arrows[0].source.x);
+	assertEquals(7.53125, rxn.arrows[0].source.x);
 }
 
 function testImportReactionWithNoReactantsAndNoProducts(){

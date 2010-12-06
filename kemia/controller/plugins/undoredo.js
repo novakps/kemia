@@ -335,7 +335,7 @@ kemia.controller.plugins.UndoRedo.prototype.shiftState_ = function(fromStack,
 			if (s.atoms){
 				return kemia.io.json.readMolecule(s);
 			} else {
-				return kemia.io.json.readReaction(s);
+				return kemia.io.json.readReaction(s, true);
 			}
 		});
 

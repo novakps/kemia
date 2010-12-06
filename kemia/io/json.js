@@ -275,9 +275,10 @@ kemia.io.json.plusToJson = function (plus){
  * 
  * @param {string|kemia.io.json.Reaction}
  *            arg The JSON object string, or object itself
+ * @param {boolean=} opt_permit_overlap
  * @return {kemia.model.Reaction}
  */
-kemia.io.json.readReaction = function(arg) {
+kemia.io.json.readReaction = function(arg, opt_permit_overlap) {
 //	kemia.io.json.logger.fine('readReaction')
 	/** @type {kemia.io.json.Reaction} */
 	var jrxn;
@@ -314,7 +315,7 @@ kemia.io.json.readReaction = function(arg) {
 	});
 	
 	goog.array.forEach(products, function(mol){
-		rxn.addProduct(mol);
+		rxn.addProduct(mol, opt_permit_overlap);
 	});
 
 	if(!jrxn['arrows']){

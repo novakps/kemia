@@ -28,6 +28,30 @@ function setUp() {
 	logger = goog.debug.Logger.getLogger('ReactionTest');
 }
 
+function buildMolecule(x1, x2) {
+	// defaults y-coords
+	var mol = new kemia.model.Molecule();
+	var a1 = new kemia.model.Atom('C', x1, -1);
+	var a2 = new kemia.model.Atom('C', x2, 1);
+	var b1 = new kemia.model.Bond(a1, a2);
+	mol.addAtom(a1);
+	mol.addAtom(a2);
+	mol.addBond(b1);
+	mol._orig_min_x = Math.min(x1, x2);
+	mol._orig_max_x = Math.max(x1, x2);
+	return mol;
+}
+
+function buildReactionWithRoomForArrow() {
+	var rxn = new kemia.model.Reaction();
+	rxn.addReactant(buildMolecule(1, 2));
+	rxn.addReactant(buildMolecule(3, 4));
+	rxn.addProduct(buildMolecule(17, 18));
+	rxn.addProduct(buildMolecule(19, 20));
+	rxn.addProduct(buildMolecule(21, 22));
+	return rxn;
+}
+
 function buildReaction() {
 	var rxn1 = new kemia.model.Reaction();
 	rxn1.header = 'my header';
@@ -92,7 +116,6 @@ function buildReaction2() {
 	rxn1.addMolecule(mol1);
 
 	rxn1.addPlus(new kemia.model.Plus(new goog.math.Coordinate(1, 1.5)));
-
 
 	rxn1.setArrow(new kemia.model.Arrow(new goog.math.Coordinate(3, 1.5),
 			new goog.math.Coordinate(4, 1.5)));
@@ -160,6 +183,45 @@ function testAddProductRightOfArrow() {
 	assertEquals(2, r.getProducts().length);
 }
 
+function testAddProductWithRoomForArrow() {
+	var rxn = new kemia.model.Reaction();
+
+	rxn.addReactant(buildMolecule(1, 2));
+	rxn.addReactant(buildMolecule(3, 4));
+	rxn.addProduct(buildMolecule(14, 15));
+	rxn.addProduct(buildMolecule(19, 20));
+	rxn.addProduct(buildMolecule(24, 25));
+
+	goog.array.forEach(rxn.molecules, function(mol) {
+		this.logger.info(mol.toString());
+		assertEquals('should not change coord', mol._orig_min_x,
+				kemia.model.Reaction.boundingBox([ mol ]).left)
+		assertEquals('should not change coord', mol._orig_max_x,
+				kemia.model.Reaction.boundingBox([ mol ]).right)
+	})
+}
+
+function testAddProductWithNoRoomForArrow() {
+	var rxn = new kemia.model.Reaction();
+
+	rxn.addReactant(buildMolecule(1, 2));
+	rxn.addReactant(buildMolecule(3, 4));
+	rxn.addProduct(buildMolecule(12, 13));
+	rxn.addProduct(buildMolecule(14, 15));
+	rxn.addProduct(buildMolecule(16, 17));
+
+	goog.array.forEach(rxn.molecules, function(mol) {
+		this.logger.info(mol.toString());
+		goog.array.forEach(rxn.molecules, function(other) {
+			if (mol != other) {
+				assertFalse('should not overlap with ' + other.toString(),
+						goog.math.Box.intersects(mol.getBoundingBox(), other
+								.getBoundingBox()));
+			}
+		})
+	})
+}
+
 function testGetReactants() {
 	var r = buildReaction();
 	assertEquals(2, r.getReactants().length);
@@ -202,12 +264,12 @@ function testMidpoint() {
 	var rxn = buildReaction();
 	var r = rxn.getReactants()[1];
 	var p = rxn.getProducts()[0];
-	var m = kemia.model.Reaction.midpoint(r,p);
+	var m = kemia.model.Reaction.midpoint(r, p);
 	assertEquals(3, m.x);
 	assertEquals(1.5, m.y);
 }
 
-function testCenterArrow(){
+function testCenterArrow() {
 	var rxn = buildReaction();
 	rxn.centerArrow();
 	var c = rxn.arrows[0].getCenter();
@@ -215,7 +277,7 @@ function testCenterArrow(){
 	assertEquals(1.5, c.y);
 }
 
-function testCenterArrow2(){
+function testCenterArrow2() {
 	var rxn = buildReaction2();
 	rxn.centerArrow();
 	var c = rxn.arrows[0].getCenter();

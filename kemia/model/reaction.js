@@ -46,7 +46,7 @@ kemia.model.Reaction = function() {
 /**
  * @const
  */
-kemia.model.Reaction.MOLECULE_MARGIN = 4;
+kemia.model.Reaction.MOLECULE_MARGIN = 3;
 
 
 /**
@@ -107,7 +107,7 @@ kemia.model.Reaction.prototype.addReactant = function(mol) {
 		goog.asserts.assert(this.isReactant(mol));
 	} 
 	this.addMolecule(mol);
-//	kemia.model.Reaction.removeOverlap(this.getReactants());
+// kemia.model.Reaction.removeOverlap(this.getReactants());
 };
 
 kemia.model.Reaction.prototype.getReactants = function() {
@@ -133,35 +133,44 @@ kemia.model.Reaction.prototype.addMolecule = function(mol) {
  * 
  * @param {kemia.model.Molecule}
  *            mol product to add
+ * @param {boolean=}
+ *            opt_permit_overlap if true will not adjust layout to avoid overlap
  */
-kemia.model.Reaction.prototype.addProduct = function(mol) {
-	if(!this.isProduct(mol)){
-		if (this.arrows.length==0){
-			var arrow = new kemia.model.Arrow();
-			var reactants = this.getReactants();
-			var r_diff;
-			if(reactants.length>0){
-				var reactant_box = kemia.model.Reaction.boundingBox(reactants);
-				r_diff = new goog.math.Vec2(-arrow.target.x + reactant_box.right + kemia.model.Reaction.MOLECULE_MARGIN, 0);
-			} else {
-				r_diff = new goog.math.Vec2( kemia.model.Reaction.MOLECULE_MARGIN, 0);
-			}
-			arrow.translate(r_diff);
-			this.setArrow(arrow);
-		}
-		// translate mol to the right of products, or of arrow, if no products
-		var products = this.getProducts();
-		var mol_box = mol.getBoundingBox();
-		var x_diff;
-		if(products.length>0){
-			var prod_box = kemia.model.Reaction.boundingBox(products);
-			x_diff =  prod_box.right - mol_box.left + kemia.model.Reaction.MOLECULE_MARGIN;
+kemia.model.Reaction.prototype.addProduct = function(mol, opt_permit_overlap) {
+	
+	if (this.arrows.length==0){
+		// need to add arrow after reactants
+		var reactants = this.getReactants();
+		if(reactants.length>0){
+			var reactant_box = kemia.model.Reaction.boundingBox(reactants);
+			var arrow = new kemia.model.Arrow(
+					new goog.math.Coordinate(
+							reactant_box.right + kemia.model.Reaction.MOLECULE_MARGIN, 
+							(reactant_box.top + reactant_box.bottom)/2));
 		} else {
-			x_diff = this.arrows[0].target.x - mol_box.left + kemia.model.Reaction.MOLECULE_MARGIN;
+			arrow = new kemia.model.Arrow(new goog.math.Coordinate( kemia.model.Reaction.MOLECULE_MARGIN, 0));
 		}
-		mol.translate(new goog.math.Vec2(x_diff, 0));
-		goog.asserts.assert(this.isProduct(mol));
+		this.setArrow(arrow);
 	}
+	
+	// translate molecule to the right of existing products, or of arrow, if no
+	// products
+	var mol_box = mol.getBoundingBox();
+	var products = this.getProducts();
+	var x_diff = 0;
+	if(products.length==0 || opt_permit_overlap){
+		x_diff += this.arrows[0].target.x 
+	} else {
+		var prod_box = kemia.model.Reaction.boundingBox(products);
+		x_diff +=  prod_box.right;
+	} 
+
+	x_diff += kemia.model.Reaction.MOLECULE_MARGIN 
+	x_diff -= mol_box.left;
+	
+	mol.translate(new goog.math.Vec2(x_diff, 0));
+	goog.asserts.assert(this.isProduct(mol));
+	
 	this.addMolecule(mol);
 };
 
@@ -291,7 +300,8 @@ kemia.model.Reaction.prototype.removePlus = function(plus) {
 /**
  * inserts plus at midpoint between molecules
  * 
- * @param {Array.<kemia.model.Molecule>} molecules
+ * @param {Array.
+ *            <kemia.model.Molecule>} molecules
  */
 kemia.model.Reaction.prototype.generatePluses = function(molecules) {
 	var previousMol;
@@ -314,7 +324,8 @@ kemia.model.Reaction.prototype.generatePluses = function(molecules) {
 /**
  * bounding box of an array of molecules
  * 
- * @param {Array.<kemia.model.Molecule>} molecules
+ * @param {Array.
+ *            <kemia.model.Molecule>} molecules
  * @return {goog.math.Box}
  */
 kemia.model.Reaction.boundingBox = function(molecules) {
@@ -334,7 +345,8 @@ kemia.model.Reaction.boundingBox = function(molecules) {
 /**
  * finds center of an array of molecules
  * 
- * @param {Array.<kemia.model.Molecule>} molecules
+ * @param {Array.
+ *            <kemia.model.Molecule>} molecules
  * @return {goog.math.Coordinate}
  */
 kemia.model.Reaction.prototype.center = function(molecules) {
@@ -346,8 +358,10 @@ kemia.model.Reaction.prototype.center = function(molecules) {
 /**
  * finds midpoint in space between two molecules
  * 
- * @param {kemia.model.Molecule} mol1
- * @param {kemia.model.Molecule} mol2
+ * @param {kemia.model.Molecule}
+ *            mol1
+ * @param {kemia.model.Molecule}
+ *            mol2
  * @return {goog.math.Coordinate}
  */
 kemia.model.Reaction.midpoint = function (mol1, mol2){
@@ -396,7 +410,7 @@ kemia.model.Reaction.removeOverlap = function(molecules) {
  * centers arrow between last reactant and first product
  */
 kemia.model.Reaction.prototype.centerArrow = function(){	
-//	this.logger.fine('centerArrow');
+// this.logger.fine('centerArrow');
 	if(this.arrows.length>0){
 		var arrow = this.arrows[0];
 		var box1 = kemia.model.Reaction.boundingBox(this.getReactants());
