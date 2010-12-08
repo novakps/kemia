@@ -29,6 +29,7 @@
 		<filelist dir="${js-src.dir}/io">
 			<file name="json.js" />
 			<file name="mdl.js" />
+			<file name="xhr.js" />
 		</filelist>
 
 		<filelist dir="${js-src.dir}/io/smiles">
