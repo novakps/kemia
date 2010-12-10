@@ -309,6 +309,12 @@ kemia.io.json.readReaction = function(arg, opt_permit_overlap) {
 
 	rxn.setReagentsText( jrxn['reagents_text']);
 	rxn.setConditionsText( jrxn['conditions_text']);
+	
+	if(jrxn['pluses']){
+		goog.array.forEach(jrxn['pluses'], function(plus){
+			rxn.addPlus(kemia.io.json.readPlus(plus));
+		});
+	}
 
 	goog.array.forEach(reactants, function(mol){
 		rxn.addReactant(mol);
@@ -322,11 +328,7 @@ kemia.io.json.readReaction = function(arg, opt_permit_overlap) {
 		rxn.centerArrow();
 	}
 
-	if(jrxn['pluses']){
-		goog.array.forEach(jrxn['pluses'], function(plus){
-			rxn.addPlus(kemia.io.json.readPlus(plus));
-		});
-	} else {
+	if(!jrxn['pluses']){
 		rxn.generatePluses(rxn.getReactants());
 		rxn.generatePluses(rxn.getProducts());
 	}

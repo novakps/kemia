@@ -99,6 +99,9 @@ kemia.model.Reaction.prototype.addReactant = function(mol) {
 			goog.array.forEach(this.arrows, function(arrow){
 				arrow.translate(diff);
 			});
+			goog.array.forEach(this.pluses, function(plus){
+				plus.translate(diff);
+			})
 			// move products, since arrow moved
 			goog.array.forEach(products, function(mol){
 				mol.translate(diff);
