@@ -328,7 +328,7 @@ kemia.io.json.readReaction = function(arg, opt_permit_overlap) {
 		rxn.centerArrow();
 	}
 
-	if(!jrxn['pluses']){
+	if(rxn.pluses.length==0){
 		rxn.generatePluses(rxn.getReactants());
 		rxn.generatePluses(rxn.getProducts());
 	}

@@ -108,6 +108,7 @@ kemia.model.Reaction.prototype.addReactant = function(mol) {
 			})
 		}
 		goog.asserts.assert(this.isReactant(mol));
+		this.pluses.length= 0;  // force plus generation, since we've moved the components
 	} 
 	this.addMolecule(mol);
 // kemia.model.Reaction.removeOverlap(this.getReactants());
@@ -170,10 +171,11 @@ kemia.model.Reaction.prototype.addProduct = function(mol, opt_permit_overlap) {
 
 	x_diff += kemia.model.Reaction.MOLECULE_MARGIN 
 	x_diff -= mol_box.left;
-	
-	mol.translate(new goog.math.Vec2(x_diff, 0));
+	if(x_diff!=0){
+		mol.translate(new goog.math.Vec2(x_diff, 0));
+		this.pluses.length= 0;  // force plus generation, since we've moved the components
+	}
 	goog.asserts.assert(this.isProduct(mol));
-	
 	this.addMolecule(mol);
 };
 
