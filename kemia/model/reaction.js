@@ -75,17 +75,17 @@ goog.exportSymbol('kemia.model.Reaction.prototype.getHeader',
  *            mol reactant to add
  */
 kemia.model.Reaction.prototype.addReactant = function(mol) {
-	if(!this.isReactant(mol)){
-		// have to change layout to make room for a new reactant
+	
+		// may have to change layout to make room for a new reactant
 		var reactants = this.getReactants();
-		var r_diff;
+		var r_diff = new goog.math.Vec2(0,0);
 		var mol_box = mol.getBoundingBox();
 		if(reactants.length>0){
 			var reactant_box = kemia.model.Reaction.boundingBox(reactants);
-			r_diff = new goog.math.Vec2(reactant_box.right - mol_box.left + kemia.model.Reaction.MOLECULE_MARGIN, 0);
-		} else {
-			r_diff = new goog.math.Vec2(mol_box.left + kemia.model.Reaction.MOLECULE_MARGIN, 0);
-		}
+			if(goog.math.Box.intersects(mol_box, reactant_box)){
+				r_diff = new goog.math.Vec2(reactant_box.right - mol_box.left + kemia.model.Reaction.MOLECULE_MARGIN, 0);
+			}
+		} 
 		// move new reactant to the right of existing reactants, if any
 		mol.translate(r_diff);
 		if(!this.isReactant(mol)){
@@ -108,8 +108,8 @@ kemia.model.Reaction.prototype.addReactant = function(mol) {
 			})
 		}
 		goog.asserts.assert(this.isReactant(mol));
-		this.pluses.length= 0;  // force plus generation, since we've moved the components
-	} 
+		this.pluses.length = 0;  // force plus generation, since we've moved the components
+ 
 	this.addMolecule(mol);
 // kemia.model.Reaction.removeOverlap(this.getReactants());
 };
