@@ -25,14 +25,7 @@ goog.require('kemia.model.Arrow');
 goog.require('kemia.model.NeighborList');
 goog.require('goog.array');
 goog.require('goog.debug.Trace');
-goog.require('goog.debug.Logger');
-goog.require('goog.debug.Console');
 
-function setUp() {
-	c = new goog.debug.Console();
-	c.setCapturing(true);
-	logger = goog.debug.Logger.getLogger('kemia.model.NeighborlistTest');
-}
 
 function testEmptyList() {
 	var neighborList = new kemia.model.NeighborList( [], 1, .5);

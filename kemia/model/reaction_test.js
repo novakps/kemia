@@ -20,16 +20,9 @@ goog.require('kemia.model.Bond');
 goog.require('kemia.model.Plus');
 goog.require('goog.math.Coordinate');
 goog.require('goog.testing.jsunit');
-goog.require('goog.debug.Logger');
-goog.require('goog.debug.Console');
 
-function setUp() {
-	c = new goog.debug.Console();
-	c.setCapturing(true);
-	logger = goog.debug.Logger.getLogger('ReactionTest');
-}
 
-function buildMolecule(x1, x2) {
+function buildTestMolecule(x1, x2) {
 	// defaults y-coords
 	var mol = new kemia.model.Molecule();
 	var a1 = new kemia.model.Atom('C', x1, -1);
@@ -45,11 +38,11 @@ function buildMolecule(x1, x2) {
 
 function buildReactionWithRoomForArrow() {
 	var rxn = new kemia.model.Reaction();
-	rxn.addReactant(buildMolecule(1, 2));
-	rxn.addReactant(buildMolecule(3, 4));
-	rxn.addProduct(buildMolecule(17, 18));
-	rxn.addProduct(buildMolecule(19, 20));
-	rxn.addProduct(buildMolecule(21, 22));
+	rxn.addReactant(buildTestMolecule(1, 2));
+	rxn.addReactant(buildTestMolecule(3, 4));
+	rxn.addProduct(buildTestMolecule(17, 18));
+	rxn.addProduct(buildTestMolecule(19, 20));
+	rxn.addProduct(buildTestMolecule(21, 22));
 	return rxn;
 }
 
@@ -194,7 +187,7 @@ function testAddProductWithRoomForArrow() {
 	rxn.addProduct(buildMolecule(24, 25));
 
 	goog.array.forEach(rxn.molecules, function(mol) {
-		this.logger.info(mol.toString());
+//		this.logger.info(mol.toString());
 		assertEquals('should not change coord', mol._orig_min_x,
 				kemia.model.Reaction.boundingBox([ mol ]).left)
 		assertEquals('should not change coord', mol._orig_max_x,
@@ -212,7 +205,7 @@ function testAddProductWithNoRoomForArrow() {
 	rxn.addProduct(buildMolecule(16, 17));
 
 	goog.array.forEach(rxn.molecules, function(mol) {
-		this.logger.info(mol.toString());
+//		this.logger.info(mol.toString());
 		goog.array.forEach(rxn.molecules, function(other) {
 			if (mol != other) {
 				assertFalse('should not overlap with ' + other.toString(),
@@ -237,25 +230,25 @@ function testRemoveOverlap() {
 	var mol1 = new kemia.model.Molecule('mol1');
 	mol1.addAtom(new kemia.model.Atom("C", -1, -1));
 	mol1.addAtom(new kemia.model.Atom("C", 1, 1));
-	logger.info('mol1 ' + mol1.getBoundingBox().toString());
+//	logger.info('mol1 ' + mol1.getBoundingBox().toString());
 
 	var mol2 = new kemia.model.Molecule('mol2');
 	mol2.addAtom(new kemia.model.Atom("O", -2, -2));
 	mol2.addAtom(new kemia.model.Atom("O", 0, 0));
-	logger.info('mol2 ' + mol2.getBoundingBox().toString());
+//	logger.info('mol2 ' + mol2.getBoundingBox().toString());
 
 	var rxn = new kemia.model.Reaction();
 	rxn.addMolecule(mol1);
 	rxn.addMolecule(mol2);
 
 	var bbox = kemia.model.Reaction.boundingBox(rxn.molecules);
-	logger.info('rxn bbox ' + bbox.toString());
+//	logger.info('rxn bbox ' + bbox.toString());
 	assertEquals(3, bbox.right - bbox.left);
 	kemia.model.Reaction.removeOverlap(rxn.molecules);
 	bbox = kemia.model.Reaction.boundingBox(rxn.molecules);
-	logger.info('rxn bbox after remove overlap ' + bbox.toString());
-	logger.info('mol1 ' + mol1.getBoundingBox().toString());
-	logger.info('mol2 ' + mol2.getBoundingBox().toString());
+//	logger.info('rxn bbox after remove overlap ' + bbox.toString());
+//	logger.info('mol1 ' + mol1.getBoundingBox().toString());
+//	logger.info('mol2 ' + mol2.getBoundingBox().toString());
 
 	var bbox = kemia.model.Reaction.boundingBox(rxn.molecules);
 	assertEquals(2 + 2 + 4, bbox.right - bbox.left);

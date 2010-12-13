@@ -315,9 +315,9 @@ kemia.model.Molecule.prototype.getRings = function() {
  * @return{boolean}
  */
 kemia.model.Molecule.prototype.isAtomInRing = function(atom_) {
-	rings = this.getRings();
-	for (r = 0, ringCount = rings.length; r < ringCount; r++) {
-		for (a = 0, atomCount = rings[r].atoms.length; a < atomCount; a++) {
+	var rings = this.getRings();
+	for (var r = 0, ringCount = rings.length; r < ringCount; r++) {
+		for (var a = 0, atomCount = rings[r].atoms.length; a < atomCount; a++) {
 			if (atom_ == rings[r].atoms[a]) {
 				return true;
 			}
@@ -332,9 +332,9 @@ kemia.model.Molecule.prototype.isAtomInRing = function(atom_) {
  * @return{boolean}
  */
 kemia.model.Molecule.prototype.isBondInRing = function(bond_) {
-	rings = this.getRings();
-	for (r = 0, ringCount = rings.length; r < ringCount; r++) {
-		for (b = 0, bondCount = rings[r].bonds.length; b < bondCount; b++) {
+	var rings = this.getRings();
+	for (var r = 0, ringCount = rings.length; r < ringCount; r++) {
+		for (var b = 0, bondCount = rings[r].bonds.length; b < bondCount; b++) {
 			if (bond_ == rings[r].bonds[b]) {
 				return true;
 			}
@@ -390,9 +390,9 @@ kemia.model.Molecule.prototype.getFragments = function() {
  * 
  */
 kemia.model.Molecule.prototype.getConnectedBondsList = function(atom) {
-	bondsList = new Array();
-	bondCount = this.bonds.length;
-	for (i = 0; i < bondCount; i++) {
+	var bondsList = new Array();
+	var bondCount = this.bonds.length;
+	for (var i = 0; i < bondCount; i++) {
 		if (this.bonds[i].source == atom || this.bonds[i].target == atom)
 			bondsList.push(this.bonds[i]);
 	}

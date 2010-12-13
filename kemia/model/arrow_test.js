@@ -1,15 +1,7 @@
 goog.provide('kemia.model.ArrowTest');
 goog.require('kemia.model.Arrow');
 goog.require('goog.testing.jsunit');
-goog.require('goog.debug.Logger');
-goog.require('goog.debug.Console');
 
-
-function setUp() {
-	c = new goog.debug.Console();
-	c.setCapturing(true);
-	logger = goog.debug.Logger.getLogger('ArrowTest');
-}
 
 function testGetOrientation() {
 	var arrow = new kemia.model.Arrow(

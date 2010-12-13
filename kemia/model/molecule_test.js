@@ -7,12 +7,6 @@ goog.require('goog.debug.Trace');
 goog.require('goog.debug.Logger');
 goog.require('goog.debug.Console');
 
-function setUp() {
-	c = new goog.debug.Console();
-	c.setCapturing(true);
-	logger = goog.debug.Logger.getLogger('kemia.model.MoleculeTest');
-}
-
 	
 function buildMolecule(){
 	var mol1 = new kemia.model.Molecule('mol1');
@@ -76,10 +70,10 @@ function testMerge() {
 	mol2.addBond(b2a);
 	mol2.addBond(b2b);
 	
-	this.logger.info(mol1.toString());
-	this.logger.info(mol2.toString());
+//	this.logger.info(mol1.toString());
+//	this.logger.info(mol2.toString());
 	mol1.merge(mol2, b2a, b1b, a2d, a1c);
-	this.logger.info(mol1.toString());
+//	this.logger.info(mol1.toString());
 	
 	assertEquals(4, mol1.atoms.length);
 	assertEquals(3, mol1.bonds.length);
@@ -87,10 +81,10 @@ function testMerge() {
 			assertEquals(mol1, b.molecule);
 		})
 	goog.array.forEach(mol1.atoms, function(a){
-		logger.info(a.toString());
+//		logger.info(a.toString());
 		assertEquals(mol1, a.molecule);
 		goog.array.forEach(a.bonds.getValues(), function(b){
-			this.logger.info(b.toString());
+//			this.logger.info(b.toString());
 			assert(goog.array.contains(mol1.bonds, b));
 		})
 	});

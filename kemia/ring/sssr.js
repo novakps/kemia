@@ -18,6 +18,7 @@ goog.require('goog.structs.Set');
 goog.require('goog.array');
 goog.require('kemia.ring.Ring');
 goog.require('goog.array');
+goog.require('goog.json');
 
 /**
  * Smallest Set of Smallest rings.
@@ -59,7 +60,7 @@ kemia.ring.SSSR.matrixToHTML = function(matrix) {
 	var n = matrix.length;
 	for (var i = 0; i < n; i++) {
 		for (var j = 0; j < n; j++) {
-			text += JSON.stringify(matrix[i][j]) + " ";
+			text += goog.json.serialize(matrix[i][j]) + " ";
 		}
 		text += "<br>";
 	}

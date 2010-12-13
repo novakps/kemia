@@ -162,10 +162,10 @@ kemia.model.NeighborList.prototype.getNearestList = function(coord) {
 	var nearest = [];
 	var cells = this.cellsAroundCoord(coord);
 	var rMin = this.tolerance;
-	for (i = 0, li = cells.length; i < li; i++) {
+	for (var i = 0, li = cells.length; i < li; i++) {
 		var cell = this.cells[cells[i]];
 		if (cell) {
-			for (j = 0, lj = cell.length; j < lj; j++) {
+			for (var j = 0, lj = cell.length; j < lj; j++) {
 				var o = cell[j];
 				var r = o.getDistance(coord);
 				if (r < this.tolerance) {

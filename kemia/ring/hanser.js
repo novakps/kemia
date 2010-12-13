@@ -80,7 +80,7 @@ kemia.ring.Hanser.createRing = function(atoms,molecule){
 	
     var bonds = new Array();
     for (var i = 0, il = atoms.length-1; i < il; i++) {
-		bond = molecule.findBond(atoms[i],atoms[i+1]);
+		var bond = molecule.findBond(atoms[i],atoms[i+1]);
 		if(bond!=null) {
 			bonds.push(bond);
 		}

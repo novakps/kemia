@@ -8,8 +8,7 @@ goog.require('kemia.model.PseudoAtom');
 
 var mol;
 
-function setUp() {
-}
+
 
 function testAddAtom() {
 	var mol = new kemia.model.Molecule;
