@@ -316,7 +316,7 @@ kemia.io.mdl.writeMolfile = function(mol) {
 	countsLine = atomCount + bondCount + "  0  0  0  0            999 V2000\n";
 
 	// Atom block
-	for (i = 0; i < mol.countAtoms(); i++) {
+	for (var i = 0; i < mol.countAtoms(); i++) {
 		var atom = mol.getAtom(i);
 		var xPos = (goog.string.repeat(" ", 10) + atom.coord.x.toFixed(4)).slice(-10);
 		var yPos = (goog.string.repeat(" ", 10) + atom.coord.y.toFixed(4)).slice(-10);

@@ -8,12 +8,6 @@ goog.require('kemia.model.Atom');
 goog.require('kemia.model.Bond');
 goog.require('kemia.ring.SSSR');
 
-function setUp() {
-	c = new goog.debug.Console();
-	c.setCapturing(true);
-	logger = goog.debug.Logger.getLogger('SssrTest');
-};
-
 function testFig1() {
 	// fig. 1 from the paper
 	var atom1 = new kemia.model.Atom("C", 0, 0);
@@ -50,12 +44,12 @@ function testFig1() {
 	molecule.addBond(bond8);
 
 	// matrices from the paper
-	D = [ [ 0, 1, 2, 3, 3, 2, 1 ], [ 1, 0, 1, 2, 2, 1, 2 ],
+	var D = [ [ 0, 1, 2, 3, 3, 2, 1 ], [ 1, 0, 1, 2, 2, 1, 2 ],
 			[ 2, 1, 0, 1, 2, 2, 3 ], [ 3, 2, 1, 0, 1, 2, 3 ],
 			[ 3, 2, 2, 1, 0, 1, 2 ], [ 2, 1, 2, 2, 1, 0, 1 ],
 			[ 1, 2, 3, 3, 2, 1, 0 ] ];
 
-	Pe1 = [
+	var Pe1 = [
 			[ [], [ [ 0 ] ], [ [ 0, 1 ] ], [ [ 0, 1, 2 ] ],
 					[ [ 0, 7, 4 ], [ 6, 5, 4 ] ], [ [ 0, 7 ], [ 6, 5 ] ],
 					[ [ 6 ] ] ],
@@ -72,7 +66,7 @@ function testFig1() {
 			[ [ [ 6 ] ], [ [ 6, 0 ], [ 5, 7 ] ], [ [ 6, 0, 1 ], [ 5, 7, 1 ] ],
 					[ [ 5, 4, 3 ] ], [ [ 5, 4 ] ], [ [ 5 ] ], [] ] ];
 
-	Pe2 = [
+	var Pe2 = [
 			[ [], [], [], [ [ 0, 7, 4, 3 ], [ 6, 5, 4, 3 ] ],
 					[ [ 0, 1, 2, 3 ] ], [], [] ],
 			[ [], [], [], [ [ 7, 4, 3 ] ], [ [ 1, 2, 3 ] ], [], [] ],
