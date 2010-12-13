@@ -14,6 +14,7 @@
  * the License.
  * @author paul@wingu.com (Paul Novak)
  */
+goog.provide('kemia.io.jsonTest');
 goog.require('goog.testing.jsunit');
 goog.require('kemia.io.json');
 goog.require('goog.json.Serializer');

@@ -14,7 +14,7 @@
  * the License.
  * 
  */
-
+goog.provide("kemia.math.Triangle.Test");
 goog.require('kemia.math.Triangle');
 goog.require('kemia.math.Line');
 goog.require('goog.testing.jsunit');
@@ -22,25 +22,20 @@ goog.require('goog.debug.Logger');
 goog.require('goog.debug.Console');
 goog.require('goog.math.Vec2');
 
-function setUp() {
-	c = new goog.debug.Console();
-	c.setCapturing(true);
-	logger = goog.debug.Logger.getLogger('TriangleTest');
-}
 
-function testTriangleSignClockwise() {
+var testTriangleSignClockwise = function () {
 	var a = new goog.math.Coordinate(0, 0);
 	var b = new goog.math.Coordinate(0, 1);
 	var c = new goog.math.Coordinate(1, 0);
 	assertTrue(kemia.math.Triangle.signedArea(a, b, c) < 0);
 }
-function testTriangleSignCounterClockwise() {
+var testTriangleSignCounterClockwise = function () {
 	var a = new goog.math.Coordinate(0, 0);
 	var b = new goog.math.Coordinate(0, 1);
 	var c = new goog.math.Coordinate(1, 0);
 	assertTrue(kemia.math.Triangle.signedArea(c, b, a) > 0);
 }
-function testTriangleSignColinear() {
+var testTriangleSignColinear = function () {
 	var a = new goog.math.Coordinate(1, 1);
 	var b = new goog.math.Coordinate(2, 2);
 	var c = new goog.math.Coordinate(3, 3);

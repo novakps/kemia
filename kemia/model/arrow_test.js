@@ -1,3 +1,4 @@
+goog.provide('kemia.model.ArrowTest');
 goog.require('kemia.model.Arrow');
 goog.require('goog.testing.jsunit');
 goog.require('goog.debug.Logger');

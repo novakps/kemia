@@ -29,7 +29,7 @@ kemia.ring.PathGraph = function(molecule) {
 
 	// load edges
 	for ( var i = 0, il = molecule.countBonds(); i < il; i++) {
-		bond = molecule.getBond(i);
+		var bond = molecule.getBond(i);
 		var edge = [ bond.source, bond.target ];
 		this.edges.push(new kemia.ring.PathEdge(edge));
 	}

@@ -14,6 +14,7 @@
  * the License.
  * @author paul@wingu.com (Paul Novak)
  */
+goog.provide('kemia.model.NeighborListTest');
 goog.require('goog.testing.jsunit');
 goog.require('kemia.model.Reaction');
 goog.require('kemia.model.Molecule');

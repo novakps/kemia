@@ -1,3 +1,4 @@
+goog.provide('kemia.ring.sssrTest')
 goog.require('goog.testing.jsunit');
 goog.require('goog.debug.Console');
 goog.require('goog.debug.Logger');

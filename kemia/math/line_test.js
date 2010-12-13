@@ -14,20 +14,14 @@
  * the License.
  * 
  */
-
+goog.provide('kemia.math.Line.Test');
 goog.require('kemia.math.Line');
 goog.require('goog.testing.jsunit');
 goog.require('goog.debug.Logger');
 goog.require('goog.debug.Console');
 goog.require('goog.math.Coordinate');
 
-function setUp() {
-	c = new goog.debug.Console();
-	c.setCapturing(true);
-	logger = goog.debug.Logger.getLogger('LineTest');
-}
-
-function testTheta() {
+var testTheta = function () {
 	var l = new kemia.math.Line(new goog.math.Coordinate(0, 0),
 			new goog.math.Coordinate(1, 1));
 	assertEquals(Math.PI / 4, l.getTheta());
@@ -47,7 +41,7 @@ function testTheta() {
 	assertRoughlyEquals(Math.PI / 6, l.getTheta(), .0000000000001);
 }
 
-function testPointsOnOppositeSideOfVertLine1() {
+var testPointsOnOppositeSideOfVertLine1 = function() {
 	var source = new goog.math.Coordinate(0, 0);
 	var target = new goog.math.Coordinate(0, 1);
 	var line = new kemia.math.Line(source, target);
@@ -56,7 +50,7 @@ function testPointsOnOppositeSideOfVertLine1() {
 	assertFalse(line.isSameSide(point1, point2));
 }
 
-function testPointsOnSameSideOfVertLine2() {
+var testPointsOnSameSideOfVertLine2 = function () {
 	var source = new goog.math.Coordinate(0, 0);
 	var target = new goog.math.Coordinate(0, 1);
 	var line = new kemia.math.Line(source, target);
@@ -65,7 +59,7 @@ function testPointsOnSameSideOfVertLine2() {
 	assertTrue	(line.isSameSide(point1, point2));
 }
 
-function testPointsOnSameSideOfHorizontalLine1() {
+var testPointsOnSameSideOfHorizontalLine1 = function() {
 	var source = new goog.math.Coordinate(0, 0);
 	var target = new goog.math.Coordinate(1, 0);
 	var line = new kemia.math.Line(source, target);
@@ -74,7 +68,7 @@ function testPointsOnSameSideOfHorizontalLine1() {
 	assertTrue	(line.isSameSide(point1, point2));
 }
 
-function testPointsOnOppositeSideOfHorizontalLine1() {
+var testPointsOnOppositeSideOfHorizontalLine1 = function() {
 	var source = new goog.math.Coordinate(0, 0);
 	var target = new goog.math.Coordinate(1, 0);
 	var line = new kemia.math.Line(source, target);
@@ -82,7 +76,8 @@ function testPointsOnOppositeSideOfHorizontalLine1() {
 	var point2 = new goog.math.Coordinate(0, -1);
 	assertFalse(line.isSameSide(point1, point2));
 }
-function testPointsOnSameSideOfDiagonalLine() {
+
+var testPointsOnSameSideOfDiagonalLine = function() {
 	var source = new goog.math.Coordinate(0, 0);
 	var target = new goog.math.Coordinate(1, 1);
 	var line = new kemia.math.Line(source, target);
@@ -91,7 +86,7 @@ function testPointsOnSameSideOfDiagonalLine() {
 	assertTrue(line.isSameSide(point1, point2));
 }
 
-function testPointsOnOppositeSideOfDiagonalLine2() {
+var testPointsOnOppositeSideOfDiagonalLine2 = function() {
 	var source = new goog.math.Coordinate(0, 0);
 	var target = new goog.math.Coordinate(1, 1);
 	var line = new kemia.math.Line(source, target);
@@ -100,7 +95,7 @@ function testPointsOnOppositeSideOfDiagonalLine2() {
 	assertFalse(line.isSameSide(point1, point2));
 }
 
-function testPointsOnOppositeSideOfDiagonalLine1() {
+var testPointsOnOppositeSideOfDiagonalLine1 = function() {
 	var source = new goog.math.Coordinate(0, 0);
 	var target = new goog.math.Coordinate(1, 1);
 	var line = new kemia.math.Line(source, target);

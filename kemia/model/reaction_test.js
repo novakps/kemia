@@ -14,6 +14,7 @@
  * the License.
  * @author paul@wingu.com (Paul Novak)
  */
+goog.provide('kemia.model.ReactionTest');
 goog.require('kemia.model.Reaction');
 goog.require('kemia.model.Bond');
 goog.require('kemia.model.Plus');

@@ -1,3 +1,4 @@
+goog.provide('kemia.io.mdlTest');
 goog.require('goog.testing.jsunit');
 goog.require('kemia.io.mdl');
 

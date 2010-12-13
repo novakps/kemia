@@ -1,3 +1,4 @@
+goog.provide('kemia.model.modelTest');
 goog.require('goog.testing.jsunit');
 goog.require('kemia.model.Molecule');
 goog.require('kemia.model.Atom');
