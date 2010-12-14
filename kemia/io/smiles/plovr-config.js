@@ -1,6 +1,6 @@
 {
 	"id":"kemia",
-	"paths":[".", "../model", "../ring", "../resource", "../graphics", "../math"],
+	"paths":[".", "../../model", "../../ring", "../../resource", "../../graphics", "../../math"],
 	"inputs":"plovr-inputs.js",
 	"level": "VERBOSE",
 	"mode" : "ADVANCED",

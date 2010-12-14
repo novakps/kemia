@@ -20,7 +20,7 @@ kemia.io.smiles.SmilesGenerator.generate = function(molecule, chiral) {
 	var ringMarker = 0;
 
 	var coords00 = 0;
-	for (i = 0; i < molecule.countAtoms(); i++) {
+	for (var i = 0; i < molecule.countAtoms(); i++) {
 		var atom = molecule.getAtom(i);
 		if (atom.coord.x == 0 && atom.coord.y == 0)
 			coords00++;
@@ -31,9 +31,9 @@ kemia.io.smiles.SmilesGenerator.generate = function(molecule, chiral) {
 	// TODO canonical labeler instead?
 	var start = molecule.getAtom(0);
 
-	if (chiral && rings.getAtomContainerCount() > 0) {
+//	if (chiral && rings.getAtomContainerCount() > 0) {
 		// TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-	}
+//	}
 
 	return ("todo..");
 

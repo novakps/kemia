@@ -1,3 +1,4 @@
+goog.provide('kemia.io.smiles.SmilesParserTest');
 goog.require('goog.testing.jsunit');
 goog.require('kemia.io.smiles.SmilesParser');
 
@@ -19,10 +20,10 @@ function testAtomCount() {
 }
 
 function testTimeParse() {
+	var smiles = 'CCCC(C(=O)O)CCC';
 	for ( var i in smiles) {
-		kemia.io.smiles.SmilesParser.parse(smiles[i]);
+		kemia.io.smiles.SmilesParser.parse(smiles);
 	}
-
 }
 
 function test01() {
@@ -40,7 +41,7 @@ function test03() {
 }
 function test04() {
 	var mol = kemia.io.smiles.SmilesParser.parse("F[Au](F)F");
-	gold = mol.getAtom(1);
+	var gold = mol.getAtom(1);
 	assertEquals(mol.countBonds(), 3);
 	assertEquals( "Au", gold.getSymbol());
 }

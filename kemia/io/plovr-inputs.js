@@ -1,2 +1,1 @@
-goog.require('kemia.io.jsonTest');
-goog.require('kemia.io.mdlTest');
+goog.require('kemia.io.Test');

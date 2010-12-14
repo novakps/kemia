@@ -1,10 +1,10 @@
 #!/usr/bin/python 
 """
 Given a list of directories, prints out a JavaScript array of paths to files 
-that end in "_test.html". The output will look something like: 
+that end in "_auto_test.html". The output will look something like: 
 var _allTests = [ 
-	"example/emailvalidator_test.html", 
-	"example/factorial_test.html"]; 
+	"example/emailvalidator_auto_test.html", 
+	"example/factorial_auto_test.html"]; 
 """ 
 import os.path 
 import sys 
@@ -13,7 +13,7 @@ def add_test_files(test_files, dirname, names):
   """File names that end in "_test.html" are added to test_files.""" 
   for name in names: 
     path = os.path.join(dirname, name) 
-    if os.path.isfile(path) and name.endswith('_test.html'): 
+    if os.path.isfile(path) and name.endswith('_auto_test.html'): 
       pathJsArg = ('"' + path + '"').replace('\\', '/') 
       test_files.append(pathJsArg) 
       

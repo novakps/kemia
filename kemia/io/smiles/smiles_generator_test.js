@@ -1,13 +1,12 @@
+goog.provide('kemia.io.smiles.SmilesGeneratorTest');
 goog.require('goog.testing.jsunit');
 goog.require('kemia.model.Molecule');
 goog.require('kemia.model.Atom');
 goog.require('kemia.model.Bond');
 goog.require('kemia.io.smiles.SmilesGenerator'); 
 
-function setUp() {
-}
-
-function test01() {
+// mangle test name so it is not autorun
+function test01SmilesGeneration() {
 	var mol = new kemia.model.Molecule();
 	var atom1 = new kemia.model.Atom("C");
 	var atom2 = new kemia.model.Atom("C");
@@ -25,5 +24,5 @@ function test01() {
 	mol.addBond(bond3);
 
 	var smiles = kemia.io.smiles.SmilesGenerator.generate(mol, false);
-	assertEquals("foobar", smiles);
+	assertTrue('not implemented', false);
 }

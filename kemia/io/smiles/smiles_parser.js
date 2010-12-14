@@ -105,8 +105,8 @@ kemia.io.smiles.SmilesParser.parse = function(smi) {
 		} else if (item == kemia.io.smiles.SmilesParser.punctuation.aromaticbond) {
 			bond_type = kemia.io.smiles.SmilesParser.BondType.AROMATIC_BOND
 		} else if (item[0] == kemia.io.smiles.SmilesParser.punctuation.ringclosure) {
-			ringid = parseInt(item[1] + item[2], 10);
-			ring_atom = ring[ringid];
+			var ringid = parseInt(item[1] + item[2], 10);
+			var ring_atom = ring[ringid];
 			if (ring_atom) {
 				mol.addBond(kemia.io.smiles.SmilesParser.createBond(bond_type,
 						previous_atom, ring_atom));
@@ -151,7 +151,7 @@ kemia.io.smiles.SmilesParser.parse = function(smi) {
 			}
 		}
 		else {
-			smi_atom = kemia.io.smiles.SmilesParser.parseAtom(item) // ,chiralCenters);
+			var smi_atom = kemia.io.smiles.SmilesParser.parseAtom(item) // ,chiralCenters);
 																	// parseAtom
 																	// takes one
 																	// argument?
@@ -195,15 +195,15 @@ goog.exportSymbol('kemia.io.smiles.SmilesParser.parse',
 
 kemia.io.smiles.SmilesParser.sanityCheck = function(branch, ring, bond_type) {
 	if (branch.length) {
-		throw new Error(smi + " unbalanced parens");
+		throw new Error( "unbalanced parens");
 	}
 	for ( var i = 0; i < ring.length; ++i) {
 		if (ring[i]) {
-			throw new Error(smi + " unclosed rings");
+			throw new Error("unclosed rings");
 		}
 	}
 	if (bond_type != kemia.io.smiles.SmilesParser.BondType.NONE) {
-		throw new Error(smi + " unpaired bond " + bond_type);
+		throw new Error( "unpaired bond " + bond_type);
 	}
 	return true;
 };
@@ -304,8 +304,7 @@ kemia.io.smiles.SmilesParser.createBond = function(type, source, target) {
 		return bond;
 	case kemia.io.smiles.SmilesParser.BondType.ANY:
 	default:
-		throw new Error("invalid bond type/stereo [" + type + "]/[" + stereo
-				+ "]");
+		throw new Error("invalid bond type [" + type + "]");
 	}
 	;
 };
@@ -320,7 +319,7 @@ kemia.io.smiles.SmilesParser.createBond = function(type, source, target) {
  */
 kemia.io.smiles.SmilesParser.setChiralCenters = function(molecule,
 		chiralCenters) {
-	for (c = 0, centers = chiralCenters.length; c < centers; c++) {
+	for (var c = 0, centers = chiralCenters.length; c < centers; c++) {
 		var atIndex = chiralCenters[c];
 		var chiralAtom = molecule.getAtom(atIndex);
 		if (chiralAtom != undefined) {
@@ -332,7 +331,7 @@ kemia.io.smiles.SmilesParser.setChiralCenters = function(molecule,
 			var cntNeighb = 0;
 			var bond = null;
 			goog.array.forEach(molecule.atoms, function(atom) {
-				bond_ = molecule.findBond(chiralAtom, atom);
+				var bond_ = molecule.findBond(chiralAtom, atom);
 				if (bond_ != null && bond_ != undefined) {
 					if (bond_.source != chiralAtom) {
 						bond_.source = chiralAtom;
@@ -345,7 +344,7 @@ kemia.io.smiles.SmilesParser.setChiralCenters = function(molecule,
 			});
 			var numOfAvBonds = availableBonds.length;
 			if ((cntNeighb == 3 || cntNeighb == 4) && numOfAvBonds > 0) {
-				bondidx = 0;
+				var bondidx = 0;
 				if ((cntNeighb == 3 && numOfAvBonds > 1)
 						|| (cntNeighb == 4 && numOfAvBonds > 2)) {
 					bondidx = 1;
