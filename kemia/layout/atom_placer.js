@@ -13,18 +13,18 @@ goog.require('goog.math');
 kemia.layout.AtomPlacer.getInitialLongestChain = function(molecule){
 
     var connectionMatrix = kemia.layout.ConnectionMatrix.getMatrix(molecule);
-    var apsp = this.computeFloydAPSP(connectionMatrix);
+    var apsp = kemia.layout.AtomPlacer.computeFloydAPSP(connectionMatrix);
     var maxPathLength = 0;
     var bestStartAtom = -1;
     var bestEndAtom = -1;
     var bondCount = molecule.countBonds();
     var apspLength = apsp.length;
     
-    for (f = 0; f < apspLength; f++) {
-        atom = molecule.getAtom(f);
-        var connBondCount = this.getConnectedBondsCount(atom, molecule, bondCount);
+    for (var f = 0; f < apspLength; f++) {
+        var atom = molecule.getAtom(f);
+        var connBondCount = kemia.layout.AtomPlacer.getConnectedBondsCount(atom, molecule, bondCount);
         if (connBondCount == 1) {
-            for (g = 0; g < apspLength; g++) {
+            for (var g = 0; g < apspLength; g++) {
                 if (apsp[f][g] > maxPathLength) {
                     maxPathLength = apsp[f][g];
                     bestStartAtom = f;
@@ -36,7 +36,7 @@ kemia.layout.AtomPlacer.getInitialLongestChain = function(molecule){
     // kemia.layout.ConnectionMatrix.display(apsp);
     
     var startAtom = molecule.getAtom(bestStartAtom);
-    path = this.getLongestUnplacedChain(molecule, startAtom);
+    var path = kemia.layout.AtomPlacer.getLongestUnplacedChain(molecule, startAtom);
 	
 	/* DEBUG PATH */
 	// var debugPath="";
@@ -56,14 +56,14 @@ kemia.layout.AtomPlacer.getInitialLongestChain = function(molecule){
  * paths.
  */
 kemia.layout.AtomPlacer.computeFloydAPSP = function(costMatrix){
-    nrow = costMatrix.length;
+    var nrow = costMatrix.length;
     
     var distMatrix = new Array(nrow);
-    for (i = 0; i < nrow; ++i) 
+    for (var i = 0; i < nrow; ++i) 
         distMatrix[i] = new Array(nrow);
     
-    for (i = 0; i < nrow; i++) {
-        for (j = 0; j < nrow; j++) {
+    for (var i = 0; i < nrow; i++) {
+        for (var j = 0; j < nrow; j++) {
             if (costMatrix[i][j] == 0) {
                 distMatrix[i][j] = 999999;
             }
@@ -76,7 +76,7 @@ kemia.layout.AtomPlacer.computeFloydAPSP = function(costMatrix){
     for (i = 0; i < nrow; i++) {
         distMatrix[i][i] = 0;        // no self cycle
     }
-    for (k = 0; k < nrow; k++) {
+    for (var k = 0; k < nrow; k++) {
         for (i = 0; i < nrow; i++) {
             for (j = 0; j < nrow; j++) {
                 if (distMatrix[i][k] + distMatrix[k][j] < distMatrix[i][j]) {
@@ -105,7 +105,7 @@ kemia.layout.AtomPlacer.getLongestUnplacedChain = function(molecule, startAtom){
     var atCount = molecule.countAtoms()
     var bondCount = molecule.countBonds()
 
-    for (f = 0; f < atCount; f++) {
+    for (var f = 0; f < atCount; f++) {
         molecule.getAtom(f).setFlag(kemia.model.Flags.VISITED, false);
         paths[f] = new kemia.model.Molecule;
         paths[f].addAtom(startAtom);
@@ -115,12 +115,12 @@ kemia.layout.AtomPlacer.getLongestUnplacedChain = function(molecule, startAtom){
     startSphere.push(startAtom);
 	startAtom.flags[kemia.model.Flags.VISITED]=true;
     
-    this.breadthFirstSearch(molecule, startSphere, paths, bondCount);
+    kemia.layout.AtomPlacer.breadthFirstSearch(molecule, startSphere, paths, bondCount);
 	
-    for (ds = 0; ds < atCount; ds++) {
+    for (var ds = 0; ds < atCount; ds++) {
 	
         if (paths[ds].countAtoms() >= longestPathLength) {
-            degreeSum = this.getDegreeSum(paths[ds], molecule, bondCount);
+            degreeSum = kemia.layout.AtomPlacer.getDegreeSum(paths[ds], molecule, bondCount);
             if (degreeSum > maxDegreeSum) {
                 maxDegreeSum = degreeSum;
                 longest = ds;
@@ -137,8 +137,8 @@ kemia.layout.AtomPlacer.getLongestUnplacedChain = function(molecule, startAtom){
 kemia.layout.AtomPlacer.getDegreeSum = function(molecule, superMolecule, superBondCount){
     var degreeSum = 0;
 	var atCount=molecule.countAtoms();
-    for (cb = 0; cb < atCount; cb++) {
-        degreeSum += this.getConnectedBondsCount(molecule.getAtom(cb), superMolecule, superBondCount);
+    for (var cb = 0; cb < atCount; cb++) {
+        degreeSum += kemia.layout.AtomPlacer.getConnectedBondsCount(molecule.getAtom(cb), superMolecule, superBondCount);
     }
     return degreeSum;
 }
@@ -148,7 +148,7 @@ kemia.layout.AtomPlacer.getDegreeSum = function(molecule, superMolecule, superBo
  */
 kemia.layout.AtomPlacer.getConnectedBondsCount = function(atom, molecule, bondCount){
 	var connBondCount = 0;
-	for (i = 0; i < bondCount; i++) {
+	for (var i = 0; i < bondCount; i++) {
 		if (molecule.getBond(i).source == atom || molecule.getBond(i).target == atom) 
 			connBondCount++;
 	}
@@ -165,27 +165,27 @@ kemia.layout.AtomPlacer.getConnectedBondsCount = function(atom, molecule, bondCo
  * attachment of the ring system.
  */
 kemia.layout.AtomPlacer.breadthFirstSearch = function(mol, sphere, paths, bondCount){
-	newSphere = new Array();
-	sphere_len = sphere.length;
-	for (f = 0; f < sphere_len; f++)
+	var newSphere = new Array();
+	var sphere_len = sphere.length;
+	for (var f = 0; f < sphere_len; f++)
 	{
-	    atom = sphere[f];
+	    var atom = sphere[f];
 	    if (!atom.flags[kemia.model.Flags.ISINRING])
 	    {
-	        atomNr = mol.indexOfAtom(atom);
-	        bonds = mol.getConnectedBondsList(atom);
-	        for (g = 0; g < bonds.length; g++)
+	        var atomNr = mol.indexOfAtom(atom);
+	        var bonds = mol.getConnectedBondsList(atom);
+	        for (var g = 0; g < bonds.length; g++)
 	        {
-	            curBond = bonds[g];
-	            nextAtom = curBond.otherAtom(atom);
+	            var curBond = bonds[g];
+	            var nextAtom = curBond.otherAtom(atom);
 
 	            if (!nextAtom.flags[kemia.model.Flags.VISITED] && !nextAtom.flags[kemia.model.Flags.ISPLACED])
 	            {
-	                nextAtomNr = mol.indexOfAtom(nextAtom);
-	                paths[nextAtomNr] = this.copyPath(paths[atomNr]); 
+	                var nextAtomNr = mol.indexOfAtom(nextAtom);
+	                paths[nextAtomNr] = kemia.layout.AtomPlacer.copyPath(paths[atomNr]); 
 	                paths[nextAtomNr].addAtom(nextAtom);
 	                paths[nextAtomNr].addBond(curBond);
-	                if (this.getConnectedBondsCount(nextAtom,mol,bondCount) > 1)  {
+	                if (kemia.layout.AtomPlacer.getConnectedBondsCount(nextAtom,mol,bondCount) > 1)  {
 	                    newSphere.push(nextAtom);
 	                }
 	            }
@@ -193,16 +193,16 @@ kemia.layout.AtomPlacer.breadthFirstSearch = function(mol, sphere, paths, bondCo
 	    }
 	}
 	if (newSphere.length > 0){
-	    for (ns = 0; ns < newSphere.length; ns++){
+	    for (var ns = 0; ns < newSphere.length; ns++){
 	        newSphere[ns].setFlag(kemia.model.Flags.VISITED, true);
 	    }
-	    this.breadthFirstSearch(mol, newSphere, paths, bondCount);
+	    kemia.layout.AtomPlacer.breadthFirstSearch(mol, newSphere, paths, bondCount);
 	}
 }
 
 kemia.layout.AtomPlacer.copyPath = function(path){
-	pathCopy = new kemia.model.Molecule;
-	for (pl=0,pathLen= path.countAtoms(); pl<pathLen; pl++ ) {
+	var pathCopy = new kemia.model.Molecule;
+	for (var pl=0,pathLen= path.countAtoms(); pl<pathLen; pl++ ) {
 		pathCopy.addAtom(path.getAtom(pl));
 	}
 	return pathCopy;
@@ -216,12 +216,12 @@ kemia.layout.AtomPlacer.copyPath = function(path){
 
 kemia.layout.AtomPlacer.placeLinearChain = function(chain, initialBondVector, bondLength){
 
-    bondVector = initialBondVector;
-	for (f = 0; f < chain.countAtoms()- 1; f++)
+    var bondVector = initialBondVector;
+	for (var f = 0; f < chain.countAtoms()- 1; f++)
 	{
-		atom = chain.getAtom(f);
-		nextAtom = chain.getAtom(f + 1);
-        atomPoint = new goog.math.Coordinate(atom.coord.x, atom.coord.y);
+		var atom = chain.getAtom(f);
+		var nextAtom = chain.getAtom(f + 1);
+        var atomPoint = new goog.math.Coordinate(atom.coord.x, atom.coord.y);
         bondVector.normalize();
         bondVector.scale(bondLength);
 		atomPoint.x += bondVector.x;
@@ -229,9 +229,9 @@ kemia.layout.AtomPlacer.placeLinearChain = function(chain, initialBondVector, bo
 		nextAtom.coord =atomPoint;
 		nextAtom.setFlag(kemia.model.Flags.ISPLACED,true);
 		var trans=true;
-        if (this.has2DCoordinatesNew(chain) == 2)
+        if (kemia.layout.AtomPlacer.has2DCoordinatesNew(chain) == 2)
 	   	   trans=false;
-		bondVector = this.getNextBondVector(nextAtom, atom, this.get2DCenter(chain),trans);
+		bondVector = kemia.layout.AtomPlacer.getNextBondVector(nextAtom, atom, kemia.layout.AtomPlacer.get2DCenter(chain),trans);
 	}
 }
 
@@ -261,15 +261,15 @@ kemia.layout.AtomPlacer.get2DCenter = function(molecule){
     var centerX=0;
 	var centerY=0;
 	var counter=0;
-	for (atIdx=0, atCount=molecule.countAtoms(); atIdx<atCount; atIdx++) { 
-		atom = molecule.getAtom(atIdx);
+	for (var atIdx=0, atCount=molecule.countAtoms(); atIdx<atCount; atIdx++) { 
+		var atom = molecule.getAtom(atIdx);
 		if (atom.flags[kemia.model.Flags.ISPLACED]==true ) {
 		        centerX += atom.coord.x;
 		        centerY += atom.coord.y;
 		        counter++;
 		}
     }
-	center= new goog.math.Coordinate(centerX / (counter), centerY / (counter))
+	var center= new goog.math.Coordinate(centerX / (counter), centerY / (counter))
     return center
 }
 
@@ -277,15 +277,15 @@ kemia.layout.AtomPlacer.getAtoms2DCenter = function(atoms){
 	var centerX = 0;
 	var centerY = 0;
 	var counter = 0;
-	for (atIdx = 0, atCount = atoms.length; atIdx < atCount; atIdx++) {
-		atom = atoms[atIdx];
+	for (var atIdx = 0, atCount = atoms.length; atIdx < atCount; atIdx++) {
+		var atom = atoms[atIdx];
 		if (atom.flags[kemia.model.Flags.ISPLACED] == true) {
 			centerX += atom.coord.x;
 			centerY += atom.coord.y;
 			counter++;
 		}
 	}
-	center = new goog.math.Coordinate(centerX / (counter), centerY / (counter))
+	var center = new goog.math.Coordinate(centerX / (counter), centerY / (counter))
 	return center;
 }
 
@@ -307,20 +307,20 @@ kemia.layout.AtomPlacer.getAngle = function(xDiff, yDiff){
 
 kemia.layout.AtomPlacer.getNextBondVector = function(atom, previousAtom, distanceMeasure,trans){
 
-	var angle = this.getAngle(previousAtom.coord.x - atom.coord.x, previousAtom.coord.y - atom.coord.y);
+	var angle = kemia.layout.AtomPlacer.getAngle(previousAtom.coord.x - atom.coord.x, previousAtom.coord.y - atom.coord.y);
     var addAngle = Math.PI *(120/180)
     if(!trans)
         addAngle=Math.PI *(60/180);
 
 	angle += addAngle;
 	var vec1 =  new kemia.layout.Vector2D(Math.cos(angle), Math.sin(angle));
-	point1 = new goog.math.Coordinate(atom.coord.x+vec1.x, atom.coord.y+vec1.y);
-	distance1 = goog.math.Coordinate.distance(point1,distanceMeasure)
+	var point1 = new goog.math.Coordinate(atom.coord.x+vec1.x, atom.coord.y+vec1.y);
+	var distance1 = goog.math.Coordinate.distance(point1,distanceMeasure)
 	angle += addAngle;
 
 	var vec2 = new kemia.layout.Vector2D(Math.cos(angle), Math.sin(angle));
-	point2 = new goog.math.Coordinate(atom.coord.x+vec2.x, atom.coord.y+vec2.y);
-    distance2 = goog.math.Coordinate.distance(point2,distanceMeasure)
+	var point2 = new goog.math.Coordinate(atom.coord.x+vec2.x, atom.coord.y+vec2.y);
+    var distance2 = goog.math.Coordinate.distance(point2,distanceMeasure)
 
 	if (distance2 > distance1) {
 		return vec2;
@@ -332,7 +332,7 @@ kemia.layout.AtomPlacer.getNextBondVector = function(atom, previousAtom, distanc
 
 
 kemia.layout.AtomPlacer.allPlaced = function(molecule, atCount){
-    for (ap=0; ap<atCount; ap++)
+    for (var ap=0; ap<atCount; ap++)
         if (!molecule.getAtom(ap).flags[kemia.model.Flags.ISPLACED])
             return false;
     return true;
@@ -351,28 +351,28 @@ kemia.layout.AtomPlacer.distributePartners = function(atom, placedNeighbours, sh
 	var remainingAngle = 0.0;
 	
 	// Calculate the direction away from the already placed partners of atom
-	sharedAtomsCenterVector = new kemia.layout.Vector2D(sharedAtomsCenter.x,sharedAtomsCenter.y);
-	newDirection = new kemia.layout.Vector2D(atom.coord.x, atom.coord.y);
+	var sharedAtomsCenterVector = new kemia.layout.Vector2D(sharedAtomsCenter.x,sharedAtomsCenter.y);
+	var newDirection = new kemia.layout.Vector2D(atom.coord.x, atom.coord.y);
 	
-	occupiedDirection = new kemia.layout.Vector2D(sharedAtomsCenter.x,sharedAtomsCenter.y);
+	var occupiedDirection = new kemia.layout.Vector2D(sharedAtomsCenter.x,sharedAtomsCenter.y);
 	occupiedDirection.sub(newDirection);
-	atomsToDraw = new Array();
+	var atomsToDraw = new Array();
 
     var placedNeighboursCountAtoms =placedNeighbours.countAtoms(); 
     var unPlacedNeighboursCountAtoms = unplacedNeighbours.countAtoms(); 
 
 	if (placedNeighboursCountAtoms == 1)
 	{
-	    for (f1=0; f1<unPlacedNeighboursCountAtoms; f1++) {
+	    for (var f1=0; f1<unPlacedNeighboursCountAtoms; f1++) {
 	        atomsToDraw.push(unplacedNeighbours.getAtom(f1));
 	    }
 	    addAngle = Math.PI * 2 / (unPlacedNeighboursCountAtoms + placedNeighboursCountAtoms);
-	    placedAtom = placedNeighbours.getAtom(0);
-	    xDiff = placedAtom.coord.x - atom.coord.x;
-	    yDiff = placedAtom.coord.y - atom.coord.y;
+	    var placedAtom = placedNeighbours.getAtom(0);
+	    var xDiff = placedAtom.coord.x - atom.coord.x;
+	    var yDiff = placedAtom.coord.y - atom.coord.y;
 	
-	    startAngle = this.getAngle(xDiff, yDiff);
-	    this.populatePolygonCorners(atomsToDraw, new goog.math.Coordinate(atom.coord.x, atom.coord.y), startAngle, addAngle, bondLength);
+	    startAngle = kemia.layout.AtomPlacer.getAngle(xDiff, yDiff);
+	    kemia.layout.AtomPlacer.populatePolygonCorners(atomsToDraw, new goog.math.Coordinate(atom.coord.x, atom.coord.y), startAngle, addAngle, bondLength);
 	    return;
 	} else if (placedNeighboursCountAtoms == 0)
 	{
@@ -381,7 +381,7 @@ kemia.layout.AtomPlacer.distributePartners = function(atom, placedNeighbours, sh
         }
 		addAngle = Math.PI * 2.0 / unPlacedNeighboursCountAtoms;
 		startAngle = 0.0;
-		this.populatePolygonCorners(atomsToDraw, new goog.math.Coordinate(atom.coord.x, atom.coord.y), startAngle, addAngle, bondLength);
+		kemia.layout.AtomPlacer.populatePolygonCorners(atomsToDraw, new goog.math.Coordinate(atom.coord.x, atom.coord.y), startAngle, addAngle, bondLength);
 		return;
 	}
     var sortedAtoms = new Array();
@@ -394,7 +394,7 @@ kemia.layout.AtomPlacer.distributePartners = function(atom, placedNeighbours, sh
 	newDirection.scale(bondLength);
 	newDirection.negate();
 
-	distanceMeasure = new goog.math.Coordinate(atom.coord.x, atom.coord.y)
+	var distanceMeasure = new goog.math.Coordinate(atom.coord.x, atom.coord.y)
 	distanceMeasure.x += newDirection.x;
     distanceMeasure.y += newDirection.y;
 	
@@ -403,17 +403,17 @@ kemia.layout.AtomPlacer.distributePartners = function(atom, placedNeighbours, sh
     for (f1=0; f1<placedNeighboursCountAtoms; f1++) {
         sortedAtoms.push(placedNeighbours.getAtom(f1));
     }
-    this.sortBy2DDistance(sortedAtoms, distanceMeasure);
-	closestPoint1 = new kemia.layout.Vector2D(sortedAtoms[0].coord.x,sortedAtoms[0].coord.y)
-    closestPoint2 = new kemia.layout.Vector2D(sortedAtoms[1].coord.x,sortedAtoms[1].coord.y)
+    kemia.layout.AtomPlacer.sortBy2DDistance(sortedAtoms, distanceMeasure);
+	var closestPoint1 = new kemia.layout.Vector2D(sortedAtoms[0].coord.x,sortedAtoms[0].coord.y)
+    var closestPoint2 = new kemia.layout.Vector2D(sortedAtoms[1].coord.x,sortedAtoms[1].coord.y)
     closestPoint1.sub(new kemia.layout.Vector2D(atom.coord.x, atom.coord.y));
     closestPoint2.sub(new kemia.layout.Vector2D(atom.coord.x, atom.coord.y));
     occupiedAngle = closestPoint1.angle(occupiedDirection);
     occupiedAngle += closestPoint2.angle(occupiedDirection);
 
-    angle1 = this.getAngle(sortedAtoms[0].coord.x - atom.coord.x, sortedAtoms[0].coord.y - atom.coord.y);
-    angle2 = this.getAngle(sortedAtoms[1].coord.x - atom.coord.x, sortedAtoms[1].coord.y - atom.coord.y);
-    angle3 = this.getAngle(distanceMeasure.x - atom.coord.x, distanceMeasure.y - atom.coord.y);
+    var angle1 = kemia.layout.AtomPlacer.getAngle(sortedAtoms[0].coord.x - atom.coord.x, sortedAtoms[0].coord.y - atom.coord.y);
+    var angle2 = kemia.layout.AtomPlacer.getAngle(sortedAtoms[1].coord.x - atom.coord.x, sortedAtoms[1].coord.y - atom.coord.y);
+    var angle3 = kemia.layout.AtomPlacer.getAngle(distanceMeasure.x - atom.coord.x, distanceMeasure.y - atom.coord.y);
 
 	var startAtom = null;
 	
@@ -434,13 +434,13 @@ kemia.layout.AtomPlacer.distributePartners = function(atom, placedNeighbours, sh
 	remainingAngle = (2 * Math.PI) - occupiedAngle;
 	addAngle = remainingAngle / (unPlacedNeighboursCountAtoms + 1);
     
-	for (fff=0; fff < unPlacedNeighboursCountAtoms; fff++){
+	for (var fff=0; fff < unPlacedNeighboursCountAtoms; fff++){
 	    atomsToDraw.push(unplacedNeighbours.getAtom(fff));
 	}
 	radius = bondLength;
-	startAngle = this.getAngle(startAtom.coord.x - atom.coord.x, startAtom.coord.y - atom.coord.y);
+	startAngle = kemia.layout.AtomPlacer.getAngle(startAtom.coord.x - atom.coord.x, startAtom.coord.y - atom.coord.y);
 	
-    this.populatePolygonCorners(atomsToDraw, new goog.math.Coordinate(atom.coord.x, atom.coord.y), startAngle, addAngle, radius);
+    kemia.layout.AtomPlacer.populatePolygonCorners(atomsToDraw, new goog.math.Coordinate(atom.coord.x, atom.coord.y), startAngle, addAngle, radius);
 }
 
 
@@ -454,11 +454,11 @@ kemia.layout.AtomPlacer.sortBy2DDistance = function(atoms, point){
 	var doneSomething;
 	do {
 		doneSomething=false;
-	    for (atIdx=0,atLen=atoms.length; atIdx <atLen-1; atIdx++) {
-	        atom1 = atoms[atIdx];
-	        atom2 = atoms[atIdx + 1];
-	        distance1 = goog.math.Coordinate.distance (point,atom1.coord);
-	        distance2 = goog.math.Coordinate.distance (point,atom2.coord);
+	    for (var atIdx=0,atLen=atoms.length; atIdx <atLen-1; atIdx++) {
+	        var atom1 = atoms[atIdx];
+	        var atom2 = atoms[atIdx + 1];
+	        var distance1 = goog.math.Coordinate.distance (point,atom1.coord);
+	        var distance2 = goog.math.Coordinate.distance (point,atom2.coord);
 	        if (distance2 < distance1) {
 	            atoms[atIdx] = atom2;
 	            atoms[atIdx + 1] = atom1;
@@ -478,25 +478,25 @@ kemia.layout.AtomPlacer.sortBy2DDistance = function(atoms, point){
 	 */
 kemia.layout.AtomPlacer.populatePolygonCorners = function(atomsToDraw, rotationCenter, startAngle, addAngle, radius){
  
-	points = new Array();
-    angle = startAngle;
-	for (ad=0,ads=atomsToDraw.length; ad < ads; ad++) {
+	var points = new Array();
+    var angle = startAngle;
+	for (var ad=0,ads=atomsToDraw.length; ad < ads; ad++) {
 		
 	    angle = angle + addAngle;
 	    if (angle >= 2.0 * Math.PI)
 	        angle -= 2.0 * Math.PI;
 
         //Fix Github issue 17 : Generated bond lengths should better reflect bond and participating element chemistry.
-        connectAtom = atomsToDraw[ad];
+        var connectAtom = atomsToDraw[ad];
 		
 		if (connectAtom.symbol=='H')
 		  radius*=.6;
         //End fix
 
-	    x = Math.cos(angle) * radius;
-	    y = Math.sin(angle) * radius;
-	    newX = x + rotationCenter.x;
-	    newY = y + rotationCenter.y;
+	    var x = Math.cos(angle) * radius;
+	    var y = Math.sin(angle) * radius;
+	    var newX = x + rotationCenter.x;
+	    var newY = y + rotationCenter.y;
 	    points.push(new goog.math.Coordinate(newX, newY));
 	}
     for (ad=0,ads=atomsToDraw.length; ad<ads; ad++) {
@@ -519,7 +519,7 @@ kemia.layout.AtomPlacer.populatePolygonCorners = function(atomsToDraw, rotationC
  *            An array vector for the placed bonding partners to go in
  */
 kemia.layout.AtomPlacer.partitionPartners=function(molec, atom, unplacedPartners, placedPartners){
-    cntLoop=0;
+    var cntLoop=0;
 	goog.array.forEach(atom.bonds.getValues(), function(bond){
 		cntLoop++;
 		var other_atom = bond.otherAtom(atom);

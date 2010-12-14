@@ -127,7 +127,7 @@ kemia.layout.Vector2D.prototype.subtractEquals = function(that) {
 *
 *****/
 kemia.layout.Vector2D.prototype.multiply = function(scalar) {
-    return new Vector2D(this.x * scalar, this.y * scalar);
+    return new kemia.layout.Vector2D(this.x * scalar, this.y * scalar);
 };
 
 
@@ -150,7 +150,7 @@ kemia.layout.Vector2D.prototype.multiplyEquals = function(scalar) {
 *
 *****/
 kemia.layout.Vector2D.prototype.divide = function(scalar) {
-    return new Vector2D(this.x / scalar, this.y / scalar);
+    return new kemia.layout.Vector2D(this.x / scalar, this.y / scalar);
 };
 
 
@@ -173,7 +173,7 @@ kemia.layout.Vector2D.prototype.divideEquals = function(scalar) {
 *
 *****/
 kemia.layout.Vector2D.prototype.perp = function() {
-    return new Vector2D(-this.y, this.x);
+    return new kemia.layout.Vector2D(-this.y, this.x);
 };
 
 
@@ -215,7 +215,7 @@ kemia.layout.Vector2D.prototype.toString = function() {
 *
 *****/
 kemia.layout.Vector2D.fromPoints = function(p1, p2) {
-    return new Vector2D(
+    return new kemia.layout.Vector2D(
         p2.x - p1.x,
         p2.y - p1.y
     );
@@ -235,7 +235,7 @@ kemia.layout.Vector2D.prototype.scale = function(s) {
  * Normalizes this vector in place.
  */  
 kemia.layout.Vector2D.prototype.normalize = function() {
-    norm = (1.0/Math.sqrt(this.x*this.x + this.y*this.y));
+    var norm = (1.0/Math.sqrt(this.x*this.x + this.y*this.y));
     this.x *= norm;
     this.y *= norm;
 }
@@ -273,7 +273,7 @@ kemia.layout.Vector2D.prototype.negate = function() {
 *   @return   the angle in radians in the range [0,PI]
 */
 kemia.layout.Vector2D.prototype.angle = function(v1) {
-  vDot = this.dot(v1) / ( this.length()*v1.length() );
+  var vDot = this.dot(v1) / ( this.length()*v1.length() );
   if( vDot < -1.0) vDot = -1.0;
   if( vDot >  1.0) vDot =  1.0;
   return((Math.acos(vDot) ));

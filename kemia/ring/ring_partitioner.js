@@ -12,52 +12,48 @@
 goog.provide('kemia.ring.RingPartitioner');
 goog.require('goog.array');
 
-
-
-
-
 /**
  * partitions array of rings into connected lists
  * 
- * @param {Array.<kemia.ring.Ring>} rings 
- * 	list of rings to group into connected
+ * @param {Array.
+ *            <kemia.ring.Ring>} rings list of rings to group into connected
  *            arrays
  * @return {Array.<Array.<kemia.ring.Ring>>} array of arrays of Rings
  */
-kemia.ring.RingPartitioner.getPartitionedRings = function(rings){
-    var partitions = [];
-    done= new Array(rings.length);
-    for(x=0, x2=rings.length; x<x2; x++) {
-        done[x]=false;
-    }
-    for (i=0, j=rings.length; i < j; i++) {
-        if (!done[i]) {
-          partition = new Array();
-          partition.push(rings[i]);
-          done[i]=true;
-          atomCount=rings[i].atoms.length;
-          for (k=i+1;k<rings.length;k++){
-            if (!done[k]) {
-				atomCount2 = rings[k].atoms.length;
-				connected: for (p = 0; p < partition.length; p++) {
-					atomCount = partition[p].atoms.length;
-					for (a = 0; a < atomCount; a++) {
-						for (a2 = 0; a2 < atomCount2; a2++) {
-							if (partition[p].atoms[a] == rings[k].atoms[a2]) {
-								partition.push(rings[k]);
-								done[k] = true;
-								k=i;
-								break connected;
+kemia.ring.RingPartitioner.getPartitionedRings = function(rings) {
+	var partitions = [];
+	var done = new Array(rings.length);
+	for (var x = 0, x2 = rings.length; x < x2; x++) {
+		done[x] = false;
+	}
+	for (var i = 0, j = rings.length; i < j; i++) {
+		if (!done[i]) {
+			var partition = new Array();
+			partition.push(rings[i]);
+			done[i] = true;
+			var atomCount = rings[i].atoms.length;
+			for (var k = i + 1; k < rings.length; k++) {
+				if (!done[k]) {
+					var atomCount2 = rings[k].atoms.length;
+					connected: for ( var p = 0; p < partition.length; p++) {
+						atomCount = partition[p].atoms.length;
+						for ( var a = 0; a < atomCount; a++) {
+							for ( var a2 = 0; a2 < atomCount2; a2++) {
+								if (partition[p].atoms[a] == rings[k].atoms[a2]) {
+									partition.push(rings[k]);
+									done[k] = true;
+									k = i;
+									break connected;
+								}
 							}
 						}
 					}
 				}
 			}
-          }
-          partitions.push(partition);  
-        }
-    }
-    return partitions;
+			partitions.push(partition);
+		}
+	}
+	return partitions;
 }
 
 /**
@@ -70,14 +66,14 @@ kemia.ring.RingPartitioner.getPartitionedRings = function(rings){
  * @return{Array.<kemia.ring.Ring>} array of directly connected rings, which
  *                does *not* include the subject ring
  */
-kemia.ring.RingPartitioner.directConnectedRings = function(ring, rings){
-	result = [];
-	atomCount=ring.atoms.length;
-	for (k=0,k1=rings.length;k<k1;k++){
+kemia.ring.RingPartitioner.directConnectedRings = function(ring, rings) {
+	var result = [];
+	var atomCount = ring.atoms.length;
+	for ( var k = 0, k1 = rings.length; k < k1; k++) {
 		if (ring != rings[k]) {
-			atomCount2 = rings[k].atoms.length;
-			connected: for (a = 0; a < atomCount; a++) {
-				for (a2 = 0; a2 < atomCount2; a2++) {
+			var atomCount2 = rings[k].atoms.length;
+			connected: for ( var a = 0; a < atomCount; a++) {
+				for ( var a2 = 0; a2 < atomCount2; a2++) {
 					if (ring.atoms[a] == rings[k].atoms[a2]) {
 						result.push(rings[k]);
 						break connected;
@@ -89,17 +85,15 @@ kemia.ring.RingPartitioner.directConnectedRings = function(ring, rings){
 	return result;
 }
 
-
-
 /**
  * partitions array of rings into connected lists
  * 
- * @param {Array.<kemia.ring.Ring>} rings 
- * 	list of rings to group into connected
+ * @param {Array.
+ *            <kemia.ring.Ring>} rings list of rings to group into connected
  *            arrays
  * @return {Array.<Array.<kemia.ring.Ring>>} array of arrays of Rings
  */
- 
+
 kemia.ring.RingPartitioner.getPartitionedRings = function(rings) {
 	var partitions = [];
 	var search = rings;
@@ -110,35 +104,33 @@ kemia.ring.RingPartitioner.getPartitionedRings = function(rings) {
 			});
 			if (connections == null) {
 				connections = [ ring ];// start a new group of rings
+				search = goog.array.filter(search, function(r) {
+					return r !== ring;
+				});
+			}
+			var connected = kemia.ring.RingPartitioner.directConnectedRings(
+					ring, search);
+			connections = goog.array.concat(connections, connected);
 			search = goog.array.filter(search, function(r) {
-				return r !== ring;
+				goog.array.contains(connected, r);
 			});
+			partitions.push(connections);
 		}
-		var connected = kemia.ring.RingPartitioner.directConnectedRings(ring,
-				search);
-		connections = goog.array.concat(connections, connected);
-		search = goog.array.filter(search, function(r) {
-			goog.array.contains(connected, r);
-		});
-		partitions.push(connections);
-	}
-	;
-}	);
+		;
+	});
 	return partitions;
 };
-
 
 /**
  * finds rings directly connected to the subject ring
  * 
  * @param{kemia.ring.Ring} ring the ring which we want to find direct
  *                         connections to
- * @param{Array.<kemia.ring.Ring>} rings to search for
- *               connections
- * @return{Array.<kemia.ring.Ring>} 
+ * @param{Array.<kemia.ring.Ring>} rings to search for connections
+ * @return{Array.<kemia.ring.Ring>}
  */
 kemia.ring.RingPartitioner.directConnectedRings = function(ring, rings) {
-	result = [];
+	var result = [];
 	goog.array.forEach(rings, function(r) {
 		var isConnected = goog.array.some(r.atoms, function(atom) {
 			if (r === ring) {

@@ -22,9 +22,9 @@ goog.require("kemia.layout.Vector2D");
 kemia.layout.OverlapResolver.resolveOverlap = function(molecule, sssr){
 
     var overlappingAtoms = new Array();
-    var overlapScore = this.getOverlapScore(molecule, overlappingAtoms);
+    var overlapScore = kemia.layout.OverlapResolver.getOverlapScore(molecule, overlappingAtoms);
     if (overlapScore > 0)
-        overlapScore = this.displace(molecule, overlappingAtoms);
+        overlapScore = kemia.layout.OverlapResolver.displace(molecule, overlappingAtoms);
     return overlapScore;
 }
 
@@ -35,19 +35,19 @@ kemia.layout.OverlapResolver.resolveOverlap = function(molecule, sssr){
  */
 kemia.layout.OverlapResolver.getOverlapScore = function(molecule, overlappingAtoms){
 
-    overlapScore = 0;
-    overlapCutoff = kemia.layout.CoordinateGenerator.BOND_LENGTH/5;
+    var overlapScore = 0;
+    var overlapCutoff = kemia.layout.CoordinateGenerator.BOND_LENGTH/5;
 	
-    atCount= molecule.countAtoms();
-    for (f = 0; f < atCount; f++)
+    var atCount= molecule.countAtoms();
+    for (var f = 0; f < atCount; f++)
     {
         var atom1 = molecule.getAtom(f);
         var p1 = atom1.coord;
-        for (g = f + 1; g < atCount; g++)
+        for (var g = f + 1; g < atCount; g++)
         {
             var atom2 = molecule.getAtom(g);
             var p2 = atom2.coord;
-            distance = goog.math.Coordinate.distance(p1, p2)
+            var distance = goog.math.Coordinate.distance(p1, p2)
             if (distance < overlapCutoff)
             {
                 overlapScore += overlapCutoff;
@@ -73,17 +73,17 @@ kemia.layout.OverlapResolver.displace = function(molecule, overlappingAtoms)
     var maxSteps = 25;
 	var steps=0;
     do{
-        p = Math.round(Math.random() * overlappingAtoms.length);
+        var p = Math.round(Math.random() * overlappingAtoms.length);
 		if (p>=overlappingAtoms.length)
 		  p=overlappingAtoms.length-1
         var op = overlappingAtoms[p]
         if (op != undefined) {
 			/* Now we have an overlapping pair of atoms, we calculate the 2D vector formed by the
 	         * positions of both and translate one of the atoms by one tenth of a bond length. */
-			a1 = op[0]
-			a2 = op[1]
-			v1 = new kemia.layout.Vector2D(a1.coord.x, a1.coord.y);
-			v2 = new kemia.layout.Vector2D(a2.coord.x - a1.coord.x, a2.coord.y - a1.coord.y);
+			var a1 = op[0]
+			var a2 = op[1]
+			var v1 = new kemia.layout.Vector2D(a1.coord.x, a1.coord.y);
+			var v2 = new kemia.layout.Vector2D(a2.coord.x - a1.coord.x, a2.coord.y - a1.coord.y);
 			v2.normalize();
 			
 			if (isNaN(v2.x)) 
@@ -93,7 +93,7 @@ kemia.layout.OverlapResolver.displace = function(molecule, overlappingAtoms)
 			
 			v2.scale(-1*kemia.layout.CoordinateGenerator.BOND_LENGTH/3);
 			
-			choice = Math.random();
+			var choice = Math.random();
 			if (choice > 0.5) {
 				a2.coord.x += v2.x
 				a2.coord.y += v2.y
@@ -102,7 +102,7 @@ kemia.layout.OverlapResolver.displace = function(molecule, overlappingAtoms)
 				a1.coord.x -= v2.x
 				a1.coord.y -= v2.y
 			}
-			overlapScore = this.getOverlapScore(molecule, overlappingAtoms);
+			var overlapScore = kemia.layout.OverlapResolver.getOverlapScore(molecule, overlappingAtoms);
 			steps++;
 		}
 		else {

@@ -1,3 +1,6 @@
+goog.provide('kemia.layout.RingPlacerTest');
+goog.require('kemia.ring.Testdata.biphenyl');
+goog.require('kemia.ring.Testdata.azulene');
 goog.require('goog.testing.jsunit');
 goog.require('kemia.layout.RingPlacer');
 goog.require('kemia.io.smiles.SmilesParser');
@@ -6,11 +9,7 @@ goog.require('kemia.layout.CoordinateGenerator');
 goog.require('goog.debug.Console');
 goog.require('goog.debug.Logger');
 
-function setUp(){
-	c = new goog.debug.Console();
-	c.setCapturing(true);
-	logger = goog.debug.Logger.getLogger('RingPlacerTest');
-}
+
 
 function testGetRingCenterOfFirstRing() {
 	var mol = kemia.io.smiles.SmilesParser.parse('c1ccccc1');
@@ -35,7 +34,7 @@ function testGetRingCenterOfFirstRing() {
 //}
 
 function testBiphenyl() {
-	var mol = kemia.io.mdl.readMolfile(biphenyl);
+	var mol = kemia.io.mdl.readMolfile(kemia.ring.Testdata.biphenyl);
 	goog.array.forEach(mol.atoms, function(atom) {
 		atom.coord.x = 0.0;
 		atom.coord.y = 0.0;
@@ -65,7 +64,7 @@ function testBiphenyl() {
 
 
 function testAzulene() {
-	var mol = kemia.io.mdl.readMolfile(azulene);
+	var mol = kemia.io.mdl.readMolfile(kemia.ring.Testdata.azulene);
 	goog.array.forEach(mol.atoms, function(atom) {
 		atom.coord.x = 0.0;
 		atom.coord.y = 0.0;

@@ -33,9 +33,9 @@ kemia.layout.CoordinateGenerator.generate = function(molecule){
 	var firstBondVector = new kemia.layout.Vector2D(0, 1)
 
     var atCount=molecule.countAtoms();
-    for (f = 0; f < atCount; f++)
+    for (var f = 0; f < atCount; f++)
     {
-		atom = molecule.getAtom(f);
+		var atom = molecule.getAtom(f);
 		atom.setFlag(kemia.model.Flags.ISPLACED, false);
 		atom.setFlag(kemia.model.Flags.VISITED, false);
 		atom.setFlag(kemia.model.Flags.ISINRING, false);
@@ -82,7 +82,7 @@ kemia.layout.CoordinateGenerator.generate = function(molecule){
 		//alert("ringsets length"+ ringsets.length+" largest_ringset is "+ largest_ringset.length)
     	
 		// place largest ringset
-    	this.layoutRingSet(firstBondVector, largest_ringset);
+    	kemia.layout.CoordinateGenerator.layoutRingSet(firstBondVector, largest_ringset);
 
     	// place substituents on largest ringset
     	kemia.layout.RingPlacer.placeRingSubstituents(molecule, largest_ringset, kemia.layout.CoordinateGenerator.BOND_LENGTH);
@@ -114,7 +114,7 @@ kemia.layout.CoordinateGenerator.generate = function(molecule){
 		 * to the parts which have already been laid out.
 		 */
 
-	    this.handleAliphatics(molecule,nrOfEdges, kemia.layout.CoordinateGenerator.BOND_LENGTH);
+	    kemia.layout.CoordinateGenerator.handleAliphatics(molecule,nrOfEdges, kemia.layout.CoordinateGenerator.BOND_LENGTH);
 
 	    /*
 		 * do layout for the next ring aliphatic parts of the molecule which are
@@ -158,10 +158,10 @@ kemia.layout.CoordinateGenerator.layoutRingSet=function(bondVector, ringset){
 
     var bl=kemia.layout.CoordinateGenerator.BOND_LENGTH;
 
-	var most_complex_ring = this.getMostComplexRing(ringset);
+	var most_complex_ring = kemia.layout.CoordinateGenerator.getMostComplexRing(ringset);
 
     if (!most_complex_ring.flags[kemia.model.Flags.ISPLACED]) {
-		var shared_fragment = {atoms:this.placeFirstBond( most_complex_ring.bonds[0], bondVector),
+		var shared_fragment = {atoms:kemia.layout.CoordinateGenerator.placeFirstBond( most_complex_ring.bonds[0], bondVector),
 				bonds: [most_complex_ring.bonds[0]]};
 		var shared_fragment_sum = goog.array.reduce(shared_fragment.atoms, function(r,atom){
 			return goog.math.Coordinate.sum(r,atom.coord);}, 
@@ -186,7 +186,7 @@ kemia.layout.CoordinateGenerator.layoutRingSet=function(bondVector, ringset){
         if (thisRing == ringset.length)
             thisRing = 0;
         most_complex_ring = ringset[thisRing];
-    } while (!this.allPlaced(ringset));
+    } while (!kemia.layout.CoordinateGenerator.allPlaced(ringset));
 
 }
 
@@ -212,7 +212,7 @@ kemia.layout.CoordinateGenerator.placeFirstBond=function(bond, vector){
 }
 
 kemia.layout.CoordinateGenerator.allPlaced=function(rings){
-    for (f1=0; f1<rings.length; f1++) {
+    for (var f1=0; f1<rings.length; f1++) {
         if (! rings[f1].flags[kemia.model.Flags.ISPLACED]) {
             return false;
         }
@@ -224,8 +224,8 @@ kemia.layout.CoordinateGenerator.allPlaced=function(rings){
  * Returns the next atom with unplaced aliphatic neighbors
  */
 kemia.layout.CoordinateGenerator.getNextAtomWithAliphaticUnplacedNeigbors = function(molecule,bondCount){
-    for (bc=0; bc<bondCount; bc++) {
-        bond = molecule.getBond(bc);
+    for (var bc=0; bc<bondCount; bc++) {
+        var bond = molecule.getBond(bc);
 
         if ( bond.source.flags[kemia.model.Flags.ISPLACED]  &&
             !bond.target.flags[kemia.model.Flags.ISPLACED] ) {
@@ -240,10 +240,10 @@ kemia.layout.CoordinateGenerator.getNextAtomWithAliphaticUnplacedNeigbors = func
 }
 
 kemia.layout.CoordinateGenerator.getAtoms = function(atom,molecule,bondCount,placed){
-    atoms = new kemia.model.Molecule;
-	bonds = molecule.getConnectedBondsList(atom);
-	for (ga=0, bLen=bonds.length; ga<bLen; ga++ ) {
-	    connectedAtom = bonds[ga].otherAtom(atom);
+    var atoms = new kemia.model.Molecule;
+	var bonds = molecule.getConnectedBondsList(atom);
+	for (var ga=0, bLen=bonds.length; ga<bLen; ga++ ) {
+	    var connectedAtom = bonds[ga].otherAtom(atom);
 		if (placed && connectedAtom.flags[kemia.model.Flags.ISPLACED] ) 
             atoms.addAtom(connectedAtom);
 		else
@@ -264,14 +264,14 @@ kemia.layout.CoordinateGenerator.handleAliphatics = function(molecule, bondCount
 	var at;
     do {
         cntr++;
-        done = false;
-        at = this.getNextAtomWithAliphaticUnplacedNeigbors(molecule, bondCount);
+        var done = false;
+        at = kemia.layout.CoordinateGenerator.getNextAtomWithAliphaticUnplacedNeigbors(molecule, bondCount);
         var direction=null;
         var startVector=null;
         if (at != null) {
-            unplacedAtoms = this.getAtoms(at,molecule,bondCount,false);
-            placedAtoms = this.getAtoms(at,molecule,bondCount,true);
-            longestUnplacedChain = kemia.layout.AtomPlacer.getLongestUnplacedChain (molecule, at)
+            var unplacedAtoms = kemia.layout.CoordinateGenerator.getAtoms(at,molecule,bondCount,false);
+            var placedAtoms = kemia.layout.CoordinateGenerator.getAtoms(at,molecule,bondCount,true);
+            var longestUnplacedChain = kemia.layout.AtomPlacer.getLongestUnplacedChain (molecule, at)
 			if (longestUnplacedChain.countAtoms() > 1) {
 				if (placedAtoms.countAtoms() > 1) {
 					kemia.layout.AtomPlacer.distributePartners(at, placedAtoms, kemia.layout.AtomPlacer.get2DCenter(placedAtoms), unplacedAtoms, bondLength);
@@ -283,7 +283,7 @@ kemia.layout.CoordinateGenerator.handleAliphatics = function(molecule, bondCount
 					direction = kemia.layout.AtomPlacer.getNextBondVector(at, placedAtoms.getAtom(0), kemia.layout.AtomPlacer.get2DCenter(molecule), true);
 				}
 
-                for (z=1, zCnt=longestUnplacedChain.countAtoms(); z<zCnt; z++) {
+                for (var z=1, zCnt=longestUnplacedChain.countAtoms(); z<zCnt; z++) {
                     longestUnplacedChain.getAtom(z).flags[kemia.model.Flags.ISPLACED]=false
                 }
                 kemia.layout.AtomPlacer.placeLinearChain(longestUnplacedChain, direction, bondLength);
@@ -298,20 +298,20 @@ kemia.layout.CoordinateGenerator.handleAliphatics = function(molecule, bondCount
 
 kemia.layout.CoordinateGenerator.getMostComplexRing = function(ringSet){
     var neighbors = new Array(ringSet.length);
-	for(i=0; i<neighbors.length; i++) {
+	for(var i=0; i<neighbors.length; i++) {
 		neighbors[i]=0;
 	}
     var mostComplex = 0;
 	var mostComplexPosition = 0;
     for (i = 0; i < ringSet.length; i++) {
-        ring1 = ringSet[i];
-        for (j = 0; j < ring1.atoms.length; j++){
-            atom1 = ring1[j];
-            for (k = i + 1; k < ringSet.length; k++) {
-                ring2 = ringSet[k];
+        var ring1 = ringSet[i];
+        for (var j = 0; j < ring1.atoms.length; j++){
+            var atom1 = ring1[j];
+            for (var k = i + 1; k < ringSet.length; k++) {
+                var ring2 = ringSet[k];
                 if (ring1 != ring2){
-                    for (l = 0; l < ring2.atoms.length; l++){
-                        atom2 = ring2[l];
+                    for (var l = 0; l < ring2.atoms.length; l++){
+                        var atom2 = ring2[l];
                         if (atom1 == atom2) {
                             neighbors[i]++;                             
                             neighbors[k]++;

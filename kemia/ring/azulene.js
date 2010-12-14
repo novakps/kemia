@@ -1,4 +1,5 @@
-var azulene = "9231\n\
+goog.provide('kemia.ring.Testdata.azulene');
+kemia.ring.Testdata.azulene = "9231\n\
   -OEChem-07251016142D\n\
 \n\
  18 19  0     0  0  0  0  0  0999 V2000\n\

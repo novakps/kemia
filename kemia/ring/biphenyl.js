@@ -1,4 +1,5 @@
-var biphenyl = "7095\n\
+goog.provide('kemia.ring.Testdata.biphenyl');
+kemia.ring.Testdata.biphenyl = "7095\n\
   -OEChem-07251016022D\n\
 \n\
  22 23  0     0  0  0  0  0  0999 V2000\n\
