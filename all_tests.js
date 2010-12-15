@@ -3,4 +3,6 @@ var _allTests = [
 	"./kemia/io/json_auto_test.html", 
 	"./kemia/io/mdl_auto_test.html", 
 	"./kemia/io/smiles/smiles_generator_auto_test.html", 
-	"./kemia/io/smiles/smiles_parser_auto_test.html"];
+	"./kemia/io/smiles/smiles_parser_auto_test.html", 
+	"./kemia/layout/coordinate_generator_auto_test.html", 
+	"./kemia/layout/ring_placer_auto_test.html"];

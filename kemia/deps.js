@@ -686,7 +686,8 @@ goog.addDependency("../../../../kemia/layout/vector2d.js", ['kemia.layout.Vector
 goog.addDependency("../../../../kemia/math/line.js", ['kemia.math.Line'], ['kemia.math.Triangle', 'goog.math.Coordinate']);
 goog.addDependency("../../../../kemia/math/line_test.js", ['kemia.math.Line.Test'], ['kemia.math.Line', 'goog.testing.jsunit', 'goog.debug.Logger', 'goog.debug.Console', 'goog.math.Coordinate']);
 goog.addDependency("../../../../kemia/math/plovr-config.js", [], []);
-goog.addDependency("../../../../kemia/math/plovr-inputs.js", [], ['kemia.math.Line.Test', 'kemia.math.Triangle.Test']);
+goog.addDependency("../../../../kemia/math/plovr-inputs.js", [], ['kemia.math.Test']);
+goog.addDependency("../../../../kemia/math/test.js", ['kemia.math.Test'], ['kemia.math.Line.Test', 'kemia.math.Triangle.Test']);
 goog.addDependency("../../../../kemia/math/triangle.js", ['kemia.math.Triangle'], []);
 goog.addDependency("../../../../kemia/math/triangle_test.js", ['kemia.math.Triangle.Test'], ['kemia.math.Triangle', 'kemia.math.Line', 'goog.testing.jsunit', 'goog.debug.Logger', 'goog.debug.Console', 'goog.math.Vec2']);
 goog.addDependency("../../../../kemia/model/arrow.js", ['kemia.model.Arrow'], ['kemia.math.Line', 'goog.math.Vec2']);

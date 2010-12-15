@@ -30,7 +30,9 @@ goog.require('goog.math.Coordinate');
  * @constructor
  */
 kemia.math.Line = function(source, target) {
+	/** @type {goog.math.Coordinate} **/
 	this.source = source;
+	/** @type {goog.math.Coordinate} **/
 	this.target = target;
 };
 
@@ -48,7 +50,7 @@ kemia.math.Line.prototype.getTheta = function() {
  * 
  * @param {goog.math.Coordinate}
  *            point1
- * @param {goog.math.Coordiante}
+ * @param {goog.math.Coordinate}
  *            point2
  * @return {boolean}
  */

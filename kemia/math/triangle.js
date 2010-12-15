@@ -21,6 +21,7 @@ goog.provide('kemia.math.Triangle');
  * @param {goog.math.Coordinate} a
  * @param {goog.math.Coordinate} b
  * @param {goog.math.Coordinate} c
+ * @constructor
  */
 kemia.math.Triangle = function (a, b, c){
 	this.a = a;
@@ -36,7 +37,7 @@ kemia.math.Triangle = function (a, b, c){
  * see http://softsurfer.com/Archive/algorithm_0101/algorithm_0101.htm 'Modern Triangles'
  * @param {goog.math.Coordinate} a
  * @param {goog.math.Coordinate} b
- * @param {goog.math.Coordinat} c
+ * @param {goog.math.Coordinate} c
  * @return {number}
  */
 kemia.math.Triangle.signedArea = function(a, b, c) {

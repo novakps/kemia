@@ -33,7 +33,7 @@ var testTheta = function () {
 	l = new kemia.math.Line(new goog.math.Coordinate(0, 0),
 			new goog.math.Coordinate(1, 0));
 	assertEquals(0, l.getTheta());
-	var l = new kemia.math.Line(new goog.math.Coordinate(0, 1),
+	l = new kemia.math.Line(new goog.math.Coordinate(0, 1),
 			new goog.math.Coordinate(1, 1));
 
 	l = new kemia.math.Line(new goog.math.Coordinate(0, 0),
