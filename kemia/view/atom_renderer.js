@@ -161,7 +161,7 @@ kemia.view.AtomRenderer.prototype.compoundSymbol = function(atom) {
 			retval.text = atom.symbol;
 			// could have H on left, depending on bond slope
 		} else {
-			bond_direction = kemia.view.AtomRenderer.bondDirection(atom);
+			var bond_direction = kemia.view.AtomRenderer.bondDirection(atom);
 			var justification = 'center';
 			if (bond_direction == "SW" || bond_direction == "W"
 					|| bond_direction == "NW") {

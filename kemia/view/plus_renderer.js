@@ -25,10 +25,10 @@ kemia.view.PlusRenderer.prototype.render = function(plus, transform) {
 	plus.group = this.graphics.createGroup();
 	var coord = plus.coord;
 	var w = this.config.get('plus')['size'];
-	h0 = new goog.math.Coordinate(coord.x, coord.y - w);
-	h1 = new goog.math.Coordinate(coord.x, coord.y + w);
-	v0 = new goog.math.Coordinate(coord.x - w, coord.y);
-	v1 = new goog.math.Coordinate(coord.x + w, coord.y);
+	var h0 = new goog.math.Coordinate(coord.x, coord.y - w);
+	var h1 = new goog.math.Coordinate(coord.x, coord.y + w);
+	var v0 = new goog.math.Coordinate(coord.x - w, coord.y);
+	var v1 = new goog.math.Coordinate(coord.x + w, coord.y);
 
 	var path = new goog.graphics.Path();
 	var stroke = new goog.graphics.Stroke(
