@@ -14,7 +14,7 @@
  * the License.
  * 
  */
-goog.provide("kemia.math.Triangle.Test");
+goog.provide("kemia.math.TriangleTest");
 goog.require('kemia.math.Triangle');
 goog.require('kemia.math.Line');
 goog.require('goog.testing.jsunit');

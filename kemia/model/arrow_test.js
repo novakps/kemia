@@ -1,5 +1,6 @@
 goog.provide('kemia.model.ArrowTest');
 goog.require('kemia.model.Arrow');
+goog.require('goog.math.Coordinate');
 goog.require('goog.testing.jsunit');
 
 

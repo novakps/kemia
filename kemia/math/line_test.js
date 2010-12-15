@@ -14,7 +14,7 @@
  * the License.
  * 
  */
-goog.provide('kemia.math.Line.Test');
+goog.provide('kemia.math.LineTest');
 goog.require('kemia.math.Line');
 goog.require('goog.testing.jsunit');
 goog.require('goog.debug.Logger');

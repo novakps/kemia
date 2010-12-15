@@ -390,7 +390,7 @@ kemia.model.Reaction.removeOverlap = function(molecules) {
 						m2.getBoundingBox().left)});
 	goog.array.forEach(molecules,
 			function(mol) {
-		var mol_rect = goog.math.Rect.createFromBox(this
+		var mol_rect = goog.math.Rect.createFromBox(kemia.model.Reaction
 				.boundingBox( [ mol ]));
 		if (accumulated_rect) {
 			if (goog.math.Rect.intersection(accumulated_rect,
