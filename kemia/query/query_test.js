@@ -10,6 +10,7 @@
  * License for the specific language governing permissions and limitations under
  * the License. Copyright (c) 2010 Mark Rijnbeek (markr@ebi.ac.uk)
  */
+goog.provide("kemia.query.QueryTest")
 goog.require('goog.testing.jsunit');
 goog.require('goog.debug.Console');
 goog.require('goog.debug.Logger');
@@ -19,12 +20,7 @@ goog.require('kemia.query.MoleculeCompiler');
 goog.require('kemia.query.DFSMapper');
 goog.require('kemia.query.SmilesCompiler');
 
-function setUp() {
-	c = new goog.debug.Console();
-	c.setCapturing(true);
-	logger = goog.debug.Logger.getLogger('RingPlacerTest');
 
-}
 
 function createMolecule() {
 	var molfile = '\n OpenBabel05291001332D\n\n  9  9  0  0  0  0  0  0  0  0999 V2000\n   -6.3750   -0.6250    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -6.3750    0.3750    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -5.5092    0.8755    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -4.6427    0.3764    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -4.6411   -0.6236    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n   -5.5061   -1.1255    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -5.5092    1.8755    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -6.3766    2.3732    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -4.6435    2.3759    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0  0  0  0\n  2  3  1  0  0  0  0\n  3  4  1  0  0  0  0\n  3  7  1  0  0  0  0\n  4  5  2  0  0  0  0\n  5  6  1  0  0  0  0\n  6  1  1  0  0  0  0\n  7  8  1  0  0  0  0\n  7  9  2  0  0  0  0\nM  END\n';
@@ -37,13 +33,16 @@ function createBenzene() {
 }
 
 function printMaps(maps) {
+	var c = new goog.debug.Console();
+	c.setCapturing(true);
+	var logger = goog.debug.Logger.getLogger('RingPlacerTest');
 	logger.info('printMaps');
 	for ( var i = 0; i < maps.length; i++) {
 		var keys = maps[i].getKeys();
 		var vals = maps[i].getValues();
 		logger.info("map: query index -> queried index");
 		for ( var j = 0; j < keys.length; j++) {
-			debug(keys[j] + " -> " + vals[j]);
+			logger.info(keys[j] + " -> " + vals[j]);
 		}
 	}
 }
@@ -57,12 +56,15 @@ function testSmilesCompiler1() {
 }
 
 function testSmilesCompiler2() {
+	var c = new goog.debug.Console();
+	c.setCapturing(true);
+	var logger = goog.debug.Logger.getLogger('RingPlacerTest');
 	logger.info('testSmilesCompiler2');
 	var queried = createMolecule();
 	var query = new kemia.query.SmilesCompiler().compile('CCCN');
 	var mapper = new kemia.query.DFSMapper(query);
 	var maps = mapper.mapUnique(queried);
-	// printMaps(maps);
+	printMaps(maps);
 	assertEquals(1, maps.length);
 }
 

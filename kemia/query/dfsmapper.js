@@ -226,7 +226,7 @@ kemia.query.DFSMapper.depthFirstSearch = function(state, queryAtom,
  */
 kemia.query.DFSMapper.mapNext = function(i, type, query, queryAtom, queried,
 		maps, callback) {
-	var state = new State(type, query, queried);
+	var state = new kemia.query.State(type, query, queried);
 	var queriedAtom = queried.getAtom(i);
 
 	if (queryAtom.matches(queriedAtom)) {

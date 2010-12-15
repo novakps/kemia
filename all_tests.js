@@ -11,4 +11,5 @@ var _allTests = [
 	"./kemia/model/arrow_auto_test.html", 
 	"./kemia/model/molecule_auto_test.html", 
 	"./kemia/model/neighborlist_auto_test.html", 
-	"./kemia/model/reaction_auto_test.html"];
+	"./kemia/model/reaction_auto_test.html", 
+	"./kemia/query/query_auto_test.html"];
