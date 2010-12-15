@@ -454,5 +454,4 @@ kemia.ring.RingFinder.findRings = function(molecule) {
 	// process the ring systems
 	return kemia.ring.RingFinder.createRingSystems(molecule);
 }
-goog.exportSymbol("kemia.ring.RingFinder.findRings", kemia.ring.RingFinder.findRings);
 

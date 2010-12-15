@@ -55,8 +55,7 @@ kemia.controller.plugins.UndoRedo = function() {
 	this.currentState_ = [];
 }
 goog.inherits(kemia.controller.plugins.UndoRedo, kemia.controller.Plugin);
-goog.exportSymbol('kemia.controller.plugins.UndoRedo',
-		kemia.controller.plugins.UndoRedo);
+
 
 /**
  * Commands implemented by this plugin.

@@ -248,7 +248,6 @@ kemia.io.mdl.readMolfile = function(molfile) {
 	return mol;
 
 };
-goog.exportSymbol('kemia.io.mdl.readMolfile', kemia.io.mdl.readMolfile);
 
 /**
  * convert Reaction to mdl RXN string
@@ -380,6 +379,4 @@ kemia.io.mdl.readRxnfile = function(rxnfile) {
 	return reaction;
 
 };
-
-goog.exportSymbol('kemia.io.mdl.readMolfile', kemia.io.mdl.readMolfile);
 

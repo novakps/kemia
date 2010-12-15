@@ -64,8 +64,6 @@ kemia.model.Reaction.prototype.logger = goog.debug.Logger
 kemia.model.Reaction.prototype.getHeader = function() {
 	return this.header;
 }
-goog.exportSymbol('kemia.model.Reaction.prototype.getHeader',
-		kemia.model.Reaction.prototype.getHeader);
 
 /**
  * adds a molecule to reaction, changing layout if necessary to keep reactants

@@ -73,7 +73,6 @@ kemia.model.Molecule = function(opt_name) {
 	this.fragmentCount = 0;
 
 };
-goog.exportSymbol("kemia.model.Molecule", kemia.model.Molecule);
 
 kemia.model.Molecule.prototype.resetRingCenters = function() {
 	goog.array.forEach(this.getRings(), function(ring) {
@@ -117,9 +116,6 @@ kemia.model.Molecule.prototype.addBond = function(bond) {
 	bond.molecule = this;
 };
 
-goog.exportSymbol("kemia.model.Molecule.prototype.addBond",
-		kemia.model.Molecule.prototype.addBond);
-
 /**
  * Get the atom of given id.
  * 
@@ -131,9 +127,6 @@ goog.exportSymbol("kemia.model.Molecule.prototype.addBond",
 kemia.model.Molecule.prototype.getAtom = function(id) {
 	return this.atoms[id];
 };
-
-goog.exportSymbol("kemia.model.Molecule.prototype.getAtom",
-		kemia.model.Molecule.prototype.getAtom);
 
 /**
  * Get the bond of given id.
@@ -264,8 +257,6 @@ kemia.model.Molecule.prototype.removeBond = function(bondOrId) {
 kemia.model.Molecule.prototype.countAtoms = function() {
 	return this.atoms.length;
 };
-goog.exportSymbol('kemia.model.Molecule.prototype.countAtoms',
-		kemia.model.Molecule.prototype.countAtoms);
 
 /**
  * Count bonds.
@@ -273,8 +264,6 @@ goog.exportSymbol('kemia.model.Molecule.prototype.countAtoms',
 kemia.model.Molecule.prototype.countBonds = function() {
 	return this.bonds.length;
 };
-goog.exportSymbol("kemia.model.Molecule.prototype.countBonds",
-		kemia.model.Molecule.prototype.countBonds);
 
 /**
  * Add an atom to molecule. Does nothing if atom already part of molecule
@@ -292,8 +281,6 @@ kemia.model.Molecule.prototype.addAtom = function(atom) {
 		atom.molecule = this;
 	}
 };
-goog.exportSymbol("kemia.model.Molecule.prototype.addAtom",
-		kemia.model.Molecule.prototype.addAtom);
 
 /**
  * Get rings found in this molecule

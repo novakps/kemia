@@ -1,1 +1,1 @@
-goog.require('kemia.view.Test');
+goog.require('kemia.controller.plugins.Test');

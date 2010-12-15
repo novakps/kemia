@@ -36,7 +36,6 @@ goog.require('kemia.query.State');
 kemia.query.DFSMapper = function(query) {
 	this.query = query;
 }
-goog.exportSymbol('kemia.query.DFSMapper', kemia.query.DFSMapper);
 
 /**
  * @enum {number}
@@ -325,12 +324,7 @@ kemia.query.DFSMapper.prototype.mapUnique = function(queried) {
 
 	return maps;
 };
-goog.exportSymbol('kemia.query.DFSMapper.prototype.mapUnique',
-		kemia.query.DFSMapper.prototype.mapUnique);
 
-// TODO this is a leaky abstraction, encapsulate with accessor if needed
-goog.exportProperty(goog.structs.Map.prototype, 'getCount',
-		goog.structs.Map.prototype.getCount);
 
 /** @inheritDoc */
 kemia.query.DFSMapper.prototype.mapUniqueCallback = function(queried, callback) {
@@ -372,5 +366,4 @@ kemia.query.DFSMapper.prototype.mapFirst = function(queried) {
 
 	return new goog.structs.Map();
 };
-goog.exportSymbol('kemia.query.DFSMapper.prototype.mapFirst',
-		kemia.query.DFSMapper.prototype.mapFirst);
+

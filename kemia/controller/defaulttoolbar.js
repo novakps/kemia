@@ -232,9 +232,9 @@ kemia.controller.DefaultToolbar.makeAtomBondTemplateButtons = function(buttons){
 }
 
 kemia.controller.DefaultToolbar.makeDefaultMoleculeToolbar = function(elem) {
-	var buttons = this.makeActionButtons([]);
-	var buttons = this.makeZoomButtons(buttons);
-	var buttons = this.makeAtomBondTemplateButtons(buttons);
+	var buttons = kemia.controller.DefaultToolbar.makeActionButtons([]);
+	var buttons = kemia.controller.DefaultToolbar.makeZoomButtons(buttons);
+	var buttons = kemia.controller.DefaultToolbar.makeAtomBondTemplateButtons(buttons);
 	return kemia.controller.DefaultToolbar.makeToolbar(buttons, elem);
 }
 
@@ -253,15 +253,13 @@ kemia.controller.DefaultToolbar.makeDefaultMoleculeToolbar = function(elem) {
  */
 kemia.controller.DefaultToolbar.makeDefaultReactionToolbar = function(elem) {
 
-	var buttons = this.makeActionButtons([]);
-	var buttons = this.makeArrowPlusButtons(buttons);
-	var buttons = this.makeZoomButtons(buttons);
-	var buttons = this.makeAtomBondTemplateButtons(buttons);
+	var buttons = kemia.controller.DefaultToolbar.makeActionButtons([]);
+	var buttons = kemia.controller.DefaultToolbar.makeArrowPlusButtons(buttons);
+	var buttons = kemia.controller.DefaultToolbar.makeZoomButtons(buttons);
+	var buttons = kemia.controller.DefaultToolbar.makeAtomBondTemplateButtons(buttons);
 	return kemia.controller.DefaultToolbar.makeToolbar(buttons, elem);
 
 };
-goog.exportSymbol("kemia.controller.DefaultToolbar.makeDefaultToolbar",
-		kemia.controller.DefaultToolbar.makeDefaultToolbar);
 
 /**
  * Creates a {@link goog.ui.Toolbar} containing the specified set of toolbar

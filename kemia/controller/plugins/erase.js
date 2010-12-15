@@ -30,8 +30,7 @@ kemia.controller.plugins.Erase = function() {
 	kemia.controller.Plugin.call(this);
 }
 goog.inherits(kemia.controller.plugins.Erase, kemia.controller.Plugin);
-goog.exportSymbol('kemia.controller.plugins.Erase',
-		kemia.controller.plugins.Erase);
+
 
 /**
  * Command implemented by this plugin.

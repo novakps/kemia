@@ -14,7 +14,7 @@
  * the License.
  * @author paul@wingu.com (Paul Novak)
  */
-goog.provide("kemia.view.Test");
+goog.provide("kemia.controller.plugins.Test");
 // no tests here, but this creates "No tests found" instead of a blank page when there are no compiler errors
 goog.require('kemia.controller.plugins.AbstractDialogTest');
 goog.require('kemia.controller.plugins.ArrowPlusEdit');

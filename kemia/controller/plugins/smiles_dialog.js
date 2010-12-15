@@ -30,7 +30,6 @@ kemia.controller.plugins.SmilesDialog = function(dom) {
 };
 goog.inherits(kemia.controller.plugins.SmilesDialog,
 		kemia.controller.plugins.AbstractDialog);
-goog.exportSymbol('kemia.controller.plugins.SmilesDialog', kemia.controller.plugins.SmilesDialog);
 
 /** @inheritDoc */
 kemia.controller.plugins.SmilesDialog.prototype.createDialogControl = function() {

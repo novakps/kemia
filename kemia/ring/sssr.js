@@ -494,6 +494,3 @@ kemia.ring.SSSR.findRings = function(molecule) {
 	return indexes;
 };
 
-goog.exportSymbol("kemia.ring.SSSR.findRings", kemia.ring.SSSR.findRings);
-
-

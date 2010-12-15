@@ -183,13 +183,11 @@ kemia.io.json.readMolecule = function(arg) {
 	});
 	return mol;
 };
-goog.exportSymbol('kemia.io.json.readMolecule', kemia.io.json.readMolecule);
 
 /** @return {string} */
 kemia.io.json.writeMolecule = function(mol) {
 	return new goog.json.Serializer().serialize(kemia.io.json.moleculeToJson(mol));
 };
-goog.exportSymbol('kemia.io.json.writeMolecule', kemia.io.json.writeMolecule);
 
 
 kemia.io.json.readArrow = function(arrow_json){
@@ -335,8 +333,6 @@ kemia.io.json.readReaction = function(arg, opt_permit_overlap) {
 
 	return rxn;
 };
-goog.exportSymbol('kemia.io.json.readReaction', kemia.io.json.readReaction);
-
 /**
  * converts a reaction object to JSON representation
  * 
@@ -367,7 +363,6 @@ kemia.io.json.reactionToJson = function (rxn) {
 kemia.io.json.writeReaction = function(rxn){
 	return new goog.json.Serializer().serialize(kemia.io.json.reactionToJson(rxn));
 }
-goog.exportSymbol('kemia.io.json.writeReaction', kemia.io.json.writeReaction);
 
 kemia.io.json.logger = goog.debug.Logger.getLogger('kemia.io.json');
 

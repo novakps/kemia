@@ -17,11 +17,6 @@
 goog.provide('kemia.controller.plugins.Zoom');
 goog.require('goog.debug.Logger');
 
-// goog.exportSymbol('kemia.controller.plugins.Zoom.COMMAND.ZOOM_IN',
-// kemia.controller.plugins.Zoom.COMMAND.ZOOM_IN);
-// goog.exportSymbol('kemia.controller.plugins.Zoom.COMMAND.ZOOM_OUT',
-// kemia.controller.plugins.Zoom.COMMAND.ZOOM_OUT);
-
 /**
  * @constructor
  * @extends{kemian.controller.Plugin}s
@@ -30,8 +25,7 @@ kemia.controller.plugins.Zoom = function() {
 	kemia.controller.Plugin.call(this);
 }
 goog.inherits(kemia.controller.plugins.Zoom, kemia.controller.Plugin);
-goog.exportSymbol('kemia.controller.plugins.Zoom',
-		kemia.controller.plugins.Zoom);
+
 
 /**
  * Commands implemented by this plugin.

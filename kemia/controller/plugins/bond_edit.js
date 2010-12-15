@@ -28,8 +28,6 @@ kemia.controller.plugins.BondEdit = function() {
 	this._dragging = false;
 }
 goog.inherits(kemia.controller.plugins.BondEdit, kemia.controller.Plugin);
-goog.exportSymbol('kemia.controller.plugins.BondEdit',
-		kemia.controller.plugins.BondEdit);
 
 /**
  * Command implemented by this plugin.

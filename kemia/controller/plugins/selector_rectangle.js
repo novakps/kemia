@@ -31,7 +31,6 @@ kemia.controller.plugins.SelectorRectangle = function() {
   kemia.controller.Plugin.call(this);
 };
 goog.inherits(kemia.controller.plugins.SelectorRectangle, kemia.controller.Plugin);
-goog.exportSymbol('kemia.controller.plugins.SelectorRectangle', kemia.controller.plugins.SelectorRectangle);
 /**
  * Commands supported 
  * @enum {string}

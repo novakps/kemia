@@ -79,7 +79,6 @@ kemia.controller.ToolbarController = function(editor, toolbar) {
 			goog.ui.Component.EventType.ACTION, this.handleAction);
 };
 goog.inherits(kemia.controller.ToolbarController, goog.events.EventTarget);
-goog.exportSymbol("kemia.controller.ToolbarController", kemia.controller.ToolbarController);
 
 /**
  * Returns the Closure component ID of the control that corresponds to the given

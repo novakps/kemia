@@ -105,8 +105,7 @@ kemia.controller.ReactionEditor = function(element, opt_config) {
 
 };
 goog.inherits(kemia.controller.ReactionEditor, goog.events.EventTarget);
-goog.exportSymbol('kemia.controller.ReactionEditor',
-		kemia.controller.ReactionEditor);
+
 
 /**
  * Sets the active editor id.
@@ -199,8 +198,6 @@ kemia.controller.ReactionEditor.prototype.setModels = function(models){
 	this.dispatchBeforeChange();
 	this.setModelsSilently(models);
 }
-goog.exportSymbol('kemia.controller.ReactionEditor.prototype.setModels',
-		kemia.controller.ReactionEditor.prototype.setModels);
 
 kemia.controller.ReactionEditor.prototype.render = function() {
 	goog.array.forEach(this.models, function(model) {
@@ -213,8 +210,6 @@ kemia.controller.ReactionEditor.prototype.render = function() {
 		}
 	}, this);
 };
-goog.exportSymbol('kemia.controller.ReactionEditor.prototype.render',
-		kemia.controller.ReactionEditor.prototype.render);
 
 /**
  * gets model
@@ -284,7 +279,6 @@ kemia.controller.ReactionEditor.prototype.disablePlugins = function (){
 		plugin.disable(this);
 	}
 }
-goog.exportSymbol('kemia.controller.ReactionEditor.prototype.disablePlugins', kemia.controller.ReactionEditor.prototype.disablePlugins);
 
 kemia.controller.ReactionEditor.prototype.enablePlugins = function (){
 	this.logger.info('enablePlugins');
@@ -293,7 +287,6 @@ kemia.controller.ReactionEditor.prototype.enablePlugins = function (){
 		plugin.enable(this);
 	}
 }
-goog.exportSymbol('kemia.controller.ReactionEditor.prototype.enablePlugins', kemia.controller.ReactionEditor.prototype.enablePlugins);
 
 /**
  * Handle a change in the Editor. Marks the editor as modified, dispatches the
@@ -718,8 +711,6 @@ kemia.controller.ReactionEditor.prototype.registerPlugin = function(plugin) {
 		plugin.enable(this);
 	}
 };
-goog.exportSymbol('kemia.controller.ReactionEditor.prototype.registerPlugin',
-		kemia.controller.ReactionEditor.prototype.registerPlugin);
 
 /**
  * Unregisters the plugin with this editor.

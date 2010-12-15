@@ -29,8 +29,6 @@ kemia.controller.plugins.ArrowPlusEdit = function() {
 	kemia.controller.Plugin.call(this);
 }
 goog.inherits(kemia.controller.plugins.ArrowPlusEdit, kemia.controller.Plugin);
-goog.exportSymbol("kemia.controller.plugins.ArrowPlusEdit",
-		kemia.controller.plugins.ArrowPlusEdit);
 
 /**
  * Commands implemented by this plugin.

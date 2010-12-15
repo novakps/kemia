@@ -190,8 +190,7 @@ kemia.io.smiles.SmilesParser.parse = function(smi) {
 	}
 };
 
-goog.exportSymbol('kemia.io.smiles.SmilesParser.parse',
-		kemia.io.smiles.SmilesParser.parse);
+
 
 kemia.io.smiles.SmilesParser.sanityCheck = function(branch, ring, bond_type) {
 	if (branch.length) {

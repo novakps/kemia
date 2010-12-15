@@ -3,57 +3,28 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>kemia.controller.ReactionEditor</title>
-<!-- 
- <script src="../../build/kemia-advanced.js"></script>
- -->
-<script src="../../third-party/closure/closure/goog/base.js"></script>
-<script src="../deps.js"></script>
-<script src="../io/json_test_rxn.js"></script>
-<script src="../io/io_test_molsample2.js"></script>
+
+<script src="http://localhost:9810/compile?id=api"></script>
+<script src="testdata.js"></script>
 
 <link rel="stylesheet" href="../../css/kemia.css" />
 <link rel="stylesheet"	href="../../css/demo.css" />
 
 <script>
-	goog.require('goog.events.EventType');
-	goog.require('goog.dom');
-	goog.require('goog.ui.Select');
-	goog.require('goog.ui.MenuItem');
-	goog.require('kemia.io.json');
-	goog.require('kemia.controller.DefaultToolbar');
-	goog.require('kemia.controller.ToolbarController');
-	goog.require('kemia.controller.plugins.Move');
-	goog.require('kemia.controller.plugins.ClearEditor');
-	goog.require('kemia.controller.plugins.Zoom');
-	goog.require('kemia.controller.plugins.UndoRedo');
-	goog.require('kemia.controller.plugins.AtomEdit');
-	goog.require('kemia.controller.plugins.BondEdit');
-	goog.require('kemia.controller.plugins.ArrowPlusEdit');
-	goog.require('kemia.controller.plugins.Erase');
-	goog.require('kemia.controller.plugins.MoleculeEdit');
-	//goog.require('kemia.controller.plugins.Cleanup');
-    goog.require('kemia.io.mdl');
-    goog.require('kemia.io.smiles.SmilesParser');
-	goog.require('goog.debug.Console');
+function initPage() {
+	var toolbar = kemia.controller.DefaultToolbar
+			.makeDefaultReactionToolbar(goog.dom
+					.getElement('reactionEditorToolbar'));
 
-</script>
-<script><!--
-    
-	var controller;
-	
-function initPage(){
-	// uncomment next two lines to debug to console
-	var c = new goog.debug.Console(); 
-	c.setCapturing(true); 
-	goog.debug.Logger.getLogger('kemia').setLevel(goog.debug.Logger.Level.ALL);
+	var model = kemia.io.json.readReaction(reactionDrawing);
 
-	var toolbar = kemia.controller.DefaultToolbar.makeDefaultReactionToolbar(goog.dom.getElement('reactionEditorToolbar'));  
-
-	var model = kemia.io.json.readReaction(reactionDrawing); 
-	
-	var editor = new kemia.controller.ReactionEditor(goog.dom.getElement('reactionEditorContainer'),
-		{background : {color : 'white'}, 
-			showTerminalCarbons:false});
+	var editor = new kemia.controller.ReactionEditor(goog.dom
+			.getElement('reactionEditorContainer'), {
+		background : {
+			color : 'white'
+		},
+		showTerminalCarbons : false
+	});
 
 	editor.registerPlugin(new kemia.controller.plugins.Move());
 	editor.registerPlugin(new kemia.controller.plugins.ClearEditor());
@@ -64,57 +35,18 @@ function initPage(){
 	editor.registerPlugin(new kemia.controller.plugins.BondEdit());
 	editor.registerPlugin(new kemia.controller.plugins.ArrowPlusEdit());
 	editor.registerPlugin(new kemia.controller.plugins.MoleculeEdit());
-	//editor.registerPlugin(new kemia.controller.plugins.Cleanup());
-	
-    var toolbarController = new kemia.controller.ToolbarController(editor, toolbar);
-//	editor.disablePlugins();
-//	toolbar.setVisible(false);
-	
-	editor.setModels([model]);
+	// editor.registerPlugin(new kemia.controller.plugins.Cleanup());
 
-	
-	var sdfs = sdf.split("$$$$\n");
-	var mol_renderer = new kemia.controller.ReactionEditor(goog.dom.getElement('moleculeContainer'),{background : {color : 'white'},'showTerminalCarbons' : false,});
- 
-    var select1 = new goog.ui.Select();
-    select1.addItem(new goog.ui.MenuItem('1', 1));
-    select1.addItem(new goog.ui.MenuItem('2', 2));
-    select1.addItem(new goog.ui.MenuItem('3 (bucky ball)', 3));
-    select1.addItem(new goog.ui.MenuItem('4', 4));
-    select1.addItem(new goog.ui.MenuItem('5', 5));
-    select1.addItem(new goog.ui.MenuItem('6', 6));
-    select1.addItem(new goog.ui.MenuItem('7', 7));
-    select1.addItem(new goog.ui.MenuItem('8', 8));
-    select1.addItem(new goog.ui.MenuItem('9', 9));
-    select1.addItem(new goog.ui.MenuItem('10', 10));
-    select1.addItem(new goog.ui.MenuItem('11 (not too large any more!)', 11));
-    select1.addItem(new goog.ui.MenuItem('12', 12));
-    
-    
-    select1.setSelectedIndex(0);
-    select1.render(goog.dom.getElement('selectMolecule'));
-    
-        goog.events.listen(select1, goog.ui.Component.EventType.ACTION,
-        function(e) {
-          var timer = goog.now();
-          var select = e.target;
-          var idx = select.getValue();
-          var molfile=sdfs[idx];
-          //alert(sdf);
-          var mol=kemia.io.mdl.readMolfile(molfile);
-	      mol_renderer.setModels([mol]);
-	      goog.dom.setTextContent(goog.dom.getElement('perf'), (goog.now() - timer) + 'ms');
-        });
-        
-        };
+	var toolbarController = new kemia.controller.ToolbarController(editor,
+			toolbar);
+	// editor.disablePlugins();
+	// toolbar.setVisible(false);
 
-
-goog.events.listen(window, goog.events.EventType.LOAD, initPage);
---></script>
+	editor.setModels([ model ]);
+}
+</script>
 </head>
-
-<body>
-
+<body onload="initPage()">
 <fieldset>
 <legend><h1>Reaction Editor</h1></legend>
 <table style="width: 100%">
@@ -130,22 +62,5 @@ goog.events.listen(window, goog.events.EventType.LOAD, initPage);
 </table>
 
 </fieldset>
-
-<fieldset>
-<legend><h1>Molecule Rendering</h1></legend> 
-<br>
-<label id="selectMolecule">Select a molecule to render: </label>
-<br>
-
-<br>
-<div id="moleculeContainer" style="width: 600px; height: 600px"></div>
-<br>
-</fieldset>
-  <div id="perf"></div> 
-<br> 
-
-
-
-
 </body>
 </html>

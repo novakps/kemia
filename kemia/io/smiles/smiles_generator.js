@@ -38,5 +38,4 @@ kemia.io.smiles.SmilesGenerator.generate = function(molecule, chiral) {
 	return ("todo..");
 
 };
-goog.exportSymbol('kemia.io.smiles.SmilesGenerator.generate',
-		kemia.io.smiles.SmilesGenerator.generate);
+

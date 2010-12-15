@@ -27,8 +27,6 @@ kemia.controller.plugins.Cleanup = function() {
 	kemia.controller.Plugin.call(this);
 }
 goog.inherits(kemia.controller.plugins.Cleanup, kemia.controller.Plugin);
-goog.exportSymbol('kemia.controller.plugins.Cleanup',
-		kemia.controller.plugins.Cleanup);
 
 /**
  * Commands implemented by this plugin.

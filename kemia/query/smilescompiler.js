@@ -29,7 +29,6 @@ goog.require('kemia.query.MoleculeCompiler');
  */
 kemia.query.SmilesCompiler = function() {
 };
-goog.exportSymbol("kemia.query.SmilesCompiler", kemia.query.SmilesCompiler);
 
 /** @inheritDoc */
 kemia.query.SmilesCompiler.prototype.compile = function(smiles) {
@@ -37,4 +36,3 @@ kemia.query.SmilesCompiler.prototype.compile = function(smiles) {
 	var query = new kemia.query.MoleculeCompiler().compile(molecule);
 	return query;
 };
-goog.exportSymbol("kemia.query.SmilesCompiler.prototype.compile", kemia.query.SmilesCompiler.prototype.compile);

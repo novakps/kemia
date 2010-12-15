@@ -29,8 +29,7 @@ kemia.controller.plugins.Move = function() {
 	this.isDragging = false;
 }
 goog.inherits(kemia.controller.plugins.Move, kemia.controller.Plugin);
-goog.exportSymbol('kemia.controller.plugins.Move',
-		kemia.controller.plugins.Move);
+
 
 /**
  * Commands implemented by this plugin.

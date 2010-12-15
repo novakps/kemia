@@ -19,9 +19,6 @@ goog.provide('kemia.controller.plugins.ClearEditor');
 goog.require('kemia.controller.Plugin');
 goog.require('goog.functions');
 
-// goog.exportSymbol('kemia.controller.plugins.ClearEditor.COMMAND',
-// kemia.controller.plugins.ClearEditor.COMMAND);
-
 /**
  * simple Plugin for clearing editor.
  * 
@@ -32,8 +29,7 @@ kemia.controller.plugins.ClearEditor = function() {
 	kemia.controller.Plugin.call(this);
 };
 goog.inherits(kemia.controller.plugins.ClearEditor, kemia.controller.Plugin);
-goog.exportSymbol('kemia.controller.plugins.ClearEditor',
-		kemia.controller.plugins.ClearEditor);
+
 
 /** The clear command. */
 kemia.controller.plugins.ClearEditor.COMMAND = 'clearEditor';
