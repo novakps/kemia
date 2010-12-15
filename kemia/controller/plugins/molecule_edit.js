@@ -380,14 +380,15 @@ kemia.controller.plugins.MoleculeEdit.prototype.createMolecule = function(
 	var diff = goog.math.Coordinate.difference(coords, molecule.getCenter());
 	molecule.translate(diff);
 	if (this.editorObject.getModels().length > 0) {
-		var model = this.editorObject.getModels()[0];
+		var models = this.editorObject.getModels();
+		var model = models[0];
 		if (model instanceof kemia.model.Reaction) {
 			model.addMolecule(molecule);
 		} else if (model instanceof kemia.model.Molecule) {
 			models.push(molecule);
 		}
 	} else {
-		reaction = new kemia.model.Reaction();
+		var reaction = new kemia.model.Reaction();
 		reaction.addMolecule(molecule);
 	}
 }

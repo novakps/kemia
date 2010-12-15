@@ -16,7 +16,20 @@
  */
 goog.provide("kemia.view.Test");
 // no tests here, but this creates "No tests found" instead of a blank page when there are no compiler errors
-goog.require('kemia.controller.plugins.MoleculeEditTest');
+goog.require('kemia.controller.plugins.AbstractDialogTest');
+goog.require('kemia.controller.plugins.ArrowPlusEdit');
+goog.require('kemia.controller.plugins.AtomEdit');
+goog.require('kemia.controller.plugins.BondEdit');
+goog.require('kemia.controller.plugins.Cleanup');
+goog.require('kemia.controller.plugins.ClearEditor');
+goog.require('kemia.controller.plugins.Erase');
+goog.require('kemia.controller.plugins.MoleculeEdit');
+goog.require('kemia.controller.plugins.Move');
+goog.require('kemia.controller.plugins.SelectorRectangle');
+goog.require('kemia.controller.plugins.SmilesDialog');
+goog.require('kemia.controller.plugins.Smiles');
+goog.require('kemia.controller.plugins.UndoRedo');
+goog.require('kemia.controller.plugins.Zoom');
 
 
 

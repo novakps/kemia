@@ -90,16 +90,16 @@ kemia.controller.plugins.SmilesDialog.prototype.getSmiles_ = function() {
  */
 kemia.controller.plugins.SmilesDialog.prototype.createOkEvent = function(e) {
 	var smiles = this.getSmiles_();
-	if (url) {
+	if (smiles) {
 		var event = new goog.events.Event(
 				kemia.controller.plugins.AbstractDialog.EventType.OK);
-		// Add the URL to the event.
-		event.url = url;
+		// Add the SMILES to the event.
+		event.smiles = smiles;
 		return event;
 	} else {
 		/** @desc Error message telling the user why their input was rejected. */
 		var MSG_EXAMPLE_DIALOG_ERROR = goog
-				.getMsg('You must input an image URL');
+				.getMsg('You must input a SMILES');
 		this.dom.getWindow().alert(MSG_EXAMPLE_DIALOG_ERROR);
 		return null; // Prevents the dialog from closing.
 	}
