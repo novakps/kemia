@@ -12,4 +12,8 @@ var _allTests = [
 	"./kemia/model/molecule_auto_test.html", 
 	"./kemia/model/neighborlist_auto_test.html", 
 	"./kemia/model/reaction_auto_test.html", 
-	"./kemia/query/query_auto_test.html"];
+	"./kemia/query/query_auto_test.html", 
+	"./kemia/ring/hanser_auto_test.html", 
+	"./kemia/ring/ring_finder_auto_test.html", 
+	"./kemia/ring/ring_partitioner_auto_test.html", 
+	"./kemia/ring/sssr_auto_test.html"];
