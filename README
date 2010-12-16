@@ -8,7 +8,7 @@ Using Kemia
 
 <html>
 	<head>
-		<script src = "http://kemia.github.com/js/kemia.js"></script>
+		<script src="http://kemia.github.com/js/kemia.js" ></script>
 		<script>
 		  function initPage(){
 			var smiles = 'N[C@@H](CCC(=O)N[C@@H](CSSC[C@H](NC(=O)CC[C@H](N)C(O)=O)C(=O)NCC(O)=O)C(=O)NCC(O)=O)C(O)=O';
