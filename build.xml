@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <project name="kemia" default="usage">
-
+	<tstamp/>
 	<property name="base.dir" location="." />
 	<property name="build.dir" value="${base.dir}/build" />
 	<property name="test.dir" location="${base.dir}/test/java" />
@@ -15,37 +15,7 @@
 	<property name="junit.jar" value="${base.dir}/third-party/junit/junit-4.8.2.jar" />
 	<property name="plovr.jar" value="${base.dir}/third-party/plovr/plovr.jar" />
 	<property name="plover.config" value="${base.dir}/kemia/plovr-config.js" />
-
-	<path id="input-files">
-
-		<filelist dir="${js-src.dir}/controller">
-			<file name="reaction_editor.js" />
-			<file name="defaulttoolbar.js" />
-			<file name="toolbarcontroller.js" />
-		</filelist>
-
-		<filelist dir="${js-src.dir}/ring">
-			<file name="sssr.js" />
-		</filelist>
-
-		<filelist dir="${js-src.dir}/io">
-			<file name="json.js" />
-			<file name="mdl.js" />
-			<file name="xhr.js" />
-		</filelist>
-
-		<filelist dir="${js-src.dir}/io/smiles">
-			<file name="smiles_generator.js" />
-		</filelist>
-
-		<filelist dir="${js-src.dir}/query">
-			<file name="dfsmapper.js" />
-			<file name="smilescompiler.js" />
-		</filelist>
-
-	</path>
-
-	<pathconvert pathsep=' -i ' property="jsfiles" refid="input-files" />
+	<property name="versioned.plover.config" value="${base.dir}/kemia/temp-plovr-config.js" />
 
 	<path id="classpath.test">
 		<pathelement location="${selenium-java-client.jar}" />
@@ -142,7 +112,13 @@
 		</exec>
 	</target>
 	
-	<target name="compile" description="compile with plovr">
+	<target name="set-version" depends="git.revision">
+		  <copy file="${plover.config}" tofile="${versioned.plover.config}"/> 
+		  <replace file="${versioned.plover.config}" token="%REVISION%" value="${git.revision}" />
+		  <replace file="${versioned.plover.config}" token="%TIMESTAMP%" value="${TODAY}" />
+	</target>
+	
+	<target name="compile" description="compile with plovr" depends="set-version">
 	       <java jar="${plovr.jar}"
 	           fork="true"
 	           failonerror="true"
@@ -151,11 +127,12 @@
 	       	   logError="true"
 	           >
 	         <arg value="build"/>
-	         <arg value="${plover.config}"/>
+	         <arg value="${versioned.plover.config}"/>
 	         <classpath>
 	           <pathelement location="${plovr.jar}"/>
 	         </classpath>
 	       </java>
+		 <delete file="${versioned.plover.config}" />
 	</target>
 
 	<target name="usage" description="Display main targets by running 'ant -projecthelp'">
