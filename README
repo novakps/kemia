@@ -1,68 +1,56 @@
-To get started, you need to checkout kemia:
+Kemia
 
-	After you cd to your workspace:
+Kemia is a javascript chemical structure and reaction editor and chemistry toolkit.
 
-	For read-only (replace the URL for read-write access):
-	git clone git://github.com/chemhack/kemia.git
+To see what it can do, check out the demos at http://kemia.github.com
 
-	cd kemia
+Using Kemia
 
-This will pull in the google closure library:
+<html>
+	<head>
+		<script src = "http://kemia.github.com/js/kemia.js"></script>
+		<script>
+		  function initPage(){
+			var smiles = 'N[C@@H](CCC(=O)N[C@@H](CSSC[C@H](NC(=O)CC[C@H](N)C(O)=O)C(=O)NCC(O)=O)C(=O)NCC(O)=O)C(O)=O';
+    			var mol=kemia.io.smiles.SmilesParser.parse(smiles);
+   			kemia.layout.CoordinateGenerator.generate(mol);
+    			var renderer = new kemia.controller.ReactionEditor(goog.dom.getElement('kemia'));
+    			renderer.setModels([mol]);
+			}
+		</script>
+	</head>
+	<body onload="initPage()">
+	  <fieldset> <legend>Glutathione disulphide</legend> 
+		<div id="kemia" style="width: 100%; height: 400px"></div> 
+	  </filedset>
+	</body>
+</html>
 
-	git submodule init
+Building Kemia
 
-	git submodule update
-	
+Kemia depends on the Google Closure Library:  http://http://code.google.com/closure/library/ 
 
-If you make an edit that changes a goog.provide or goog.require statement, 
-there are two ways to update deps.js: the first (recommended) is with the ant build script or you can use 
-the command line to invoke calcdeps.py as described below.  The ant script also provides for running the closure compiler
-which, in addition to minimizing the code to a single file, also provides many useful checks.
+It is compiled with the Plovr Closure build tool http://plovr.com/.  Plovr is used both to compile the precompiled distribution file, as well as for dynamic compilation during development.  
 
-With ant:
+The ant script build.xml includes targets to run Plovr and a slightly modified copy of the plovr.jar is included in the third-party folder.  To build Kemia, you will also need Java 1.6+ and ant installed.  
 
-You need to have ant installed (http://ant.apache.org).  
+The default target for the ant script is a usage guide, so executing 'ant' at the command prompt, in the base kemia directory, will output something like this:
+> ant
+Main targets:
 
-From the base kemia directory, to see the usage message, just execute
+ build-deps  rebuild deps.js file
+ build-docs  build the JsDoc documentation
+ clean       delete generated files
+ compile     compile with plovr
+ test        Start Selenium ; Run Junit tests ; stop Selenium
+ usage       Display main targets by running 'ant -projecthelp'
+Default target: usage
 
-	ant
-	
-Usage is the default target, so you should see output something like this:
-	
-	Buildfile: build.xml
+Executing "ant compile" will generate the minified and compiled library at build/kemia.js
 
-	usage:
-    	 [java] Buildfile: build.xml
-
-	Main targets:
-
- 	 build-deps               rebuild deps.js file
-	 clean                    delete generated files
-	 compile-advanced         compile with ADVANCED_OPTIMIZATIONS setting
-	 compile-check            check by compiling all kemia files
-	 compile-simple           compile with SIMPLE_OPTIMIZATIONS setting
-	 compile-whitespace-only  compile with WHITESPACE_ONLY setting
-	 usage                    Display main targets by running 'ant -projecthelp'
-	Default target: usage
-	
-To update deps.js, execute the build-deps target:
-	
-	ant build-deps
-	
-The targets compile-whitespace-only, compile-simple, compile-advanced include only files to support kemia.controller.ReactionEditor.  
-The smallest download size will result from executing:
-	
-	ant compile-advanced
-	
-The compile output will be created in a 'build' directory that will be created if necessary.
-
-The target compile-check attempts to compile all kemia code.  This purpose of this target is to take advantage of the closure compile-time checks that
-include static type checking, access violations, etc.  For more information on options (not all of which are currently enabled in the ant build script) see 
-http://code.google.com/p/closure-compiler/wiki/Warnings.
+Executing "ant compile-server" will start the plovr dynamic compile server, see the Getting Involved Guide at http://kemia.github.com/
 
 
-Alternatively, without ant, it is also possibly to execute the calcdeps python script as follows to re-generate deps.js:
 
-	cd third-party/closure/closure/goog/
-	
-	python ../bin/calcdeps.py -o deps -p ../../../../kemia/ -p ../../closure/ > ../../../../kemia/deps.js 
+
+ 
