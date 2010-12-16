@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <project name="kemia" default="usage">
-	<tstamp/>
+	<tstamp />
 	<property name="base.dir" location="." />
 	<property name="build.dir" value="${base.dir}/build" />
 	<property name="test.dir" location="${base.dir}/test/java" />
@@ -31,13 +31,14 @@
 			<classpath refid="classpath.test" />
 		</javac>
 	</target>
-	
-	<available file=".git" type="dir" property="git.present"/>
+
+	<available file=".git" type="dir" property="git.present" />
 
 	<target name="git.revision" if="git.present">
-	    <exec executable="git" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
-	        <arg value="describe"/>
-	    </exec>
+		<exec executable="git" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
+			<arg value="describe" />
+			<arg value="--match=v*" />
+		</exec>
 		<echo>"version:  ${git.revision}"</echo>
 	</target>
 
@@ -111,28 +112,32 @@
 			<arg line="-jar ${jsdoc.dir}/jsrun.jar ${jsdoc.dir}/app/run.js -r=10 ${js-src.dir} -t=${jsdoc.dir}/templates/kemia/ -d=${doc.dir}" />
 		</exec>
 	</target>
-	
+
 	<target name="set-version" depends="git.revision">
-		  <copy file="${plover.config}" tofile="${versioned.plover.config}"/> 
-		  <replace file="${versioned.plover.config}" token="%REVISION%" value="${git.revision}" />
-		  <replace file="${versioned.plover.config}" token="%TIMESTAMP%" value="${TODAY}" />
+		<copy file="${plover.config}" tofile="${versioned.plover.config}" />
+		<replace file="${versioned.plover.config}" token="%REVISION%" value="${git.revision}" />
+		<replace file="${versioned.plover.config}" token="%TIMESTAMP%" value="${TODAY}" />
 	</target>
-	
+
 	<target name="compile" description="compile with plovr" depends="set-version">
-	       <java jar="${plovr.jar}"
-	           fork="true"
-	           failonerror="true"
-	           maxmemory="512m"
-	       	   output="${build.dir}/kemia.js"
-	       	   logError="true"
-	           >
-	         <arg value="build"/>
-	         <arg value="${versioned.plover.config}"/>
-	         <classpath>
-	           <pathelement location="${plovr.jar}"/>
-	         </classpath>
-	       </java>
-		 <delete file="${versioned.plover.config}" />
+		<java jar="${plovr.jar}" fork="true" failonerror="true" maxmemory="512m" output="${build.dir}/kemia.js" logError="true">
+			<arg value="build" />
+			<arg value="${versioned.plover.config}" />
+			<classpath>
+				<pathelement location="${plovr.jar}" />
+			</classpath>
+		</java>
+		<delete file="${versioned.plover.config}" />
+	</target>
+
+	<target name="compile-server" description="run plovr dynamic compilation server">
+		<java jar="${plovr.jar}" fork="true" failonerror="true" maxmemory="512m" logError="true">
+			<arg value="serve" />
+			<arg value="${plover.config}" />
+			<classpath>
+				<pathelement location="${plovr.jar}" />
+			</classpath>
+		</java>
 	</target>
 
 	<target name="usage" description="Display main targets by running 'ant -projecthelp'">
