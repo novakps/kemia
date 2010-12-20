@@ -1,5 +1,5 @@
 {
-	"id":"kemia",
+	"id":"math",
 	"paths":["."],
 	"inputs":"plovr-inputs.js",
 	"level": "VERBOSE",

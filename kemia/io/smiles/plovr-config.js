@@ -1,5 +1,5 @@
 {
-	"id":"kemia",
+	"id":"smiles",
 	"paths":[".", "../../model", "../../ring", "../../resource", "../../graphics", "../../math"],
 	"inputs":"plovr-inputs.js",
 	"level": "VERBOSE",
