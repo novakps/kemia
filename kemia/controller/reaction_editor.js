@@ -34,15 +34,36 @@ goog.require('kemia.io.json');
 /**
  * A graphical editor for reactions
  * 
+ * @param {} element
+ * @param {} opt_config
  * 
  * @constructor
  * @extends {goog.events.EventTarget}
  */
 kemia.controller.ReactionEditor = function(element, opt_config) {
 	goog.events.EventTarget.call(this);
-	this.originalElement = element;
 	this.id = element.id;
-	this.editableDomHelper = goog.dom.getDomHelper(element);
+		
+	var domHelper = goog.dom.getDomHelper(element);
+	this.editableDomHelper = domHelper;
+
+    var iframe = /** @type {HTMLIFrameElement} */(
+            domHelper.createDom(goog.dom.TagName.IFRAME,
+                this.getIframeAttributes(element)));
+
+	iframe.className = element.className;
+	iframe.id = element.id;
+	goog.dom.replaceNode(iframe, element);
+	var div = domHelper.createElement(goog.dom.TagName.DIV);
+	domHelper.appendChild(iframe.contentWindow.document.body, div);
+	
+	div.style.height = iframe.contentWindow.document.body.offsetHeight + 'px';	
+	this.originalElement = div;
+	
+	this.graphics = goog.graphics.createGraphics(div.clientWidth,
+			div.clientHeight);
+	this.graphics.render(div);
+
 	this.models = [];
 	/**
 	 * Map of class id to registered plugin.
@@ -70,11 +91,6 @@ kemia.controller.ReactionEditor = function(element, opt_config) {
 		this.config.addAll(opt_config); // merge optional config into
 		// defaults
 	}
-
-	this.graphics = goog.graphics.createGraphics(element.clientWidth,
-			element.clientHeight);
-
-	this.graphics.render(this.originalElement);
 
 	this.reactionRenderer = new kemia.view.ReactionRenderer(this.graphics,
 			this.config);
@@ -115,6 +131,31 @@ goog.inherits(kemia.controller.ReactionEditor, goog.events.EventTarget);
  */
 kemia.controller.ReactionEditor.setActiveEditorId = function(editorId) {
 	kemia.controller.ReactionEditor.activeEditorId_ = editorId;
+};
+
+/**
+ * @param {}element that will be replaced with iframe
+ * @return {Object} Get the HTML attributes for this editor's iframe.
+ * @protected
+ */
+kemia.controller.ReactionEditor.prototype.getIframeAttributes = function(element) {
+  var iframeStyle = 'padding:0;' + element.style.cssText;
+
+  if (!goog.string.endsWith(iframeStyle, ';')) {
+    iframeStyle += ';';
+  }
+
+  iframeStyle += 'background-color:white;';
+
+  // Ensure that the iframe has default overflow styling.  If overflow is
+  // set to auto, an IE rendering bug can occur when it tries to render a
+  // table at the very bottom of the field, such that the table would cause
+  // a scrollbar, that makes the entire field go blank.
+  if (goog.userAgent.IE) {
+    iframeStyle += 'overflow:visible;';
+  }
+
+  return { 'frameBorder': 0, 'style': iframeStyle };
 };
 
 kemia.controller.ReactionEditor.prototype.clearSelected = function() {
@@ -224,7 +265,7 @@ kemia.controller.ReactionEditor.prototype.getModels = function() {
  * This dispatches the beforechange event on the editable reaction editor
  */
 kemia.controller.ReactionEditor.prototype.dispatchBeforeChange = function() {
-//	this.logger.info('dispatchBeforeChange');
+// this.logger.info('dispatchBeforeChange');
 	this._serialized = goog.json.serialize(goog.array.map(this.getModels(), function(model){
 		if (model instanceof kemia.model.Reaction){
 			return kemia.io.json.reactionToJson(model);
@@ -233,7 +274,7 @@ kemia.controller.ReactionEditor.prototype.dispatchBeforeChange = function() {
 		}
 	}));
 	this.dispatchEvent(kemia.controller.ReactionEditor.EventType.BEFORECHANGE);
-//	this.logger.info('_end_dispatchBeforeChange');
+// this.logger.info('_end_dispatchBeforeChange');
 };
 
 /**
@@ -305,45 +346,45 @@ kemia.controller.ReactionEditor.prototype.handleChange = function() {
 // * e The browser event.
 // * @private
 // */
-//kemia.controller.ReactionEditor.prototype.handleKeyDown_ = function(e) {
-//	this.logger.info('handleKeyDown_');
-//	if (!goog.editor.BrowserFeature.USE_MUTATION_EVENTS) {
-//	if (!this.handleBeforeChangeKeyEvent_(e)) {
-//	return;
-//	}
-//	}
+// kemia.controller.ReactionEditor.prototype.handleKeyDown_ = function(e) {
+// this.logger.info('handleKeyDown_');
+// if (!goog.editor.BrowserFeature.USE_MUTATION_EVENTS) {
+// if (!this.handleBeforeChangeKeyEvent_(e)) {
+// return;
+// }
+// }
 
-//	if (!this.invokeShortCircuitingOp_(kemia.controller.Plugin.Op.KEYDOWN, e)
-//			&& goog.editor.BrowserFeature.USES_KEYDOWN) {
-//		this.handleKeyboardShortcut_(e);
-//	}
-//};
+// if (!this.invokeShortCircuitingOp_(kemia.controller.Plugin.Op.KEYDOWN, e)
+// && goog.editor.BrowserFeature.USES_KEYDOWN) {
+// this.handleKeyboardShortcut_(e);
+// }
+// };
 
 // /**
-//	 * Handles keypress on the field.
-//	 * 
-//	 * @param {goog.events.BrowserEvent}
-//	 *            e The browser event.
-//	 * @private
-//	 */
-//kemia.controller.ReactionEditor.prototype.handleKeyPress_ = function(e) {
-//	this.logger.info('handleKeyPress_');
-//	if (goog.editor.BrowserFeature.USE_MUTATION_EVENTS) {
-//	if (!this.handleBeforeChangeKeyEvent_(e)) {
-//	return;
-//	}
-//	} else {
-//	// In IE only keys that generate output trigger keypress
-//	// In Mozilla charCode is set for keys generating content.
-//	this.gotGeneratingKey_ = true;
-//	this.dispatchBeforeChange();
-//	}
+// * Handles keypress on the field.
+// *
+// * @param {goog.events.BrowserEvent}
+// * e The browser event.
+// * @private
+// */
+// kemia.controller.ReactionEditor.prototype.handleKeyPress_ = function(e) {
+// this.logger.info('handleKeyPress_');
+// if (goog.editor.BrowserFeature.USE_MUTATION_EVENTS) {
+// if (!this.handleBeforeChangeKeyEvent_(e)) {
+// return;
+// }
+// } else {
+// // In IE only keys that generate output trigger keypress
+// // In Mozilla charCode is set for keys generating content.
+// this.gotGeneratingKey_ = true;
+// this.dispatchBeforeChange();
+// }
 
-//	if (!this.invokeShortCircuitingOp_(goog.editor.Plugin.Op.KEYPRESS, e)
-//			&& !goog.editor.BrowserFeature.USES_KEYDOWN) {
-//		this.handleKeyboardShortcut_(e);
-//	}
-//};
+// if (!this.invokeShortCircuitingOp_(goog.editor.Plugin.Op.KEYPRESS, e)
+// && !goog.editor.BrowserFeature.USES_KEYDOWN) {
+// this.handleKeyboardShortcut_(e);
+// }
+// };
 
 // /**
 // * Handles keyup on the editor.
@@ -372,13 +413,17 @@ kemia.controller.ReactionEditor.prototype.handleChange = function() {
  * Bond, then Molecule, then Arrow, then Plus In other words, if a Bond and
  * Molecule are both returned by findTargetList, then the Bond will be preferred
  * and returned.
- * @param {goog.events.Event} e mouse event used to locate target
- * @param {!goog.math.Coordinate} opt_coord used to locate target
+ * 
+ * @param {goog.events.Event}
+ *            e mouse event used to locate target
+ * @param {!goog.math.Coordinate}
+ *            opt_coord used to locate target
  * @return {kemia.model.Atom|kemia.model.Bond|kemia.model.Molecule|kemia.model.Arrow|kemia.model.Plus}
  */
 kemia.controller.ReactionEditor.prototype.findTarget = function(e, opt_coord) {
 	var targets = this.findTargetList(e, opt_coord);
-//	this.logger.fine('targets ' + targets.length + " at " + e.clientX + ", " + e.clientY);
+// this.logger.fine('targets ' + targets.length + " at " + e.clientX + ", " +
+// e.clientY);
 
 	var atom_targets = goog.array.filter(targets, function(t) {
 		return t instanceof kemia.model.Atom;
@@ -462,10 +507,13 @@ kemia.controller.ReactionEditor.getOffsetCoords = function(elem, posx, posy) {
 }
 
 /**
-* @param {goog.events.Event} e mouse event used to locate target, ignored if opt_coord is provided
-* @param {!goog.math.Coordinate} opt_coord used to locate target
-* @return {Array.<kemia.model.Atom|kemia.model.Bond|kemia.model.Molecule|kemia.model.Arrow|kemia.model.Plus>}
-*/
+ * @param {goog.events.Event}
+ *            e mouse event used to locate target, ignored if opt_coord is
+ *            provided
+ * @param {!goog.math.Coordinate}
+ *            opt_coord used to locate target
+ * @return {Array.<kemia.model.Atom|kemia.model.Bond|kemia.model.Molecule|kemia.model.Arrow|kemia.model.Plus>}
+ */
 kemia.controller.ReactionEditor.prototype.findTargetList = function(e, opt_coord) {
 	if(!goog.isDef(opt_coord)){
 		opt_coord = kemia.controller.ReactionEditor.getMouseCoords(e);
@@ -554,7 +602,7 @@ kemia.controller.ReactionEditor.prototype.handleMouseUp_ = function(e) {
 // };
 
 kemia.controller.ReactionEditor.prototype.handleKeyboardShortcut_ = function(e) {
-//	this.logger.info('handelKeyboardShortcut_ ' + e.identifier);
+// this.logger.info('handelKeyboardShortcut_ ' + e.identifier);
 	this.invokeShortCircuitingOp_(kemia.controller.Plugin.Op.SHORTCUT, e);
 }
 
@@ -602,8 +650,8 @@ kemia.controller.ReactionEditor.prototype.resetQueryablePlugins = function() {
 /**
  * Gets the value of command(s).
  * 
- * @param {string|Array.<string>} commands 
- * 	String name(s) of the command.
+ * @param {string|Array.
+ *            <string>} commands String name(s) of the command.
  * @return {*} Value of each command. Returns false (or array of falses) if
  *         designMode is off or the editor is otherwise uneditable, and there
  *         are no activeOnUneditable plugins for the command.
@@ -633,8 +681,8 @@ kemia.controller.ReactionEditor.prototype.dispatchChange = function() {
 /**
  * Dispatches a command value change event.
  * 
- * @param {Array.<string>=} opt_commands 
- * Commands whose state has changed.
+ * @param {Array.
+ *            <string>=} opt_commands Commands whose state has changed.
  */
 kemia.controller.ReactionEditor.prototype.dispatchCommandValueChange = function(
 		opt_commands) {
@@ -948,8 +996,8 @@ kemia.controller.ReactionEditor.prototype.dispatchLoadEvent_ = function() {
  * Gecko since the fields are contained in an iFrame and there is no way to
  * auto-propagate key events up to the main window.
  * 
- * @param {string|Array.<string>} type 
- * Event type to listen for or array of event types,
+ * @param {string|Array.
+ *            <string>} type Event type to listen for or array of event types,
  *            for example goog.events.EventType.KEYDOWN.
  * @param {Function}
  *            listener Function to be used as the listener.
