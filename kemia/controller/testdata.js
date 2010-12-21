@@ -1,4 +1,6 @@
-var reactionDrawing = {
+goog.provide('kemia.controller.Testdata');
+
+kemia.controller.Testdata.reactionDrawing = {
 	"reactants" : [ {
 		"atoms" : [ {
 			"coord" : {

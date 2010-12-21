@@ -5,49 +5,15 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9" />
 <title>kemia.controller.ReactionEditor</title>
 
-<script src="http://localhost:9810/compile?id=controller&mode=raw"></script>
-<script src="testdata.js"></script>
+<script src="http://localhost:9810/compile?id=controller_reaction_editor_demo&mode=raw"></script>
+
 
 <link rel="stylesheet" href="../../css/kemia.css" />
 <link rel="stylesheet"	href="../../css/demo.css" />
 
-<script>
-function initPage() {
-	var toolbar = kemia.controller.DefaultToolbar
-			.makeDefaultReactionToolbar(goog.dom
-					.getElement('reactionEditorToolbar'));
 
-	var model = kemia.io.json.readReaction(reactionDrawing);
-
-	var editor = new kemia.controller.ReactionEditor(goog.dom
-			.getElement('reactionEditorContainer'), {
-		background : {
-			color : 'white'
-		},
-		showTerminalCarbons : false
-	});
-
-	editor.registerPlugin(new kemia.controller.plugins.Move());
-	editor.registerPlugin(new kemia.controller.plugins.ClearEditor());
-	editor.registerPlugin(new kemia.controller.plugins.Zoom());
-	editor.registerPlugin(new kemia.controller.plugins.UndoRedo());
-	editor.registerPlugin(new kemia.controller.plugins.Erase());
-	editor.registerPlugin(new kemia.controller.plugins.AtomEdit());
-	editor.registerPlugin(new kemia.controller.plugins.BondEdit());
-	editor.registerPlugin(new kemia.controller.plugins.ArrowPlusEdit());
-	editor.registerPlugin(new kemia.controller.plugins.MoleculeEdit());
-	// editor.registerPlugin(new kemia.controller.plugins.Cleanup());
-
-	var toolbarController = new kemia.controller.ToolbarController(editor,
-			toolbar);
-	// editor.disablePlugins();
-	// toolbar.setVisible(false);
-
-	editor.setModels([ model ]);
-}
-</script>
 </head>
-<body onload="initPage()">
+<body>
 
 <fieldset>
 <legend><h1>Reaction Editor</h1></legend>

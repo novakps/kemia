@@ -34,8 +34,10 @@ goog.require('kemia.io.json');
 /**
  * A graphical editor for reactions
  * 
- * @param {} element
- * @param {} opt_config
+ * @param {}
+ *            element
+ * @param {}
+ *            opt_config
  * 
  * @constructor
  * @extends {goog.events.EventTarget}
@@ -47,22 +49,9 @@ kemia.controller.ReactionEditor = function(element, opt_config) {
 	var domHelper = goog.dom.getDomHelper(element);
 	this.editableDomHelper = domHelper;
 
-//    var iframe = goog.dom.iframe.createBlank(domHelper, this.getIframeAttributes(element));
-//
-//	iframe.className = element.className;
-//	iframe.id = element.id;
-//	goog.dom.replaceNode(iframe, element);
-//	
-//	goog.dom.iframe.writeContent(iframe, '<!DOCTYPE html><html><head><meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9" /></head><body></body></html>');
-//
-//	var doc = goog.dom.getFrameContentDocument(iframe);
-//	
-//	var div = domHelper.createElement(goog.dom.TagName.DIV);
-//	domHelper.appendChild(doc.body, div);
 	var div = element;
-	div.style.height = '200px';	
 
-	this.originalElement = div;
+	this.originalElement = element;
 	
 	this.graphics = goog.graphics.createGraphics(div.clientWidth,
 			div.clientHeight);
@@ -138,7 +127,8 @@ kemia.controller.ReactionEditor.setActiveEditorId = function(editorId) {
 };
 
 /**
- * @param {}element that will be replaced with iframe
+ * @param {}element
+ *            that will be replaced with iframe
  * @return {Object} Get the HTML attributes for this editor's iframe.
  * @protected
  */
@@ -151,7 +141,7 @@ kemia.controller.ReactionEditor.prototype.getIframeAttributes = function(element
 
   iframeStyle += 'background-color:white;';
 
-  // Ensure that the iframe has default overflow styling.  If overflow is
+  // Ensure that the iframe has default overflow styling. If overflow is
   // set to auto, an IE rendering bug can occur when it tries to render a
   // table at the very bottom of the field, such that the table would cause
   // a scrollbar, that makes the entire field go blank.
