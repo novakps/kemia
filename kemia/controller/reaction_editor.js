@@ -47,17 +47,21 @@ kemia.controller.ReactionEditor = function(element, opt_config) {
 	var domHelper = goog.dom.getDomHelper(element);
 	this.editableDomHelper = domHelper;
 
-    var iframe = /** @type {HTMLIFrameElement} */(
-            domHelper.createDom(goog.dom.TagName.IFRAME,
-                this.getIframeAttributes(element)));
+//    var iframe = goog.dom.iframe.createBlank(domHelper, this.getIframeAttributes(element));
+//
+//	iframe.className = element.className;
+//	iframe.id = element.id;
+//	goog.dom.replaceNode(iframe, element);
+//	
+//	goog.dom.iframe.writeContent(iframe, '<!DOCTYPE html><html><head><meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9" /></head><body></body></html>');
+//
+//	var doc = goog.dom.getFrameContentDocument(iframe);
+//	
+//	var div = domHelper.createElement(goog.dom.TagName.DIV);
+//	domHelper.appendChild(doc.body, div);
+	var div = element;
+	div.style.height = '200px';	
 
-	iframe.className = element.className;
-	iframe.id = element.id;
-	goog.dom.replaceNode(iframe, element);
-	var div = domHelper.createElement(goog.dom.TagName.DIV);
-	domHelper.appendChild(iframe.contentWindow.document.body, div);
-	
-	div.style.height = iframe.contentWindow.document.body.offsetHeight + 'px';	
 	this.originalElement = div;
 	
 	this.graphics = goog.graphics.createGraphics(div.clientWidth,

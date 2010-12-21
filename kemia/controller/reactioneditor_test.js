@@ -27,6 +27,13 @@ goog.require('goog.testing.dom');
 goog.require('goog.testing.jsunit');
 goog.require('goog.testing.recordFunction');
 goog.require('goog.userAgent');
+goog.require('kemia.io.smiles.SmilesParser');
+goog.require('kemia.layout.CoordinateGenerator');
+goog.require('goog.dom');
+goog.require('kemia.io.Testdata');
+goog.require('kemia.controller.DefaultToolbar');
+goog.require('kemia.controller.ToolbarController');
+goog.require('kemia.io.mdl');
 
 var HTML;
 
@@ -72,7 +79,7 @@ goog.inherits(TestPlugin, kemia.controller.Plugin);
  * Tests that calling registerPlugin will add the plugin to the plugin map.
  */
 
-function testRegisterPlugin() {
+function xtestRegisterPlugin() {
 	var editor = new kemia.controller.ReactionEditor(goog.dom
 			.getElement('testEditor'));
 	var plugin = new TestPlugin();
@@ -109,7 +116,7 @@ function testRegisterPlugin() {
 /**
  * Tests that calling unregisterPlugin will remove the plugin from the map.
  */
-function testUnregisterPlugin() {
+function xtestUnregisterPlugin() {
 	var editor = new kemia.controller.ReactionEditor(goog.dom
 			.getElement('testEditor'));
 	var plugin = new TestPlugin();
@@ -126,7 +133,7 @@ function testUnregisterPlugin() {
 /**
  * Tests that registered plugins can be fetched by their id.
  */
-function testGetPluginByClassId() {
+function xtestGetPluginByClassId() {
 	var editor = new kemia.controller.ReactionEditor(goog.dom
 			.getElement('testEditor'));
 	var plugin = new TestPlugin();
@@ -146,7 +153,7 @@ function testGetPluginByClassId() {
  * Tests that plugins with setAutoDispose(false) do not get disposed when the
  * field is disposed.
  */
-function testDisposed_PluginAutoDispose() {
+function xtestDisposed_PluginAutoDispose() {
 	var editor = new kemia.controller.ReactionEditor(goog.dom
 			.getElement('testEditor'));
 	var plugin = new TestPlugin();
@@ -183,7 +190,7 @@ function getBrowserEvent() {
  * Test that if a plugin has an execCommand function, it gets called but only
  * for supported commands.
  */
-function testPluginExecCommand() {
+function xtestPluginExecCommand() {
 	var plugin = new TestPlugin();
 	var passedCommand, passedArg;
 	plugin.execCommand = function(command, arg) {
@@ -331,7 +338,7 @@ function testSupportedQueryCommand() {
  * Tests that if a plugin handles selectionChange that it gets called and no
  * further plugins can handle the selectionChange.
  */
-function testHandledSelectionChange() {
+function xtestHandledSelectionChange() {
 	var editor = new kemia.controller.ReactionEditor(goog.dom
 			.getElement('testEditor'));
 	var plugin = new TestPlugin();
@@ -365,7 +372,7 @@ function testHandledSelectionChange() {
  * Tests that if the first plugin does not handle selectionChange that the next
  * plugin gets a chance to handle it.
  */
-function testNotHandledSelectionChange() {
+function xtestNotHandledSelectionChange() {
 	var editor = new kemia.controller.ReactionEditor(goog.dom
 			.getElement('testEditor'));
 	var plugin = new TestPlugin();
@@ -395,3 +402,14 @@ function testNotHandledSelectionChange() {
 	mockPlugin1.$verify();
 	mockPlugin2.$verify();
 }
+
+
+function testSmilesRender(){
+	var smiles = 'N[C@@H](CCC(=O)N[C@@H](CSSC[C@H](NC(=O)CC[C@H](N)C(O)=O)C(=O)NCC(O)=O)C(=O)NCC(O)=O)C(O)=O';
+	var mol=kemia.io.smiles.SmilesParser.parse(smiles);
+	kemia.layout.CoordinateGenerator.generate(mol);
+	var renderer = new kemia.controller.ReactionEditor(goog.dom.getElement('molecule'));
+	renderer.setModels([mol]);
+};
+
+

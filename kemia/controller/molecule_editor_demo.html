@@ -3,13 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Molecule Editor Demo</title>
-<!-- 
- <script src="../../build/kemia-advanced.js"></script>
- -->
-<script src="../../third-party/closure/closure/goog/base.js"></script>
-<script src="../deps.js"></script>
-<script src="../io/json_test_rxn.js"></script>
-<script src="../io/io_test_molsample2.js"></script>
+<script src="http://localhost:9810/compile?id=api&mode=raw"></script>
+
+<script src="../io/testdata.js"></script>
+
 
 <link rel="stylesheet" href="../../css/kemia.css" />
 <link rel="stylesheet"	href="../../css/demo.css" />
@@ -31,7 +28,7 @@
 	goog.require('kemia.controller.plugins.ArrowPlusEdit');
 	goog.require('kemia.controller.plugins.Erase');
 	goog.require('kemia.controller.plugins.MoleculeEdit');
-	goog.require('kemia.controller.plugins.Smiles');
+
     goog.require('kemia.io.mdl');
     goog.require('kemia.io.smiles.SmilesParser');
 	goog.require('goog.debug.Console');
