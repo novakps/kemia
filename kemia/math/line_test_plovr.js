@@ -1,7 +1,7 @@
 {
-	"id":"math",
+	"id":"math_line_test",
 	"paths":["."],
-	"inputs":"plovr-inputs.js",
+	"inputs":"line_test.js",
 	"level": "VERBOSE",
 	"mode" : "ADVANCED",
 	"debug": true,
