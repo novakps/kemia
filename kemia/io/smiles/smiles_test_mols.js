@@ -1,4 +1,6 @@
-var smiles = new Array("CN1C2CCC1CC(C2)OC(=O)C(CO)c3ccccc3",
+goog.provide('kemia.io.smiles.Testdata');
+
+kemia.io.smiles.Testdata.smiles = new Array("CN1C2CCC1CC(C2)OC(=O)C(CO)c3ccccc3",
 "c1cc(ccc1C(C(CO)NC(=O)C(Cl)Cl)O)N(=O)=O",
 "c1c2c(cc(c1Cl)S(=O)(=O)N)S(=O)(=O)N=CN2",
 "CN(C)CCCN1c2ccccc2Sc3c1cc(cc3)Cl",

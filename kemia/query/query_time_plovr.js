@@ -1,7 +1,7 @@
 {
-	"id":"query",
+	"id":"query_time",
 	"paths":[".", "../math", "../ring", "../resource", "../graphics", "../io", "../model"],
-	"inputs":"plovr-inputs.js",
+	"inputs":"query_time.js",
 	"level": "VERBOSE",
 	"mode" : "ADVANCED",
 	"debug": true,
