@@ -143,21 +143,14 @@
 	</target>
 
 	<target name="run-compile-server" description="run plovr dynamic compilation server">
+	    <fileset dir="${base.dir}/kemia" id="plovr-configs">
+	        <include name="**/*plovr.js" />
+	    </fileset>
+	    <pathconvert property="plovr.configs" refid="plovr-configs" pathsep=" " />
+		<echo>" Found plovr configurations:\n${plovr.configs}"</echo>
 		<java jar="${plovr.jar}" fork="true" failonerror="true" maxmemory="512m" logError="true">
 			<arg value="serve" />
-			<arg value="${api.plovr.config}" />
-			<arg value="${controller.plovr.config}" />
-			<arg value="${controller.reactoneditor_test.plover.config}" />
-			<arg value="${controller.molecule.editor.demo.plovr.config}" />
-			<arg value="${graphics.plovr.config}" />
-			<arg value="${smiles.plovr.config}" />
-			<arg value="${io.plovr.config}" />
-			<arg value="${layout.plovr.config}" />
-			<arg value="${math.plovr.config}" />
-			<arg value="${model.plovr.config}" />
-			<arg value="${query.plovr.config}" />
-			<arg value="${ring.plovr.config}" />
-			<arg value="${view.plovr.config}" />
+			<arg line="${plovr.configs}" />
 			<classpath>
 				<pathelement location="${plovr.jar}" />
 			</classpath>

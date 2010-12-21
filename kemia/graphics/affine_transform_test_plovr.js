@@ -1,7 +1,7 @@
 {
-	"id":"graphics",
+	"id":"graphics_affine_transform_test",
 	"paths":".",
-	"inputs":"plovr-inputs.js",
+	"inputs":"affine_transform_test.js",
 	"level": "VERBOSE",
 	"mode" : "ADVANCED",
 	"debug": true,
