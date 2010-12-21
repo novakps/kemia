@@ -2,10 +2,10 @@ goog.provide("kemia.ring.RingPartitionerTest");
 goog.require('goog.testing.jsunit');
 goog.require('kemia.ring.RingPartitioner');
 goog.require('kemia.io.mdl');
-goog.require('kemia.ring.Testdata.azulene');
-goog.require('kemia.ring.Testdata.alpha_pinene');
-goog.require('kemia.ring.Testdata.biphenyl');
-goog.require('kemia.ring.Testdata.spiro_decane');
+goog.require('kemia.ring.testdata.Azulene');
+goog.require('kemia.ring.testdata.AlphaPinene');
+goog.require('kemia.ring.testdata.Biphenyl');
+goog.require('kemia.ring.testdata.SpiroDecane');
 
 function testDirectlyConnectedRings() {
 	var a1 = new kemia.model.Atom("C");
@@ -23,7 +23,7 @@ function testDirectlyConnectedRings() {
 }
 
 function testAlphaPinene() {
-	var mol = kemia.io.mdl.readMolfile(kemia.ring.Testdata.alpha_pinene);
+	var mol = kemia.io.mdl.readMolfile(kemia.ring.testdata.AlphaPinene);
 	var sssr = mol.getRings();
 	var ring_set = kemia.ring.RingPartitioner.getPartitionedRings(sssr);
 	assertEquals('one ring set', 1, ring_set.length);
@@ -33,21 +33,21 @@ function testAlphaPinene() {
 }
 
 function testAzulene() {
-	var mol = kemia.io.mdl.readMolfile(kemia.ring.Testdata.azulene);
+	var mol = kemia.io.mdl.readMolfile(kemia.ring.testdata.Azulene);
 	var sssr = mol.getRings();
 	var ring_set = kemia.ring.RingPartitioner.getPartitionedRings(sssr);
 	assertEquals('one ring set', 1, ring_set.length);
 }
 
 function testBiphenyl() {
-	var mol = kemia.io.mdl.readMolfile(kemia.ring.Testdata.biphenyl);
+	var mol = kemia.io.mdl.readMolfile(kemia.ring.testdata.Biphenyl);
 	var sssr = mol.getRings();
 	var ring_set = kemia.ring.RingPartitioner.getPartitionedRings(sssr);
 	assertEquals('two ring sets', 2, ring_set.length);
 }
 
 function testSpiroRings() {
-	var mol = kemia.io.mdl.readMolfile(kemia.ring.Testdata.spiro_decane);
+	var mol = kemia.io.mdl.readMolfile(kemia.ring.testdata.SpiroDecane);
 	var sssr = mol.getRings();
 	var ring_set = kemia.ring.RingPartitioner.getPartitionedRings(sssr);
 	assertEquals('one ring set', 1, ring_set.length);
