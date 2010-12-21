@@ -36,5 +36,5 @@ function findSymmetryClasses(name, mdlString, count) {
 	var mol = kemia.io.mdl.readMolfile(mdlString);
 	var symClasses = kemia.symmetry.Symmetry.findSymmetryClasses(mol);
 	assertEquals(count, kemia.symmetry.countSymmetryClasses(symClasses));
-	debug(JSON.stringify(symClasses));
+	debug(new goog.json.Serializer().serialize(symClasses));
 }
