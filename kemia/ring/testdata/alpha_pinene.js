@@ -1,6 +1,6 @@
-goog.provide('kemia.ring.Testdata.alpha_pinene');
+goog.provide('kemia.ring.testdata.AlphaPinene');
 
-kemia.ring.Testdata.alpha_pinene = "440968\n\
+kemia.ring.testdata.AlphaPinene = "440968\n\
   -OEChem-07191017142D\n\
 \n\
  26 27  0     1  0  0  0  0  0999 V2000\n\

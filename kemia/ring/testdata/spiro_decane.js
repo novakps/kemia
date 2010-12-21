@@ -1,6 +1,6 @@
-goog.provide('kemia.ring.Testdata.spiro_decane');
+goog.provide('kemia.ring.testdata.SpiroDecane');
 
-kemia.ring.Testdata.spiro_decane = "135982\n\
+kemia.ring.testdata.SpiroDecane = "135982\n\
   -OEChem-07251016092D\n\
 \n\
  28 29  0     0  0  0  0  0  0999 V2000\n\

@@ -6,7 +6,7 @@ goog.require('kemia.model.Bond');
 goog.require('kemia.io.smiles.SmilesGenerator'); 
 
 // mangle test name so it is not autorun
-function test01SmilesGeneration() {
+function xtest01SmilesGeneration() {
 	var mol = new kemia.model.Molecule();
 	var atom1 = new kemia.model.Atom("C");
 	var atom2 = new kemia.model.Atom("C");
