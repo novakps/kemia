@@ -14,7 +14,7 @@
  * the License.
  * @author paul@wingu.com (Paul Novak)
  */
-goog.provide('kemia.controller.PluginTest');
+
 goog.require('kemia.controller.ReactionEditor');
 goog.require('kemia.controller.Plugin');
 goog.require('goog.functions');

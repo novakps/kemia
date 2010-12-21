@@ -1,7 +1,7 @@
 {
-	"id":"controller",
+	"id":"controller_plugin_test",
 	"paths":[".", "../math", "../resource", "../graphics", "../io", "../model", "../layout", "../ring", "../view"],
-	"inputs":"plovr-inputs.js",
+	"inputs":"plugin_test.js",
 	"level": "VERBOSE",
 	"mode" : "ADVANCED",
 	"debug": true,
