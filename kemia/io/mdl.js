@@ -142,7 +142,7 @@ kemia.io.mdl.readMolfile = function(molfile) {
 	var mol_lines = molfile.split(lineDelimiter);
 	var name = mol_lines[0]
 	var mol = new kemia.model.Molecule(name);
-	var reg_num = mol_lines[1].slice(46,52).trim();
+	var reg_num = goog.string.trim( mol_lines[1].slice(46,52));
 	mol.id = reg_num;
 	/**format of second line of header
 	 * IIPPPPPPPPMMDDYYHHmmddSSssssssssssEEEEEEEEEEEERRRRRR 
