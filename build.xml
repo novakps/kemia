@@ -16,6 +16,8 @@
 	<property name="plovr.jar" value="${base.dir}/third-party/plovr/plovr.jar" />
 	<property name="api.plovr.config" value="${base.dir}/kemia/plovr-config.js" />
 	<property name="controller.plovr.config" value="${base.dir}/kemia/controller/plovr-config.js" />
+	<property name="controller.reactoneditor_test.plover.config" value="${base.dir}/kemia/controller/reactioneditor_test_plovr.js" />
+	<property name="controller.molecule.editor.demo.plovr.config" value="${base.dir}/kemia/controller/molecule_editor_demo_plovr.js" />
 	<property name="graphics.plovr.config" value="${base.dir}/kemia/graphics/plovr-config.js" />
 	<property name="io.plovr.config" value="${base.dir}/kemia/io/plovr-config.js" />
 	<property name="smiles.plovr.config" value="${base.dir}/kemia/io/smiles/plovr-config.js" />
@@ -145,6 +147,8 @@
 			<arg value="serve" />
 			<arg value="${api.plovr.config}" />
 			<arg value="${controller.plovr.config}" />
+			<arg value="${controller.reactoneditor_test.plover.config}" />
+			<arg value="${controller.molecule.editor.demo.plovr.config}" />
 			<arg value="${graphics.plovr.config}" />
 			<arg value="${smiles.plovr.config}" />
 			<arg value="${io.plovr.config}" />
