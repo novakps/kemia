@@ -147,7 +147,10 @@
 	        <include name="**/*plovr.js" />
 	    </fileset>
 	    <pathconvert property="plovr.configs" refid="plovr-configs" pathsep=" " />
-		<echo>" Found plovr configurations:\n${plovr.configs}"</echo>
+		<pathconvert property="echo.plovr.configs" refid="plovr-configs" pathsep="${line.separator}|   |-- " />
+		<echo message="|-- found plovr configs:"/>
+		<echo message="|   |"/>
+		<echo message="|   |-- ${echo.plovr.configs}"/>
 		<java jar="${plovr.jar}" fork="true" failonerror="true" maxmemory="512m" logError="true">
 			<arg value="serve" />
 			<arg line="${plovr.configs}" />
