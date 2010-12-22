@@ -1,12 +1,12 @@
 /**
- * @license Copyright 2010 Paul Novak (paul@wingu.com)
- * 
+ * @license Copyright 2010 Paul Novak (paul@wingu.com).
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,18 +15,18 @@
  * @author paul@wingu.com (Paul Novak)
  */
 goog.provide('kemia.controller.plugins.BondEdit');
-goog.require('kemia.controller.Plugin');
 goog.require('goog.debug.Logger');
+goog.require('kemia.controller.Plugin');
 goog.require('kemia.model.Bond');
 
 /**
  * @constructor
- * @extends{kemia.controller.Plugin}
+ * @extends {kemia.controller.Plugin}
  */
 kemia.controller.plugins.BondEdit = function() {
 	kemia.controller.Plugin.call(this);
 	this._dragging = false;
-}
+};
 goog.inherits(kemia.controller.plugins.BondEdit, kemia.controller.Plugin);
 
 /**
@@ -46,7 +46,7 @@ kemia.controller.plugins.BondEdit.prototype.getTrogClassId = goog.functions
 
 /**
  * sets bond order and stereo.
- * 
+ *
  * @param {string}
  *            command Command to execute.
  * @return {Object|undefined} The result of the command.
@@ -56,75 +56,75 @@ kemia.controller.plugins.BondEdit.prototype.execCommandInternal = function(
 	this.bond_type = arguments[1];
 };
 
-kemia.controller.plugins.BondEdit.SHORTCUTS = [ {
-	id : '1',
-	key : '1'
+kemia.controller.plugins.BondEdit.SHORTCUTS = [{
+	id: '1',
+	key: '1'
 }, {
-	id : '2',
-	key : '2'
+	id: '2',
+	key: '2'
 }, {
-	id : '3',
-	key : '3'
+	id: '3',
+	key: '3'
 }, {
-	id : '4',
-	key : '4'
+	id: '4',
+	key: '4'
 }, {
-	id : '5',
-	key : '5'
+	id: '5',
+	key: '5'
 }, {
-	id : '6',
-	key : '6'
+	id: '6',
+	key: '6'
 }, {
-	id : '7',
-	key : '7'
+	id: '7',
+	key: '7'
 }, {
-	id : '8',
-	key : '8'
+	id: '8',
+	key: '8'
 }, {
-	id : '9',
-	key : '9'
-} ];
+	id: '9',
+	key: '9'
+}];
 
 kemia.controller.plugins.BondEdit.prototype.getKeyboardShortcuts = function() {
 	return kemia.controller.plugins.BondEdit.SHORTCUTS;
-}
+};
 
 /**
  * @enum {Object}
  */
-kemia.controller.plugins.BondEdit.BOND_TYPES = [ {
-	caption : "Single",
-	order : kemia.model.Bond.ORDER.SINGLE,
-	stereo : kemia.model.Bond.STEREO.NOT_STEREO
+kemia.controller.plugins.BondEdit.BOND_TYPES = [{
+	caption: 'Single',
+	order: kemia.model.Bond.ORDER.SINGLE,
+	stereo: kemia.model.Bond.STEREO.NOT_STEREO
 }, {
-	caption : "Double",
-	order : kemia.model.Bond.ORDER.DOUBLE,
-	stereo : kemia.model.Bond.STEREO.NOT_STEREO
+	caption: 'Double',
+	order: kemia.model.Bond.ORDER.DOUBLE,
+	stereo: kemia.model.Bond.STEREO.NOT_STEREO
 }, {
-	caption : "Triple",
-	order : kemia.model.Bond.ORDER.TRIPLE,
-	stereo : kemia.model.Bond.STEREO.NOT_STEREO
+	caption: 'Triple',
+	order: kemia.model.Bond.ORDER.TRIPLE,
+	stereo: kemia.model.Bond.STEREO.NOT_STEREO
 }, {
-	caption : "Quadruple",
-	order : kemia.model.Bond.ORDER.QUADRUPLE,
-	stereo : kemia.model.Bond.STEREO.NOT_STEREO
+	caption: 'Quadruple',
+	order: kemia.model.Bond.ORDER.QUADRUPLE,
+	stereo: kemia.model.Bond.STEREO.NOT_STEREO
 }, {
-	caption : "Single Up",
-	order : kemia.model.Bond.ORDER.SINGLE,
-	stereo : kemia.model.Bond.STEREO.UP
+	caption: 'Single Up',
+	order: kemia.model.Bond.ORDER.SINGLE,
+	stereo: kemia.model.Bond.STEREO.UP
 }, {
-	caption : "Single Down",
-	order : kemia.model.Bond.ORDER.SINGLE,
-	stereo : kemia.model.Bond.STEREO.DOWN
+	caption: 'Single Down',
+	order: kemia.model.Bond.ORDER.SINGLE,
+	stereo: kemia.model.Bond.STEREO.DOWN
 }, {
-	caption : "Single Up or Down",
-	order : kemia.model.Bond.ORDER.SINGLE,
-	stereo : kemia.model.Bond.STEREO.UP_OR_DOWN
-} ]
+	caption: 'Single Up or Down',
+	order: kemia.model.Bond.ORDER.SINGLE,
+	stereo: kemia.model.Bond.STEREO.UP_OR_DOWN
+}];
 
 /**
  * The logger for this class.
- * 
+ *
  * @type {goog.debug.Logger}
  * @protected
  */
@@ -140,7 +140,7 @@ kemia.controller.plugins.BondEdit.prototype.handleKeyboardShortcut = function(e)
 	var id = e.identifier;
 	var shortcut = goog.array.find(kemia.controller.plugins.BondEdit.SHORTCUTS,
 			function(obj) {
-				return obj.id == e.identifier
+				return obj.id == e.identifier;
 			});
 	if (shortcut) {
 		// this.logger.info('getSelected ' +
@@ -151,7 +151,7 @@ kemia.controller.plugins.BondEdit.prototype.handleKeyboardShortcut = function(e)
 			if (target instanceof kemia.model.Atom) {
 				var attachment_atom = target;
 				this.editorObject.dispatchBeforeChange();
-				for ( var i = 0; i < repeat; i++) {
+				for (var i = 0; i < repeat; i++) {
 					var new_bond = attachment_atom.molecule.sproutBond(
 							attachment_atom, kemia.model.Bond.ORDER.SINGLE,
 							kemia.model.Bond.STEREO.NOT_STEREO);
@@ -167,7 +167,7 @@ kemia.controller.plugins.BondEdit.prototype.handleKeyboardShortcut = function(e)
 			return true;
 		}, this);
 	}
-}
+};
 
 kemia.controller.plugins.BondEdit.prototype.handleMouseMove = function(e) {
 //	this.logger.fine('handleMouseMove');
@@ -246,7 +246,7 @@ kemia.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 											this.editorObject.dispatchChange();
 											return true;
 										}
-									} 
+									}
 
 									// else {
 									// if (target._last_click) {
@@ -290,8 +290,8 @@ kemia.controller.plugins.BondEdit.prototype.createMolecule = function(pos) {
 	} else {
 		trans = this.editorObject.reactionRenderer.moleculeRenderer.transform;
 	}
-	var coord = trans.createInverse().transformCoords([ pos ])[0];
-	var atom = new kemia.model.Atom("C", coord.x, coord.y);
+	var coord = trans.createInverse().transformCoords([pos])[0];
+	var atom = new kemia.model.Atom('C', coord.x, coord.y);
 	var molecule = new kemia.model.Molecule();
 	molecule.addAtom(atom);
 	molecule.sproutBond(atom, this.bond_type.order, this.bond_type.stereo);
@@ -300,7 +300,7 @@ kemia.controller.plugins.BondEdit.prototype.createMolecule = function(pos) {
 		var model = this.editorObject.getModels()[0];
 		if (model instanceof kemia.model.Reaction) {
 			model.addMolecule(molecule);
-		} 
+		}
 	} else {
 		this.editorObject.setModels([molecule]);
 	}
@@ -356,7 +356,7 @@ kemia.controller.plugins.BondEdit.prototype.highlightBond = function(bond,
  */
 kemia.controller.plugins.BondEdit.prototype.resetState = function() {
 	this.bond_type = undefined;
-}
+};
 
 /** @inheritDoc */
 kemia.controller.plugins.BondEdit.prototype.queryCommandValue = function(

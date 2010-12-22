@@ -27,40 +27,40 @@ kemia.graphics.AffineTransform = function(opt_m00, opt_m10, opt_m01,
 		(opt_m02),
 		/** @type {number} */
 		(opt_m12));
-	}	
-}
+	}
+};
 goog.inherits(kemia.graphics.AffineTransform, goog.graphics.AffineTransform);
 
 /**
  * convenience method to
  * transform array of coordinates
- * 
- * @param trans{goog.graphics.AffineTransform} transform to apply
- * @param source_coords{!Array.
+ *
+ * @param trans {goog.graphics.AffineTransform} transform to apply.
+ * @param source_coords {!Array.
  *            <goog.math.Coordinate>}
  * @return {!Array.<goog.math.Coordinate>}
  */
 kemia.graphics.AffineTransform.transformCoords = function(trans, source_coords) {
 	var pairs = goog.array.map(source_coords, function(coord) {
-		return [ coord.x, coord.y ];
+		return [coord.x, coord.y];
 	});
 	var source_points = goog.array.flatten(pairs);
 	var dest_points = [];
-	trans.transform(source_points, 0, dest_points, 0, source_points.length / 2)
+	trans.transform(source_points, 0, dest_points, 0, source_points.length / 2);
 
 	var dest_coords = [];
-	for ( var i = 0; i < dest_points.length; i += 2) {
+	for (var i = 0; i < dest_points.length; i += 2) {
 		dest_coords.push(new goog.math.Coordinate(dest_points[i],
 				dest_points[i + 1]));
 	}
-	;
+;
 	return dest_coords;
 };
 
 /**
  * transform array of coordinates
- * 
- * @param source_coords{!Array.
+ *
+ * @param source_coords {!Array.
  *            <goog.math.Coordinate>}
  * @return {!Array.<goog.math.Coordinate>}
  */
@@ -88,7 +88,7 @@ kemia.graphics.AffineTransform.getRotateInstance = function(theta, x, y) {
 	return new kemia.graphics.AffineTransform().setToRotation(theta, x, y);
 };
 
-kemia.graphics.AffineTransform.getScaleInstance = function(sx , sy){
+kemia.graphics.AffineTransform.getScaleInstance = function(sx , sy) {
 	return new kemia.graphics.AffineTransform().setToScale(sx, sy);
 };
 

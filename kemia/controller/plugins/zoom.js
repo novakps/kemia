@@ -1,12 +1,12 @@
 /**
- * @license Copyright 2010 Paul Novak (paul@wingu.com)
- * 
+ * @license Copyright 2010 Paul Novak (paul@wingu.com).
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,29 +19,29 @@ goog.require('goog.debug.Logger');
 
 /**
  * @constructor
- * @extends{kemian.controller.Plugin}s
+ * @extends {kemian.controller.Plugin}s
  */
 kemia.controller.plugins.Zoom = function() {
 	kemia.controller.Plugin.call(this);
-}
+};
 goog.inherits(kemia.controller.plugins.Zoom, kemia.controller.Plugin);
 
 
 /**
  * Commands implemented by this plugin.
- * 
+ *
  * @enum {string}
  */
 kemia.controller.plugins.Zoom.COMMAND = {
-	ZOOM_IN : 'zoomIn',
-	ZOOM_OUT : 'zoomOut'
+	ZOOM_IN: 'zoomIn',
+	ZOOM_OUT: 'zoomOut'
 };
 
 /**
  * Inverse map of execCommand strings to
  * {@link kemia.controller.plugins.Zoom.COMMAND} constants. Used to determine
  * whether a string corresponds to a command this plugin handles
- * 
+ *
  * @type {Object}
  * @private
  */
@@ -75,7 +75,7 @@ kemia.controller.plugins.Zoom.prototype.execCommand = function(command,
 
 /**
  * The logger for this class.
- * 
+ *
  * @type {goog.debug.Logger}
  * @protected
  */

@@ -1,18 +1,18 @@
-goog.require('kemia.controller.DefaultToolbar');
-goog.require('kemia.io.json');
 goog.require('goog.dom');
+goog.require('kemia.controller.DefaultToolbar');
 goog.require('kemia.controller.ReactionEditor');
-goog.require('kemia.controller.plugins.Move');
-goog.require('kemia.controller.plugins.ClearEditor');
-goog.require('kemia.controller.plugins.Zoom');
-goog.require('kemia.controller.plugins.UndoRedo');
-goog.require('kemia.controller.plugins.Erase');
+goog.require('kemia.controller.Testdata');
+goog.require('kemia.controller.ToolbarController');
+goog.require('kemia.controller.plugins.ArrowPlusEdit');
 goog.require('kemia.controller.plugins.AtomEdit');
 goog.require('kemia.controller.plugins.BondEdit');
-goog.require('kemia.controller.plugins.ArrowPlusEdit');
+goog.require('kemia.controller.plugins.ClearEditor');
+goog.require('kemia.controller.plugins.Erase');
 goog.require('kemia.controller.plugins.MoleculeEdit');
-goog.require('kemia.controller.ToolbarController');
-goog.require('kemia.controller.Testdata');
+goog.require('kemia.controller.plugins.Move');
+goog.require('kemia.controller.plugins.UndoRedo');
+goog.require('kemia.controller.plugins.Zoom');
+goog.require('kemia.io.json');
 
 
 function initPage() {
@@ -24,10 +24,10 @@ function initPage() {
 
 	var editor = new kemia.controller.ReactionEditor(goog.dom
 			.getElement('reactionEditorContainer'), {
-		background : {
-			color : 'white'
+		background: {
+			color: 'white'
 		},
-		showTerminalCarbons : false
+		showTerminalCarbons: false
 	});
 
 	editor.registerPlugin(new kemia.controller.plugins.Move());
@@ -44,11 +44,11 @@ function initPage() {
 			toolbar);
 
 
-	editor.setModels([ model ]);
+	editor.setModels([model]);
 }
 (function() {
 	window.onload = function() {
 		initPage();
 		window.onload = null;
 	};
-})()
+})();

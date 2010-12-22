@@ -1,12 +1,12 @@
 /**
- * @license Copyright 2010 Paul Novak (paul@wingu.com)
- * 
+ * @license Copyright 2010 Paul Novak (paul@wingu.com).
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -14,12 +14,12 @@
  * the License.
  * @author paul@wingu.com (Paul Novak)
  */
-goog.provide("kemia.controller.plugins.SmilesDialog");
-goog.require("goog.ui.editor.AbstractDialog");
+goog.provide('kemia.controller.plugins.SmilesDialog');
+goog.require('goog.ui.editor.AbstractDialog');
 
 /**
  * Creates a dialog for the user to enter the SMILES of a compound to insert.
- * 
+ *
  * @param {goog.dom.DomHelper}
  *            dom DomHelper to be used to create the dialog's DOM structure.
  * @constructor
@@ -43,32 +43,32 @@ kemia.controller.plugins.SmilesDialog.prototype.createDialogControl = function()
 };
 /**
  * Input element where the user will type the image URL.
- * 
+ *
  * @type {Element}
  * @private
  */
 kemia.controller.plugins.SmilesDialog.prototype.input_;
 /**
  * Creates the DOM structure that makes up the dialog's content area.
- * 
+ *
  * @return {Element} The DOM structure that makes up the dialog's content area.
  * @private
  */
 kemia.controller.plugins.SmilesDialog.prototype.createContent_ = function() {
 	this.input_ = this.dom.$dom(goog.dom.TagName.INPUT, {
-		size : 25,
-		value : 'http://'
+		size: 25,
+		value: 'http://'
 	});
-	/** @desc Prompt telling the user to enter a url */
+	/** @desc Prompt telling the user to enter a url. */
 	var MSG_EXAMPLE_DIALOG_PROMPT = goog
 			.getMsg('Enter the SMILES for the structure to paste into drawing');
 	return this.dom.$dom(goog.dom.TagName.DIV, null, [
-			MSG_EXAMPLE_DIALOG_PROMPT, this.input_ ]);
+			MSG_EXAMPLE_DIALOG_PROMPT, this.input_]);
 };
 
 /**
  * Returns the image URL typed into the dialog's input.
- * 
+ *
  * @return {?string} The SMILES currently typed into the dialog's input.
  * @private
  */
@@ -79,7 +79,7 @@ kemia.controller.plugins.SmilesDialog.prototype.getSmiles_ = function() {
 /**
  * Creates and returns the event object to be used when dispatching the OK event
  * to listeners, or returns null to prevent the dialog from closing.
- * 
+ *
  * @param {goog.events.Event}
  *            e The event object dispatched by the wrapped dialog.
  * @return {goog.events.Event} The event object to be used when dispatching the

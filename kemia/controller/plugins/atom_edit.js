@@ -1,12 +1,12 @@
 /**
- * @license Copyright 2010 Paul Novak (paul@wingu.com)
- * 
+ * @license Copyright 2010 Paul Novak (paul@wingu.com).
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,19 +15,19 @@
  * @author paul@wingu.com (Paul Novak)
  */
 goog.provide('kemia.controller.plugins.AtomEdit');
-goog.require('kemia.controller.Plugin');
 goog.require('goog.debug.Logger');
-goog.require('goog.ui.KeyboardShortcutHandler');
 goog.require('goog.events.KeyCodes');
+goog.require('goog.ui.KeyboardShortcutHandler');
+goog.require('kemia.controller.Plugin');
 
 /**
  * @constructor
- * @extends{kemian.controller.Plugin}s
+ * @extends {kemian.controller.Plugin}s
  */
 kemia.controller.plugins.AtomEdit = function() {
 	kemia.controller.Plugin.call(this);
 
-}
+};
 goog.inherits(kemia.controller.plugins.AtomEdit, kemia.controller.Plugin);
 
 /**
@@ -47,60 +47,60 @@ kemia.controller.plugins.AtomEdit.prototype.getTrogClassId = goog.functions
 
 kemia.controller.plugins.AtomEdit.SHORTCUTS = [
 		{
-			id : 'H',
-			key : 'h'
+			id: 'H',
+			key: 'h'
 		},
 		{
-			id : 'C',
-			key : 'c'
+			id: 'C',
+			key: 'c'
 		},
 		{
-			id : 'N',
-			key : 'n'
+			id: 'N',
+			key: 'n'
 		},
 		{
-			id : 'S',
-			key : 's'
+			id: 'S',
+			key: 's'
 		},
 		{
-			id : 'P',
-			key : 'p'
+			id: 'P',
+			key: 'p'
 		},
 		{
-			id : 'O',
-			key : 'o'
+			id: 'O',
+			key: 'o'
 		},
 		{
-			id : 'F',
-			key : 'f'
+			id: 'F',
+			key: 'f'
 		},
 		{
-			id : 'I',
-			key : 'i'
+			id: 'I',
+			key: 'i'
 		},
 		{
-			id : '+',
-			key : [ goog.events.KeyCodes.EQUALS,
-					goog.ui.KeyboardShortcutHandler.Modifiers.SHIFT ]
+			id: '+',
+			key: [goog.events.KeyCodes.EQUALS,
+					goog.ui.KeyboardShortcutHandler.Modifiers.SHIFT]
 		}, {
-			id : '-',
-			key : goog.events.KeyCodes.DASH
-		} ];
+			id: '-',
+			key: goog.events.KeyCodes.DASH
+		}];
 
 kemia.controller.plugins.AtomEdit.prototype.getKeyboardShortcuts = function() {
 	return kemia.controller.plugins.AtomEdit.SHORTCUTS;
-}
+};
 
 /**
  * reset to default state called when another plugin is made active
  */
 kemia.controller.plugins.AtomEdit.prototype.resetState = function() {
 	this.symbol = undefined;
-}
+};
 
 /**
  * sets atom symbol.
- * 
+ *
  * @param {string}
  *            command Command to execute.
  * @return {Object|undefined} The result of the command.
@@ -112,7 +112,7 @@ kemia.controller.plugins.AtomEdit.prototype.execCommandInternal = function(
 
 /**
  * The logger for this class.
- * 
+ *
  * @type {goog.debug.Logger}
  * @protected
  */
@@ -146,7 +146,7 @@ kemia.controller.plugins.AtomEdit.prototype.handleKeyboardShortcut = function(e)
 										.getModels());
 								this.editorObject.dispatchChange();
 							} else {
-								var symbol = shortcut.id
+								var symbol = shortcut.id;
 								// this.logger.info('symbol ' + symbol);
 					if (symbol != atom.symbol) {
 						this.editorObject.dispatchBeforeChange();
@@ -164,7 +164,7 @@ kemia.controller.plugins.AtomEdit.prototype.handleKeyboardShortcut = function(e)
 	} catch (e) {
 		this.logger.info(e);
 	}
-}
+};
 
 kemia.controller.plugins.AtomEdit.prototype.handleMouseMove = function(e) {
 	if (this.symbol) {
@@ -188,18 +188,18 @@ kemia.controller.plugins.AtomEdit.prototype.handleMouseMove = function(e) {
 		}
 	}
 	return false;
-}
+};
 
 kemia.controller.plugins.AtomEdit.prototype.handleMouseDown = function(e) {
-	
+
 
 	if (this.symbol) {
 		var selected = this.editorObject.getSelected();
 		if (selected.length) {
-			if (selected.length==1 && e.shiftKey) {
+			if (selected.length == 1 && e.shiftKey) {
                 var existingAtom = selected[0];
 				var molecule = existingAtom.molecule;
-                molecule.sproutBond(existingAtom, kemia.model.Bond.ORDER.SINGLE,kemia.model.Bond.STEREO.NOT_STEREO, this.symbol);
+                molecule.sproutBond(existingAtom, kemia.model.Bond.ORDER.SINGLE, kemia.model.Bond.STEREO.NOT_STEREO, this.symbol);
                 this.editorObject.setModels(this.editorObject.getModels());
                 this.editorObject.dispatchChange();
 				return true;
@@ -217,7 +217,7 @@ kemia.controller.plugins.AtomEdit.prototype.handleMouseDown = function(e) {
 							return true;
 						}
 					}
-				}, this)
+				}, this);
 		} else {
 			this.createMolecule(kemia.controller.ReactionEditor
 					.getMouseCoords(e));
@@ -239,7 +239,7 @@ kemia.controller.plugins.AtomEdit.prototype.highlightAtom = function(atom,
 kemia.controller.plugins.AtomEdit.prototype.setAtomSymbol = function(symbol,
 		atom) {
 	var new_atom = new kemia.model.Atom(symbol, atom.coord.x, atom.coord.y);
-	var molecule = atom.molecule
+	var molecule = atom.molecule;
 	goog.array.forEach(atom.bonds.getValues(), function(bond) {
 		var new_bond = bond.clone();
 		new_bond.molecule = undefined;
@@ -254,7 +254,7 @@ kemia.controller.plugins.AtomEdit.prototype.setAtomSymbol = function(symbol,
 
 kemia.controller.plugins.AtomEdit.prototype.createMolecule = function(pos) {
 	var coord = this.editorObject.reactionRenderer.transform.createInverse()
-			.transformCoords( [ pos ])[0];
+			.transformCoords([pos])[0];
 	var atom = new kemia.model.Atom(this.symbol, coord.x, coord.y);
 	var molecule = new kemia.model.Molecule();
 	molecule.addAtom(atom);

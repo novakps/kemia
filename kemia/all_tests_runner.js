@@ -11,11 +11,11 @@ function setFilterFunction(testRunner) {
 }
 
 function pageInit() {
-	
+
 	var hidePassesInput = document.getElementById('hidepasses');
 	var parallelInput = document.getElementById('parallel');
 	var filterInput = document.getElementById('filter');
-	
+
 	// Create a test runner and render it.
 	var testRunner = new goog.testing.MultiTestRunner().setName(document.title)
 			.setBasePath('./').setPoolSize(parallelInput.checked ? 8 : 1)
@@ -41,4 +41,4 @@ function pageInit() {
 		pageInit();
 		window.onload = null;
 	};
-})()
+})();

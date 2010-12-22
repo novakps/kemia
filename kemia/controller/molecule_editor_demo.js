@@ -1,23 +1,23 @@
-goog.require('goog.events.EventType');
+goog.require('goog.debug.Console');
 goog.require('goog.dom');
-goog.require('goog.ui.Select');
+goog.require('goog.events.EventType');
 goog.require('goog.ui.MenuItem');
-goog.require('kemia.io.json');
+goog.require('goog.ui.Select');
 goog.require('kemia.controller.DefaultToolbar');
 goog.require('kemia.controller.ToolbarController');
-goog.require('kemia.controller.plugins.Move');
-goog.require('kemia.controller.plugins.ClearEditor');
-goog.require('kemia.controller.plugins.Zoom');
-goog.require('kemia.controller.plugins.UndoRedo');
+goog.require('kemia.controller.plugins.ArrowPlusEdit');
 goog.require('kemia.controller.plugins.AtomEdit');
 goog.require('kemia.controller.plugins.BondEdit');
-goog.require('kemia.controller.plugins.ArrowPlusEdit');
+goog.require('kemia.controller.plugins.ClearEditor');
 goog.require('kemia.controller.plugins.Erase');
 goog.require('kemia.controller.plugins.MoleculeEdit');
+goog.require('kemia.controller.plugins.Move');
+goog.require('kemia.controller.plugins.UndoRedo');
+goog.require('kemia.controller.plugins.Zoom');
 goog.require('kemia.io.Testdata');
+goog.require('kemia.io.json');
 goog.require('kemia.io.mdl');
 goog.require('kemia.io.smiles.SmilesParser');
-goog.require('goog.debug.Console');
 
 var controller;
 
@@ -32,8 +32,8 @@ function initPage() {
 
 	var editor = new kemia.controller.ReactionEditor(goog.dom
 			.getElement('moleculeEditorContainer'), {
-		background : {
-			color : 'white'
+		background: {
+			color: 'white'
 		}
 	});
 
@@ -51,8 +51,8 @@ function initPage() {
 	var toolbarController = new kemia.controller.ToolbarController(editor,
 			toolbar);
 
-	var sdfs = kemia.io.Testdata.sdf.split("$$$$\n");
-	editor.setModels([ kemia.io.mdl.readMolfile(sdfs[0]) ]);
+	var sdfs = kemia.io.Testdata.sdf.split('$$$$\n');
+	editor.setModels([kemia.io.mdl.readMolfile(sdfs[0])]);
 
 	var select1 = new goog.ui.Select();
 	select1.addItem(new goog.ui.MenuItem('0', 0));
@@ -78,12 +78,12 @@ function initPage() {
 				var idx = select.getValue();
 				var molfile = sdfs[idx];
 				var mol = kemia.io.mdl.readMolfile(molfile);
-				editor.setModels([ mol ]);
+				editor.setModels([mol]);
 			});
 
-};
+}
 
-(function(){
+(function() {
     var onload = window.onload;
     window.onload = function() {
     	initPage();

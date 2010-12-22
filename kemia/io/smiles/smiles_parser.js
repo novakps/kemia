@@ -1,74 +1,74 @@
 /*
  * Copyright 2010 Paul Novak paul@wingu.com
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-goog.provide("kemia.io.smiles.SmilesParser");
-goog.require('kemia.model.Molecule');
+goog.provide('kemia.io.smiles.SmilesParser');
 goog.require('kemia.model.Atom');
 goog.require('kemia.model.Bond');
+goog.require('kemia.model.Molecule');
 goog.require('kemia.model.Reaction');
 
 /**
  * enum for bond types
- * 
+ *
  * @enum {string}
  */
 kemia.io.smiles.SmilesParser.BondType = {
-	NONE : "NONE",
-	SINGLE_BOND : "-",
-	DOUBLE_BOND : "=",
-	TRIPLE_BOND : "#",
-	QUAD_BOND : "$",
-	AROMATIC_BOND : ":",
-	ANY : "~"
+	NONE: 'NONE',
+	SINGLE_BOND: '-',
+	DOUBLE_BOND: '=',
+	TRIPLE_BOND: '#',
+	QUAD_BOND: '$',
+	AROMATIC_BOND: ':',
+	ANY: '~'
 };
 
 /**
  * enum for stereo types
- * 
+ *
  * @enum {string}
  */
 kemia.io.smiles.SmilesParser.BondStereo = {
-	NONE : "NONE",
-	CLOCKWISE : "@",
-	COUNTER_CLOCKWISE : "@@"
+	NONE: 'NONE',
+	CLOCKWISE: '@',
+	COUNTER_CLOCKWISE: '@@'
 };
 
 /**
  * enum for punctuation
- * 
- * @enum{string}
+ *
+ * @enum {string}
  */
 kemia.io.smiles.SmilesParser.punctuation = {
-	nobond : '.',
-	openbranch : '(',
-	closebranch : ')',
-	singlebond : kemia.io.smiles.SmilesParser.BondType.SINGLE_BOND,
-	doublebond : kemia.io.smiles.SmilesParser.BondType.DOUBLE_BOND,
-	triplebond : kemia.io.smiles.SmilesParser.BondType.TRIPLE_BOND,
-	quadbond : kemia.io.smiles.SmilesParser.BondType.QUAD_BOND,
-	aromaticbond : kemia.io.smiles.SmilesParser.BondType.AROMATIC_BOND,
-	ringclosure : '%',
-	cis : '/',
-	trans : '\\'
+	nobond: '.',
+	openbranch: '(',
+	closebranch: ')',
+	singlebond: kemia.io.smiles.SmilesParser.BondType.SINGLE_BOND,
+	doublebond: kemia.io.smiles.SmilesParser.BondType.DOUBLE_BOND,
+	triplebond: kemia.io.smiles.SmilesParser.BondType.TRIPLE_BOND,
+	quadbond: kemia.io.smiles.SmilesParser.BondType.QUAD_BOND,
+	aromaticbond: kemia.io.smiles.SmilesParser.BondType.AROMATIC_BOND,
+	ringclosure: '%',
+	cis: '/',
+	trans: '\\'
 };
 
 kemia.io.smiles.SmilesParser.smiPattern = new RegExp(
 		/\[[^[]+\]|Br|B|Cl|C|N|F|O|P]|S|c|n|o|s|-|=[0-9]|=[0-9]|=|#[0-9]|#[0-9][0-9]|#|\$|%[0-9][0-9]|[0-9]|\(|\)|./g);
 kemia.io.smiles.SmilesParser.atomPattern = new RegExp(
 		/^\[([0-9]*)([A-Z][a-z]?|c|n|o|se|s|as)(@|@@)?(H)?([0-9])?([+-][\d]?)?\]$/);
-kemia.io.smiles.SmilesParser.specialAtoms = [ 'C', 'c', 'N', 'n', 'O', 'o',
-		'S', 's', 'P', 'F', 'Br', 'Cl', 'I', 'B' ];
-kemia.io.smiles.SmilesParser.aromaticAtoms = [ 'c', 'n', 'o', 's', 'as', 'se' ];
+kemia.io.smiles.SmilesParser.specialAtoms = ['C', 'c', 'N', 'n', 'O', 'o',
+		'S', 's', 'P', 'F', 'Br', 'Cl', 'I', 'B'];
+kemia.io.smiles.SmilesParser.aromaticAtoms = ['c', 'n', 'o', 's', 'as', 'se'];
 
 kemia.io.smiles.SmilesParser.parse = function(smi) {
 	var items = smi.match(kemia.io.smiles.SmilesParser.smiPattern);
@@ -80,9 +80,9 @@ kemia.io.smiles.SmilesParser.parse = function(smi) {
 	var ring = new Array();
 	var ringClosureOrder = new Array();
 
-	var errstr = "";
+	var errstr = '';
 	var chiralCenters = new Array();
-	for ( var i = 0; i < items.length; i++) {
+	for (var i = 0; i < items.length; i++) {
 		var item = items[i];
 		//alert("item "+item)
 		if (item == kemia.io.smiles.SmilesParser.punctuation.nobond) {
@@ -92,7 +92,7 @@ kemia.io.smiles.SmilesParser.parse = function(smi) {
 			if (branch.length) {
 				previous_atom = branch.pop();
 			} else {
-				errstr = " Unbalanced parents";
+				errstr = ' Unbalanced parents';
 			}
 		} else if (item == kemia.io.smiles.SmilesParser.punctuation.singlebond) {
 			bond_type = kemia.io.smiles.SmilesParser.BondType.SINGLE_BOND;
@@ -103,7 +103,7 @@ kemia.io.smiles.SmilesParser.parse = function(smi) {
 		} else if (item == kemia.io.smiles.SmilesParser.punctuation.quadbond) {
 			bond_type = kemia.io.smiles.SmilesParser.BondType.QUAD_BOND;
 		} else if (item == kemia.io.smiles.SmilesParser.punctuation.aromaticbond) {
-			bond_type = kemia.io.smiles.SmilesParser.BondType.AROMATIC_BOND
+			bond_type = kemia.io.smiles.SmilesParser.BondType.AROMATIC_BOND;
 		} else if (item[0] == kemia.io.smiles.SmilesParser.punctuation.ringclosure) {
 			var ringid = parseInt(item[1] + item[2], 10);
 			var ring_atom = ring[ringid];
@@ -122,15 +122,15 @@ kemia.io.smiles.SmilesParser.parse = function(smi) {
 			if (!ring_atom) {
 				ring[ringid] = previous_atom;
 			} else {
-				mol.addBond(kemia.io.smiles.SmilesParser.createBond(bond_type,previous_atom, ring_atom));
+				mol.addBond(kemia.io.smiles.SmilesParser.createBond(bond_type, previous_atom, ring_atom));
 				bond_type = kemia.io.smiles.SmilesParser.BondType.NONE;
 				ring[ringid] = null;
 			}
 
 		// The default bond order for the ring closure is single (or aromatic) but may be specified by including a bond symbol between (!) the atom and the closure number.
 		// Example: alternatives for cyclohexene (there is only one double bond here): C1=CCCCC1 <=> C=1CCCCC1 <=> C1CCCCC=1 <=> C=1CCCCC=1
-		} else if (item.length>1 
-				   && 
+		} else if (item.length > 1
+				   &&
 				   (
 					  goog.string.startsWith(item, kemia.io.smiles.SmilesParser.BondType.DOUBLE_BOND) ||
 					  goog.string.startsWith(item, kemia.io.smiles.SmilesParser.BondType.TRIPLE_BOND) ||
@@ -142,16 +142,16 @@ kemia.io.smiles.SmilesParser.parse = function(smi) {
 			ring_atom = ring[ringid];
 			if (!ring_atom) {
 				ring[ringid] = previous_atom;
-				ringClosureOrder[ringid]=item.substr(0,1)
+				ringClosureOrder[ringid] = item.substr(0, 1);
 			} else {
-				mol.addBond(kemia.io.smiles.SmilesParser.createBond(ringClosureOrder[ringid],previous_atom, ring_atom));
+				mol.addBond(kemia.io.smiles.SmilesParser.createBond(ringClosureOrder[ringid], previous_atom, ring_atom));
 				bond_type = kemia.io.smiles.SmilesParser.BondType.NONE;
 				ring[ringid] = null;
-				ringClosureOrder[ringid]=null;
+				ringClosureOrder[ringid] = null;
 			}
 		}
 		else {
-			var smi_atom = kemia.io.smiles.SmilesParser.parseAtom(item) // ,chiralCenters);
+			var smi_atom = kemia.io.smiles.SmilesParser.parseAtom(item); // ,chiralCenters);
 																	// parseAtom
 																	// takes one
 																	// argument?
@@ -165,14 +165,14 @@ kemia.io.smiles.SmilesParser.parse = function(smi) {
 					bond_type = kemia.io.smiles.SmilesParser.BondType.NONE;
 				}
 				mol.addAtom(atom);
-				if (smi_atom.stereo != "NONE") {
+				if (smi_atom.stereo != 'NONE') {
 					chiralCenters.push(mol.indexOfAtom(atom));
 					chiralCenters.push(smi_atom.stereo);
 					chiralCenters.push(smi_atom.chiralHydrogenNeighbour);
 				}
 				previous_atom = atom;
 			} else {
-				errstr = " unknown atom " + item;
+				errstr = ' unknown atom ' + item;
 			}
 		}
 		if (errstr) {
@@ -194,28 +194,28 @@ kemia.io.smiles.SmilesParser.parse = function(smi) {
 
 kemia.io.smiles.SmilesParser.sanityCheck = function(branch, ring, bond_type) {
 	if (branch.length) {
-		throw new Error( "unbalanced parens");
+		throw new Error('unbalanced parens');
 	}
-	for ( var i = 0; i < ring.length; ++i) {
+	for (var i = 0; i < ring.length; ++i) {
 		if (ring[i]) {
-			throw new Error("unclosed rings");
+			throw new Error('unclosed rings');
 		}
 	}
 	if (bond_type != kemia.io.smiles.SmilesParser.BondType.NONE) {
-		throw new Error( "unpaired bond " + bond_type);
+		throw new Error('unpaired bond ' + bond_type);
 	}
 	return true;
 };
 
 kemia.io.smiles.SmilesParser.parseAtom = function(item) {
 	var atom = {
-		isotope : null,
+		isotope: null,
 		'symbol' : null,
-		stereo : kemia.io.smiles.SmilesParser.BondStereo.NONE,
-		hcount : null,
-		charge : null,
-		aromatic : false,
-		chiralHydrogenNeighbour : false
+		stereo: kemia.io.smiles.SmilesParser.BondStereo.NONE,
+		hcount: null,
+		charge: null,
+		aromatic: false,
+		chiralHydrogenNeighbour: false
 	};
 	var atomProp = kemia.io.smiles.SmilesParser.atomPattern.exec(item);
 
@@ -243,9 +243,9 @@ kemia.io.smiles.SmilesParser.parseAtom = function(item) {
 			}
 		}
 
-		if (atomProp[6] == "+") {
+		if (atomProp[6] == '+') {
 			atom.charge = 1;
-		} else if (atomProp[6] == "-") {
+		} else if (atomProp[6] == '-') {
 			atom.charge = -1;
 		} else {
 			atom.charge = parseInt(atomProp[6], 10);
@@ -270,12 +270,12 @@ kemia.io.smiles.SmilesParser.parseAtom = function(item) {
 
 /**
  * factory method for bonds
- * 
- * @param{kemia.io.smiles.SmilesParser.BondType}type bond-type code
- * @param{kemia.model.Atom} source atom at source end of bond
- * @param{kemia.model.Atom} target atom at target end of bond
- * 
- * @return{kemia.model.Bond}
+ *
+ * @param {kemia.io.smiles.SmilesParser.BondType} type bond-type code.
+ * @param {kemia.model.Atom} source atom at source end of bond.
+ * @param {kemia.model.Atom} target atom at target end of bond.
+ *
+ * @return {kemia.model.Bond}
  */
 kemia.io.smiles.SmilesParser.createBond = function(type, source, target) {
 	var atype = type;
@@ -303,18 +303,18 @@ kemia.io.smiles.SmilesParser.createBond = function(type, source, target) {
 		return bond;
 	case kemia.io.smiles.SmilesParser.BondType.ANY:
 	default:
-		throw new Error("invalid bond type [" + type + "]");
+		throw new Error('invalid bond type [' + type + ']');
 	}
-	;
+;
 };
 
 /**
  * Sets UP and DOWN bonds based on chiral center information
- * 
+ *
  * @param {kemia.model.Molecule}
- *            molecule currently being constructed by Smiles parser
+ *            molecule currently being constructed by Smiles parser.
  * @param {Array.<number>} chiralCenters array of atoms flagged as chiral
- *            center in Smiles (plus extra overhead data)
+ *            center in Smiles (plus extra overhead data).
  */
 kemia.io.smiles.SmilesParser.setChiralCenters = function(molecule,
 		chiralCenters) {
@@ -323,7 +323,7 @@ kemia.io.smiles.SmilesParser.setChiralCenters = function(molecule,
 		var chiralAtom = molecule.getAtom(atIndex);
 		if (chiralAtom != undefined) {
 
-			var direction = chiralCenters[++c]
+			var direction = chiralCenters[++c];
 			var chiralHydrogenNeighbour = chiralCenters[++c];
 			var cnt = 0;
 			var availableBonds = new Array();
@@ -338,7 +338,7 @@ kemia.io.smiles.SmilesParser.setChiralCenters = function(molecule,
 					}
 					cntNeighb++;
 					if (!molecule.isBondInRing(bond_))
-						availableBonds.push(bond_)
+						availableBonds.push(bond_);
 				}
 			});
 			var numOfAvBonds = availableBonds.length;
@@ -348,7 +348,7 @@ kemia.io.smiles.SmilesParser.setChiralCenters = function(molecule,
 						|| (cntNeighb == 4 && numOfAvBonds > 2)) {
 					bondidx = 1;
 				}
-				bond = availableBonds[bondidx]
+				bond = availableBonds[bondidx];
 				if (direction == kemia.io.smiles.SmilesParser.BondStereo.CLOCKWISE) {
 					bond.stereo = kemia.model.Bond.STEREO.UP;
 				} else
@@ -360,7 +360,7 @@ kemia.io.smiles.SmilesParser.setChiralCenters = function(molecule,
 					bondidx = 3;
 				else if (numOfAvBonds == 4)
 					bondidx = 2;
-				bond = availableBonds[bondidx]
+				bond = availableBonds[bondidx];
 				if (direction == kemia.io.smiles.SmilesParser.BondStereo.CLOCKWISE)
 					bond.stereo = kemia.model.Bond.STEREO.DOWN;
 				else
@@ -368,479 +368,479 @@ kemia.io.smiles.SmilesParser.setChiralCenters = function(molecule,
 			}
 		}
 	}
-}
+};
 
 kemia.io.smiles.SmilesParser.periodicTable = {
 	'H' : {
-		"number" : 1,
-		"name" : "Hydrogen"
+		'number' : 1,
+		'name' : 'Hydrogen'
 	},
 	'He' : {
-		"number" : 2,
-		"name" : "Helium"
+		'number' : 2,
+		'name' : 'Helium'
 	},
 	'Li' : {
-		"number" : 3,
-		"name" : "Lithium"
+		'number' : 3,
+		'name' : 'Lithium'
 	},
 	'Be' : {
-		"number" : 4,
-		"name" : "Beryllium"
+		'number' : 4,
+		'name' : 'Beryllium'
 	},
 	'B' : {
-		"number" : 5,
-		"name" : "Boron"
+		'number' : 5,
+		'name' : 'Boron'
 	},
 	'C' : {
-		"number" : 6,
-		"name" : "Carbon"
+		'number' : 6,
+		'name' : 'Carbon'
 	},
 	'c' : {
-		"number" : 6,
-		"name" : "Carbon"
+		'number' : 6,
+		'name' : 'Carbon'
 	},
 	'N' : {
-		"number" : 7,
-		"name" : "Nitrogen"
+		'number' : 7,
+		'name' : 'Nitrogen'
 	},
 	'n' : {
-		"number" : 7,
-		"name" : "Nitrogen"
+		'number' : 7,
+		'name' : 'Nitrogen'
 	},
 	'O' : {
-		"number" : 8,
-		"name" : "Oxygen"
+		'number' : 8,
+		'name' : 'Oxygen'
 	},
 	'o' : {
-		"number" : 8,
-		"name" : "Oxygen"
+		'number' : 8,
+		'name' : 'Oxygen'
 	},
 	'F' : {
-		"number" : 9,
-		"name" : "Fluorine"
+		'number' : 9,
+		'name' : 'Fluorine'
 	},
 	'Ne' : {
-		"number" : 10,
-		"name" : "Neon"
+		'number' : 10,
+		'name' : 'Neon'
 	},
 	'Na' : {
-		"number" : 11,
-		"name" : "Sodium"
+		'number' : 11,
+		'name' : 'Sodium'
 	},
 	'Mg' : {
-		"number" : 12,
-		"name" : "Magnesium"
+		'number' : 12,
+		'name' : 'Magnesium'
 	},
 	'Al' : {
-		"number" : 13,
-		"name" : "Aluminium"
+		'number' : 13,
+		'name' : 'Aluminium'
 	},
 	'Si' : {
-		"number" : 14,
-		"name" : "Silicon"
+		'number' : 14,
+		'name' : 'Silicon'
 	},
 	'P' : {
-		"number" : 15,
-		"name" : "Phosphorus"
+		'number' : 15,
+		'name' : 'Phosphorus'
 	},
 	'S' : {
-		"number" : 16,
-		"name" : "Sulfur"
+		'number' : 16,
+		'name' : 'Sulfur'
 	},
 	's' : {
-		"number" : 16,
-		"name" : "Sulfur"
+		'number' : 16,
+		'name' : 'Sulfur'
 	},
 	'Cl' : {
-		"number" : 17,
-		"name" : "Chlorine"
+		'number' : 17,
+		'name' : 'Chlorine'
 	},
 	'Ar' : {
-		"number" : 18,
-		"name" : "Argon"
+		'number' : 18,
+		'name' : 'Argon'
 	},
 	'K' : {
-		"number" : 19,
-		"name" : "Potassium"
+		'number' : 19,
+		'name' : 'Potassium'
 	},
 	'Ca' : {
-		"number" : 20,
-		"name" : "Calcium"
+		'number' : 20,
+		'name' : 'Calcium'
 	},
 	'Sc' : {
-		"number" : 21,
-		"name" : "Scandium"
+		'number' : 21,
+		'name' : 'Scandium'
 	},
 	'Ti' : {
-		"number" : 22,
-		"name" : "Titanium"
+		'number' : 22,
+		'name' : 'Titanium'
 	},
 	'V' : {
-		"number" : 23,
-		"name" : "Vanadium"
+		'number' : 23,
+		'name' : 'Vanadium'
 	},
 	'Cr' : {
-		"number" : 24,
-		"name" : "Chromium"
+		'number' : 24,
+		'name' : 'Chromium'
 	},
 	'Mn' : {
-		"number" : 25,
-		"name" : "Manganese"
+		'number' : 25,
+		'name' : 'Manganese'
 	},
 	'Fe' : {
-		"number" : 26,
-		"name" : "Iron"
+		'number' : 26,
+		'name' : 'Iron'
 	},
 	'Co' : {
-		"number" : 27,
-		"name" : "Cobalt"
+		'number' : 27,
+		'name' : 'Cobalt'
 	},
 	'Ni' : {
-		"number" : 28,
-		"name" : "Nickel"
+		'number' : 28,
+		'name' : 'Nickel'
 	},
 	'Cu' : {
-		"number" : 29,
-		"name" : "Copper"
+		'number' : 29,
+		'name' : 'Copper'
 	},
 	'Zn' : {
-		"number" : 30,
-		"name" : "Zinc"
+		'number' : 30,
+		'name' : 'Zinc'
 	},
 	'Ga' : {
-		"number" : 31,
-		"name" : "Gallium"
+		'number' : 31,
+		'name' : 'Gallium'
 	},
 	'Ge' : {
-		"number" : 32,
-		"name" : "Germanium"
+		'number' : 32,
+		'name' : 'Germanium'
 	},
 	'As' : {
-		"number" : 33,
-		"name" : "Arsenic"
+		'number' : 33,
+		'name' : 'Arsenic'
 	},
 	'as' : {
-		"number" : 33,
-		"name" : "Arsenic"
+		'number' : 33,
+		'name' : 'Arsenic'
 	},
 	'Se' : {
-		"number" : 34,
-		"name" : "Selenium"
+		'number' : 34,
+		'name' : 'Selenium'
 	},
 	'se' : {
-		"number" : 34,
-		"name" : "Selenium"
+		'number' : 34,
+		'name' : 'Selenium'
 	},
 	'Br' : {
-		"number" : 35,
-		"name" : "Bromine"
+		'number' : 35,
+		'name' : 'Bromine'
 	},
 	'Kr' : {
-		"number" : 36,
-		"name" : "Krypton"
+		'number' : 36,
+		'name' : 'Krypton'
 	},
 	'Rb' : {
-		"number" : 37,
-		"name" : "Rubidium"
+		'number' : 37,
+		'name' : 'Rubidium'
 	},
 	'Sr' : {
-		"number" : 38,
-		"name" : "Strontium"
+		'number' : 38,
+		'name' : 'Strontium'
 	},
 	'Y' : {
-		"number" : 39,
-		"name" : "Yttrium"
+		'number' : 39,
+		'name' : 'Yttrium'
 	},
 	'Zr' : {
-		"number" : 40,
-		"name" : "Zirconium"
+		'number' : 40,
+		'name' : 'Zirconium'
 	},
 	'Nb' : {
-		"number" : 41,
-		"name" : "Niobium"
+		'number' : 41,
+		'name' : 'Niobium'
 	},
 	'Mo' : {
-		"number" : 42,
-		"name" : "Molybdenum"
+		'number' : 42,
+		'name' : 'Molybdenum'
 	},
 	'Tc' : {
-		"number" : 43,
-		"name" : "Technetium"
+		'number' : 43,
+		'name' : 'Technetium'
 	},
 	'Ru' : {
-		"number" : 44,
-		"name" : "Ruthenium"
+		'number' : 44,
+		'name' : 'Ruthenium'
 	},
 	'Rh' : {
-		"number" : 45,
-		"name" : "Rhodium"
+		'number' : 45,
+		'name' : 'Rhodium'
 	},
 	'Pd' : {
-		"number" : 46,
-		"name" : "Palladium"
+		'number' : 46,
+		'name' : 'Palladium'
 	},
 	'Ag' : {
-		"number" : 47,
-		"name" : "Silver"
+		'number' : 47,
+		'name' : 'Silver'
 	},
 	'Cd' : {
-		"number" : 48,
-		"name" : "Cadmium"
+		'number' : 48,
+		'name' : 'Cadmium'
 	},
 	'In' : {
-		"number" : 49,
-		"name" : "Indium"
+		'number' : 49,
+		'name' : 'Indium'
 	},
 	'Sn' : {
-		"number" : 50,
-		"name" : "Tin"
+		'number' : 50,
+		'name' : 'Tin'
 	},
 	'Sb' : {
-		"number" : 51,
-		"name" : "Antimony"
+		'number' : 51,
+		'name' : 'Antimony'
 	},
 	'Te' : {
-		"number" : 52,
-		"name" : "Tellurium"
+		'number' : 52,
+		'name' : 'Tellurium'
 	},
 	'I' : {
-		"number" : 53,
-		"name" : "Iodine"
+		'number' : 53,
+		'name' : 'Iodine'
 	},
 	'Xe' : {
-		"number" : 54,
-		"name" : "Xenon"
+		'number' : 54,
+		'name' : 'Xenon'
 	},
 	'Cs' : {
-		"number" : 55,
-		"name" : "Caesium"
+		'number' : 55,
+		'name' : 'Caesium'
 	},
 	'Ba' : {
-		"number" : 56,
-		"name" : "Barium"
+		'number' : 56,
+		'name' : 'Barium'
 	},
 	'La' : {
-		"number" : 57,
-		"name" : "Lanthanum"
+		'number' : 57,
+		'name' : 'Lanthanum'
 	},
 	'Ce' : {
-		"number" : 58,
-		"name" : "Cerium"
+		'number' : 58,
+		'name' : 'Cerium'
 	},
 	'Pr' : {
-		"number" : 59,
-		"name" : "Praseodymium"
+		'number' : 59,
+		'name' : 'Praseodymium'
 	},
 	'Nd' : {
-		"number" : 60,
-		"name" : "Neodymium"
+		'number' : 60,
+		'name' : 'Neodymium'
 	},
 	'Pm' : {
-		"number" : 61,
-		"name" : "Promethium"
+		'number' : 61,
+		'name' : 'Promethium'
 	},
 	'Sm' : {
-		"number" : 62,
-		"name" : "Samarium"
+		'number' : 62,
+		'name' : 'Samarium'
 	},
 	'Eu' : {
-		"number" : 63,
-		"name" : "Europium"
+		'number' : 63,
+		'name' : 'Europium'
 	},
 	'Gd' : {
-		"number" : 64,
-		"name" : "Gadolinium"
+		'number' : 64,
+		'name' : 'Gadolinium'
 	},
 	'Tb' : {
-		"number" : 65,
-		"name" : "Terbium"
+		'number' : 65,
+		'name' : 'Terbium'
 	},
 	'Dy' : {
-		"number" : 66,
-		"name" : "Dysprosium"
+		'number' : 66,
+		'name' : 'Dysprosium'
 	},
 	'Ho' : {
-		"number" : 67,
-		"name" : "Holmium"
+		'number' : 67,
+		'name' : 'Holmium'
 	},
 	'Er' : {
-		"number" : 68,
-		"name" : "Erbium"
+		'number' : 68,
+		'name' : 'Erbium'
 	},
 	'Tm' : {
-		"number" : 69,
-		"name" : "Thulium"
+		'number' : 69,
+		'name' : 'Thulium'
 	},
 	'Yb' : {
-		"number" : 70,
-		"name" : "Ytterbium"
+		'number' : 70,
+		'name' : 'Ytterbium'
 	},
 	'Lu' : {
-		"number" : 71,
-		"name" : "Lutetium"
+		'number' : 71,
+		'name' : 'Lutetium'
 	},
 	'Hf' : {
-		"number" : 72,
-		"name" : "Hafnium"
+		'number' : 72,
+		'name' : 'Hafnium'
 	},
 	'Ta' : {
-		"number" : 73,
-		"name" : "Tantalum"
+		'number' : 73,
+		'name' : 'Tantalum'
 	},
 	'W' : {
-		"number" : 74,
-		"name" : "Tungsten"
+		'number' : 74,
+		'name' : 'Tungsten'
 	},
 	'Re' : {
-		"number" : 75,
-		"name" : "Rhenium"
+		'number' : 75,
+		'name' : 'Rhenium'
 	},
 	'Os' : {
-		"number" : 76,
-		"name" : "Osmium"
+		'number' : 76,
+		'name' : 'Osmium'
 	},
 	'Ir' : {
-		"number" : 77,
-		"name" : "Iridium"
+		'number' : 77,
+		'name' : 'Iridium'
 	},
 	'Pt' : {
-		"number" : 78,
-		"name" : "Platinum"
+		'number' : 78,
+		'name' : 'Platinum'
 	},
 	'Au' : {
-		"number" : 79,
-		"name" : "Gold"
+		'number' : 79,
+		'name' : 'Gold'
 	},
 	'Hg' : {
-		"number" : 80,
-		"name" : "Mercury"
+		'number' : 80,
+		'name' : 'Mercury'
 	},
 	'Tl' : {
-		"number" : 81,
-		"name" : "Thallium"
+		'number' : 81,
+		'name' : 'Thallium'
 	},
 	'Pb' : {
-		"number" : 82,
-		"name" : "Lead"
+		'number' : 82,
+		'name' : 'Lead'
 	},
 	'Bi' : {
-		"number" : 83,
-		"name" : "Bismuth"
+		'number' : 83,
+		'name' : 'Bismuth'
 	},
 	'Po' : {
-		"number" : 84,
-		"name" : "Polonium"
+		'number' : 84,
+		'name' : 'Polonium'
 	},
 	'At' : {
-		"number" : 85,
-		"name" : "Astatine"
+		'number' : 85,
+		'name' : 'Astatine'
 	},
 	'Rn' : {
-		"number" : 86,
-		"name" : "Radon"
+		'number' : 86,
+		'name' : 'Radon'
 	},
 	'Fr' : {
-		"number" : 87,
-		"name" : "Francium"
+		'number' : 87,
+		'name' : 'Francium'
 	},
 	'Ra' : {
-		"number" : 88,
-		"name" : "Radium"
+		'number' : 88,
+		'name' : 'Radium'
 	},
 	'Ac' : {
-		"number" : 89,
-		"name" : "Actinium"
+		'number' : 89,
+		'name' : 'Actinium'
 	},
 	'Th' : {
-		"number" : 90,
-		"name" : "Thorium"
+		'number' : 90,
+		'name' : 'Thorium'
 	},
 	'Pa' : {
-		"number" : 91,
-		"name" : "Protactinium"
+		'number' : 91,
+		'name' : 'Protactinium'
 	},
 	'U' : {
-		"number" : 92,
-		"name" : "Uranium"
+		'number' : 92,
+		'name' : 'Uranium'
 	},
 	'Np' : {
-		"number" : 93,
-		"name" : "Neptunium"
+		'number' : 93,
+		'name' : 'Neptunium'
 	},
 	'Pu' : {
-		"number" : 94,
-		"name" : "Plutonium"
+		'number' : 94,
+		'name' : 'Plutonium'
 	},
 	'Am' : {
-		"number" : 95,
-		"name" : "Americium"
+		'number' : 95,
+		'name' : 'Americium'
 	},
 	'Cm' : {
-		"number" : 96,
-		"name" : "Curium"
+		'number' : 96,
+		'name' : 'Curium'
 	},
 	'Bk' : {
-		"number" : 97,
-		"name" : "Berkelium"
+		'number' : 97,
+		'name' : 'Berkelium'
 	},
 	'Cf' : {
-		"number" : 98,
-		"name" : "Californium"
+		'number' : 98,
+		'name' : 'Californium'
 	},
 	'Es' : {
-		"number" : 99,
-		"name" : "Einsteinium"
+		'number' : 99,
+		'name' : 'Einsteinium'
 	},
 	'Fm' : {
-		"number" : 100,
-		"name" : "Fermium"
+		'number' : 100,
+		'name' : 'Fermium'
 	},
 	'Md' : {
-		"number" : 101,
-		"name" : "Mendelevium"
+		'number' : 101,
+		'name' : 'Mendelevium'
 	},
 	'No' : {
-		"number" : 102,
-		"name" : "Nobelium"
+		'number' : 102,
+		'name' : 'Nobelium'
 	},
 	'Lr' : {
-		"number" : 103,
-		"name" : "Lawrencium"
+		'number' : 103,
+		'name' : 'Lawrencium'
 	},
 	'Rf' : {
-		"number" : 104,
-		"name" : "Rutherfordium"
+		'number' : 104,
+		'name' : 'Rutherfordium'
 	},
 	'Db' : {
-		"number" : 105,
-		"name" : "Dubnium"
+		'number' : 105,
+		'name' : 'Dubnium'
 	},
 	'Sg' : {
-		"number" : 106,
-		"name" : "Seaborgium"
+		'number' : 106,
+		'name' : 'Seaborgium'
 	},
 	'Bh' : {
-		"number" : 107,
-		"name" : "Bohrium"
+		'number' : 107,
+		'name' : 'Bohrium'
 	},
 	'Hs' : {
-		"number" : 108,
-		"name" : "Hassium"
+		'number' : 108,
+		'name' : 'Hassium'
 	},
 	'Mt' : {
-		"number" : 109,
-		"name" : "Meitnerium"
+		'number' : 109,
+		'name' : 'Meitnerium'
 	},
 	'Ds' : {
-		"number" : 110,
-		"name" : "Darmstadtium"
+		'number' : 110,
+		'name' : 'Darmstadtium'
 	},
 	'Rg' : {
-		"number" : 111,
-		"name" : "Roentgenium"
+		'number' : 111,
+		'name' : 'Roentgenium'
 	},
 	'Cn' : {
-		"number" : 112,
-		"name" : "Copernicium"
+		'number' : 112,
+		'name' : 'Copernicium'
 	}
 };

@@ -1,12 +1,12 @@
 /**
- * @license Copyright 2010 Paul Novak (paul@wingu.com)
- * 
+ * @license Copyright 2010 Paul Novak (paul@wingu.com).
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,37 +15,37 @@
  * @author paul@wingu.com (Paul Novak)
  */
 goog.provide('kemia.controller.plugins.Move');
-goog.require('kemia.controller.Plugin');
 goog.require('goog.debug.Logger');
+goog.require('kemia.controller.Plugin');
 
 /**
  * @constructor
- * @extends{kemian.controller.Plugin}s
+ * @extends {kemian.controller.Plugin}s
  */
 kemia.controller.plugins.Move = function() {
 	kemia.controller.Plugin.call(this);
 	this.isActive = {};
 	this.isActive[kemia.controller.plugins.Move.COMMAND.MOVE] = true;
 	this.isDragging = false;
-}
+};
 goog.inherits(kemia.controller.plugins.Move, kemia.controller.Plugin);
 
 
 /**
  * Commands implemented by this plugin.
- * 
+ *
  * @enum {string}
  */
 kemia.controller.plugins.Move.COMMAND = {
-	MOVE : 'move',
-	ROTATE : 'rotate'
-}
+	MOVE: 'move',
+	ROTATE: 'rotate'
+};
 
 /**
  * Inverse map of execCommand strings to
  * {@link kemia.controller.plugins.Move.COMMAND} constants. Used to determine
  * whether a string corresponds to a command this plugin handles
- * 
+ *
  * @type {Object}
  * @private
  */
@@ -69,11 +69,11 @@ kemia.controller.plugins.Move.prototype.getTrogClassId = goog.functions
 kemia.controller.plugins.Move.prototype.resetState = function() {
 	this.isActive[kemia.controller.plugins.Move.COMMAND.MOVE] = false;
 	this.isActive[kemia.controller.plugins.Move.COMMAND.ROTATE] = false;
-}
+};
 
 /**
  * sets atom symbol.
- * 
+ *
  * @param {string}
  *            command Command to execute.
  * @return {Object|undefined} The result of the command.
@@ -172,14 +172,14 @@ kemia.controller.plugins.Move.prototype.handleMouseMove = function(e) {
 					}
 					return true;
 				}
-			} else if (!target){
+			} else if (!target) {
 				this.editorObject.getOriginalElement().style.cursor = 'all-scroll';
 				return true;
 			}
 		}
 		return false;
 	}
-}
+};
 
 kemia.controller.plugins.Move.prototype.handleMouseDown = function(e) {
 
@@ -247,7 +247,7 @@ kemia.controller.plugins.Move.prototype.handleMouseDown = function(e) {
 				this.editorObject.dispatchChange();
 				return true;
 			}
-			if (!target){
+			if (!target) {
 				this.editorObject.dispatchBeforeChange();
 				this.dragCanvas(e);
 				this.editorObject.dispatchChange();
@@ -280,7 +280,7 @@ kemia.controller.plugins.Move.prototype.handleMouseUp = function(e) {
 	} catch (e) {
 		this.logger.severe(e);
 	}
-}
+};
 
 kemia.controller.plugins.Move.prototype.highlightAtom = function(atom,
 		opt_group) {
@@ -307,7 +307,7 @@ kemia.controller.plugins.Move.prototype.highlightMolecule = function(molecule,
 	}
 	return this.editorObject.reactionRenderer.moleculeRenderer.highlightOn(
 			molecule, color, opt_group);
-}
+};
 
 kemia.controller.plugins.Move.prototype.highlightArrow = function(arrow,
 		opt_group) {
@@ -329,11 +329,11 @@ kemia.controller.plugins.Move.prototype.queryCommandValue = function(command) {
 
 /**
  * merge two molecules at a single atom
- * 
- * @param{kemia.model.Atom} source_atom, the atom being dragged
- * @param{kemia.model.Atom} target_atom, the drag-target atom
- * 
- * @return{kemia.model.Molecule} resulting merged molecule
+ *
+ * @param {kemia.model.Atom} source_atom, the atom being dragged.
+ * @param {kemia.model.Atom} target_atom, the drag-target atom.
+ *
+ * @return {kemia.model.Molecule} resulting merged molecule.
  */
 kemia.controller.plugins.Move.mergeMolecules = function(source_atom,
 		target_atom) {
@@ -379,15 +379,15 @@ kemia.controller.plugins.Move.mergeMolecules = function(source_atom,
 	reaction.addMolecule(result);
 
 	return result;
-}
+};
 
 /**
  * merge two atoms in the same molecule
- * 
- * @param{kemia.model.Atom} source_atom, the atom being dragged
- * @param{kemia.model.Atom} target_atom, the drag-target atom
- * 
- * @return{kemia.model.Molecule} resulting merged molecule
+ *
+ * @param {kemia.model.Atom} source_atom, the atom being dragged.
+ * @param {kemia.model.Atom} target_atom, the drag-target atom.
+ *
+ * @return {kemia.model.Molecule} resulting merged molecule.
  */
 kemia.controller.plugins.Move.closeRing = function(source_atom, target_atom) {
 
@@ -408,7 +408,7 @@ kemia.controller.plugins.Move.closeRing = function(source_atom, target_atom) {
 	target_molecule.removeAtom(target_atom);
 
 	var result = target_molecule.clone();
-	goog.array.forEach(result.bonds, function(b){
+	goog.array.forEach(result.bonds, function(b) {
 		goog.asserts.assert(b.source);
 		goog.asserts.assert(b.target);
 	});
@@ -417,7 +417,7 @@ kemia.controller.plugins.Move.closeRing = function(source_atom, target_atom) {
 	reaction.addMolecule(result);
 
 	return result;
-}
+};
 
 kemia.controller.plugins.Move.prototype.dragAtom = function(e, atom) {
 
@@ -434,7 +434,7 @@ kemia.controller.plugins.Move.prototype.dragAtom = function(e, atom) {
 						if (d._highlightGroups) {
 							goog.array.forEach(d._highlightGroups, function(g) {
 								g.clear();
-							})
+							});
 						}
 						d._highlightGroups = [];
 						if (d.atom.molecule.group) {
@@ -453,7 +453,7 @@ kemia.controller.plugins.Move.prototype.dragAtom = function(e, atom) {
 
 						var coords = inverse.transformCoords([
 								new goog.math.Coordinate(e.clientX, e.clientY),
-								new goog.math.Coordinate(d._prevX, d._prevY) ]);
+								new goog.math.Coordinate(d._prevX, d._prevY)]);
 						var diff = goog.math.Coordinate.difference(coords[0],
 								coords[1]);
 
@@ -486,10 +486,10 @@ kemia.controller.plugins.Move.prototype.dragAtom = function(e, atom) {
 																							}));
 														}));
 						var merge_pairs = this.editorObject.findAtomMergePairs(
-								[ atom ], d._merge_exclusions);
+								[atom], d._merge_exclusions);
 
 						// only merge one atom
-						d._merge_pairs = goog.array.slice(merge_pairs, 0, 1)
+						d._merge_pairs = goog.array.slice(merge_pairs, 0, 1);
 
 						goog.array
 								.forEach(
@@ -551,7 +551,7 @@ kemia.controller.plugins.Move.prototype.dragBond = function(e, bond) {
 		} else {
 			trans = this.editorObject.reactionRenderer.moleculeRenderer.transform;
 		}
-		d._transformed_center = trans.transformCoords([ center ])[0];
+		d._transformed_center = trans.transformCoords([center])[0];
 		d._start = kemia.controller.ReactionEditor.getMouseCoords(e);
 //		this.logger.fine('d._start: ' + d._start.toString());
 		d._prev_angle = goog.math.angle(d._transformed_center.x,
@@ -569,7 +569,7 @@ kemia.controller.plugins.Move.prototype.dragBond = function(e, bond) {
 									goog.array.forEach(d._highlightGroups,
 											function(g) {
 												g.clear();
-											})
+											});
 								}
 								d._highlightGroups = [];
 								d._initDeltaX = d._initDeltaX || d.deltaX;
@@ -590,7 +590,7 @@ kemia.controller.plugins.Move.prototype.dragBond = function(e, bond) {
 												center.x, center.y);
 								var coords = trans.transformCoords([
 										d.bond.source.coord,
-										d.bond.target.coord ]);
+										d.bond.target.coord]);
 								d.bond.source.coord = coords[0];
 								d.bond.target.coord = coords[1];
 								d.editor
@@ -616,8 +616,8 @@ kemia.controller.plugins.Move.prototype.dragBond = function(e, bond) {
 											.contains(exclusions, target)) {
 										// this.logger.fine('target: ' +
 										// target.toString());
-										d._merge_pairs = [ [ target,
-												moving_atom ] ];
+										d._merge_pairs = [[target,
+												moving_atom]];
 										d._highlightGroups
 												.push(d.editor.reactionRenderer.moleculeRenderer.atomRenderer
 														.highlightOn(moving_atom));
@@ -679,7 +679,7 @@ kemia.controller.plugins.Move.prototype.dragPlus = function(e, plus) {
 												new goog.math.Coordinate(
 														e.clientX, e.clientY),
 												new goog.math.Coordinate(
-														d._prevX, d._prevY) ]);
+														d._prevX, d._prevY)]);
 						var diff = goog.math.Coordinate.difference(coords[0],
 								coords[1]);
 
@@ -723,7 +723,7 @@ kemia.controller.plugins.Move.prototype.dragArrow = function(e, arrow) {
 												new goog.math.Coordinate(
 														e.clientX, e.clientY),
 												new goog.math.Coordinate(
-														d._prevX, d._prevY) ]);
+														d._prevX, d._prevY)]);
 						var diff = goog.math.Coordinate.difference(coords[0],
 								coords[1]);
 
@@ -765,7 +765,7 @@ kemia.controller.plugins.Move.prototype.dragMolecule = function(e, molecule) {
 						if (d._highlightGroups) {
 							goog.array.forEach(d._highlightGroups, function(g) {
 								g.clear();
-							})
+							});
 						}
 						d._highlightGroups = [];
 						d._merge_pairs = [];
@@ -795,7 +795,7 @@ kemia.controller.plugins.Move.prototype.dragMolecule = function(e, molecule) {
 
 						// d._prev = mouse_coord;
 						d._prevDeltaX = d.deltaX - d._initDeltaX;
-						d._prevDeltaY = d.deltaY - d._initDeltaY
+						d._prevDeltaY = d.deltaY - d._initDeltaY;
 
 						// highlight merge sites
 						d._merge_exclusions = molecule.atoms;
@@ -805,7 +805,7 @@ kemia.controller.plugins.Move.prototype.dragMolecule = function(e, molecule) {
 						// limit numbers of pairs that can be merged to two for now
 						if (merge_pairs.length > 1) {
 							d._merge_pairs = goog.array
-									.slice(merge_pairs, 0, 2)
+									.slice(merge_pairs, 0, 2);
 						}
 						goog.array
 								.forEach(
@@ -874,36 +874,36 @@ kemia.controller.plugins.Move.prototype.dragMolecule = function(e, molecule) {
 	d.startDrag(e);
 };
 
-kemia.controller.plugins.Move.prototype.dragCanvas = function(e){
+kemia.controller.plugins.Move.prototype.dragCanvas = function(e) {
 	var d = new goog.fx.Dragger(this.editorObject.getOriginalElement());
 	d.addEventListener(
 			goog.fx.Dragger.EventType.DRAG,
 			function(e) {
-				var trans= this.editorObject.reactionRenderer.transform;
+				var trans = this.editorObject.reactionRenderer.transform;
 				var x = d.screenX - d.lastX;
 				var y = d.screenY - d.lastY;
-				if (x || y){					
+				if (x || y) {
 					var diff = new goog.math.Vec2(x
 							/ trans.getScaleX(), y
 							/ trans.getScaleY());
-					goog.array.forEach(this.editorObject.getModels(), function(model){
-						if(model instanceof kemia.model.Reaction){
+					goog.array.forEach(this.editorObject.getModels(), function(model) {
+						if (model instanceof kemia.model.Reaction) {
 							model.translate(diff);
 						}
-					})
+					});
 					this.editorObject.setModelsSilently(this.editorObject.getModels());
 				}
 				d.lastX = d.screenX;
 				d.lastY = d.screenY;
 			}, undefined, this);
 	d.addEventListener(
-			goog.fx.Dragger.EventType.END, 
+			goog.fx.Dragger.EventType.END,
 			function(e) {
 				this.editorObject.setModelsSilently(this.editorObject.getModels());
 				d.dispose();
 			}, undefined, this);
 	d.startDrag(e);
-}
+};
 
 kemia.controller.plugins.Move.prototype.rotateMolecule = function(e, molecule) {
 
@@ -916,7 +916,7 @@ kemia.controller.plugins.Move.prototype.rotateMolecule = function(e, molecule) {
 		trans = this.editorObject.reactionRenderer.moleculeRenderer.transform;
 	}
 
-	d._center = trans.transformCoords([ molecule.getCenter() ])[0];
+	d._center = trans.transformCoords([molecule.getCenter()])[0];
 	d._start = kemia.controller.ReactionEditor.getMouseCoords(e);
 	d._start_angle = goog.math.angle(d._center.x, d._center.y, d._start.x,
 			d._start.y);
@@ -946,7 +946,7 @@ kemia.controller.plugins.Move.prototype.rotateMolecule = function(e, molecule) {
 
 /**
  * The logger for this class.
- * 
+ *
  * @type {goog.debug.Logger}
  * @protected
  */

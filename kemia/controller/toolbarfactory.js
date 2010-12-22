@@ -8,6 +8,7 @@ goog.require('goog.style');
 goog.require('goog.ui.Component.State');
 goog.require('goog.ui.Container.Orientation');
 goog.require('goog.ui.ControlContent');
+goog.require('goog.ui.LabelInput');
 goog.require('goog.ui.Option');
 goog.require('goog.ui.Toolbar');
 goog.require('goog.ui.ToolbarButton');
@@ -16,13 +17,12 @@ goog.require('goog.ui.ToolbarMenuButton');
 goog.require('goog.ui.ToolbarRenderer');
 goog.require('goog.ui.ToolbarSelect');
 goog.require('goog.userAgent');
-goog.require('goog.ui.LabelInput');
 
 /**
  * Creates a {@link goog.ui.Toolbar} containing the specified set of toolbar
  * buttons, and renders it into the given parent element. Each item in the
  * {@code items} array must a {@link goog.ui.Control}.
- * 
+ *
  * @param {!Array.
  *            <goog.ui.Control>} items Toolbar items; each must be a
  *            {@link goog.ui.Control}.
@@ -53,7 +53,7 @@ kemia.controller.ToolbarFactory.makeToolbar = function(items, elem,
 	// to avoid creating unnecessary keyboard event handler objects.
 	toolbar.setFocusable(false);
 
-	for ( var i = 0, button; button = items[i]; i++) {
+	for (var i = 0, button; button = items[i]; i++) {
 		// Optimization: Set the button to non-focusable before it is rendered,
 		// to avoid creating unnecessary keyboard event handler objects. Also
 		// set
@@ -71,7 +71,7 @@ kemia.controller.ToolbarFactory.makeToolbar = function(items, elem,
 /**
  * Creates a toolbar button with the given ID, tooltip, and caption. Applies any
  * custom CSS class names to the button's caption element.
- * 
+ *
  * @param {string}
  *            id Button ID; must equal a {@link goog.editor.Command} for
  *            built-in buttons, anything else for custom buttons.
@@ -103,7 +103,7 @@ kemia.controller.ToolbarFactory.makeButton = function(id, tooltip, caption,
  * Creates a toggle button with the given ID, tooltip, and caption. Applies any
  * custom CSS class names to the button's caption element. The button returned
  * has checkbox-like toggle semantics.
- * 
+ *
  * @param {string}
  *            id Button ID; must equal a {@link goog.editor.Command} for
  *            built-in buttons, anything else for custom buttons.
@@ -134,7 +134,7 @@ kemia.controller.ToolbarFactory.makeToggleButton = function(id, tooltip,
  * custom CSS class names to the button's caption element. The button returned
  * doesn't have an actual menu attached; use {@link goog.ui.MenuButton#setMenu}
  * to attach a {@link goog.ui.Menu} to the button.
- * 
+ *
  * @param {string}
  *            id Button ID; must equal a {@link goog.editor.Command} for
  *            built-in buttons, anything else for custom buttons.
@@ -168,7 +168,7 @@ kemia.controller.ToolbarFactory.makeMenuButton = function(id, tooltip, caption,
  * doesn't have an actual menu attached; use {@link goog.ui.Select#setMenu} to
  * attach a {@link goog.ui.Menu} containing {@link goog.ui.Option}s to the
  * select button.
- * 
+ *
  * @param {string}
  *            id Button ID; must equal a {@link goog.editor.Command} for
  *            built-in buttons, anything else for custom buttons.
@@ -211,7 +211,7 @@ kemia.controller.ToolbarFactory.makeSelectButton = function(id, tooltip,
  * Creates a color menu button with the given ID, tooltip, and caption. Applies
  * any custom CSS class names to the button's caption element. The button is
  * created with a default color menu containing standard color palettes.
- * 
+ *
  * @param {string}
  *            id Button ID; must equal a {@link goog.editor.Command} for
  *            built-in toolbar buttons, but can be anything else for custom
@@ -244,7 +244,7 @@ kemia.controller.ToolbarFactory.makeColorMenuButton = function(id, tooltip,
 /**
  * Creates a new DIV that wraps a button caption, optionally applying CSS class
  * names to it. Used as a helper function in button factory methods.
- * 
+ *
  * @param {goog.ui.ControlContent}
  *            caption Button caption.
  * @param {string=}

@@ -107,7 +107,7 @@ function expectCustomButton() {
  * abstract, needs to add a concrete version of any abstract methods. Also
  * creates up the global builder variable which should be set up after the call
  * to this method.
- * 
+ *
  * @return {kemia.controller.plugins.AbstractDialog} The dialog.
  */
 function createTestDialog() {
@@ -137,7 +137,7 @@ function createTestDialog() {
 
 /**
  * Asserts that the given dialog is open.
- * 
+ *
  * @param {string}
  *            msg Message to be printed in case of failure.
  * @param {kemia.controller.plugins.AbstractDialog}
@@ -149,7 +149,7 @@ function assertOpen(msg, dialog) {
 
 /**
  * Asserts that the given dialog is closed.
- * 
+ *
  * @param {string}
  *            msg Message to be printed in case of failure.
  * @param {kemia.controller.plugins.AbstractDialog}
@@ -345,7 +345,7 @@ function testCustomButton() {
 	mockCtrl.$replayAll();
 
 	builder.addButton('My Custom Button', function() {
-		dialog.dispatchEvent(CUSTOM_EVENT)
+		dialog.dispatchEvent(CUSTOM_EVENT);
 	}, CUSTOM_BUTTON_ID);
 
 	dialog.show();

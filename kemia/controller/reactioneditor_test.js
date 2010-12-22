@@ -1,12 +1,12 @@
 /**
- * @license Copyright 2010 Paul Novak (paul@wingu.com)
- * 
+ * @license Copyright 2010 Paul Novak (paul@wingu.com).
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,9 +15,8 @@
  * @author paul@wingu.com (Paul Novak)
  */
 
+goog.require('goog.dom');
 goog.require('goog.dom.Range');
-goog.require('kemia.controller.ReactionEditor');
-goog.require('kemia.controller.Plugin');
 goog.require('goog.events');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.functions');
@@ -27,13 +26,14 @@ goog.require('goog.testing.dom');
 goog.require('goog.testing.jsunit');
 goog.require('goog.testing.recordFunction');
 goog.require('goog.userAgent');
+goog.require('kemia.controller.DefaultToolbar');
+goog.require('kemia.controller.Plugin');
+goog.require('kemia.controller.ReactionEditor');
+goog.require('kemia.controller.ToolbarController');
+goog.require('kemia.io.Testdata');
+goog.require('kemia.io.mdl');
 goog.require('kemia.io.smiles.SmilesParser');
 goog.require('kemia.layout.CoordinateGenerator');
-goog.require('goog.dom');
-goog.require('kemia.io.Testdata');
-goog.require('kemia.controller.DefaultToolbar');
-goog.require('kemia.controller.ToolbarController');
-goog.require('kemia.io.mdl');
 
 var HTML;
 
@@ -54,7 +54,7 @@ function tearDown() {
 
 /**
  * Dummy plugin for test usage.
- * 
+ *
  * @constructor
  * @extends {kemia.controller.Plugin}
  */
@@ -176,7 +176,7 @@ var STRING_KEY = String.fromCharCode(goog.events.KeyCodes.A).toLowerCase();
 
 /**
  * @return {goog.events.Event} Returns an event for a keyboard shortcut for the
- *         letter 'a'
+ *         letter 'a'.
  */
 function getBrowserEvent() {
 	var e = new goog.events.BrowserEvent();
@@ -404,12 +404,12 @@ function xtestNotHandledSelectionChange() {
 }
 
 
-function testSmilesRender(){
+function testSmilesRender() {
 	var smiles = 'N[C@@H](CCC(=O)N[C@@H](CSSC[C@H](NC(=O)CC[C@H](N)C(O)=O)C(=O)NCC(O)=O)C(=O)NCC(O)=O)C(O)=O';
-	var mol=kemia.io.smiles.SmilesParser.parse(smiles);
+	var mol = kemia.io.smiles.SmilesParser.parse(smiles);
 	kemia.layout.CoordinateGenerator.generate(mol);
 	var renderer = new kemia.controller.ReactionEditor(goog.dom.getElement('molecule'));
 	renderer.setModels([mol]);
-};
+}
 
 
