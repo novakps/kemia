@@ -37,7 +37,7 @@ goog.exportSymbol('kemia.io.mdl.readMolfile', kemia.io.mdl.readMolfile);
 goog.exportSymbol('kemia.io.smiles.SmilesParser.parse',
 		kemia.io.smiles.SmilesParser.parse);
 
-//layout
+// layout
 goog.exportSymbol('kemia.layout.CoordinateGenerator.generate', kemia.layout.CoordinateGenerator.generate);
 
 
@@ -50,6 +50,10 @@ goog.exportSymbol('kemia.controller.ReactionEditor.prototype.render',
 		kemia.controller.ReactionEditor.prototype.render);
 goog.exportSymbol('kemia.controller.ReactionEditor.prototype.registerPlugin',
 		kemia.controller.ReactionEditor.prototype.registerPlugin);
+goog.exportSymbol('kemia.controller.ReactionEditor.prototype.addEventListener', 
+		kemia.controller.ReactionEditor.prototype.addEventListener)
+goog.exportSymbol('kemia.controller.ReactionEditor.EventType.CLEAR', 
+				kemia.controller.ReactionEditor.EventType.CLEAR)
 
 // toolbar
 goog.exportSymbol('kemia.controller.ToolbarController', kemia.controller.ToolbarController);

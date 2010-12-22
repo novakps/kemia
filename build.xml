@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <project name="kemia" default="usage">
-	<tstamp />
 	<property name="base.dir" location="." />
 	<property name="build.dir" value="${base.dir}/build" />
 	<property name="test.dir" location="${base.dir}/test/java" />
@@ -14,20 +13,8 @@
 	<property name="selenium-java-client.jar" value="${base.dir}/third-party/selenium-java-client-driver-1.0.1/selenium-java-client-driver.jar" />
 	<property name="junit.jar" value="${base.dir}/third-party/junit/junit-4.8.2.jar" />
 	<property name="plovr.jar" value="${base.dir}/third-party/plovr/plovr.jar" />
-	<property name="api.plovr.config" value="${base.dir}/kemia/plovr-config.js" />
-	<property name="controller.plovr.config" value="${base.dir}/kemia/controller/plovr-config.js" />
-	<property name="controller.reactoneditor_test.plover.config" value="${base.dir}/kemia/controller/reactioneditor_test_plovr.js" />
-	<property name="controller.molecule.editor.demo.plovr.config" value="${base.dir}/kemia/controller/molecule_editor_demo_plovr.js" />
-	<property name="graphics.plovr.config" value="${base.dir}/kemia/graphics/plovr-config.js" />
-	<property name="io.plovr.config" value="${base.dir}/kemia/io/plovr-config.js" />
-	<property name="smiles.plovr.config" value="${base.dir}/kemia/io/smiles/plovr-config.js" />
-	<property name="layout.plovr.config" value="${base.dir}/kemia/layout/plovr-config.js" />
-	<property name="math.plovr.config" value="${base.dir}/kemia/math/plovr-config.js" />
-	<property name="model.plovr.config" value="${base.dir}/kemia/model/plovr-config.js" />
-	<property name="query.plovr.config" value="${base.dir}/kemia/query/plovr-config.js" />
-	<property name="ring.plovr.config" value="${base.dir}/kemia/ring/plovr-config.js" />
-	<property name="view.plovr.config" value="${base.dir}/kemia/view/plovr-config.js" />
-	<property name="versioned.plovr.config" value="${base.dir}/kemia/temp-plovr-config.js" />
+	<property name="api.plovr.config" value="${base.dir}/kemia/api_plovr.js" />
+	<property name="versioned.plovr.config" value="${base.dir}/kemia//versioned-plovr-config.js" />
 
 	<path id="classpath.test">
 		<pathelement location="${selenium-java-client.jar}" />
@@ -42,16 +29,6 @@
 		<javac srcdir="${test.dir}">
 			<classpath refid="classpath.test" />
 		</javac>
-	</target>
-
-	<available file=".git" type="dir" property="git.present" />
-
-	<target name="git.revision" if="git.present">
-		<exec executable="git" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
-			<arg value="describe" />
-			<arg value="--match=v*" />
-		</exec>
-		<echo>"version:  ${git.revision}"</echo>
 	</target>
 
 	<target name="start-selenium-server">
@@ -110,13 +87,25 @@
 		<delete dir="${doc.dir}" />
 	</target>
 
-	<target name="build-deps" description="rebuild deps.js file">
-		<exec executable="python" failonerror="true" logError="true" output="${js-src.dir}/deps.js">
-			<arg value="${closure-library.dir}/bin/calcdeps.py" />
-			<arg line='-p "${closure-library.dir}"' />
-			<arg line='-p "${js-src.dir}"' />
-			<arg line="-o deps" />
+	<target name="git.revision" if="git.present">
+		<exec executable="git" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
+			<arg value="describe" />
+			<arg value="--match=v*" />
 		</exec>
+		<echo>"version:  ${git.revision}"</echo>
+	</target>
+
+	<target name="init" depends="clean, git.revision">
+		<tstamp />
+		<mkdir dir="${build.dir}" />
+	</target>
+	
+	<available file=".git" type="dir" property="git.present" />
+
+	<target name="set-version" depends="init">
+		<copy file="${api.plovr.config}" tofile="${versioned.plovr.config}" />
+		<replace file="${versioned.plovr.config}" token="%REVISION%" value="${git.revision}" />
+		<replace file="${versioned.plovr.config}" token="%TIMESTAMP%" value="${TODAY}" />
 	</target>
 
 	<target name="build-docs" description="build the JsDoc documentation">
@@ -125,11 +114,6 @@
 		</exec>
 	</target>
 
-	<target name="set-version" depends="git.revision">
-		<copy file="${api.plovr.config}" tofile="${versioned.plovr.config}" />
-		<replace file="${versioned.plovr.config}" token="%REVISION%" value="${git.revision}" />
-		<replace file="${versioned.plovr.config}" token="%TIMESTAMP%" value="${TODAY}" />
-	</target>
 
 	<target name="compile" description="compile with plovr" depends="set-version">
 		<java jar="${plovr.jar}" fork="true" failonerror="true" maxmemory="512m" output="${build.dir}/kemia.js" logError="true">
@@ -143,14 +127,14 @@
 	</target>
 
 	<target name="run-compile-server" description="run plovr dynamic compilation server">
-	    <fileset dir="${base.dir}/kemia" id="plovr-configs">
-	        <include name="**/*plovr.js" />
-	    </fileset>
-	    <pathconvert property="plovr.configs" refid="plovr-configs" pathsep=" " />
+		<fileset dir="${base.dir}/kemia" id="plovr-configs">
+			<include name="**/*plovr.js" />
+		</fileset>
+		<pathconvert property="plovr.configs" refid="plovr-configs" pathsep=" " />
 		<pathconvert property="echo.plovr.configs" refid="plovr-configs" pathsep="${line.separator}|   |-- " />
-		<echo message="|-- found plovr configs:"/>
-		<echo message="|   |"/>
-		<echo message="|   |-- ${echo.plovr.configs}"/>
+		<echo message="|-- found plovr configs:" />
+		<echo message="|   |" />
+		<echo message="|   |-- ${echo.plovr.configs}" />
 		<java jar="${plovr.jar}" fork="true" failonerror="true" maxmemory="512m" logError="true">
 			<arg value="serve" />
 			<arg line="${plovr.configs}" />
