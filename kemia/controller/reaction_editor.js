@@ -181,9 +181,12 @@ kemia.controller.ReactionEditor.getActiveEditorId = function() {
 /**
  * clears editor and dispatches event of type kemia.controller.ReactionEditor.CLEAR
  */
-
 kemia.controller.ReactionEditor.prototype.clear = function() {
+	this.initModels();
+	this.dispatchEvent(kemia.controller.ReactionEditor.EventType.CLEAR);
+};
 
+kemia.controller.ReactionEditor.prototype.initModels = function() {
 	this.graphics.clear();
 	this.models = [new kemia.model.Reaction()];
 
@@ -192,8 +195,7 @@ kemia.controller.ReactionEditor.prototype.clear = function() {
 
 	this.graphics.drawRect(0, 0, this.graphics.getSize().width, this.graphics
 			.getSize().height, null, fill);
-	this.dispatchEvent(kemia.controller.ReactionEditor.EventType.CLEAR);
-};
+}
 
 kemia.controller.ReactionEditor.prototype.getScaleFactor = function() {
 	return this.reactionRenderer.scale_factor;
@@ -205,7 +207,7 @@ kemia.controller.ReactionEditor.prototype.setScaleFactor = function(scale) {
 };
 
 kemia.controller.ReactionEditor.prototype.setModelsSilently = function(models) {
-	this.clear();
+	this.initModels();
 	this.models = [];
 	goog.array.forEach(models, function(model) {
 		var reaction;
@@ -842,7 +844,7 @@ kemia.controller.ReactionEditor.EventType = {
 	/**
 	 * Dispatched when the editor clears its contents.
 	 */
-	CLEAR: goog.events.getUniqueId('clear');
+	CLEAR: goog.events.getUniqueId('clear')
 };
 
 /**
