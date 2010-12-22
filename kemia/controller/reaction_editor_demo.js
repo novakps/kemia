@@ -30,9 +30,7 @@ function initPage() {
 		showTerminalCarbons: false
 	});
 	
-	// event listener that calls an alert
-	editor.addEventListener(kemia.controller.ReactionEditor.EventType.CLEAR, 
-		    function(e) { alert('Cleared!'); }); 
+
 
 	editor.registerPlugin(new kemia.controller.plugins.Move());
 	editor.registerPlugin(new kemia.controller.plugins.ClearEditor());
