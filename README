@@ -8,7 +8,7 @@ Using Kemia
 
 <html>
 	<head>
-		<script src="http://kemia.github.com/js/kemia.js" ></script>
+		<script src='http://kemia.github.com/js/kemia.js'></script>
 		<script>
 		  function initPage(){
 			var smiles = 'N[C@@H](CCC(=O)N[C@@H](CSSC[C@H](NC(=O)CC[C@H](N)C(O)=O)C(=O)NCC(O)=O)C(=O)NCC(O)=O)C(O)=O';
@@ -38,17 +38,22 @@ The default target for the ant script is a usage guide, so executing 'ant' at th
 > ant
 Main targets:
 
- build-deps  rebuild deps.js file
- build-docs  build the JsDoc documentation
- clean       delete generated files
- compile     compile with plovr
- test        Start Selenium ; Run Junit tests ; stop Selenium
- usage       Display main targets by running 'ant -projecthelp'
+ build-deps          rebuild deps.js file
+ build-docs          build the JsDoc documentation
+ clean               delete generated files
+ compile             compile with plovr
+ run-compile-server  run plovr dynamic compilation server
+ test                Start Selenium ; Run Junit tests ; stop Selenium
+ usage               Display main targets by running 'ant -projecthelp'
 Default target: usage
 
-Executing "ant compile" will generate the minified and compiled library at build/kemia.js
 
-Executing "ant compile-server" will start the plovr dynamic compile server, see the Getting Involved Guide at http://kemia.github.com/
+Executing "ant compile" will generate the minified and compiled library at build/kemia.js, this contains everything you need to start using Kemia in your webpage.
+
+
+Developing Kemia
+
+Executing "ant run-compile-server" will start the plovr dynamic compile server, see the Getting Involved Guide at http://kemia.github.com/ for more information.
 
 
 
