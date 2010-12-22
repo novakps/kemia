@@ -178,6 +178,10 @@ kemia.controller.ReactionEditor.getActiveEditorId = function() {
 	return kemia.controller.ReactionEditor.activeEditorId_;
 };
 
+/**
+ * clears editor and dispatches event of type kemia.controller.ReactionEditor.CLEAR
+ */
+
 kemia.controller.ReactionEditor.prototype.clear = function() {
 
 	this.graphics.clear();
@@ -188,6 +192,7 @@ kemia.controller.ReactionEditor.prototype.clear = function() {
 
 	this.graphics.drawRect(0, 0, this.graphics.getSize().width, this.graphics
 			.getSize().height, null, fill);
+	this.dispatchEvent(kemia.controller.ReactionEditor.EventType.CLEAR);
 };
 
 kemia.controller.ReactionEditor.prototype.getScaleFactor = function() {
@@ -816,24 +821,28 @@ kemia.controller.ReactionEditor.EventType = {
 	 * Dispatched when the command state of the selection may have changed. This
 	 * event should be listened to for updating toolbar state.
 	 */
-	COMMAND_VALUE_CHANGE: 'cvc',
+	COMMAND_VALUE_CHANGE: goog.events.getUniqueId('cvc'),
 	/**
 	 * Dispatched when the editor is loaded and ready to use.
 	 */
-	LOAD: 'load',
+	LOAD: goog.events.getUniqueId('load'),
 	/**
 	 * Dispatched when the editor is fully unloaded and uneditable.
 	 */
-	UNLOAD: 'unload',
+	UNLOAD: goog.events.getUniqueId('unload'),
 	/**
 	 * Dispatched before the editor contents are changed.
 	 */
-	BEFORECHANGE: 'beforechange',
+	BEFORECHANGE: goog.events.getUniqueId('beforechange'),
 	/**
 	 * Dispatched when the editor contents change, in FF only. Used for internal
 	 * resizing, please do not use.
 	 */
-	CHANGE: 'change'
+	CHANGE: goog.events.getUniqueId('change'),
+	/**
+	 * Dispatched when the editor clears its contents.
+	 */
+	CLEAR: goog.events.getUniqueId('clear');
 };
 
 /**
