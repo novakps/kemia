@@ -17,23 +17,21 @@ goog.require('kemia.controller.plugins.ClearEditor');
 goog.require('kemia.controller.plugins.Erase');
 goog.require('kemia.controller.plugins.MoleculeEdit');
 goog.require('kemia.controller.plugins.Move');
-//goog.require('kemia.controller.plugins.Cleanup');
+// goog.require('kemia.controller.plugins.Cleanup');
 goog.require('kemia.controller.plugins.UndoRedo');
 goog.require('kemia.controller.plugins.Zoom');
 
-
 kemia.controller.DefaultToolbar.makeActionButtons = function(buttons) {
 
-	var file_select = kemia.controller.ToolbarFactory.makeSelectButton(
-			kemia.controller.plugins.ClearEditor.COMMAND, 'File',
-			'File');
 	var file_menu = new goog.ui.Menu();
-	var erase_all = new goog.ui.Option(goog.dom.createDom(
-			goog.dom.TagName.DIV, undefined, 'New'));
-	file_menu.addChild(erase_all, true);
-	file_select.setMenu(file_menu);
-	file_select.queryable = true;
-	buttons.push(file_select);
+    var file_button = new goog.ui.MenuButton('File', file_menu);
+
+	var erase_all = kemia.controller.ToolbarFactory.makeButton(kemia.controller.plugins.ClearEditor.COMMAND, 'Clear all', 'New');
+
+	file_menu.addItem(erase_all);
+
+	file_button.queryable = true;
+	buttons.push(file_button);
 
 	buttons.push(new goog.ui.ToolbarSeparator());
 
@@ -74,10 +72,10 @@ kemia.controller.DefaultToolbar.makeActionButtons = function(buttons) {
 	erase.queryable = true;
 	buttons.push(erase);
 
-//	buttons.push(kemia.controller.ToolbarFactory.makeButton(
-//			kemia.controller.plugins.Cleanup.COMMAND, 'Cleanup', '', goog
-//					.getCssName('tr-icon')
-//					+ ' ' + goog.getCssName('tr-cleanup')));
+	// buttons.push(kemia.controller.ToolbarFactory.makeButton(
+	// kemia.controller.plugins.Cleanup.COMMAND, 'Cleanup', '', goog
+	// .getCssName('tr-icon')
+	// + ' ' + goog.getCssName('tr-cleanup')));
 
 	buttons.push(new goog.ui.ToolbarSeparator());
 
@@ -118,7 +116,7 @@ kemia.controller.DefaultToolbar.makeAtomBondTemplateButtons = function(buttons) 
 	var atom_select = kemia.controller.ToolbarFactory.makeSelectButton(
 			kemia.controller.plugins.AtomEdit.COMMAND, 'Atomic Symbol',
 			'Symbol');// ,goog.getCssName('tr-icon') + ' ' +
-						// goog.getCssName('tr-symbol'));
+	// goog.getCssName('tr-symbol'));
 	atom_select.queryable = true;
 	// How to update this button.
 	atom_select.updateFromValue = function(value) {
@@ -129,52 +127,55 @@ kemia.controller.DefaultToolbar.makeAtomBondTemplateButtons = function(buttons) 
 			atom_select.setValue(value);
 		}
 	}
-	var atom_menu = new goog.ui.Menu();	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
+	var atom_menu = new goog.ui.Menu();
+	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
-				style: 'color:grey'
+				style : 'color:grey'
 			}, 'H')), true);
 	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
-				style: 'color:black'
+				style : 'color:black'
 			}, 'C')), true);
 	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
-				style: 'color:blue'
+				style : 'color:blue'
 			}, 'N')), true);
 	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
-				style: 'color:red'
+				style : 'color:red'
 			}, 'O')), true);
 	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
-				style: 'color:yellow'
+				style : 'color:yellow'
 			}, 'S')), true);
 	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
-				style: 'color:orange'
+				style : 'color:orange'
 			}, 'P')), true);
 	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
-				style: 'color:green'
+				style : 'color:green'
 			}, 'F')), true);
 	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
-				style: 'color:green'
+				style : 'color:green'
 			}, 'Cl')), true);
 	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
-				style: 'color:DarkRed'
+				style : 'color:DarkRed'
 			}, 'Br')), true);
 	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
 			goog.dom.TagName.DIV, {
-				style: 'color:purple'
+				style : 'color:purple'
 			}, 'I')), true);
 	atom_menu.addChild(new goog.ui.MenuSeparator(), true);
 	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
-			goog.dom.TagName.DIV, {style: 'color:black'
+			goog.dom.TagName.DIV, {
+				style : 'color:black'
 			}, 'R1')), true);
 	atom_menu.addChild(new goog.ui.Option(goog.dom.createDom(
-			goog.dom.TagName.DIV, {style: 'color:black'
+			goog.dom.TagName.DIV, {
+				style : 'color:black'
 			}, 'R2')), true);
 	// atom_menu.addChild(new goog.ui.Option('...'), true);//TTD periodic table
 	atom_select.setMenu(atom_menu);
@@ -182,10 +183,10 @@ kemia.controller.DefaultToolbar.makeAtomBondTemplateButtons = function(buttons) 
 
 	var bond_select = kemia.controller.ToolbarFactory.makeSelectButton(
 			kemia.controller.plugins.BondEdit.COMMAND, 'Bond Type', 'Bond');// ,
-																			// goog.getCssName('tr-icon')
-																			// + '
-																			// ' +
-																			// goog.getCssName('tr-bond'));
+	// goog.getCssName('tr-icon')
+	// + '
+	// ' +
+	// goog.getCssName('tr-bond'));
 	bond_select.queryable = true;
 	// How to update this button.
 	bond_select.updateFromValue = function(value) {
@@ -206,7 +207,7 @@ kemia.controller.DefaultToolbar.makeAtomBondTemplateButtons = function(buttons) 
 	var template_select = kemia.controller.ToolbarFactory.makeSelectButton(
 			kemia.controller.plugins.MoleculeEdit.COMMAND, 'Template',
 			'Template');// , goog.getCssName('tr-icon') + ' ' +
-						// goog.getCssName('tr-template'), renderer);
+	// goog.getCssName('tr-template'), renderer);
 
 	template_select.queryable = true;
 	// How to update this button.
@@ -227,21 +228,21 @@ kemia.controller.DefaultToolbar.makeAtomBondTemplateButtons = function(buttons) 
 	// buttons.push(kemia.controller.ToolbarFactory.makeButton(kemia.controller.plugins.Smiles.COMMAND,
 	// 'SMILES', 'paste SMILES'));
 
-
 	return buttons;
 };
 
 kemia.controller.DefaultToolbar.makeDefaultMoleculeToolbar = function(elem) {
 	var buttons = kemia.controller.DefaultToolbar.makeActionButtons([]);
 	var buttons = kemia.controller.DefaultToolbar.makeZoomButtons(buttons);
-	var buttons = kemia.controller.DefaultToolbar.makeAtomBondTemplateButtons(buttons);
+	var buttons = kemia.controller.DefaultToolbar
+			.makeAtomBondTemplateButtons(buttons);
 	return kemia.controller.DefaultToolbar.makeToolbar(buttons, elem);
 };
 
 /**
  * Creates a {@link goog.ui.Toolbar} containing a default set of editor toolbar
  * buttons, and renders it into the given parent element.
- *
+ * 
  * @param {!Element}
  *            elem Toolbar parent element.
  * @param {boolean=}
@@ -256,7 +257,8 @@ kemia.controller.DefaultToolbar.makeDefaultReactionToolbar = function(elem) {
 	var buttons = kemia.controller.DefaultToolbar.makeActionButtons([]);
 	var buttons = kemia.controller.DefaultToolbar.makeArrowPlusButtons(buttons);
 	var buttons = kemia.controller.DefaultToolbar.makeZoomButtons(buttons);
-	var buttons = kemia.controller.DefaultToolbar.makeAtomBondTemplateButtons(buttons);
+	var buttons = kemia.controller.DefaultToolbar
+			.makeAtomBondTemplateButtons(buttons);
 	return kemia.controller.DefaultToolbar.makeToolbar(buttons, elem);
 
 };
@@ -267,8 +269,9 @@ kemia.controller.DefaultToolbar.makeDefaultReactionToolbar = function(elem) {
  * {@code items} array must either be a {@link goog.editor.Command} (to create a
  * built-in button) or a subclass of {@link goog.ui.Control} (to create a custom
  * control).
- *
- * @param {!Array.<string|goog.ui.Control>} items Toolbar items; each must be a
+ * 
+ * @param {!Array.
+ *            <string|goog.ui.Control>} items Toolbar items; each must be a
  *            {@link goog.editor.Command} or a {@link goog.ui.Control}.
  * @param {!Element}
  *            elem Toolbar parent element.
@@ -282,7 +285,7 @@ kemia.controller.DefaultToolbar.makeToolbar = function(items, elem) {
 	var domHelper = goog.dom.getDomHelper(elem);
 	var controls = [];
 
-	for (var i = 0, button; button = items[i]; i++) {
+	for ( var i = 0, button; button = items[i]; i++) {
 		if (goog.isString(button)) {
 			button = kemia.controller.DefaultToolbar.makeBuiltInToolbarButton(
 					button, domHelper);
@@ -300,7 +303,7 @@ kemia.controller.DefaultToolbar.makeToolbar = function(items, elem) {
  * {@link goog.editor.Command}, or null if no built-in button exists for the
  * command. Note that this function is only intended to create built-in buttons;
  * please don't try to hack it!
- *
+ * 
  * @param {string}
  *            command Editor command ID.
  * @param {goog.dom.DomHelper=}
@@ -338,15 +341,15 @@ kemia.controller.DefaultToolbar.makeBuiltInToolbarButton = function(command,
 
 /**
  * A set of built-in buttons to display in the default editor toolbar.
- *
+ * 
  * @type {!Array.<string>}
  */
-kemia.controller.DefaultToolbar.DEFAULT_BUTTONS = [kemia.controller.Command.INSERT_ATOM];
+kemia.controller.DefaultToolbar.DEFAULT_BUTTONS = [ kemia.controller.Command.INSERT_ATOM ];
 
 /**
  * A set of built-in buttons to display in the default editor toolbar when the
  * editor chrome is right-to-left (BiDi mode only).
- *
+ * 
  * @type {!Array.<string>}
  */
 kemia.controller.DefaultToolbar.DEFAULT_BUTTONS_RTL = [];
@@ -355,7 +358,7 @@ kemia.controller.DefaultToolbar.DEFAULT_BUTTONS_RTL = [];
  * Creates a toolbar button with the given ID, tooltip, and caption. Applies any
  * custom CSS class names to the button's caption element. This button is
  * designed to be used as the RTL button.
- *
+ * 
  * @param {string}
  *            id Button ID; must equal a {@link kemia.controller.Command} for
  *            built-in buttons, anything else for custom buttons.
@@ -396,7 +399,7 @@ kemia.controller.DefaultToolbar.rtlButtonFactory_ = function(id, tooltip,
  * Creates a toolbar button with the given ID, tooltip, and caption. Applies any
  * custom CSS class names to the button's caption element. Designed to be used
  * to create undo and redo buttons.
- *
+ * 
  * @param {string}
  *            id Button ID; must equal a {@link kemia.controller.Command} for
  *            built-in buttons, anything else for custom buttons.
@@ -429,7 +432,7 @@ kemia.controller.DefaultToolbar.undoRedoButtonFactory_ = function(id, tooltip,
  * Creates a toolbar button with the given ID, tooltip, and caption. Applies any
  * custom CSS class names to the button's caption element. Used to create a font
  * face button, filled with default fonts.
- *
+ * 
  * @param {string}
  *            id Button ID; must equal a {@link kemia.controller.Command} for
  *            built-in buttons, anything else for custom buttons.
@@ -484,7 +487,7 @@ kemia.controller.DefaultToolbar.fontFaceFactory_ = function(id, tooltip,
  * Creates a toolbar button with the given ID, tooltip, and caption. Applies any
  * custom CSS class names to the button's caption element. Use to create a font
  * size button, filled with default font sizes.
- *
+ * 
  * @param {string}
  *            id Button ID; must equal a {@link kemia.controller.Command} for
  *            built-in buttons, anything else for custom buttons.
@@ -536,7 +539,7 @@ kemia.controller.DefaultToolbar.fontSizeFactory_ = function(id, tooltip,
 
 /**
  * Function to update the state of a color menu button.
- *
+ * 
  * @param {goog.ui.ToolbarColorMenuButton}
  *            button The button to which the color menu is attached.
  * @param {number}
@@ -567,7 +570,7 @@ kemia.controller.DefaultToolbar.colorUpdateFromValue_ = function(button, value) 
  * Creates a toolbar button with the given ID, tooltip, and caption. Applies any
  * custom CSS class names to the button's caption element. Use to create a font
  * color button.
- *
+ * 
  * @param {string}
  *            id Button ID; must equal a {@link kemia.controller.Command} for
  *            built-in buttons, anything else for custom buttons.
@@ -601,7 +604,7 @@ kemia.controller.DefaultToolbar.fontColorFactory_ = function(id, tooltip,
  * Creates a toolbar button with the given ID, tooltip, and caption. Applies any
  * custom CSS class names to the button's caption element. Use to create a font
  * background color button.
- *
+ * 
  * @param {string}
  *            id Button ID; must equal a {@link kemia.controller.Command} for
  *            built-in buttons, anything else for custom buttons.
@@ -635,7 +638,7 @@ kemia.controller.DefaultToolbar.backgroundColorFactory_ = function(id, tooltip,
  * Creates a toolbar button with the given ID, tooltip, and caption. Applies any
  * custom CSS class names to the button's caption element. Use to create the
  * format menu, prefilled with default formats.
- *
+ * 
  * @param {string}
  *            id Button ID; must equal a {@link kemia.controller.Command} for
  *            built-in buttons, anything else for custom buttons.
@@ -813,7 +816,7 @@ kemia.controller.DefaultToolbar.MSG_EDIT_HTML_CAPTION = goog
  * Note that this object is only used for creating toolbar buttons for built-in
  * editor commands; custom buttons aren't listed here. Please don't try to hack
  * this!
- *
+ * 
  * @type {Object.<!kemia.controller.ReactionEditor.ButtonDescriptor>}.
  * @private
  */
@@ -833,7 +836,7 @@ kemia.controller.DefaultToolbar.ButtonDescriptor = goog.typedef;
  * descriptor objects. This array is processed at JS parse time; each item is
  * inserted into {@link kemia.controller.DefaultToolbar.buttons_}, and the
  * array itself is deleted and (hopefully) garbage-collected.
- *
+ * 
  * @type {Array.<!kemia.controller.ReactionEditor.ButtonDescriptor>}.
  * @private
  */
@@ -842,7 +845,7 @@ kemia.controller.DefaultToolbar.BUTTONS_ = [];
 (function() {
 	// Create the kemia.controller.DefaultToolbar.buttons_ map from
 	// kemia.controller.DefaultToolbar.BUTTONS_.
-	for (var i = 0, button; button = kemia.controller.DefaultToolbar.BUTTONS_[i]; i++) {
+	for ( var i = 0, button; button = kemia.controller.DefaultToolbar.BUTTONS_[i]; i++) {
 		kemia.controller.DefaultToolbar.buttons_[button.command] = button;
 	}
 
