@@ -3,35 +3,35 @@ goog.require('kemia.ring.RingFinder');
 goog.require('goog.testing.jsunit');
 goog.require('kemia.io.smiles.SmilesParser');
 goog.require('kemia.io.mdl');
-goog.require('kemia.ring.Testdata.azulene');
-goog.require('kemia.ring.Testdata.alpha_pinene');
-goog.require('kemia.ring.Testdata.biphenyl');
-goog.require('kemia.ring.Testdata.spiro_decane');
+goog.require('kemia.ring.testdata.Azulene');
+goog.require('kemia.ring.testdata.AlphaPinene');
+goog.require('kemia.ring.testdata.Biphenyl');
+goog.require('kemia.ring.testdata.SpiroDecane');
 
 var testFindAzulene = function() {
 //	var mol = kemia.io.smiles.parse('c1cccc2cccc2c1');
-	var mol = kemia.io.mdl.readMolfile(kemia.ring.Testdata.azulene);
+	var mol = kemia.io.mdl.readMolfile(kemia.ring.testdata.Azulene);
 	var rings = kemia.ring.RingFinder.findRings(mol);
 	assertEquals('should find 2 rings', 2, rings.length);	
 }
 
 var testFindAlphaPinene = function() {
 //	var mol = kemia.io.smiles.SmilesParser.parse('CC1=CCC2CC1C2(C)C');
-	var mol=kemia.io.mdl.readMolfile(kemia.ring.Testdata.alpha_pinene);
+	var mol=kemia.io.mdl.readMolfile(kemia.ring.testdata.AlphaPinene);
 	var rings = kemia.ring.RingFinder.findRings(mol);
 	assertEquals('should find 2 rings', 2, rings.length);
 }
 
 function testFindBiphenyl(){
 //	var mol = kemia.io.smiles.SmilesParser.parse('c1ccccc1(c2ccccc2)');
-	var mol = kemia.io.mdl.readMolfile(kemia.ring.Testdata.biphenyl);
+	var mol = kemia.io.mdl.readMolfile(kemia.ring.testdata.Biphenyl);
 	var rings = kemia.ring.RingFinder.findRings(mol);
 	assertEquals('should find 2 rings', 2, rings.length);
 }
 
 function testFindSpiro45Decane(){
 //	var mol = kemia.io.smiles.SmilesParser.parse('O=C1CCC(=O)C12CCCCC2');
-	var mol=kemia.io.mdl.readMolfile(kemia.ring.Testdata.spiro_decane);
+	var mol=kemia.io.mdl.readMolfile(kemia.ring.testdata.SpiroDecane);
 	var rings = kemia.ring.RingFinder.findRings(mol);
 	assertEquals('should find 2 rings', 2, rings.length);
 }

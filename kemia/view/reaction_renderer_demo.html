@@ -3,13 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>kemia.view.ReactionRenderer</title>
-<!-- 
- <script src="../../kemia_compiled.js"></script>
- -->
-<script src="../../third-party/closure/closure/goog/base.js"></script>
-<script src="../deps.js"></script>
+<script src="http://localhost:9810/compile?id=api&mode=raw"></script>
 
-<script src="../io/json_test_rxn.js"></script>
+<script src="../io/testdata.js"></script>
 
 <script>
 	goog.require('kemia.io.mdl');
@@ -25,7 +21,7 @@
 function initPage(){
 	var c = new goog.debug.Console(); 
 	c.setCapturing(true); 
-	var reaction = kemia.io.json.readReaction(reactionDrawing);
+	var reaction = kemia.io.json.readReaction(kemia.io.Testdata.reactionDrawing);
 	var element = goog.dom.getElement('reactionContainer')
 	var graphics = goog.graphics.createGraphics(element.clientWidth,
 			element.clientHeight);
@@ -34,6 +30,8 @@ function initPage(){
 	var rr = new kemia.view.ReactionRenderer( graphics);
 
 	rr.render(reaction);
+	rr.moleculeRenderer.highlightOn(
+			reaction.getReactants()[0], 'blue');
 };
 
 goog.events.listen(window, goog.events.EventType.LOAD, initPage);

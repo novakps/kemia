@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Kemia- All JsUnit Tests</title>
+<script src="http://localhost:9810/compile?id=all_tests&mode=ADVANCED"></script>
+
+<link rel="stylesheet" href="../css/multitestrunner.css" type="text/css">
+<style>
+h1 {
+  font: normal x-large arial, helvetica, sans-serif;
+  margin: 0;
+}
+p, form {
+  font: normal small sans-serif;
+  margin: 0;
+}
+#header {
+  position: absolute;
+  right: 10px;
+  top: 13px;
+}
+#footer {
+  margin-top: 8px;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+</style>
+</head>
+<body>
+<h1>Kemia - All JsUnit Tests</h1>
+
+<div id="runner"></div>
+<!--  Use a form so browser persists input values -->
+<form id="footer" onsubmit="return false">
+  Settings:<br>
+  <input type="checkbox" name="hidepasses" id="hidepasses" checked>
+  <label for="hidepasses">Hide passes</label><br>
+  <input type="checkbox" name="parallel" id="parallel" checked>
+  <label for="parallel">Run in parallel</label>
+  <small>(timing stats not available if enabled)</small><br>
+  <input type="text" name="filter" id="filter" value="">
+  <label for="filter">Run only tests for path</label>
+</form>
+
+</body>
+</html>

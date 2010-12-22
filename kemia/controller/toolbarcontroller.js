@@ -1,22 +1,22 @@
 goog.provide('kemia.controller.ToolbarController');
 
-goog.require('kemia.controller.ReactionEditor.EventType');
 goog.require('goog.events.EventHandler');
 goog.require('goog.events.EventTarget');
 goog.require('goog.ui.Component.EventType');
+goog.require('kemia.controller.ReactionEditor.EventType');
 
 /**
  * A class for managing the editor toolbar. Acts as a bridge between a
  * {@link kemia.controller.ReactionEditor} and a {@link goog.ui.Toolbar}.
- * 
+ *
  * The {@code toolbar} argument must be an instance of {@link goog.ui.Toolbar}
  * or a subclass. This class doesn't care how the toolbar was created. As long
  * as one or more controls hosted in the toolbar have IDs that match built-in
  * {@link kemia.controller.ReactionEditor.Command}s, they will function as
  * expected. It is the caller's responsibility to ensure that the toolbar is
  * already rendered or that it decorates an existing element.
- * 
- * 
+ *
+ *
  * @param {!kemia.controller.ReactionEditor}
  *            editor to be controlled by the toolbar.
  * @param {!goog.ui.Toolbar}
@@ -29,7 +29,7 @@ kemia.controller.ToolbarController = function(editor, toolbar) {
 
 	/**
 	 * Event handler to listen for editor events and user actions.
-	 * 
+	 *
 	 * @type {!goog.events.EventHandler}
 	 * @private
 	 */
@@ -37,7 +37,7 @@ kemia.controller.ToolbarController = function(editor, toolbar) {
 
 	/**
 	 * The editor instance controlled by the toolbar.
-	 * 
+	 *
 	 * @type {!kemia.controller.ToolbarController}
 	 * @private
 	 */
@@ -45,7 +45,7 @@ kemia.controller.ToolbarController = function(editor, toolbar) {
 
 	/**
 	 * The toolbar that controls the editor.
-	 * 
+	 *
 	 * @type {!goog.ui.Toolbar}
 	 * @private
 	 */
@@ -53,7 +53,7 @@ kemia.controller.ToolbarController = function(editor, toolbar) {
 
 	/**
 	 * Editing commands whose state is to be queried when updating the toolbar.
-	 * 
+	 *
 	 * @type {!Array.<string>}
 	 * @private
 	 */
@@ -84,7 +84,7 @@ goog.inherits(kemia.controller.ToolbarController, goog.events.EventTarget);
  * Returns the Closure component ID of the control that corresponds to the given
  * {@link kemia.controller.Command} constant. Subclasses may override this
  * method if they want to use a custom mapping scheme from commands to controls.
- * 
+ *
  * @param {string}
  *            command Editor command.
  * @return {string} Closure component ID of the corresponding toolbar control,
@@ -101,7 +101,7 @@ kemia.controller.ToolbarController.prototype.getComponentId = function(command) 
  * Returns the {@link kemia.controller.Command} constant that corresponds to the
  * given Closure component ID. Subclasses may override this method if they want
  * to use a custom mapping scheme from controls to commands.
- * 
+ *
  * @param {string}
  *            id Closure component ID of a toolbar control.
  * @return {string} Editor command or dialog constant corresponding to the
@@ -117,7 +117,7 @@ kemia.controller.ToolbarController.prototype.getCommand = function(id) {
 /**
  * Returns the event handler object for the editor toolbar. Useful for classes
  * that extend {@code kemia.controller.ToolbarController}.
- * 
+ *
  * @return {!goog.events.EventHandler} The event handler object.
  * @protected
  */
@@ -128,7 +128,7 @@ kemia.controller.ToolbarController.prototype.getHandler = function() {
 /**
  * Returns the editor instance managed by the toolbar. Useful for classes that
  * extend {@code kemia.controller.ToolbarController}.
- * 
+ *
  * @return {!kemia.controller.ReactionEditor} The editor managed by the toolbar.
  * @protected
  */
@@ -139,7 +139,7 @@ kemia.controller.ToolbarController.prototype.getEditor = function() {
 /**
  * Returns the toolbar UI component that manages the editor. Useful for classes
  * that extend {@code kemia.controller.ToolbarController}.
- * 
+ *
  * @return {!goog.ui.Toolbar} The toolbar UI component.
  */
 kemia.controller.ToolbarController.prototype.getToolbar = function() {
@@ -155,7 +155,7 @@ kemia.controller.ToolbarController.prototype.isVisible = function() {
 
 /**
  * Shows or hides the toolbar.
- * 
+ *
  * @param {boolean}
  *            visible Whether to show or hide the toolbar.
  */
@@ -172,7 +172,7 @@ kemia.controller.ToolbarController.prototype.isEnabled = function() {
 
 /**
  * Enables or disables the toolbar.
- * 
+ *
  * @param {boolean}
  *            enabled Whether to enable or disable the toolbar.
  */
@@ -210,7 +210,7 @@ kemia.controller.ToolbarController.prototype.disposeInternal = function() {
  * Updates the toolbar in response to editor events. Specifically, updates
  * button states based on {@code COMMAND_VALUE_CHANGE} events, reflecting the
  * effective formatting of the selection.
- * 
+ *
  * @param {goog.events.Event}
  *            e Editor event to handle.
  * @protected
@@ -244,7 +244,7 @@ kemia.controller.ToolbarController.prototype.updateToolbar = function(e) {
 
 /**
  * Updates the toolbar to reflect a given state.
- * 
+ *
  * @param {Object}
  *            state Object mapping editor commands to values.
  */
@@ -252,7 +252,7 @@ kemia.controller.ToolbarController.prototype.updateToolbarFromState = function(
 		state) {
 //	this.logger.info('updateToobarFromState');
 
-	for ( var command in state) {
+	for (var command in state) {
 		var button = this.toolbar_.getChild(this.getComponentId(command));
 		if (button) {
 			var value = state[command];
@@ -269,7 +269,7 @@ kemia.controller.ToolbarController.prototype.updateToolbarFromState = function(
 /**
  * Handles {@code ACTION} events dispatched by toolbar buttons in response to
  * user actions by executing the corresponding editor command.
- * 
+ *
  * @param {goog.events.Event}
  *            e Action event to handle.
  * @protected
@@ -298,7 +298,7 @@ kemia.controller.ToolbarController.prototype.handleAction = function(e) {
 
 /**
  * The logger for this class.
- * 
+ *
  * @type {goog.debug.Logger}
  * @protected
  */

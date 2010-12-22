@@ -20,6 +20,7 @@ goog.require('kemia.model.Atom');
 goog.require('goog.debug.Logger');
 goog.require('goog.math.Vec2');
 goog.require('kemia.graphics.AffineTransform');
+goog.require('goog.math.Box');
 
 /**
  * Class representing a Molecule

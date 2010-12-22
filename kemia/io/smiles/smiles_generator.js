@@ -1,18 +1,18 @@
-goog.provide("kemia.io.smiles.SmilesGenerator");
-goog.require('kemia.model.Molecule');
+goog.provide('kemia.io.smiles.SmilesGenerator');
 goog.require('kemia.model.Atom');
 goog.require('kemia.model.Bond');
+goog.require('kemia.model.Molecule');
 goog.require('kemia.model.Reaction');
 
 /**
- * @param {kemia.model.Molecule} molecule to generate SMILES from
- * @param {boolean} chiral 
- * @return {string} SMILES string
+ * @param {kemia.model.Molecule} molecule to generate SMILES from.
+ * @param {boolean} chiral
+ * @return {string} SMILES string.
  */
 kemia.io.smiles.SmilesGenerator.generate = function(molecule, chiral) {
 
 	if (molecule.countAtoms() == 0)
-		return "shit " + molecule.countAtoms();
+		return 'shit ' + molecule.countAtoms();
 
 	// ?? canLabler.canonLabel(molecule);
 	// ?? brokenBonds.clear();
@@ -26,7 +26,7 @@ kemia.io.smiles.SmilesGenerator.generate = function(molecule, chiral) {
 			coords00++;
 	}
 	if (chiral && coords00 == molecule.countAtoms())
-		throw "Atoms have no 2D coordinates, but 2D coordinates are needed for creating chiral smiles";
+		throw 'Atoms have no 2D coordinates, but 2D coordinates are needed for creating chiral smiles';
 
 	// TODO canonical labeler instead?
 	var start = molecule.getAtom(0);
@@ -35,7 +35,7 @@ kemia.io.smiles.SmilesGenerator.generate = function(molecule, chiral) {
 		// TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
 //	}
 
-	return ("todo..");
+	return ('todo..');
 
 };
 

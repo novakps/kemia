@@ -1,12 +1,12 @@
 /**
- * @license Copyright 2010 Paul Novak (paul@wingu.com)
- * 
+ * @license Copyright 2010 Paul Novak (paul@wingu.com).
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,14 +15,14 @@
  * @author paul@wingu.com (Paul Novak)
  */
 goog.provide('kemia.controller.plugins.UndoRedo');
+goog.require('goog.array');
+goog.require('goog.date.DateTime');
 goog.require('goog.debug.Logger');
 goog.require('goog.json');
-goog.require('goog.date.DateTime');
-goog.require('goog.array');
 
 /**
  * @constructor
- * @extends{kemian.controller.Plugin}s
+ * @extends {kemian.controller.Plugin}s
  */
 kemia.controller.plugins.UndoRedo = function() {
 	kemia.controller.Plugin.call(this);
@@ -30,7 +30,7 @@ kemia.controller.plugins.UndoRedo = function() {
 	/**
 	 * The maximum number of states on the undo stack at any time. Used to limit
 	 * the memory footprint of the undo-redo stack.
-	 * 
+	 *
 	 * @type {number}
 	 * @private
 	 */
@@ -38,7 +38,7 @@ kemia.controller.plugins.UndoRedo = function() {
 
 	/**
 	 * The undo stack.
-	 * 
+	 *
 	 * @type {Array}
 	 * @private
 	 */
@@ -46,35 +46,35 @@ kemia.controller.plugins.UndoRedo = function() {
 
 	/**
 	 * The redo stack.
-	 * 
+	 *
 	 * @type {Array}
 	 * @private
 	 */
 	this.redoStack_ = [];
 
 	this.currentState_ = [];
-}
+};
 goog.inherits(kemia.controller.plugins.UndoRedo, kemia.controller.Plugin);
 
 
 /**
  * Commands implemented by this plugin.
- * 
+ *
  * @enum {string}
  */
 kemia.controller.plugins.UndoRedo.COMMAND = {
-	UNDO : 'undo',
-	REDO : 'redo'
+	UNDO: 'undo',
+	REDO: 'redo'
 };
 
-kemia.controller.plugins.UndoRedo.SHORTCUTS = [ {
-	id : 'undo',
-	key : goog.events.KeyCodes.ESC
-} ];
+kemia.controller.plugins.UndoRedo.SHORTCUTS = [{
+	id: 'undo',
+	key: goog.events.KeyCodes.ESC
+}];
 
 kemia.controller.plugins.UndoRedo.prototype.getKeyboardShortcuts = function() {
 	return kemia.controller.plugins.UndoRedo.SHORTCUTS;
-}
+};
 
 kemia.controller.plugins.UndoRedo.prototype.handleKeyboardShortcut = function(e) {
 //	try {
@@ -91,13 +91,13 @@ kemia.controller.plugins.UndoRedo.prototype.handleKeyboardShortcut = function(e)
 //	} catch (e) {
 //		this.logger.info(e);
 //	}
-}
+};
 
 /**
  * Inverse map of execCommand strings to
  * {@link kemia.controller.plugins.UndoRedo.COMMAND} constants. Used to
  * determine whether a string corresponds to a command this plugin handles
- * 
+ *
  * @type {Object}
  * @private
  */
@@ -143,7 +143,7 @@ kemia.controller.plugins.UndoRedo.prototype.clearHistory = function() {
 
 /**
  * Before the editor changes, we want to save the state.
- * 
+ *
  * @param {goog.events.Event}
  *            e The event.
  * @private
@@ -161,9 +161,9 @@ kemia.controller.plugins.UndoRedo.prototype.handleBeforeChange_ = function(e) {
 
 };
 
-kemia.controller.plugins.UndoRedo.prototype.getContentState_ = function(editorObj){
+kemia.controller.plugins.UndoRedo.prototype.getContentState_ = function(editorObj) {
 	var content = editorObj.getModels();
-	var serialized = "[]";
+	var serialized = '[]';
 	if (content) {
 		// serialize to json object
 		serialized = goog.array.map(content, function(model) {
@@ -175,11 +175,11 @@ kemia.controller.plugins.UndoRedo.prototype.getContentState_ = function(editorOb
 		});
 	}
 	return serialized;
-}
+};
 
 /**
  * Helper method for saving state.
- * 
+ *
  * @param {kemia.controller.ReactionEditor}
  *            edtiorObj The field object.
  * @private
@@ -215,19 +215,19 @@ kemia.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 //		var msg = "    ";
 //
 //		msg +=" currentState_:" + atom_count(this.currentState_);
-//		
+//
 //		if(this.undoStack_.length>0){
 //			msg += " undoStack_:" + " [" + goog.array.map(this.undoStack_, atom_count) + "]";
 //		}
 //		if(this.redoStack_.length > 0){
-//			msg+=" redoStack_:"+ " [" + goog.array.map(this.redoStack_, atom_count) + "]"; 
+//			msg+=" redoStack_:"+ " [" + goog.array.map(this.redoStack_, atom_count) + "]";
 //		}
 //		this.logger.info(msg);
 //	}
 
 /**
  * Add state to the undo stack. This clears the redo stack.
- * 
+ *
  * @param {object}
  *            state The state to add to the undo stack.
  */
@@ -242,9 +242,9 @@ kemia.controller.plugins.UndoRedo.prototype.addState = function(state) {
 		var redoLength = this.redoStack_.length;
 		this.redoStack_.length = 0;
 
-		this.dispatchEvent( {
-			type : kemia.controller.plugins.UndoRedo.EventType.STATE_ADDED,
-			state : state
+		this.dispatchEvent({
+			type: kemia.controller.plugins.UndoRedo.EventType.STATE_ADDED,
+			state: state
 		});
 
 		// If the redo state had states on it, then clobbering the redo stack
@@ -260,7 +260,7 @@ kemia.controller.plugins.UndoRedo.prototype.addState = function(state) {
 
 /**
  * Dispatches a STATE_CHANGE event with this as the target.
- * 
+ *
  * @private
  */
 kemia.controller.plugins.UndoRedo.prototype.dispatchStateChange_ = function() {
@@ -315,7 +315,7 @@ kemia.controller.plugins.UndoRedo.prototype.hasRedoState = function() {
 /**
  * Move a state from one stack to the other, performing the appropriate undo or
  * redo action.
- * 
+ *
  * @param {Array}
  *            fromStack Stack to move the state from.
  * @param {Array}
@@ -330,8 +330,8 @@ kemia.controller.plugins.UndoRedo.prototype.shiftState_ = function(fromStack,
 		var state = fromStack.pop();
 		// Push the current state into the to-stack.
 		toStack.push(state);
-		var models = goog.array.map(state, function(s){
-			if (s.atoms){
+		var models = goog.array.map(state, function(s) {
+			if (s.atoms) {
 				return kemia.io.json.readMolecule(s);
 			} else {
 				return kemia.io.json.readReaction(s, true);
@@ -389,7 +389,7 @@ kemia.controller.plugins.UndoRedo.prototype.disposeInternal = function() {
 
 /**
  * Event types for the events dispatched by undo-redo
- * 
+ *
  * @enum {string}
  */
 kemia.controller.plugins.UndoRedo.EventType = {
@@ -397,14 +397,14 @@ kemia.controller.plugins.UndoRedo.EventType = {
 	 * Signifies that he undo or redo stack transitioned between 0 and 1 states,
 	 * meaning that the ability to perform undo or redo operations has changed.
 	 */
-	STATE_CHANGE : 'state_change',
+	STATE_CHANGE: 'state_change',
 
 	/**
 	 * Signifies that a state was just added to the undo stack. Events of this
 	 * type will have a {@code state} property whose value is the state that was
 	 * just added.
 	 */
-	STATE_ADDED : 'state_added',
+	STATE_ADDED: 'state_added',
 
 	/**
 	 * Signifies that the undo method of a state is about to be called. Events
@@ -413,7 +413,7 @@ kemia.controller.plugins.UndoRedo.EventType = {
 	 * action does not proceed, but the state will still transition between
 	 * stacks.
 	 */
-	BEFORE_UNDO : 'before_undo',
+	BEFORE_UNDO: 'before_undo',
 
 	/**
 	 * Signifies that the redo method of a state is about to be called. Events
@@ -422,12 +422,12 @@ kemia.controller.plugins.UndoRedo.EventType = {
 	 * action does not proceed, but the state will still transition between
 	 * stacks.
 	 */
-	BEFORE_REDO : 'before_redo'
+	BEFORE_REDO: 'before_redo'
 };
 
 /**
  * The logger for this class.
- * 
+ *
  * @type {goog.debug.Logger}
  * @protected
  */

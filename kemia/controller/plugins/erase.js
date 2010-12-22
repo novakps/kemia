@@ -1,12 +1,12 @@
 /**
- * @license Copyright 2010 Paul Novak (paul@wingu.com)
- * 
+ * @license Copyright 2010 Paul Novak (paul@wingu.com).
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,19 +16,19 @@
  */
 goog.provide('kemia.controller.plugins.Erase');
 
-goog.require('kemia.controller.Plugin');
 goog.require('goog.debug.Logger');
 goog.require('goog.functions');
+goog.require('kemia.controller.Plugin');
 
 /**
  * Plugin to provide functionality to erase drawing elements
- * 
+ *
  * @constructor
- * @extends{kemian.controller.Plugin}s
+ * @extends {kemian.controller.Plugin}s
  */
 kemia.controller.plugins.Erase = function() {
 	kemia.controller.Plugin.call(this);
-}
+};
 goog.inherits(kemia.controller.plugins.Erase, kemia.controller.Plugin);
 
 
@@ -48,7 +48,7 @@ kemia.controller.plugins.Erase.prototype.getTrogClassId = goog.functions
 
 /**
  * The logger for this class.
- * 
+ *
  * @type {goog.debug.Logger}
  * @protected
  */
@@ -56,7 +56,7 @@ kemia.controller.plugins.Erase.prototype.logger = goog.debug.Logger
 		.getLogger('kemia.controller.plugins.Erase');
 
 /**
- * 
+ *
  * @param {string}
  *            command Command to execute.
  * @return {Object|undefined} The result of the command.
@@ -114,12 +114,12 @@ kemia.controller.plugins.Erase.prototype.handleMouseMove = function(e) {
 						e.currentTarget.highlightGroup);
 			}
 			return true;
-		} else if (target instanceof kemia.model.Arrow){
+		} else if (target instanceof kemia.model.Arrow) {
 			this.editorObject.getOriginalElement().style.cursor = kemia.controller.plugins.Erase.CURSOR_STYLE;
 			if (!e.currentTarget.hightlightGroup) {
 				e.currentTarget.hightlightGroup = this.highlightArrow(target);
 			} else {
-				e.currentTarget.highlightGroup = this.highlightArrow(target, 
+				e.currentTarget.highlightGroup = this.highlightArrow(target,
 						e.currentTarget.highlightGroup);
 			}
 		} else {
@@ -129,7 +129,7 @@ kemia.controller.plugins.Erase.prototype.handleMouseMove = function(e) {
 	}
 	return false;
 
-}
+};
 
 kemia.controller.plugins.Erase.prototype.handleMouseDown = function(e) {
 	var result = false;
@@ -152,7 +152,7 @@ kemia.controller.plugins.Erase.prototype.handleMouseDown = function(e) {
 			this.erasePlus(target);
 			result = true;
 		}
-		if (target instanceof kemia.model.Arrow){
+		if (target instanceof kemia.model.Arrow) {
 			this.eraseArrow(target);
 			result = true;
 		}
@@ -181,24 +181,24 @@ kemia.controller.plugins.Erase.prototype.eraseBond = function(bond) {
 	var fragments = molecule.getFragments();
 	this.logger.fine('fragements.length: ' + fragments.length);
 	var reaction = molecule.reaction;
-	if (reaction){
+	if (reaction) {
 		reaction.removeMolecule(molecule);
 		goog.array.forEach(fragments, function(mol) {
 			reaction.addMolecule(mol);
 		});
-	} 
+	}
 	this.editorObject.setModelsSilently(models);
 };
 
 kemia.controller.plugins.Erase.prototype.eraseMolecule = function(molecule) {
 	var reaction = molecule.reaction;
-	if(reaction){
+	if (reaction) {
 		reaction.removeMolecule(molecule);
 	} else {
 		goog.array.remove(this.editorObject.getModels(), molecule);
 	}
 	this.editorObject.setModelsSilently(this.editorObject.getModels());
-}
+};
 
 kemia.controller.plugins.Erase.prototype.erasePlus = function(plus) {
 	var reaction = plus.reaction;
@@ -217,8 +217,8 @@ kemia.controller.plugins.Erase.prototype.eraseArrow = function(arrow) {
  */
 kemia.controller.plugins.Erase.prototype.resetState = function() {
 	this.isActive = false;
-	this.editorObject.getOriginalElement().style.cursor = "default";
-}
+	this.editorObject.getOriginalElement().style.cursor = 'default';
+};
 
 /** @inheritDoc */
 kemia.controller.plugins.Erase.prototype.queryCommandValue = function(command) {
@@ -251,7 +251,7 @@ kemia.controller.plugins.Erase.prototype.highlightPlus = function(plus,
 
 kemia.controller.plugins.Erase.prototype.highlightArrow = function(arrow, 
 		opt_group) {
-	return this.editorObject.reactionRenderer.arrowRenderer.highlightOn(arrow, 
+	return this.editorObject.reactionRenderer.arrowRenderer.highlightOn(arrow,
 			'#ff6666', opt_group);
 };
 
@@ -260,4 +260,4 @@ kemia.controller.plugins.Erase.prototype.highlightMolecule = function(molecule,
 	// this.logger.info('highlightPlus');
 	return this.editorObject.reactionRenderer.moleculeRenderer.highlightOn(
 			molecule, '#ff6666', opt_group);
-}
+};
