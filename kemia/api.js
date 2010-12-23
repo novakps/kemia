@@ -39,6 +39,7 @@ goog.exportSymbol('kemia.io.json.readMolecule', kemia.io.json.readMolecule);
 goog.exportSymbol('kemia.io.json.writeMolecule', kemia.io.json.writeMolecule);
 goog.exportSymbol('kemia.io.json.readReaction', kemia.io.json.readReaction);
 goog.exportSymbol('kemia.io.json.writeReaction', kemia.io.json.writeReaction);
+goog.exportSymbol('kemia.io.json.reactionToJson', kemia.io.json.reactionToJson);
 goog.exportSymbol('kemia.io.mdl.readMolfile', kemia.io.mdl.readMolfile);
 goog.exportSymbol('kemia.io.smiles.SmilesParser.parse',
 		kemia.io.smiles.SmilesParser.parse);
@@ -61,17 +62,19 @@ goog.exportSymbol('kemia.model.Reaction.prototype.generatePluses', kemia.model.R
 
 // editor
 goog.exportSymbol('kemia.controller.ReactionEditor',
-		kemia.controller.ReactionEditor);
+		  kemia.controller.ReactionEditor);
 goog.exportSymbol('kemia.controller.ReactionEditor.prototype.setModels',
-		kemia.controller.ReactionEditor.prototype.setModels);
+		  kemia.controller.ReactionEditor.prototype.setModels);
+goog.exportSymbol('kemia.controller.ReactionEditor.prototype.getModels', 
+		  kemia.controller.ReactionEditor.prototype.getModels);
 goog.exportSymbol('kemia.controller.ReactionEditor.prototype.render',
-		kemia.controller.ReactionEditor.prototype.render);
+		  kemia.controller.ReactionEditor.prototype.render);
 goog.exportSymbol('kemia.controller.ReactionEditor.prototype.registerPlugin',
-		kemia.controller.ReactionEditor.prototype.registerPlugin);
+		  kemia.controller.ReactionEditor.prototype.registerPlugin);
 goog.exportSymbol('kemia.controller.ReactionEditor.prototype.addEventListener', 
-		kemia.controller.ReactionEditor.prototype.addEventListener)
+		  kemia.controller.ReactionEditor.prototype.addEventListener)
 goog.exportSymbol('kemia.controller.ReactionEditor.EventType.CLEAR', 
-				kemia.controller.ReactionEditor.EventType.CLEAR)
+		  kemia.controller.ReactionEditor.EventType.CLEAR)
 
 // toolbar
 goog.exportSymbol('kemia.controller.ToolbarController', kemia.controller.ToolbarController);
