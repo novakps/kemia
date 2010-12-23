@@ -71,8 +71,6 @@ goog.exportSymbol('kemia.controller.ReactionEditor.prototype.render',
 		  kemia.controller.ReactionEditor.prototype.render);
 goog.exportSymbol('kemia.controller.ReactionEditor.prototype.registerPlugin',
 		  kemia.controller.ReactionEditor.prototype.registerPlugin);
-goog.exportSymbol('kemia.controller.ReactionEditor.prototype.addEventListener', 
-		  kemia.controller.ReactionEditor.prototype.addEventListener)
 goog.exportSymbol('kemia.controller.ReactionEditor.EventType.CLEAR', 
 		  kemia.controller.ReactionEditor.EventType.CLEAR)
 
