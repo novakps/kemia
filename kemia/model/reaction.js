@@ -299,6 +299,12 @@ kemia.model.Reaction.prototype.removePlus = function(plus) {
 	plus.reaction = undefined;
 }
 
+/**
+ * @return {Array.<kemia.model.Plus>} 
+ */
+kemia.model.Reaction.prototype.getPluses = function(){
+    return this.pluses;
+}
 
 /**
  * inserts plus at midpoint between molecules

@@ -8,9 +8,14 @@ goog.require('kemia.controller.ToolbarController');
 goog.require('kemia.io.mdl');
 goog.require('kemia.io.smiles.SmilesParser');
 goog.require('kemia.layout.CoordinateGenerator');
+goog.require('kemia.io.xhr');
+goog.require('goog.array');
 
 // utilities
 goog.exportSymbol('goog.dom.getElement', goog.dom.getElement);
+goog.exportSymbol('goog.dom.getElementsByClass', goog.dom.getElementsByClass);
+goog.exportSymbol('goog.dom.getFirstElementChild', goog.dom.getFirstElementChild);
+goog.exportSymbol('goog.array.forEach', goog.array.forEach);
 goog.exportSymbol('goog.dom.setTextContent', goog.dom.setTextContent);
 goog.exportSymbol('goog.ui.Prompt', goog.ui.Prompt);
 goog.exportSymbol('goog.ui.Prompt.prototype.setDefaultValue', goog.ui.Prompt.prototype.setDefaultValue);
@@ -27,6 +32,7 @@ goog.exportSymbol('goog.ui.MenuItem', goog.ui.MenuItem);
 goog.exportSymbol('goog.ui.Component.EventType.ACTION', goog.ui.Component.EventType.ACTION);
 goog.exportSymbol('goog.events.EventType.LOAD', goog.events.EventType.LOAD);
 goog.exportSymbol('goog.events.listen', goog.events.listen);
+goog.exportSymbol('goog.array.filter', goog.array.filter);
 
 // io
 goog.exportSymbol('kemia.io.json.readMolecule', kemia.io.json.readMolecule);
@@ -36,10 +42,22 @@ goog.exportSymbol('kemia.io.json.writeReaction', kemia.io.json.writeReaction);
 goog.exportSymbol('kemia.io.mdl.readMolfile', kemia.io.mdl.readMolfile);
 goog.exportSymbol('kemia.io.smiles.SmilesParser.parse',
 		kemia.io.smiles.SmilesParser.parse);
+goog.exportSymbol('kemia.io.xhr', kemia.io.xhr);
+goog.exportSymbol('kemia.io.xhr.get', kemia.io.xhr.get);
 
 // layout
 goog.exportSymbol('kemia.layout.CoordinateGenerator.generate', kemia.layout.CoordinateGenerator.generate);
 
+//model
+goog.exportSymbol('kemia.model.Reaction', kemia.model.Reaction);
+goog.exportSymbol('kemia.model.Reaction.prototype.addReactant', kemia.model.Reaction.prototype.addReactant);
+goog.exportSymbol('kemia.model.Reaction.prototype.addProduct', kemia.model.Reaction.prototype.addProduct);
+goog.exportSymbol('kemia.model.Reaction.prototype.getReactants', kemia.model.Reaction.prototype.getReactants);
+goog.exportSymbol('kemia.model.Reaction.prototype.getProducts', kemia.model.Reaction.prototype.getProducts);
+goog.exportSymbol('kemia.model.Reaction.prototype.setConditionsText', kemia.model.Reaction.prototype.setConditionsText);
+goog.exportSymbol('kemia.model.Reaction.prototype.setReagentsText', kemia.model.Reaction.prototype.setReagentsText);
+goog.exportSymbol('kemia.model.Reaction.prototype.getPluses', kemia.model.Reaction.prototype.getPluses);
+goog.exportSymbol('kemia.model.Reaction.prototype.generatePluses', kemia.model.Reaction.prototype.generatePluses);
 
 // editor
 goog.exportSymbol('kemia.controller.ReactionEditor',

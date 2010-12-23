@@ -113,7 +113,7 @@ kemia.model.Bond.ORDER = {
 	DOUBLE : 2,
 	TRIPLE : 3,
 	QUADRUPLE : 4
-}
+};
 
 /**
  * enum for bond stereochemistry
@@ -125,10 +125,10 @@ kemia.model.Bond.STEREO = {
 	UP : 11,
 	UP_OR_DOWN : 12,
 	DOWN : 13
-}
+};
 
 kemia.model.Bond.prototype.toString = function(){
-	var molname = this.molecule ? this.molecule.name : "no molecule"
+	var molname = this.molecule ? this.molecule.name : "no molecule";
 	return "kemia.model.Bond[" + 
 		this.order + ", " + 
 		this.stereo + "]  " + 
