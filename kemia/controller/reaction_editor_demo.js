@@ -1,3 +1,4 @@
+goog.provide('kemia.controller.ReactioneEditorDemo');
 goog.require('goog.dom');
 goog.require('kemia.controller.DefaultToolbar');
 goog.require('kemia.controller.ReactionEditor');
@@ -15,7 +16,12 @@ goog.require('kemia.controller.plugins.Zoom');
 goog.require('kemia.io.json');
 
 
-function initPage() {
+
+kemia.controller.ReactioneEditorDemo.initPage = function() {
+	var c = new goog.debug.Console();
+	c.setCapturing(true);
+	var logger = goog.debug.Logger.getLogger('kemia.controller.ReactionEditorDemo');
+	logger.info('initPage')
 	var toolbar = kemia.controller.DefaultToolbar
 			.makeDefaultReactionToolbar(goog.dom
 					.getElement('reactionEditorToolbar'));
@@ -48,9 +54,5 @@ function initPage() {
 
 	editor.setModels([model]);
 }
-(function() {
-	window.onload = function() {
-		initPage();
-		window.onload = null;
-	};
-})();
+
+goog.exportSymbol('kemia.controller.ReactioneEditorDemo.initPage', kemia.controller.ReactioneEditorDemo.initPage);

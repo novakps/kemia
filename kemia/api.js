@@ -13,8 +13,11 @@ goog.require('goog.array');
 
 // utilities
 goog.exportSymbol('goog.dom.getElement', goog.dom.getElement);
+goog.exportSymbol('goog.dom.getAncestor', goog.dom.getAncestor);
 goog.exportSymbol('goog.dom.getElementsByClass', goog.dom.getElementsByClass);
+goog.exportSymbol('goog.dom.getElementByClass', goog.dom.getElementByClass);
 goog.exportSymbol('goog.dom.getFirstElementChild', goog.dom.getFirstElementChild);
+goog.exportSymbol('goog.dom.getNextElementSibling', goog.dom.getNextElementSibling);
 goog.exportSymbol('goog.array.forEach', goog.array.forEach);
 goog.exportSymbol('goog.dom.setTextContent', goog.dom.setTextContent);
 goog.exportSymbol('goog.ui.Prompt', goog.ui.Prompt);
