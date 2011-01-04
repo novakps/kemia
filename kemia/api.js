@@ -26,6 +26,7 @@ goog.exportSymbol('goog.ui.Prompt.prototype.setVisible', goog.ui.Prompt.prototyp
 goog.exportSymbol('goog.now', goog.now);
 goog.exportSymbol('goog.debug.Console', goog.debug.Console);
 goog.exportSymbol('goog.debug.Console.prototype.setCapturing', goog.debug.Console.prototype.setCapturing);
+goog.exportSymbol('goog.debug.Logger.getLogger', goog.debug.Logger.getLogger);
 goog.exportSymbol('goog.ui.Select', goog.ui.Select);
 goog.exportSymbol('goog.ui.Select.prototype.addItem', goog.ui.Select.prototype.addItem);
 goog.exportSymbol('goog.ui.Select.prototype.setSelectedIndex', goog.ui.Select.prototype.setSelectedIndex);
