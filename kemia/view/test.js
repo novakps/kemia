@@ -14,19 +14,17 @@
  * the License.
  * @author paul@wingu.com (Paul Novak)
  */
-goog.provide("kemia.view.Test");
-// no tests here, but this creates "No tests found" instead of a blank page when there are no compiler errors
-goog.require('goog.testing.jsunit');
-goog.require("kemia.view.ArrowRenderer");
-goog.require('kemia.view.AtomRenderer');
-goog.require('kemia.view.BondRenderer');
-goog.require('kemia.view.MoleculeRenderer');
-goog.require('kemia.view.PlusRenderer');
-goog.require('kemia.view.ReactionRenderer');
-goog.require('kemia.view.SingleBondRenderer');
-goog.require('kemia.view.SingleDownBondRenderer');
-goog.require('kemia.view.SingleUpBondRenderer');
-goog.require('kemia.view.SingleUpOrDownBondRenderer');
+
+goog.require("kemia.view.ArrowDemo");
+// goog.require('kemia.view.AtomRenderer');
+// goog.require('kemia.view.BondRenderer');
+// goog.require('kemia.view.MoleculeRenderer');
+// goog.require('kemia.view.PlusRenderer');
+// goog.require('kemia.view.ReactionRenderer');
+// goog.require('kemia.view.SingleBondRenderer');
+// goog.require('kemia.view.SingleDownBondRenderer');
+// goog.require('kemia.view.SingleUpBondRenderer');
+// goog.require('kemia.view.SingleUpOrDownBondRenderer');
 
 
 

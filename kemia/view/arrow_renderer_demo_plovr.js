@@ -1,11 +1,11 @@
 {
-	"id":"view",
-	"paths":[".", "../math", "../resource", "../graphics", "../io", "../model"],
-	"inputs":"plovr-inputs.js",
+	"id":"arrow_renderer_demo",
+	"paths":[".", "../model", "../math", "../graphics"],
+	"inputs":"arrow_renderer_demo.js",
 	"level": "VERBOSE",
 	"mode" : "ADVANCED",
-	"debug": true,
-	"pretty-print" : true,
-	"print-input-delimiter": true,
-	"export-test-functions": true
+	"define": {
+		  "goog.DEBUG": false
+		},
+	"debug": false
 }
