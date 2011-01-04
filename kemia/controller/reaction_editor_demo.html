@@ -1,27 +1,36 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-"http://www.w3.org/TR/html4/strict.dtd">
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>
-			kemia.controller.ReactionEditor
-		</title>
-		<script src="http://10.37.129.2:9810/compile?id=controller_reaction_editor_demo" type="text/javascript">
-</script>
-		<link rel="stylesheet" href="../../css/kemia.css" type="text/css">
-		<link rel="stylesheet" href="../../css/demo.css" type="text/css">
+
+<html >
+<head >
+<meta http - equiv = "Content-Type"content = "text/html; charset=utf-8" >
+<title >
+kemia.controller.ReactionEditor
+</title>
+		<script src="http://localhost:9810/compile?id=controller_reaction_editor_demo" ></script>
+		<script>
+		(function() {
+			window.onload = function() {
+				kemia.controller.ReactioneEditorDemo.initPage();
+				window.onload = null;
+			};
+		})();
+		</script>
+		<link rel="stylesheet "href="../../css/kemia.css" type="text/css">
+		<link rel="stylesheet "href="../../css/demo.css" type="text/css">
 	</head>
 	<body>
 		<fieldset>
 			<h1>
 				<legend>Reaction Editor</legend>
 			</h1>
-			<table style="width: 100%">
+			<table style="width: 100 % ">
 				<tr>
 					<td>
 						<div id="reactionEditorToolbar"></div>
-						<div style="width: 1000px; height: 400px; overflow: auto; padding: 5px">
-							<div id="reactionEditorContainer" style="width: 1000px; height: 400px"></div>
+						<div style="width: 1000px;
+									height: 400px;
+									overflow: auto;
+									padding: 5px ">
+						<div id="reactionEditorContainer" style="width: 1000px;														height: 400px "></div>
 						</div>
 					</td>
 				</tr>
@@ -29,3 +38,4 @@
 		</fieldset>
 	</body>
 </html>
+"
