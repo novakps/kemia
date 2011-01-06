@@ -85,16 +85,14 @@ goog.exportSymbol('kemia.controller.DefaultToolbar.makeDefaultMoleculeToolbar', 
 // plugins
 goog.exportSymbol('kemia.controller.plugins.ArrowPlusEdit',
 		kemia.controller.plugins.ArrowPlusEdit);
-goog.exportSymbol('kemia.controller.DefaultToolbar.makeDefaultToolbar',
-		kemia.controller.DefaultToolbar.makeDefaultToolbar);
+goog.exportSymbol('kemia.controller.DefaultToolbar.makeDefaultMoleculeToolbar',
+		kemia.controller.DefaultToolbar.makeDefaultMoleculeToolbar);
 goog.exportSymbol('kemia.controller.DefaultToolbar.makeDefaultReactionToolbar',
 		kemia.controller.DefaultToolbar.makeDefaultReactionToolbar);
 goog.exportSymbol('kemia.controller.plugins.AtomEdit',
 		kemia.controller.plugins.AtomEdit);
 goog.exportSymbol('kemia.controller.plugins.BondEdit',
 		kemia.controller.plugins.BondEdit);
-goog.exportSymbol('kemia.controller.plugins.Cleanup',
-		kemia.controller.plugins.Cleanup);
 goog.exportSymbol('kemia.controller.plugins.ClearEditor',
 		kemia.controller.plugins.ClearEditor);
 goog.exportSymbol('kemia.controller.plugins.Erase',
