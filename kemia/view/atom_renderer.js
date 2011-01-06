@@ -18,6 +18,7 @@
 goog.provide('kemia.view.AtomRenderer');
 goog.require('kemia.view.Renderer');
 goog.require('goog.debug.Logger');
+goog.require('kemia.graphics.ElementArray');
 
 /**
  * Class to render an Atom object to a graphics representation
@@ -41,12 +42,15 @@ goog.inherits(kemia.view.AtomRenderer, kemia.view.Renderer);
  *            atom
  * @param {kemia.graphics.AffineTransform}
  *            transform
- * @return {goog.graphics.GroupElement}
+ * @param {kemia.graphics.ElementArray=} opt_element_array
+ * @return {kemia.graphics.ElementArray}
  */
-kemia.view.AtomRenderer.prototype.render = function(atom, transform, opt_group) {
+kemia.view.AtomRenderer.prototype.render = function(atom, transform, opt_element_array) {
 
 	this.setTransform(transform);
-
+	if(!opt_element_array){
+		opt_element_array = new kemia.graphics.ElementArray();
+	}
 	var atom_config = this.config.get("atom");
 	var color = this.config.get(atom.symbol) ? this.config.get(atom.symbol)['color']
 			: atom_config['color'];
@@ -67,40 +71,65 @@ kemia.view.AtomRenderer.prototype.render = function(atom, transform, opt_group) 
 	var h = font.size;
 
 	if (symbol.text) {
-		graphics.drawText(symbol.text, point.x - w / 2, point.y - h / 2, w, h,
-				symbol.justification, null, font, stroke, fill, opt_group);
+		opt_element_array.add(
+			graphics.drawText(symbol.text, point.x - w / 2, point.y - h / 2, w, h,
+				symbol.justification, null, font, stroke, fill));
 		if (symbol.justification == 'left') {
 			if (symbol.subscript || symbol.superscript) {
 				var subSize = this.config.get("subscriptSize");
 				if (symbol.subscript) {
-					graphics.drawText(symbol.subscript, point.x + w * 0.9,
+					opt_element_array.add(
+						graphics.drawText(symbol.subscript, point.x + w * 0.9,
 							point.y, subSize, subSize, 'center', null, font,
-							stroke, fill, opt_group);
+							stroke, fill));
 				}
 				if (symbol.superscript) {
-					graphics.drawText(symbol.superscript, point.x + w, point.y
+					opt_element_array.add(
+						graphics.drawText(symbol.superscript, point.x + w, point.y
 							- h * 0.8, subSize, subSize, 'center', null, font,
-							stroke, fill, opt_group);
+							stroke, fill));
 				}
 			}
 		} else if (symbol.justification == 'right') {
 			if (symbol.subscript || symbol.superscript) {
 				var subSize = this.config.get("subscriptSize");
 				if (symbol.subscript) {
-					graphics.drawText('H', point.x - w * 3, point.y - h / 2, w,
-							h, 'center', null, font, stroke, fill, opt_group);
-					graphics.drawText(symbol.subscript, point.x - w * 1.8,
-							point.y, subSize, subSize, 'center', null, font,
-							stroke, fill, opt_group);
+					opt_element_array.add(
+						graphics.drawText(
+							'H', 
+							point.x - w * 3, 
+							point.y - h / 2, 
+							w,
+							h, 
+							'center', 
+							null, 
+							font, 
+							stroke, 
+							fill));
+					opt_element_array.add(
+						graphics.drawText(
+							symbol.subscript, 
+							point.x - w * 1.8,
+							point.y, 
+							subSize, 
+							subSize, 
+							'center', 
+							null, 
+							font,
+							stroke, 
+							fill));
 				}
 				if (symbol.superscript) {
-					graphics.drawText(symbol.superscript, point.x + w, point.y
+					opt_element_array.add(
+						graphics.drawText(
+							symbol.superscript, point.x + w, point.y
 							- h * 0.8, subSize, subSize, 'center', null, font,
-							stroke, fill, opt_group);
+							stroke, fill));
 				}
 			}
 		}
 	}
+	return opt_element_array;
 };
 
 /**
@@ -108,11 +137,10 @@ kemia.view.AtomRenderer.prototype.render = function(atom, transform, opt_group) 
  *            atom
  * @param {string=}
  *            opt_color
- * @param {goog.graphics.Group=}
- *            opt_group
+ * @param {kemia.graphics.ElementArray} opt_element_array
  */
 kemia.view.AtomRenderer.prototype.highlightOn = function(atom, opt_color,
-		opt_group) {
+		opt_element_array) {
 //	this.logger.fine('hightlightOn');
 	var atom_config = this.config.get("atom");
 	var strokeWidth = atom_config['stroke']['width'] * 24;
@@ -121,6 +149,9 @@ kemia.view.AtomRenderer.prototype.highlightOn = function(atom, opt_color,
 				this.config.get(atom.symbol)['color']: 
 				atom_config['color'];
 	}
+	if (!opt_element_array){
+		opt_element_array = new kemia.graphics.ElementArray();
+	}
 
 	var stroke = null
 	var fill = new goog.graphics.SolidFill(opt_color, .3);
@@ -128,13 +159,11 @@ kemia.view.AtomRenderer.prototype.highlightOn = function(atom, opt_color,
 			* this.transform.getScaleX();
 	var coords = this.transform.transformCoords( [ atom.coord ])[0];
 
-	if (!opt_group) {
-		opt_group = this.graphics.createGroup();
-	}
-	this.graphics.drawCircle(coords.x, coords.y, radius, stroke, fill,
-			opt_group);
+	opt_element_array.add(
+		opt_element_array.add(
+			this.graphics.drawCircle(coords.x, coords.y, radius, stroke, fill)));
 
-	return opt_group;
+	return opt_element_array;
 };
 
 /**
