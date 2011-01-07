@@ -14,6 +14,7 @@
 	goog.require('kemia.graphics.AffineTransform');
 	goog.require('goog.debug.Console');
 	goog.require('kemia.graphics.ElementArray');
+	goog.require('goog.Timer');
 
     
 function initPage(){
@@ -109,6 +110,8 @@ function initPage(){
 	var bondStroke = new goog.graphics.Stroke( 1, 'black');
 	var bondFill = new goog.graphics.SolidFill( 'black');
 
- 	graphics.drawPath(bondPath, bondStroke, bondFill);
+ 	// elements.add(graphics.drawPath(bondPath, bond// Stroke, bondFill));
+ 	// 	goog.Timer.callOnce(elements.clear(), 10000);
 };
+goog.events.listen(window, goog.events.EventType.LOAD, initPage);
 

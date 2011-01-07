@@ -21,24 +21,44 @@ kemia.graphics.ElementArray = function() {
  * @protected
  */
 kemia.graphics.ElementArray.prototype.logger = goog.debug.Logger
-		.getLogger('kemia.graphics.ElementArray');
+.getLogger('kemia.graphics.ElementArray');
 
 /**
  * add a graphics element
  * @param {goog.graphics.Element} element the element to add
  */
 kemia.graphics.ElementArray.prototype.add = function(element) {
+    goog.asserts.assert(element instanceof goog.graphics.Element);
     this._elements.push(element);
+    return this;
 }
 
 /** 
  * remove all elements
  */
 kemia.graphics.ElementArray.prototype.clear = function() {
-	goog.array.forEach(this._elements, function(element){
-		element.getGraphics().removeElement(element);
-	}, this);
-	this._elements.length=0;
+    goog.array.forEach(this._elements,
+    function(element) {
+        element.getGraphics().removeElement(element);
+    },
+    this);
+    this._elements.length = 0;
+}
+
+/**
+ * Set the transformation of the elements.
+ * @param {number} x The x coordinate of the translation transform.
+ * @param {number} y The y coordinate of the translation transform.
+ * @param {number} rotate The angle of the rotation transform.
+ * @param {number} centerX The horizontal center of the rotation transform.
+ * @param {number} centerY The vertical center of the rotation transform.
+ */
+kemia.graphics.ElementArray.prototype.setTransformation = function(x, y, rotate,
+centerX, centerY) {
+    goog.array.forEach(this._elements,
+    function(element) {
+        element.setTransformation(x, y, rotate, centerX, centerY);
+    });
 }
 
 

@@ -49,7 +49,15 @@ goog.inherits(kemia.view.ArrowRenderer, kemia.view.Renderer);
  */
 kemia.view.ArrowRenderer.prototype.render = function(arrow, transform) {
 	this.setTransform(transform);
-	arrow.group = this.graphics.createGroup();
+	// TTD this does not belong on arrow, neighborlist should track graphic elements not just model objects
+		if (!arrow._elements){
+			/** @type {kemia.graphics.ElementArray} 
+			 * @private
+			*/
+		    arrow._elements = new kemia.graphics.ElementArray();
+		} else {
+			arrow._elements.clear();
+		}
 	var h = this.config.get('arrow')['height'];
 	var l = goog.math.Coordinate.distance(arrow.target, arrow.source);
 	var angle = goog.math.angle(arrow.source.x, arrow.source.y, arrow.target.x,
@@ -115,15 +123,15 @@ kemia.view.ArrowRenderer.prototype.render = function(arrow, transform) {
 			fontSize * Math.cos(angle_down_rads), -fontSize
 					* Math.sin(angle_down_rads)), coords[1]);
 
-	this.graphics.drawTextOnLine(arrow.reagents_text, reagents_nock.x,
+	arrow._elements.add(this.graphics.drawTextOnLine(arrow.reagents_text, reagents_nock.x,
 			reagents_nock.y, reagents_tip.x, reagents_tip.y, 'center', font,
-			textStroke, fill, arrow.group);
-	this.graphics.drawTextOnLine(arrow.conditions_text, conditions_nock.x,
+			textStroke, fill));
+	arrow._elements.add(this.graphics.drawTextOnLine(arrow.conditions_text, conditions_nock.x,
 			conditions_nock.y, conditions_tip.x, conditions_tip.y, 'center',
-			font, textStroke, fill, arrow.group);
+			font, textStroke, fill));
 
 	// visible arrow
-	this.graphics.drawPath(path, arrowStroke, null, arrow.group);
+	arrow._elements.add(this.graphics.drawPath(path, arrowStroke));
 }
 /**
  * @param {kemia.model.Arrow}

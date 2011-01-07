@@ -48,9 +48,6 @@ goog.inherits(kemia.view.AromaticityRenderer, kemia.view.BondRenderer);
 kemia.view.AromaticityRenderer.prototype.render = function(ring, transform, bondPath) {
 
     this.setTransform(transform);
-    if (!opt_element_array) {
-        opt_element_array = new kemia.graphics.ElementArray();
-    }
 
     var aromaticCircle = new goog.graphics.Path();
     var ringCenter = this.transform.transformCoords([ring.getCenter()])[0];

@@ -44,16 +44,16 @@ goog.inherits(kemia.view.BondRenderer, kemia.view.Renderer);
  *            bond
  * @param {string}
  *            opt_color
- * @param {goog.graphics.Group=}
- *            opt_group
+ * @param {kemia.graphics.ElementArray=} opt_element_array
+ * @return {kemia.graphics.ElementArray}
  */
-kemia.view.BondRenderer.prototype.highlightOn = function(bond, opt_color, opt_group) {
+kemia.view.BondRenderer.prototype.highlightOn = function(bond, opt_color, opt_element_array) {
 	
 	if(!opt_color){
 		opt_color = this.config.get("highlight")['color'];
 	}
-	if (!opt_group) {
-		opt_group = this.graphics.createGroup();
+	if (!opt_element_array) {
+		opt_element_array = new kemia.graphics.ElementArray();
 	}
 
 	var stroke = null;
@@ -98,7 +98,7 @@ kemia.view.BondRenderer.prototype.highlightOn = function(bond, opt_color, opt_gr
 // var fill = new goog.graphics.LinearGradient(coords[0].x, coords[0].y,
 // source_up.x, source_up.y, opt_color, 'white');
 	var fill = new goog.graphics.SolidFill(opt_color, .15);
-	this.graphics.drawPath(path_up, stroke, fill, opt_group);
+	opt_element_array.add(this.graphics.drawPath(path_up, stroke, fill));
 	
 	var path_down = new goog.graphics.Path();
 	path_down.moveTo(coords[0].x, coords[0].y);
@@ -108,10 +108,10 @@ kemia.view.BondRenderer.prototype.highlightOn = function(bond, opt_color, opt_gr
 	path_down.close();
 // var fill = new goog.graphics.LinearGradient(coords[0].x, coords[0].y,
 // source_down.x, source_down.y, opt_color, 'white');
-	this.graphics.drawPath(path_down, stroke, fill, opt_group);
+	opt_element_array.add(this.graphics.drawPath(path_down, stroke, fill));
 	
 	
-	return opt_group;
+	return opt_element_array;
 }
 
 /**

@@ -25,7 +25,7 @@ function initPage(){
 	var element = goog.dom.getElement('container')
 	var graphics = goog.graphics.createGraphics(element.clientWidth,
 			element.clientHeight);
-	var group = graphics.createGroup();
+
 	graphics.render(element);
 	var r = new kemia.view.MoleculeRenderer( graphics);
 	
@@ -37,7 +37,7 @@ function initPage(){
 //	mol1.addAtom(o1);
 //	var b = new kemia.model.Bond(c1, o1);
 //	mol1.addBond(b);
-	r.render(mol1, trans, group);
+	r.render(mol1, trans);
 	
 	var mol2 = new kemia.model.Molecule();
 	var c2 = new kemia.model.Atom("C", 5, -2);
@@ -47,7 +47,7 @@ function initPage(){
 	var b2 = new kemia.model.Bond(c2, o2, 2)
 	mol2.addBond(b2);
 
-	r.render(mol2, trans, group);
+	r.render(mol2, trans);
 	
 	var mol3 = new kemia.model.Molecule();
 	var c3 = new kemia.model.Atom("C", 8, -2);
@@ -66,7 +66,7 @@ function initPage(){
 	var b4 = new kemia.model.Bond(n,s, 4);
 	mol3.addBond(b4);
 	
-	r.render(mol3, trans, group);
+	r.render(mol3, trans);
 	
 	var mol4 = new kemia.model.Molecule();
 	var p = new kemia.model.Atom("P", 4, -4);
@@ -84,7 +84,7 @@ function initPage(){
 	var b6 = new kemia.model.Bond(f,br);
         b6.stereo = kemia.model.Bond.STEREO.UP;
 	mol4.addBond(b6);
-	r.render(mol4, trans, group);
+	r.render(mol4, trans);
 	
 	var mol5 = new kemia.model.Molecule();
 	var i = new kemia.model.Atom("I", 8, -4);
@@ -94,10 +94,7 @@ function initPage(){
 	var b7 = new kemia.model.Bond(i,h);
         b7.stereo = kemia.model.Bond.STEREO.UP_OR_DOWN;
 	mol5.addBond(b7);
-	r.render(mol5, trans, group);
-
-	
-	
+	r.render(mol5, trans);
 
 };
 
