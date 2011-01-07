@@ -21,6 +21,15 @@ goog.inherits(kemia.view.PlusRenderer, kemia.view.Renderer);
  * @param {kemia.graphics.AffineTransform} transform
  */
 kemia.view.PlusRenderer.prototype.render = function(plus, transform) {
+	// TTD this does not belong on plus, neighborlist should track graphic elements not just model objects
+		if (!plus._elements){
+			/** @type {kemia.graphics.ElementArray} 
+			 * @private
+			*/
+		    plus._elements = new kemia.graphics.ElementArray();
+		} else {
+			plus._elements.clear();
+		}
 	this.setTransform(transform);
 	plus.group = this.graphics.createGroup();
 	var coord = plus.coord;
@@ -43,7 +52,7 @@ kemia.view.PlusRenderer.prototype.render = function(plus, transform) {
 	path.lineTo(coords[3].x, coords[3].y);
 
 	// the visible plus sign
-	this.graphics.drawPath(path, stroke, null, plus.group);
+	plus._elements.add(this.graphics.drawPath(path, stroke));
 
 };
 
