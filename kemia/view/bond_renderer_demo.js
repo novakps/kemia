@@ -13,6 +13,8 @@
 	goog.require('goog.graphics');
 	goog.require('kemia.graphics.AffineTransform');
 	goog.require('goog.debug.Console');
+	goog.require('kemia.graphics.ElementArray');
+	goog.require('goog.Timer');
 
     
 function initPage(){
@@ -22,6 +24,7 @@ function initPage(){
 	var element = goog.dom.getElement('container')
 	var graphics = goog.graphics.createGraphics(element.clientWidth,
 			element.clientHeight);
+	var elements = kemia.graphics.ElementArray();
 	
 	graphics.render(element);
 
@@ -32,7 +35,7 @@ function initPage(){
 	var c1 = new kemia.model.Atom("C", 2, -2);
 	var o1 = new kemia.model.Atom("O", 3, -3);
 	var b = new kemia.model.Bond(c1, o1, kemia.model.Bond.ORDER.SINGLE);
-	sbr.render(b, trans, bondPath);
+	sbr.render(b, trans, bondPath, elements);
 	
 	
 	var c0 = new kemia.model.Atom("C", 4, -3);
@@ -107,7 +110,8 @@ function initPage(){
 	var bondStroke = new goog.graphics.Stroke( 1, 'black');
 	var bondFill = new goog.graphics.SolidFill( 'black');
 
- 	graphics.drawPath(bondPath, bondStroke, bondFill);
+ 	// elements.add(graphics.drawPath(bondPath, bond// Stroke, bondFill));
+ 	// 	goog.Timer.callOnce(elements.clear(), 10000);
 };
-
 goog.events.listen(window, goog.events.EventType.LOAD, initPage);
+

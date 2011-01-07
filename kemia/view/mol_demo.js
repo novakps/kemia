@@ -8,8 +8,8 @@ goog.require('kemia.io.Testdata');
 
 function draw() {
     // uncomment next two lines to debug to console
-    //var c = new goog.debug.Console();
-    //c.setCapturing(true);
+    var c = new goog.debug.Console();
+       c.setCapturing(true);
     var sdfs = kemia.io.Testdata.sdf.split("$$$$\n");
     var mol_renderer = new kemia.controller.ReactionEditor(goog.dom.getElement('container'), {
         background: {
@@ -28,7 +28,7 @@ function draw() {
     select1.addItem(new goog.ui.MenuItem('8', 8));
     select1.addItem(new goog.ui.MenuItem('9', 9));
     select1.addItem(new goog.ui.MenuItem('10', 10));
-    select1.addItem(new goog.ui.MenuItem('11 (too large right now)', 11));
+    select1.addItem(new goog.ui.MenuItem('11 (not too large right now)', 11));
     select1.addItem(new goog.ui.MenuItem('12', 12));
     select1.addItem(new goog.ui.MenuItem('13', 13));
     select1.addItem(new goog.ui.MenuItem('14', 14));

@@ -26,11 +26,11 @@ goog.require('kemia.view.BondRenderer');
  * @extends {kemia.view.BondRenderer}
  */
 kemia.view.AromaticityRenderer = function(graphics, opt_config) {
-	kemia.view.BondRenderer.call(
-			this,
-			graphics, 
-			kemia.view.AromaticityRenderer.defaultConfig, 
-			opt_config);
+    kemia.view.BondRenderer.call(
+    this,
+    graphics,
+    kemia.view.AromaticityRenderer.defaultConfig,
+    opt_config);
 }
 goog.inherits(kemia.view.AromaticityRenderer, kemia.view.BondRenderer);
 
@@ -41,31 +41,27 @@ goog.inherits(kemia.view.AromaticityRenderer, kemia.view.BondRenderer);
  *            ring
  * @param {kemia.graphics.AffineTransform}
  *            transform
- * @return {goog.graphics.GroupElement}
+ * @param {kemia.graphics.ElementArray=} opt_element_array
+ * @return {kemia.graphics.ElementArray}
  */
 
-kemia.view.AromaticityRenderer.prototype.render = function(ring,transform) {
+kemia.view.AromaticityRenderer.prototype.render = function(ring, transform, bondPath) {
 
-	this.setTransform(transform);
+    this.setTransform(transform);
 
-	var bondFill = null;
-	var strokeWidth = this.config.get("bond")['stroke']['width'];
-	var bondStroke = new goog.graphics.Stroke(strokeWidth, this.config.get("bond")['stroke']['color']);
+    var aromaticCircle = new goog.graphics.Path();
+    var ringCenter = this.transform.transformCoords([ring.getCenter()])[0];
 
-  var aromaticCircle = new goog.graphics.Path();
- 	var ringCenter = this.transform.transformCoords( [ ring.getCenter() ])[0];
+    // Radius of the aromatic circle proportional to the ring size	
+    var circleRadiusProportion = 0.5;
+    //Assumption: ring is symmetrical, so pick any one of the ring atom coords
+    var anyAtomCoord = this.transform.transformCoords([ring.atoms[0].coord])[0];
+    var spokeSize = goog.math.Coordinate.distance(ringCenter, anyAtomCoord)
+    var omeletRadius = spokeSize * circleRadiusProportion;
 
-	// Radius of the aromatic circle proportional to the ring size	
-	var circleRadiusProportion=0.5;
-	//Assumption: ring is symmetrical, so pick any one of the ring atom coords
-	var anyAtomCoord=this.transform.transformCoords( [ ring.atoms[0].coord ])[0];
-	var spokeSize=goog.math.Coordinate.distance(ringCenter, anyAtomCoord)	
-  var omeletRadius=spokeSize*circleRadiusProportion;
-  
-	aromaticCircle.moveTo(ringCenter.x+(omeletRadius),ringCenter.y);
-	aromaticCircle.arcTo(omeletRadius,omeletRadius,0,180);
-	aromaticCircle.moveTo(ringCenter.x+(omeletRadius),ringCenter.y);
-	aromaticCircle.arcTo(omeletRadius,omeletRadius,0,-180);
+    aromaticCircle.moveTo(ringCenter.x + (omeletRadius), ringCenter.y);
+    aromaticCircle.arcTo(omeletRadius, omeletRadius, 0, 180);
+    aromaticCircle.moveTo(ringCenter.x + (omeletRadius), ringCenter.y);
+    aromaticCircle.arcTo(omeletRadius, omeletRadius, 0, -180);
 
-	this.graphics.drawPath(aromaticCircle, bondStroke, bondFill);
 }
