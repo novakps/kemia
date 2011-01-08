@@ -45,6 +45,8 @@ goog.exportSymbol('kemia.io.json.readReaction', kemia.io.json.readReaction);
 goog.exportSymbol('kemia.io.json.writeReaction', kemia.io.json.writeReaction);
 goog.exportSymbol('kemia.io.json.reactionToJson', kemia.io.json.reactionToJson);
 goog.exportSymbol('kemia.io.mdl.readMolfile', kemia.io.mdl.readMolfile);
+goog.exportSymbol('kemia.io.mdl.readRxnfile', kemia.io.mdl.readRxnfile);
+goog.exportSymbol('kemia.io.mdl.writeRxnfile', kemia.io.mdl.writeRxnfile);
 goog.exportSymbol('kemia.io.smiles.SmilesParser.parse',
 		kemia.io.smiles.SmilesParser.parse);
 goog.exportSymbol('kemia.io.xhr', kemia.io.xhr);
