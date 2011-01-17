@@ -240,10 +240,14 @@ kemia.model.Reaction.prototype.setArrow = function(arrow) {
 /**
  * setter 
  * 
- * @param{string} text
+ * @param{string=} text
  */
 kemia.model.Reaction.prototype.setReagentsText = function(text){
-	this.reagentsText = text;
+	if(text){
+		this.reagentsText = text;
+	} else {
+		this.reagentsText = "";
+	}
 };
 
 /**
@@ -267,10 +271,15 @@ kemia.model.Reaction.prototype.getConditionsText = function(){
 /**
  * setter 
  * 
- * @param{string} text
+ * @param{string=} text
  */
 kemia.model.Reaction.prototype.setConditionsText = function(text){
-	this.conditionsText = text;
+	if(text){
+		this.conditionsText = text;		
+	} else {
+		this.conditionsText = '';
+	}
+
 }
 
 /**
