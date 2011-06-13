@@ -865,8 +865,20 @@ See the COPYING file for details.
 	background-position: -142px;
 }
 
-kemia-eraser {
+.kemia-eraser {
+	cursor: url(../images/erase-cursor-32.png), pointer;
+}
+
+.kemia-rotator {
+	cursor: url(../images/rotate-cursor-32.png), pointer;
+}
+
+.kemia-mover {
 	cursor: move;
+}
+
+.kemia-editor {
+	cursor: pointer;
 }
 
 
