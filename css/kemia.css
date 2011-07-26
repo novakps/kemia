@@ -767,7 +767,7 @@ See the COPYING file for details.
 }
 
 .goog-toolbar-select .goog-toolbar-menu-button-inner-box {
-  width: 64px;
+/*  width: 64px;*/
   height: 14px;
   border-width: 0 1px;
   border-style: solid;
